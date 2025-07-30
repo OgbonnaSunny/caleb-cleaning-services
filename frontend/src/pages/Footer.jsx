@@ -78,6 +78,8 @@ const Footer = () => {
     const names = ['Pricing', 'Blog', 'Reclean Guarantee', 'Sitemap']
     const pathIncluded = hideNavbarPaths.includes(location.pathname);
 
+    // target="_blank" rel="noopener noreferrer"
+
     return (
         <footer className="footer-banner">
             <div className="container" >
@@ -117,7 +119,7 @@ const Footer = () => {
                         <ul>
                             {customerActions.map(action => (
                                 <li key={action.id}>
-                                    <Link to={action.path} target="_blank" rel="noopener noreferrer" >
+                                    <Link to={action.path} >
                                         <div>
                                             <p style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
                                                 {action.name}
