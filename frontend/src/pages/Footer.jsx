@@ -79,7 +79,7 @@ const Footer = () => {
     const pathIncluded = hideNavbarPaths.includes(location.pathname);
 
     return (
-        <footer style={{marginTop:'30px'}} className="footer-banner">
+        <footer className="footer-banner">
             <div className="container" >
 
                 <div className="footer-content" >
@@ -105,9 +105,7 @@ const Footer = () => {
                             {services.map( service => (
                                 <li key={service.id}>
                                     <Link to={'/services'} state={{ id: service.id, name: service.title }}>
-                                        <div>
-                                            <p>{service.title}</p>
-                                        </div>
+                                        {service.title}
                                     </Link>
                                 </li>
                             ))}

@@ -11,10 +11,9 @@ import axios from 'axios';
 
 const Sitemap = () => {
     const location = useLocation();
-    let { currentAddress } = location.state?.address;
-    console.log(currentAddress);
-    if (!currentAddress || currentAddress === null || currentAddress.trim().length <= 0 || currentAddress !== undefined) {
-        currentAddress = "Unknown address";
+    let currentAddress = "Unknown address";
+    if (location.state !== null && location.state !== undefined) {
+        currentAddress = location.state.address;
     }
 
     // Fix default marker icons (React-Leaflet issue)
