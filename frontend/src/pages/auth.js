@@ -1,4 +1,4 @@
-import SecureLS from 'secure-ls'; // Encrypted storage
+import { SecureLS } from 'secure-ls'; // Encrypted storage
 
 const ls = new SecureLS({ encodingType: 'aes' });
 

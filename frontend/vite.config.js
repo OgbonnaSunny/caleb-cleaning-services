@@ -4,6 +4,14 @@ import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
   plugins: [react(), svgr()],
+  resolve: {
+    alias: {
+      events: 'events'  // Explicitly tell Vite where to find events
+    }
+  },
+  optimizeDeps: {
+    include: ['events']  // Force Vite to bundle it
+  },
   server: {
     proxy: {
       '/api': {

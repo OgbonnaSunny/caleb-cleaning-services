@@ -293,7 +293,7 @@ const CleanerProfile = () => {
             }
         }
         if (activeMenu === topNavItems[0]) {
-            fetchOrders();
+        //    fetchOrders();
         }
     }, [activeMenu])
 
@@ -1191,7 +1191,7 @@ const CleanerProfile = () => {
             }
         }
         if (activeMenu === topNavItems[1]) {
-            myOders()
+        //    myOders()
         }
     }, [activeMenu]);
 
@@ -1396,7 +1396,7 @@ const CleanerProfile = () => {
             }
         }
         if (activeMenu === topNavItems[2]) {
-            history()
+          //  history()
         }
     }, [activeMenu]);
 
@@ -1856,7 +1856,7 @@ const CleanerProfile = () => {
                     setIsLoading(false);
                 })
         };
-        fetchCleanerData();
+     //   fetchCleanerData();
     }, []);
 
     const SettingsPage = () => {
@@ -1880,6 +1880,7 @@ const CleanerProfile = () => {
         }
 
         const onSubmit = async (e) => {
+            return;
             e.preventDefault();
             if (getValues().personal.email === null || getValues().personal.email === ''
                 || getValues().personal.email === undefined) {

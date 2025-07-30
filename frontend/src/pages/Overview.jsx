@@ -353,7 +353,7 @@ const Overview = () => {
             </section>
 
             <section className={["contact-section", "main-banner"].join(" ")}>
-                <div className="container">
+                <div className="grid-container">
                     <div className="contact-content">
                         <h2>Ready to Transform Your Space?</h2>
                         <p>Contact us today for a free, no-obligation quote</p>

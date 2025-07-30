@@ -847,6 +847,7 @@ const Checkout = () => {
             setLoggedIn(false);
         }*/
         setCurrentStep(0);
+        setStarter(value);
 
     }
 
