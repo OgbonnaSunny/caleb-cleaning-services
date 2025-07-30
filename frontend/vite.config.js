@@ -3,14 +3,7 @@ import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  plugins: [react(),
-    svgr({
-      include: '**/*.svg?react', // Only transform SVG files with ?react suffix
-      svgrOptions: {
-        icon: true, // Optional: enables SVG props like width/height
-      },
-    }),
-  ],
+  plugins: [react(), svgr()],
   server: {
     proxy: {
       '/api': {
