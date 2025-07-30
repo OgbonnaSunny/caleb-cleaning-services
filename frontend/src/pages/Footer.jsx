@@ -119,7 +119,7 @@ const Footer = () => {
                         <ul>
                             {customerActions.map(action => (
                                 <li key={action.id}>
-                                    <Link to={action.path} >
+                                    <Link to={action.path} target="_blank" rel="noopener noreferrer" >
                                         <div>
                                             <p style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
                                                 {action.name}
