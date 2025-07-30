@@ -352,96 +352,98 @@ const Overview = () => {
                 </div>
             </section>
 
-            <section className={["contact-section", "main-banner"].join(" ")}>
-                <div className="grid-container">
-                    <div className="contact-content">
-                        <h2>Ready to Transform Your Space?</h2>
-                        <p>Contact us today for a free, no-obligation quote</p>
-                        <div className="contact-methods">
-                            <div className="contact-method">
-                                <i className="fas fa-phone-alt"></i>
-                                <h4>Call Us</h4>
-                                <p>073 6258 7018</p>
-                                <p>Mon-Sat: 8am-6pm</p>
-                            </div>
-                            <div className="contact-method">
-                                <i className="fas fa-envelope"></i>
-                                <h4>Email Us</h4>
-                                <p>flyclean@gmail.com</p>
-                                <p>Response within 24 hours</p>
-                            </div>
-                            <div className="contact-method">
-                                <i className="fas fa-map-marker-alt"></i>
-                                <h4>Areas We Serve</h4>
-                                <p>All West London boroughs including Kensington, Chelsea, Hammersmith, and more</p>
+            <section className="main-banner">
+                <div className="container">
+                    <div className="burden-container">
+                        <div className="contact-content">
+                            <h2>Ready to Transform Your Space?</h2>
+                            <p>Contact us today for a free, no-obligation quote</p>
+                            <div className="contact-methods">
+                                <div className="contact-method">
+                                    <i className="fas fa-phone-alt"></i>
+                                    <h4>Call Us</h4>
+                                    <p>073 6258 7018</p>
+                                    <p>Mon-Sat: 8am-6pm</p>
+                                </div>
+                                <div className="contact-method">
+                                    <i className="fas fa-envelope"></i>
+                                    <h4>Email Us</h4>
+                                    <p>flyclean@gmail.com</p>
+                                    <p>Response within 24 hours</p>
+                                </div>
+                                <div className="contact-method">
+                                    <i className="fas fa-map-marker-alt"></i>
+                                    <h4>Areas We Serve</h4>
+                                    <p>All West London boroughs including Kensington, Chelsea, Hammersmith, and more</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="contact-form">
-                        <h3>Send Us a Message</h3>
-                        <form onSubmit={sendMessage}>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label htmlFor="name">Your Name</label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
+                        <div className="contact-form">
+                            <h3>Send Us a Message</h3>
+                            <form onSubmit={sendMessage}>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="name">Your Name</label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email Address</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="phone">Phone Number</label>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="service">Service Needed</label>
+                                        <select
+                                            id="service"
+                                            name="service"
+                                            value={formData.service}
+                                            onChange={handleInputChange}
+                                            required
+                                        >
+                                            {services.map(service => (
+                                                <option key={service.id} value={service.id}>{service.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="email">Email Address</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        value={formData.email}
+                                    <label htmlFor="message">Your Message</label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={formData.message}
                                         onChange={handleInputChange}
-                                        required
-                                    />
+                                    ></textarea>
                                 </div>
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label htmlFor="phone">Phone Number</label>
-                                    <input
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="service">Service Needed</label>
-                                    <select
-                                        id="service"
-                                        name="service"
-                                        value={formData.service}
-                                        onChange={handleInputChange}
-                                        required
-                                    >
-                                        {services.map(service => (
-                                            <option key={service.id} value={service.id}>{service.title}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="message">Your Message</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleInputChange}
-                                ></textarea>
-                            </div>
-                            <button type="submit" className="submit-button">Send Message</button>
-                        </form>
+                                <button type="submit" className="submit-button">Send Message</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </section>
