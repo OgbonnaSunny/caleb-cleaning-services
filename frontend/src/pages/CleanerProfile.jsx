@@ -274,7 +274,7 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-        const fetchOrders = async () => {
+        /*const fetchOrders = async () => {
             setIsLoading(true)
             try {
                 const newOrderResponse = await api.get('api/booking/new');
@@ -293,8 +293,8 @@ const CleanerProfile = () => {
             }
         }
         if (activeMenu === topNavItems[0]) {
-        //    fetchOrders();
-        }
+            fetchOrders();
+        }*/
     }, [activeMenu])
 
     const NewOrders = () => {
@@ -1167,7 +1167,7 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-        const myOders = async () => {
+       /* const myOders = async () => {
             setIsLoadMyOrders(true);
             const userData = {email: email}
             try {
@@ -1191,8 +1191,8 @@ const CleanerProfile = () => {
             }
         }
         if (activeMenu === topNavItems[1]) {
-        //    myOders()
-        }
+            myOders()
+        }*/
     }, [activeMenu]);
 
     const MyOrders = () => {
@@ -1377,7 +1377,7 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-        const history = async () => {
+        /*const history = async () => {
             setLoadingHistory(true);
             try {
                 const acceptResponse = await api.post('/api/booking/history', {email: email});
@@ -1396,8 +1396,8 @@ const CleanerProfile = () => {
             }
         }
         if (activeMenu === topNavItems[2]) {
-          //  history()
-        }
+            history()
+        }*/
     }, [activeMenu]);
 
     const History = () => {
@@ -1817,7 +1817,7 @@ const CleanerProfile = () => {
     };
 
     useEffect(() => {
-        const fetchCleanerData = () => {
+       /* const fetchCleanerData = () => {
             setIsLoading(true);
             const user1 = JSON.parse(localStorage.getItem('user'));
             api.post('/api/users/record', {email: user1.email})
@@ -1856,7 +1856,7 @@ const CleanerProfile = () => {
                     setIsLoading(false);
                 })
         };
-     //   fetchCleanerData();
+        fetchCleanerData();*/
     }, []);
 
     const SettingsPage = () => {
