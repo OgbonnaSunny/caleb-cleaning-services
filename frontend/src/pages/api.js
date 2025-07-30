@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getRefreshToken, clearRefreshToken } from './auth.js';
+//import { getRefreshToken, clearRefreshToken } from './auth.js';
 
 
 const api = axios.create({
@@ -31,7 +31,6 @@ api.interceptors.response.use(
 
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
             try {
                 // Attempt refresh
                 await axios.post('/api/refresh', {}, {
