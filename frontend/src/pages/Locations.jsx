@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Link, useNavigate } from 'react-router-dom';
 import Domestic from "../images/domestic.png";
 import Upholstery from "../images/upholstery2.png";
@@ -22,6 +22,7 @@ import { isValidUKPostcodeFormat, checkPostcodeExists } from './Postcode.jsx'
 
 const Locations = () => {
   const navigate = useNavigate();
+  const ref = useRef(null);
 
   const miniLocations = [
     { id: 1, name: "Abbey" },
@@ -1171,6 +1172,7 @@ const Locations = () => {
       }
     }
     setIsAllLocations(!isAllLocations);
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
   const updateList = (name) => {
@@ -1290,7 +1292,7 @@ const Locations = () => {
               )}
             </section>
 
-            <section className={'main-banner'}>
+            <section className={'main-banner'} ref={ref}>
               <h2 style={{textAlign:'center', padding:'20px'}}>More Locations</h2>
               <div style={{display:'block'}}>
                 <div className="grid-container">
