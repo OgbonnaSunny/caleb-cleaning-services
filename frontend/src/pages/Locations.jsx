@@ -21,48 +21,57 @@ import Footer from '../pages/Footer.jsx'
 import { isValidUKPostcodeFormat, checkPostcodeExists } from './Postcode.jsx'
 
 const Locations = () => {
+  const navigate = useNavigate();
+
   const miniLocations = [
     { id: 1, name: "Abbey" },
     { id: 2, name: "Abbey Road" },
     { id: 3, name: "Abbey Wood" },
     { id: 4, name: "Abingdon" },
     { id: 5, name: "Acton Central" },
-    { id: 6, name: "Addiscombe East" },
-    { id: 7, name: "Addiscombe West" },
-    { id: 8, name: "Addison" },
-    { id: 9, name: "Aldborough" },
-    { id: 10, name: "Alexandra" },
   ]
-  miniLocations.sort();
-  const navigate = useNavigate();
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [locations, setLocations] = useState([]);
-  const [locationList, setLocationList] = useState(miniLocations);
-  const [isAllLocations, setIsAllLocations] = useState(false);
-  const [filteredLocations, setFilteredLocations] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [cleanerLocation, setCleanerLocation] = useState('');
-  const [postcode, setPostcode] = useState('');
-  const [error, setError] = useState(null);
-
-  // Sample data - in a real app you would fetch this from an API
-  useEffect(() => {
-    const sampleLocations = [
-      { id: "sl", name: "South London" },
-      { id: "cl", name: "Central London" },
-      { id: "nl", name: "North London" },
-      { id: "el", name: "East London" },
-      { id: "wl", name: "West London" },
-      { id: "nel", name: "North East London" },
-      { id: "nwl", name: "North West London" },
-      { id: "swl", name: "South West London" },
-      { id: "sel", name: "South East London" }
-    ];
-
-    setLocations(sampleLocations);
-    setFilteredLocations(sampleLocations);
-  }, []);
+  const miniLocations2 = [
+    {
+      id: 1,
+      postcode: "EH1",
+      name: "Edinburgh City Centre",
+      addresses: [
+        "1 Princes Street, Edinburgh, EH1 2EQ",
+        "The Balmoral Hotel, 1 Princes Street, Edinburgh, EH1 2EQ",
+        "Edinburgh Waverley Station, Edinburgh, EH1 1BQ"
+      ]
+    },
+    {
+      id: 2,
+      postcode: "EH2",
+      name: "New Town / City Centre",
+      addresses: [
+        "The Scotch Whisky Experience, 354 Castlehill, Edinburgh, EH2 4AE",
+        "Assembly Rooms, 54 George Street, Edinburgh, EH2 2LR",
+        "Harvey Nichols, 30-34 St Andrew Square, Edinburgh, EH2 2AD"
+      ]
+    },
+    {
+      id: 3,
+      postcode: "EH3",
+      name: "West End / Bruntsfield",
+      addresses: [
+        "The Royal College of Physicians, 9 Queen Street, Edinburgh, EH2 1JQ",
+        "The Dome, 14 George Street, Edinburgh, EH2 2PF",
+        "Tynecastle Park (Hearts FC), Gorgie Road, Edinburgh, EH11 2NL"
+      ]
+    },
+    {
+      id: 4,
+      postcode: "EH4",
+      name: "West Edinburgh (Murrayfield, Cramond, Davidson Mains)",
+      addresses: [
+        "Murrayfield Stadium, Roseburn Street, Edinburgh, EH12 5PJ",
+        "Cramond Kirk, Cramond Glebe Road, Edinburgh, EH4 6NS",
+        "Davidson Mains Park, 5 Quality Street, Edinburgh, EH4 5BP"
+      ]
+    },
+  ]
 
   const allLocations = [
     { id: 1, name: "Abbey" },
@@ -765,6 +774,280 @@ const Locations = () => {
   ]
   allLocations.toSorted()
 
+  const edinburghDistricts = [
+    {
+      id: 1,
+      postcode: "EH1",
+      name: "Edinburgh City Centre",
+      addresses: [
+        "1 Princes Street, Edinburgh, EH1 2EQ",
+        "The Balmoral Hotel, 1 Princes Street, Edinburgh, EH1 2EQ",
+        "Edinburgh Waverley Station, Edinburgh, EH1 1BQ"
+      ]
+    },
+    {
+      id: 2,
+      postcode: "EH2",
+      name: "New Town / City Centre",
+      addresses: [
+        "The Scotch Whisky Experience, 354 Castlehill, Edinburgh, EH2 4AE",
+        "Assembly Rooms, 54 George Street, Edinburgh, EH2 2LR",
+        "Harvey Nichols, 30-34 St Andrew Square, Edinburgh, EH2 2AD"
+      ]
+    },
+    {
+      id: 3,
+      postcode: "EH3",
+      name: "West End / Bruntsfield",
+      addresses: [
+        "The Royal College of Physicians, 9 Queen Street, Edinburgh, EH2 1JQ",
+        "The Dome, 14 George Street, Edinburgh, EH2 2PF",
+        "Tynecastle Park (Hearts FC), Gorgie Road, Edinburgh, EH11 2NL"
+      ]
+    },
+    {
+      id: 4,
+      postcode: "EH4",
+      name: "West Edinburgh (Murrayfield, Cramond, Davidson Mains)",
+      addresses: [
+        "Murrayfield Stadium, Roseburn Street, Edinburgh, EH12 5PJ",
+        "Cramond Kirk, Cramond Glebe Road, Edinburgh, EH4 6NS",
+        "Davidson Mains Park, 5 Quality Street, Edinburgh, EH4 5BP"
+      ]
+    },
+    {
+      id: 5,
+      postcode: "EH5",
+      name: "Trinity, Granton, Newhaven",
+      addresses: [
+        "Ocean Terminal, Ocean Drive, Edinburgh, EH6 6JJ",
+        "Newhaven Harbour, 24 Pier Place, Edinburgh, EH6 4LP",
+        "The Trinity Academy, Craighall Road, Edinburgh, EH6 4RT"
+      ]
+    },
+    {
+      id: 6,
+      postcode: "EH6",
+      name: "Leith",
+      addresses: [
+        "The Royal Yacht Britannia, Ocean Drive, Edinburgh, EH6 6JJ",
+        "Leith Theatre, 28-30 Ferry Road, Edinburgh, EH6 4AE",
+        "The Shore (Leith’s dining area), 1-3 Shore, Edinburgh, EH6 6QW"
+      ]
+    },
+    {
+      id: 7,
+      postcode: "EH7",
+      name: "Leith Walk, Easter Road, Calton Hill",
+      addresses: [
+        "Meadowbank Stadium, 200 London Road, Edinburgh, EH7 6AE",
+        "Prestonfield House Hotel, Priestfield Road, Edinburgh, EH16 5UT",
+        "The Edinburgh Playhouse, 18-22 Greenside Place, Edinburgh, EH1 3AA"
+      ]
+    },
+    {
+      id: 8,
+      postcode: "EH8",
+      name: "Holyrood, Old Town, University of Edinburgh",
+      addresses: [
+        "The Scottish Parliament, Holyrood, Edinburgh, EH99 1SP",
+        "Dynamic Earth, Holyrood Road, Edinburgh, EH8 8AS",
+        "University of Edinburgh Old College, South Bridge, Edinburgh, EH8 9YL"
+      ]
+    },
+    {
+      id: 9,
+      postcode: "EH9",
+      name: "Marchmont, Newington, Grange",
+      addresses: [
+        "The King’s Buildings (University of Edinburgh), Mayfield Road, Edinburgh, EH9 3JL",
+        "Royal Commonwealth Pool, 21 Dalkeith Road, Edinburgh, EH16 5BB",
+        "Prestonfield Golf Club, Priestfield Road, Edinburgh, EH16 5UT"
+      ]
+    },
+    {
+      id: 10,
+      postcode: "EH10",
+      name: "Morningside, Fairmilehead",
+      addresses: [
+        "Morningside Library, 184-192 Morningside Road, Edinburgh, EH10 4PD",
+        "The Braid Hills Hotel, 134 Braid Road, Edinburgh, EH10 6JD",
+        "Fairmilehead Parish Church, 1 Frogston Road West, Edinburgh, EH10 7AA"
+      ]
+    },
+    {
+      id: 11,
+      postcode: "EH11",
+      name: "Gorgie, Dalry, Shandon",
+      addresses: [
+        "Tynecastle Park (Heart of Midlothian FC), McLeod Street, Edinburgh, EH11 2NL",
+        "Gorgie City Farm, 51 Gorgie Road, Edinburgh, EH11 2LA",
+        "Dalry Swim Centre, 46 Dalry Road, Edinburgh, EH11 2AW"
+      ]
+    },
+    {
+      id: 12,
+      postcode: "EH12",
+      name: "Corstorphine, Murrayfield, West Coates",
+      addresses: [
+        "Edinburgh Zoo, 134 Corstorphine Road, Edinburgh, EH12 6TS",
+        "Murrayfield Ice Rink, Riverside Crescent, Edinburgh, EH12 5XN",
+        "Gyle Shopping Centre, 125 The Gyle Centre, Edinburgh, EH12 9JY"
+      ]
+    },
+    {
+      id: 13,
+      postcode: "EH13",
+      name: "Colinton, Juniper Green, Currie",
+      addresses: [
+        "Colinton Parish Church, 9 Bridge Road, Edinburgh, EH13 0LQ",
+        "Currie Rugby Club, 32 Lanark Road West, Edinburgh, EH13 0PQ",
+        "Juniper Green Bowling Club, 170 Lanark Road, Edinburgh, EH13 0DQ"
+      ]
+    },
+    {
+      id: 14,
+      postcode: "EH14",
+      name: "Balerno, Baberton, Wester Hailes",
+      addresses: [
+        "Balerno Parish Church, 2 Main Street, Balerno, Edinburgh, EH14 7EH",
+        "Baberton Golf Club, 50 Baberton Avenue, Edinburgh, EH14 3DR",
+        "Wester Hailes Library, 5 Westside Plaza, Edinburgh, EH14 2ST"
+      ]
+    },
+    {
+      id: 15,
+      postcode: "EH15",
+      name: "Portobello, Craigmillar, Joppa",
+      addresses: [
+        "Portobello Beach Promenade, Edinburgh, EH15 1DB",
+        "Portobello Swim Centre, 57 The Promenade, Edinburgh, EH15 1DX",
+        "Craigmillar Castle, Craigmillar Castle Road, Edinburgh, EH16 4SY"
+      ]
+    },
+    {
+      id: 16,
+      postcode: "EH16",
+      name: "Liberton, Gilmerton, Craigmillar",
+      addresses: [
+        "Liberton Kirk, 1 Kirkgate, Edinburgh, EH16 6RR",
+        "Royal Infirmary of Edinburgh, 51 Little France Crescent, Edinburgh, EH16 4SA",
+        "Gilmerton Community Centre, 4-6 Drum Street, Edinburgh, EH17 8QG"
+      ]
+    },
+    {
+      id: 17,
+      postcode: "EH17",
+      name: "Danderhall, Newcraighall, Edgefield",
+      addresses: [
+        "Danderhall Medical Centre, 1 Oak Lane, Danderhall, Edinburgh, EH16 4EX",
+        "Newcraighall Parish Church, 1 Newcraighall Road, Edinburgh, EH21 8SF",
+        "Edinburgh College (Milton Road Campus), 24 Milton Road East, Edinburgh, EH15 2PP"
+      ]
+    },
+    {
+      id: 18,
+      postcode: "EH28",
+      name: "Kirkliston, Newbridge, Ratho",
+      addresses: [
+        "Kirkliston Leisure Centre, 37 Station Road, Kirkliston, EH29 9AQ",
+        "Ratho Park Golf Club, 7 Baird Road, Ratho, EH28 8RA",
+        "Newbridge Industrial Estate, 1 Newbridge Industrial Estate, EH28 8PJ"
+      ]
+    },
+    {
+      id: 19,
+      postcode: "EH29",
+      name: "Kirkliston, Winchburgh",
+      addresses: [
+        "Kirkliston Primary School, The Loan, Kirkliston, EH29 9EB",
+        "Winchburgh Community Centre, 6-8 High Street, Winchburgh, EH52 6HW",
+        "Drumshoreland Garden Centre, 5 Drumshoreland Road, Kirkliston, EH29 9DU"
+      ]
+    },
+    {
+      id: 20,
+      postcode: "EH30",
+      name: "South Queensferry, Dalmeny",
+      addresses: [
+        "Forth Bridge, South Queensferry, EH30 9SF",
+        "Dalmeny House, South Queensferry, EH30 9TQ",
+        "Hopetoun Farm Shop, South Queensferry, EH30 9SL"
+      ]
+    }
+  ];
+  const edinburghLocations = [
+    {
+      id: 1,
+      name: "Edinburgh City Centre",
+    },
+    {
+      id: 2,
+      name: "Leith",
+    },
+    {
+      id: 3,
+      name: "Portobello",
+    },
+    {
+      id: 4,
+      name: "Morningside",
+    },
+    {
+      id: 5,
+      name: "Cramond",
+    },
+    {
+      id: 6,
+      name: "Stockbridge",
+    },
+    {
+      id: 7,
+      name: "New Town",
+    },
+    {
+      id: 8,
+      name: "Corstorphine",
+    },
+    {
+      id: 9,
+      name: "South Queensferry",
+    }
+  ];
+
+  const sampleLocations = [
+    { id: "sl", name: "South London" },
+    { id: "cl", name: "Central London" },
+    { id: "nl", name: "North London" },
+    { id: "el", name: "East London" },
+    { id: "wl", name: "West London" },
+    { id: "nel", name: "North East London" },
+    { id: "nwl", name: "North West London" },
+    { id: "swl", name: "South West London" },
+    { id: "sel", name: "South East London" }
+  ];
+
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [locations, setLocations] = useState(edinburghLocations);
+  const [locationList, setLocationList] = useState(miniLocations2);
+  const [isAllLocations, setIsAllLocations] = useState(false);
+  const [filteredLocations, setFilteredLocations] = useState(edinburghLocations);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [cleanerLocation, setCleanerLocation] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [error, setError] = useState(null);
+  const [listName, setListName] = useState('Edin');
+  const [edin, setEdin] = useState(true);
+  const [more, setMore] = useState(false);
+
+  // Sample data - in a real app you would fetch this from an API
+  useEffect(() => {
+
+
+  }, []);
+
+
   useEffect(() => {
     if (searchTerm.trim() === '') {
       setFilteredLocations(locations);
@@ -782,13 +1065,44 @@ const Locations = () => {
   }
 
   const updateLocationList = () => {
-    if (locationList.length === miniLocations.length) {
-      setLocationList(allLocations);
+    if (more) {
+      if (locationList.length === miniLocations.length) {
+        setLocationList(allLocations);
+      }
+      else {
+        setLocationList(miniLocations)
+      }
     }
-    else {
-      setLocationList(miniLocations)
+    if (edin) {
+      if (locationList.length === miniLocations2.length) {
+        setLocationList(edinburghDistricts);
+      }
+      else {
+        setLocationList(miniLocations2)
+      }
     }
     setIsAllLocations(!isAllLocations);
+  }
+
+  const updateList = (name) => {
+    if (listName === name) {
+      return;
+    }
+    if (name === 'Edin') {
+      setEdin(true)
+      setMore(false)
+      setLocationList(miniLocations2)
+      setLocations(edinburghLocations);
+      setFilteredLocations(edinburghLocations);
+    }
+    if (name === 'More') {
+      setMore(true)
+      setEdin(false)
+      setLocationList(miniLocations)
+      setLocations(sampleLocations);
+      setFilteredLocations(sampleLocations);
+    }
+    setListName(name);
   }
 
   const handleSubmit = (e) => {
@@ -817,6 +1131,7 @@ const Locations = () => {
         flexDirection: 'column',
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
+
         <section className="location-banner">
           <div className="container">
             <h1 className={'location-header'}>Our Cleaner Locations</h1>
@@ -845,6 +1160,22 @@ const Locations = () => {
           </div>
         </section>
 
+        <div className={'support-page'} >
+          <div style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
+            <div className={'location-name'}
+            onClick={() => updateList('Edin')}>
+              <input type={'checkbox'} checked={edin}/>
+              <h2 className={'experience-text'} style={{marginLeft:'5px'}} >Edinburgh Only</h2>
+            </div>
+            <div className={'location-name'}
+            onClick={() => updateList('More')}>
+              <input type={'checkbox'} checked={more}/>
+              <h2 className={'experience-text'} style={{marginLeft:'5px'}} >More Locations</h2>
+            </div>
+
+          </div>
+        </div>
+
         <main className="locations-main">
           <div className="container">
 
@@ -854,8 +1185,11 @@ const Locations = () => {
                     {filteredLocations.map(location => (
                         <div className="location-card" key={location.id}>
                           <div className="card-content">
-                            <h3 style={{textAlign:'center'}}>{location.name}</h3>
-                            <Link to={`/locations}`}></Link>
+                            <h3 style={{textAlign:'center'}}>
+                              <Link to="/city" state={{ id: location.id, name: location.name }}>
+                                {location.name}
+                              </Link>
+                            </h3>
                           </div>
                         </div>
                     ))}
@@ -885,7 +1219,9 @@ const Locations = () => {
                       </div>
                   ))}
                 </div>
-                <button onClick={updateLocationList} style={{width:'150px', background:'white', color:'black', marginTop:'20px'}}>{!isAllLocations ? 'See more' : 'See less'}</button>
+                <button onClick={updateLocationList} style={{width:'150px', background:'white', color:'black', marginTop:'20px'}}>
+                  {!isAllLocations ? 'See more' : 'See less'}
+                </button>
               </div>
             </section>
 

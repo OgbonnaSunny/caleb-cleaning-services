@@ -2064,15 +2064,15 @@ const Pricing = () => {
         <section className={'price-banner'} style={{marginBottom:'30px'}} >
           <div className="container" style={{marginBottom:'30px',  display:'block'}}>
             <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning type!</h2>
-            <div className="word-scroller-container" style={{marginTop:'40px'}}>
+            <div className="word-scroller-container" style={{marginTop:'20px'}}>
               <FaArrowLeft onClick={scrollLeft} style={{color:'navy'}} />
               <div className="words-container" ref={scrollContainerRef}>
                 {serviceList.map( serviceItem => (
                     <div key={serviceItem.id} >
-                      <button style={service === serviceItem.name ? active: notActive}
+                      <h3 style={service === serviceItem.name ? active: notActive}
                               onClick={() => {setService(serviceItem.name)}}
                               className="word-item">{serviceItem.name}
-                      </button>
+                      </h3>
                     </div>
                 ))}
               </div>

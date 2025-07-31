@@ -5138,6 +5138,8 @@ const Services = () => {
     setTimeout(() => setClearText({display: 'none'}), 4000)
   }, [error])
 
+  // words-container
+
   return (
       <div style={{
         display: 'flex',
@@ -5149,16 +5151,16 @@ const Services = () => {
           <section className={'service-banner'}  >
             <div className="container" style={{marginBottom:'30px'}}>
               <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning service type</h2>
-              <div className="word-scroller-container" style={{marginTop:'40px'}}>
+              <div className="word-scroller-container" style={{marginTop:'20px'}}>
                 <FaArrowLeft onClick={scrollLeft} />
                 <div className="words-container" ref={scrollContainerRef}>
                   {services.map( serviceItem => (
                       <div key={serviceItem.id} >
-                        <div style={serviceName === serviceItem.title ? active: notActive}
+                        <h3 style={serviceName === serviceItem.title ? active: notActive}
                                 onClick={() => {setServiceName(serviceItem.title); setServiceDesc(serviceItem.description)}}
-                                className="word-item">
+                            className="word-item">
                           {serviceItem.title}
-                        </div>
+                        </h3>
                       </div>
                   ))}
                 </div>

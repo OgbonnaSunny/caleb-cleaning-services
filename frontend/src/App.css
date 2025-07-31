@@ -1821,7 +1821,7 @@ locations-hero {
 
 @media (max-width: 768px) {
  .word-item {
-   padding: 4px 8px;
+   padding: 4px 4px;
    background-color: #f0f0f0;
    border-radius: 10px;
    box-shadow: var(--shadow);
@@ -6516,4 +6516,11 @@ tr:hover {
     font-size: medium;
     text-align: start;
   }
+}
+
+.location-name {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 }

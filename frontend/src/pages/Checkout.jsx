@@ -586,6 +586,208 @@ const Checkout = () => {
         return date >= today;
     }
 
+    const edinburghPostcodes = [
+        {
+            id: 1,
+            postcode: "EH1",
+            name: "Edinburgh City Centre",
+            addresses: [
+                "1 Princes Street, Edinburgh, EH1 2EQ",
+                "The Balmoral Hotel, 1 Princes Street, Edinburgh, EH1 2EQ",
+                "Edinburgh Waverley Station, Edinburgh, EH1 1BQ"
+            ]
+        },
+        {
+            id: 2,
+            postcode: "EH2",
+            name: "New Town / City Centre",
+            addresses: [
+                "The Scotch Whisky Experience, 354 Castlehill, Edinburgh, EH2 4AE",
+                "Assembly Rooms, 54 George Street, Edinburgh, EH2 2LR",
+                "Harvey Nichols, 30-34 St Andrew Square, Edinburgh, EH2 2AD"
+            ]
+        },
+        {
+            id: 3,
+            postcode: "EH3",
+            name: "West End / Bruntsfield",
+            addresses: [
+                "The Royal College of Physicians, 9 Queen Street, Edinburgh, EH2 1JQ",
+                "The Dome, 14 George Street, Edinburgh, EH2 2PF",
+                "Tynecastle Park (Hearts FC), Gorgie Road, Edinburgh, EH11 2NL"
+            ]
+        },
+        {
+            id: 4,
+            postcode: "EH4",
+            name: "West Edinburgh (Murrayfield, Cramond, Davidson Mains)",
+            addresses: [
+                "Murrayfield Stadium, Roseburn Street, Edinburgh, EH12 5PJ",
+                "Cramond Kirk, Cramond Glebe Road, Edinburgh, EH4 6NS",
+                "Davidson Mains Park, 5 Quality Street, Edinburgh, EH4 5BP"
+            ]
+        },
+        {
+            id: 5,
+            postcode: "EH5",
+            name: "Trinity, Granton, Newhaven",
+            addresses: [
+                "Ocean Terminal, Ocean Drive, Edinburgh, EH6 6JJ",
+                "Newhaven Harbour, 24 Pier Place, Edinburgh, EH6 4LP",
+                "The Trinity Academy, Craighall Road, Edinburgh, EH6 4RT"
+            ]
+        },
+        {
+            id: 6,
+            postcode: "EH6",
+            name: "Leith",
+            addresses: [
+                "The Royal Yacht Britannia, Ocean Drive, Edinburgh, EH6 6JJ",
+                "Leith Theatre, 28-30 Ferry Road, Edinburgh, EH6 4AE",
+                "The Shore (Leith’s dining area), 1-3 Shore, Edinburgh, EH6 6QW"
+            ]
+        },
+        {
+            id: 7,
+            postcode: "EH7",
+            name: "Leith Walk, Easter Road, Calton Hill",
+            addresses: [
+                "Meadowbank Stadium, 200 London Road, Edinburgh, EH7 6AE",
+                "Prestonfield House Hotel, Priestfield Road, Edinburgh, EH16 5UT",
+                "The Edinburgh Playhouse, 18-22 Greenside Place, Edinburgh, EH1 3AA"
+            ]
+        },
+        {
+            id: 8,
+            postcode: "EH8",
+            name: "Holyrood, Old Town, University of Edinburgh",
+            addresses: [
+                "The Scottish Parliament, Holyrood, Edinburgh, EH99 1SP",
+                "Dynamic Earth, Holyrood Road, Edinburgh, EH8 8AS",
+                "University of Edinburgh Old College, South Bridge, Edinburgh, EH8 9YL"
+            ]
+        },
+        {
+            id: 9,
+            postcode: "EH9",
+            name: "Marchmont, Newington, Grange",
+            addresses: [
+                "The King’s Buildings (University of Edinburgh), Mayfield Road, Edinburgh, EH9 3JL",
+                "Royal Commonwealth Pool, 21 Dalkeith Road, Edinburgh, EH16 5BB",
+                "Prestonfield Golf Club, Priestfield Road, Edinburgh, EH16 5UT"
+            ]
+        },
+        {
+            id: 10,
+            postcode: "EH10",
+            name: "Morningside, Fairmilehead",
+            addresses: [
+                "Morningside Library, 184-192 Morningside Road, Edinburgh, EH10 4PD",
+                "The Braid Hills Hotel, 134 Braid Road, Edinburgh, EH10 6JD",
+                "Fairmilehead Parish Church, 1 Frogston Road West, Edinburgh, EH10 7AA"
+            ]
+        },
+        {
+            id: 11,
+            postcode: "EH11",
+            name: "Gorgie, Dalry, Shandon",
+            addresses: [
+                "Tynecastle Park (Heart of Midlothian FC), McLeod Street, Edinburgh, EH11 2NL",
+                "Gorgie City Farm, 51 Gorgie Road, Edinburgh, EH11 2LA",
+                "Dalry Swim Centre, 46 Dalry Road, Edinburgh, EH11 2AW"
+            ]
+        },
+        {
+            id: 12,
+            postcode: "EH12",
+            name: "Corstorphine, Murrayfield, West Coates",
+            addresses: [
+                "Edinburgh Zoo, 134 Corstorphine Road, Edinburgh, EH12 6TS",
+                "Murrayfield Ice Rink, Riverside Crescent, Edinburgh, EH12 5XN",
+                "Gyle Shopping Centre, 125 The Gyle Centre, Edinburgh, EH12 9JY"
+            ]
+        },
+        {
+            id: 13,
+            postcode: "EH13",
+            name: "Colinton, Juniper Green, Currie",
+            addresses: [
+                "Colinton Parish Church, 9 Bridge Road, Edinburgh, EH13 0LQ",
+                "Currie Rugby Club, 32 Lanark Road West, Edinburgh, EH13 0PQ",
+                "Juniper Green Bowling Club, 170 Lanark Road, Edinburgh, EH13 0DQ"
+            ]
+        },
+        {
+            id: 14,
+            postcode: "EH14",
+            name: "Balerno, Baberton, Wester Hailes",
+            addresses: [
+                "Balerno Parish Church, 2 Main Street, Balerno, Edinburgh, EH14 7EH",
+                "Baberton Golf Club, 50 Baberton Avenue, Edinburgh, EH14 3DR",
+                "Wester Hailes Library, 5 Westside Plaza, Edinburgh, EH14 2ST"
+            ]
+        },
+        {
+            id: 15,
+            postcode: "EH15",
+            name: "Portobello, Craigmillar, Joppa",
+            addresses: [
+                "Portobello Beach Promenade, Edinburgh, EH15 1DB",
+                "Portobello Swim Centre, 57 The Promenade, Edinburgh, EH15 1DX",
+                "Craigmillar Castle, Craigmillar Castle Road, Edinburgh, EH16 4SY"
+            ]
+        },
+        {
+            id: 16,
+            postcode: "EH16",
+            name: "Liberton, Gilmerton, Craigmillar",
+            addresses: [
+                "Liberton Kirk, 1 Kirkgate, Edinburgh, EH16 6RR",
+                "Royal Infirmary of Edinburgh, 51 Little France Crescent, Edinburgh, EH16 4SA",
+                "Gilmerton Community Centre, 4-6 Drum Street, Edinburgh, EH17 8QG"
+            ]
+        },
+        {
+            id: 17,
+            postcode: "EH17",
+            name: "Danderhall, Newcraighall, Edgefield",
+            addresses: [
+                "Danderhall Medical Centre, 1 Oak Lane, Danderhall, Edinburgh, EH16 4EX",
+                "Newcraighall Parish Church, 1 Newcraighall Road, Edinburgh, EH21 8SF",
+                "Edinburgh College (Milton Road Campus), 24 Milton Road East, Edinburgh, EH15 2PP"
+            ]
+        },
+        {
+            id: 18,
+            postcode: "EH28",
+            name: "Kirkliston, Newbridge, Ratho",
+            addresses: [
+                "Kirkliston Leisure Centre, 37 Station Road, Kirkliston, EH29 9AQ",
+                "Ratho Park Golf Club, 7 Baird Road, Ratho, EH28 8RA",
+                "Newbridge Industrial Estate, 1 Newbridge Industrial Estate, EH28 8PJ"
+            ]
+        },
+        {
+            id: 19,
+            postcode: "EH29",
+            name: "Kirkliston, Winchburgh",
+            addresses: [
+                "Kirkliston Primary School, The Loan, Kirkliston, EH29 9EB",
+                "Winchburgh Community Centre, 6-8 High Street, Winchburgh, EH52 6HW",
+                "Drumshoreland Garden Centre, 5 Drumshoreland Road, Kirkliston, EH29 9DU"
+            ]
+        },
+        {
+            id: 20,
+            postcode: "EH30",
+            name: "South Queensferry, Dalmeny",
+            addresses: [
+                "Forth Bridge, South Queensferry, EH30 9SF",
+                "Dalmeny House, South Queensferry, EH30 9TQ",
+                "Hopetoun Farm Shop, South Queensferry, EH30 9SL"
+            ]
+        }
+    ];
 
     const [currentStep, setCurrentStep] = useState(-1);
     const [starter, setStarter] = useState('');
