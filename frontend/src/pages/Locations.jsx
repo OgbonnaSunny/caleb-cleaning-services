@@ -820,7 +820,7 @@ const Locations = () => {
         <section className="location-banner">
           <div className="container">
             <h1 className={'location-header'}>Our Cleaner Locations</h1>
-            <h4 style={{justifyContent:'center', color:'white', maxWidth:'1000px', textAlign:'start'}}>
+            <h4 style={{justifyContent:'center', color:'blue', maxWidth:'1000px', textAlign:'start', marginTop:'10px', backgroundColor:'transparent'}}>
               Get professional home and office cleaning in London and the surrounding areas. Search for a local cleaner,
               book the service and they will arrive at your location shortly. Our cleaners have extensive experience and
               skills to satisfy all your cleaning needs. Enter your postcode to find a cleaner near you.

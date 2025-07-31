@@ -2468,7 +2468,6 @@ const Services = () => {
 
   }
 
-
   useEffect(() => {
     switch (serviceName) {
       case 'Deep':
@@ -2570,10 +2569,10 @@ const Services = () => {
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p style={{color:'navy'}}>Deep Cleaning</p>
-                    <p>Whether you need a deep cleaning service once or often, eMop offers professional deep cleaning services in the Edinburgh area.
+                    <p>Whether you need a deep cleaning service once or often, Fly cleaner offers professional deep cleaning services in the Edinburgh area.
                       The thought of having to dedicate time to clean your property, flat, office (commercial cleaning), or any other location might be depressing. However, assigning this job to reliable expert and fully insured cleaners with years of expertise will greatly reduce your workload.
                       You can be confident that we have staff with the highest standards for the task if you're seeking expert deep cleaning services in Edinburgh. As the premier and go-to option for deep cleaning in Edinburgh, our achievements over the years speak for themselves, and we take satisfaction in our very good service, which is suitable for any of your cleaning needs.
-                      We are all aware of how time-consuming and annoying cleaning your whole property feels. For a one-off deep clean in Edinburgh, eMop is the best choice.
+                      We are all aware of how time-consuming and annoying cleaning your whole property feels. For a one-off deep clean in Edinburgh, Fly cleaner is the best choice.
                       Our professional cleaners will work on as many things as we can in the allocated time, while also considering your cleanliness needs and preferences.</p>
                   </div>
                   <img src={Kept} alt={"cleaners"} className={'cart-image2'}/>
@@ -2829,7 +2828,7 @@ const Services = () => {
                       <p>
                         Every house is unique, which is why our cleaners are encouraged to take a personalised approach.
                         Besides, different clients require different things and having your needs fully satisfied is our top priority.
-                        The ability to modify the standard set of services is a major benefit of working with eMop regular
+                        The ability to modify the standard set of services is a major benefit of working with Fly cleaner regular
                         cleaning in Edinburgh. When your regular cleaning plan is tailored to your needs,
                         you are paying precisely for the services you need. However, there are certain services our
                         cleaners don't provide. For example, our cleaners don't lift or move heavy objects,
@@ -2863,7 +2862,7 @@ const Services = () => {
                   <p>
                     Every house is unique, which is why our cleaners are encouraged to take a personalised approach.
                     Besides, different clients require different things and having your needs fully satisfied is our top priority.
-                    The ability to modify the standard set of services is a major benefit of working with eMop regular cleaning in Edinburgh.
+                    The ability to modify the standard set of services is a major benefit of working with Fly cleaner regular cleaning in Edinburgh.
                     When your regular cleaning plan is tailored to your needs, you are paying precisely for the services you need. However,
                     there are certain services our cleaners don't provide. For example, our cleaners don't lift or move heavy objects, do ironing, or
                     clean the back garden. If you want to discuss add-ons in detail, we are always happy to answer your questions.
@@ -2905,7 +2904,7 @@ const Services = () => {
                   <p>There are multiple tasks that people need to take care of every single day. As a result,
                     cleaning becomes a lesser priority and leads to a dirty and/or disorganised house.
                     To avoid that, hire a professional cleaner, as this will have a positive effect on your
-                    mental and physical well-being. eMop provides excellent cleaning services, which will make you
+                    mental and physical well-being. Fly cleaner provides excellent cleaning services, which will make you
                     wonder why you didn't do it sooner. It is quick, convenient, and affordable.
                     You will be surprised by how much a thoroughly cleaned house can improve the quality of your life.</p>
                 </div>
@@ -3057,10 +3056,9 @@ const Services = () => {
                   <div className="service-card">
                     <p style={{color:'navy'}}>Fly Upholstery cleaning in Edinburgh</p>
                     <p>We often neglect our upholstery, until we spill a drink or notice a big stain.
-                      Spillage and stains shouldn't be the only reasons to clean your upholstery. Y
-                      our sofa and armchairs can collect dirt and dust overtime. Imagine the amount of time you sat on it.
+                      Spillage and stains shouldn't be the only reasons to clean your upholstery. Your sofa and armchairs can collect dirt and dust overtime. Imagine the amount of time you sat on it.
                       Would you wear the same trousers for the same length of time? We wouldn't, and you wouldn't either! If not cleaned regularly,
-                      furniture such as sofas and armchairs can become a breeding ground for bacteria and germs. eMop's upholstery
+                      furniture such as sofas and armchairs can become a breeding ground for bacteria and germs. Fly cleaner's upholstery
                       cleaning service removes visible dirt from the surface, such as dust and debris. Our cleaners will also
                       remove any stains on your furniture, using special stain removing products. eMop's cleaning solution
                       includes removal of bad odour - this can be particularly a
@@ -4985,7 +4983,7 @@ const Services = () => {
                   <div className="service-card">
                     <h3>Bathroom Cleaning Checklist</h3>
                     <p>
-                      For bathrooms of all sizes and shapes, eMop's professional bathroom cleaners take great delight in providing a thorough bathroom deep cleaning service.
+                      For bathrooms of all sizes and shapes, Fly cleaner professional bathroom cleaners take great delight in providing a thorough bathroom deep cleaning service.
                       When it comes to thoroughly keeping your bathroom clean, we don't cut corners. The typical checklist of our
                       bathroom cleaning service includes the following fundamental duties:
                     </p>
@@ -5110,7 +5108,6 @@ const Services = () => {
         setServiceName(state.id)
       }
     }
-    console.log(state?.id)
 
   }, [serviceName, tasklist, inspectionList, styleLeft1,styleLeft2,
     styleLeft3, styleLeft4, styleLeft5, styleLeft6, styleLeft7, styleRight1, styleRight2,
