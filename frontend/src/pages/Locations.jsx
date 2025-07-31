@@ -71,6 +71,16 @@ const Locations = () => {
         "Davidson Mains Park, 5 Quality Street, Edinburgh, EH4 5BP"
       ]
     },
+    {
+      id: 5,
+      postcode: "EH5",
+      name: "Trinity, Granton, Newhaven",
+      addresses: [
+        "Ocean Terminal, Ocean Drive, Edinburgh, EH6 6JJ",
+        "Newhaven Harbour, 24 Pier Place, Edinburgh, EH6 4LP",
+        "The Trinity Academy, Craighall Road, Edinburgh, EH6 4RT"
+      ]
+    },
   ]
 
   const allLocations = [
@@ -772,6 +782,17 @@ const Locations = () => {
     { id: 687, name: "Avonmore & Brook Green" }
 
   ]
+  const sampleLocations = [
+    { id: "sl", name: "South London" },
+    { id: "cl", name: "Central London" },
+    { id: "nl", name: "North London" },
+    { id: "el", name: "East London" },
+    { id: "wl", name: "West London" },
+    { id: "nel", name: "North East London" },
+    { id: "nwl", name: "North West London" },
+    { id: "swl", name: "South West London" },
+    { id: "sel", name: "South East London" }
+  ];
   allLocations.toSorted()
 
   const edinburghDistricts = [
@@ -974,17 +995,87 @@ const Locations = () => {
         "Dalmeny House, South Queensferry, EH30 9TQ",
         "Hopetoun Farm Shop, South Queensferry, EH30 9SL"
       ]
-    }
+    },
+
+    {
+      id: 21,
+      name: "Duddingston",
+    },
+    {
+      id: 22,
+      name: "East Craigs",
+    },
+    {
+      id: 23,
+      name: "Ferniehill",
+    },
+    {
+      id: 24,
+      name: "Gogar",
+    },
+    {
+      id: 25,
+      name: "Ingliston",
+    },
+    {
+      id: 26,
+      name: "Kaimes",
+    },
+    {
+      id: 27,
+      name: "Liberton (Greater)",
+    },
+    {
+      id: 28,
+      name: "Little France",
+    },
+    {
+      id: 29,
+      name: "Mayfield",
+    },
+    {
+      id: 30,
+      name: "Moredun",
+    },
+    {
+      id: 31,
+      name: "King's Knowe",
+    },
+    {
+      id: 32,
+      name: "Muirhouse",
+    },
+    {
+      id: 33,
+      name: "Oxgangs",
+    },
+    {
+      id: 34,
+      name: "Pentland Hills",
+    },
+    {
+      id: 35,
+      name: "Ratho Station",
+    },
+    {
+      id: 36,
+      name: "Sighthill",
+    },
+    {
+      id: 37,
+      name: "Slateford",
+    },
+    {
+      id: 38,
+      name: "Swanston",
+    },
+    {
+      id: 39,
+      name: "The Inch",
+    },
+
   ];
   const edinburghLocations = [
-    {
-      id: 1,
-      name: "Edinburgh City Centre",
-    },
-    {
-      id: 2,
-      name: "Leith",
-    },
     {
       id: 3,
       name: "Portobello",
@@ -1002,30 +1093,28 @@ const Locations = () => {
       name: "Stockbridge",
     },
     {
-      id: 7,
-      name: "New Town",
+      id: 31,
+      name: "Bingham",
     },
     {
-      id: 8,
-      name: "Corstorphine",
+      id: 32,
+      name: "Blackhall",
     },
     {
-      id: 9,
-      name: "South Queensferry",
+      id: 33,
+      name: "Bonaly",
+    },
+    {
+      id: 34,
+      name: "Burghmuirhead",
+    },
+    {
+      id: 40,
+      name: "West Pilton",
     }
   ];
 
-  const sampleLocations = [
-    { id: "sl", name: "South London" },
-    { id: "cl", name: "Central London" },
-    { id: "nl", name: "North London" },
-    { id: "el", name: "East London" },
-    { id: "wl", name: "West London" },
-    { id: "nel", name: "North East London" },
-    { id: "nwl", name: "North West London" },
-    { id: "swl", name: "South West London" },
-    { id: "sel", name: "South East London" }
-  ];
+
 
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
