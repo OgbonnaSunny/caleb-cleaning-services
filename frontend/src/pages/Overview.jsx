@@ -284,33 +284,33 @@ const Overview = () => {
                 </div>
             </section>
 
-            <section className={["about-section", "main-banner"].join(" ")}>
-                <h2 className={'experience-text'} style={{textAlign:'center'}}>Why Choose Fly Cleaners</h2>
+            <section className={["container", "main-banner"].join(" ")}>
+                <h2 className={'experience-text'} style={{textAlign:'center', marginTop:'30px', marginBottom:'15px'}}>Why Choose Fly Cleaners</h2>
                 <div className="burden-container">
                     <div className="about-content">
-                        <ul className="features-list">
-                            <li>
+                        <ul style={{padding:'10px'}}>
+                            <li style={{margin:'10px'}}>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
                                     <h4 style={{color:'blue', textAlign:'start'}}>Fully Insured Professionals</h4>
                                     <p>All our cleaners are vetted, insured, and trained to the highest standards</p>
                                 </div>
                             </li>
-                            <li>
+                            <li style={{margin:'10px'}}>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
                                     <h4 style={{color:'blue'}}>Flexible Scheduling</h4>
                                     <p>We work around your schedule with daily, weekly, or monthly options</p>
                                 </div>
                             </li>
-                            <li>
+                            <li style={{margin:'10px'}}>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
                                     <h4 style={{color:'blue'}}>Eco-Friendly Options</h4>
                                     <p>Choose from our range of environmentally friendly cleaning products</p>
                                 </div>
                             </li>
-                            <li>
+                            <li style={{margin:'10px'}}>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
                                     <h4 style={{color:'blue'}}>Satisfaction Guaranteed</h4>
@@ -323,7 +323,7 @@ const Overview = () => {
                         <img src={FlyCleaner} alt="Professional cleaner" className={'cart-image4'} />
                         <div className="experience-badge">
                             <span>10+</span>
-                            <p>Years Experience</p>
+                            <p style={{padding:'3px'}}>Years Experience</p>
                         </div>
                     </div>
                 </div>
@@ -332,7 +332,7 @@ const Overview = () => {
             <section className={["testimonials-section", "main-banner"].join(" ")}>
                 <div className="container">
                     <div className="section-header">
-                        <h2>What Our Clients Say</h2>
+                        <h1 className={'experience-text'}>What Our Clients Say</h1>
                         <p>Don't just take our word for it - hear from our satisfied customers</p>
                     </div>
                     <div className="burden-container">
