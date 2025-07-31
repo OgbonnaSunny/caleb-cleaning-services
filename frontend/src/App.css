@@ -1797,6 +1797,18 @@ locations-hero {
 .words-container::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+@media (max-width: 768px) {
+  .words-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 7px;
+    padding:5px 0;
+    flex-grow: 1;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For IE and Edge */
+  }
+}
 
 .word-item {
   padding: 8px 16px;
@@ -1811,7 +1823,7 @@ locations-hero {
  .word-item {
    padding: 4px 8px;
    background-color: #f0f0f0;
-   border-radius: 20px;
+   border-radius: 10px;
    box-shadow: var(--shadow);
    white-space: nowrap;
    font-size: 10px;

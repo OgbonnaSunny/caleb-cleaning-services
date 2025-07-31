@@ -5154,11 +5154,11 @@ const Services = () => {
                 <div className="words-container" ref={scrollContainerRef}>
                   {services.map( serviceItem => (
                       <div key={serviceItem.id} >
-                        <button style={serviceName === serviceItem.title ? active: notActive}
+                        <div style={serviceName === serviceItem.title ? active: notActive}
                                 onClick={() => {setServiceName(serviceItem.title); setServiceDesc(serviceItem.description)}}
                                 className="word-item">
                           {serviceItem.title}
-                        </button>
+                        </div>
                       </div>
                   ))}
                 </div>
