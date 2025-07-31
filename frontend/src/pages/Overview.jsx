@@ -123,7 +123,7 @@ const Overview = () => {
         {id:'one-off', name: 'One-off domestic cleaning', price: 'from £19/h', desc:'A comprehensive deep cleaning of the entire property, including thorough cleaning of bathrooms, kitchens, living areas, and bedrooms, as well as dusting and vacuuming throughout.'}]
 
     const stages = [
-        {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Enter error','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
+        {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
         {id:'pay', src: Currency, stage:'Stage 2', name: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
         {id:'manage',src: Manage,  stage: 'Stage 3', name: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
             ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use MyAccount on our website or the eMop App to keep track of your booking']}
@@ -240,7 +240,7 @@ const Overview = () => {
                     <div className={'main-banner'}>
                         <h2 style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
                         <div>
-                            <div className="services-grid">
+                            <div className="burden-container">
                                 {stages.map(stage => (
                                     <div key={stage.id} className="service-card">
                                         <img src={stage.src} alt="" className={'cart-image'}/>
@@ -273,7 +273,7 @@ const Overview = () => {
                     </div>
 
                     <div className={'main-banner'} style={{marginTop:'30px'}}>
-                        <h3 style={{textAlign:'center'}}>Why Fly cleaners?</h3>
+                        <h3 style={{textAlign:'center', marginBottom:'20px'}}>Why Fly cleaners?</h3>
                         <div className='image-container'>
                             <img src={OfficeCleaner} alt={"cleaner"} className="image-display" />
                             <p style={{alignContent:'center', marginTop:'10px', marginLeft:'10px', maxWidth:'600px'}}>
@@ -285,42 +285,42 @@ const Overview = () => {
             </section>
 
             <section className={["about-section", "main-banner"].join(" ")}>
-                <div className="container">
+                <h2 className={'experience-text'} style={{textAlign:'center'}}>Why Choose Fly Cleaners</h2>
+                <div className="burden-container">
                     <div className="about-content">
-                        <h2 style={{textAlign:'center'}}>Why Choose Fly Cleaners</h2>
                         <ul className="features-list">
                             <li>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
-                                    <h4>Fully Insured Professionals</h4>
+                                    <h4 style={{color:'blue', textAlign:'start'}}>Fully Insured Professionals</h4>
                                     <p>All our cleaners are vetted, insured, and trained to the highest standards</p>
                                 </div>
                             </li>
                             <li>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
-                                    <h4>Flexible Scheduling</h4>
+                                    <h4 style={{color:'blue'}}>Flexible Scheduling</h4>
                                     <p>We work around your schedule with daily, weekly, or monthly options</p>
                                 </div>
                             </li>
                             <li>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
-                                    <h4>Eco-Friendly Options</h4>
+                                    <h4 style={{color:'blue'}}>Eco-Friendly Options</h4>
                                     <p>Choose from our range of environmentally friendly cleaning products</p>
                                 </div>
                             </li>
                             <li>
                                 <i className="fas fa-check-circle"></i>
                                 <div>
-                                    <h4>Satisfaction Guarantee</h4>
+                                    <h4 style={{color:'blue'}}>Satisfaction Guaranteed</h4>
                                     <p>If you're not happy, we'll come back and fix it at no extra cost</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
                     <div className="about-image">
-                        <img src={FlyCleaner} alt="Professional cleaner" />
+                        <img src={FlyCleaner} alt="Professional cleaner" className={'cart-image4'} />
                         <div className="experience-badge">
                             <span>10+</span>
                             <p>Years Experience</p>
@@ -335,7 +335,7 @@ const Overview = () => {
                         <h2>What Our Clients Say</h2>
                         <p>Don't just take our word for it - hear from our satisfied customers</p>
                     </div>
-                    <div className="testimonials-grid">
+                    <div className="burden-container">
                         {testimonials.map(testimonial => (
                             <div key={testimonial.id} className="testimonial-card">
                                 <div className="rating">
@@ -356,7 +356,7 @@ const Overview = () => {
                 <div className="container">
                     <div className="burden-container">
                         <div className="contact-content">
-                            <h2>Ready to Transform Your Space?</h2>
+                            <h1 className={'experience-text'}>Ready to Transform Your Space?</h1>
                             <p>Contact us today for a free, no-obligation quote</p>
                             <div className="contact-methods">
                                 <div className="contact-method">

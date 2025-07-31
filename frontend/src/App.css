@@ -92,6 +92,15 @@ img {
   margin-bottom: 50px;
 }
 
+@media (max-width: 768px) {
+  .section-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+  }
+}
+
 .section-header h2 {
   font-size: 2.5rem;
   margin-bottom: 15px;
@@ -552,7 +561,7 @@ img {
 .experience-badge {
   position: absolute;
   bottom: -20px;
-  right: -20px;
+  right: 300px;
   background-color: var(--primary-color);
   color: white;
   width: 120px;
@@ -561,8 +570,35 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   justify-content: center;
   box-shadow: var(--shadow);
+}
+.experience-text {
+  font-size: xx-large;
+}
+
+@media (max-width: 768px) {
+  .experience-text {
+    font-size: medium;
+  }
+  .experience-badge {
+    position: absolute;
+    bottom: -20px;
+    right: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    font-size: small;
+    justify-content: center;
+    box-shadow: var(--shadow);
+  }
 }
 
 .experience-badge span {
@@ -694,6 +730,14 @@ img {
   font-size: 1.8rem;
   margin-bottom: 25px;
   color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .contact-form h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+  }
 }
 
 .form-row {
@@ -898,7 +942,8 @@ img {
 
   .about-image {
     order: -1;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
+    padding: 20px;
   }
 }
 
