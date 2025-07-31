@@ -430,7 +430,7 @@ const Become = () => {
 
             <section className={'main-banner'}>
                 <div className={'container'}>
-                    <h2 className={'help-text'} style={{textAlign:'center', marginBottom:'30px', color:'navy'}}>Benefits of joining Fly Cleaner</h2>
+                    <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'30px', color:'navy', marginTop:'20px'}}>Benefits of joining Fly Cleaner</h2>
                     <div className={'grid-container'}>
                         {cleanerBenefits.map((benefit) => (
                             <div className={'price-container'} key={benefit.id}>
@@ -444,7 +444,7 @@ const Become = () => {
 
             <section className={'main-banner'}>
                 <div className={'container'}>
-                    <h2 className={'help-text'} style={{textAlign:'center', color:'navy'}}>To get you started</h2>
+                    <h2 className={'experience-text'} style={{textAlign:'center', color:'navy', marginTop:'20px'}}>To get you started</h2>
                     <p style={{textAlign:'center'}}>To work with Fly cleaner you need to</p>
                     <div className={'grid-container'}>
                         {becomeAcleaner.map((cleaner) => (
@@ -471,7 +471,7 @@ const Become = () => {
                     <div className={'idea-container'}>
                         <img src={Meeting} alt={"cleaners"} className={'cart-image2'}/>
                         <div className="price-container">
-                            <h2 className={'help-text'} style={{textAlign:'center'}}>Requirements</h2>
+                            <h2 className={'experience-text'} style={{textAlign:'center'}}>Requirements</h2>
                             <p>To work with Fly Cleaner you need to</p>
                             <ul className={'dot-list'}>
                                 <li>Be 18+ years old</li>
@@ -493,7 +493,7 @@ const Become = () => {
             </section>
 
             <section className={['main-banner', 'container'].join(' ')}>
-                <h1 className={'help-text'} style={{textAlign:'center', color:'navy'}}>Your safety at work is our priority</h1>
+                <h1 className={'experience-text'} style={{textAlign:'center', color:'navy', marginTop:'20px'}}>Your safety at work is our priority</h1>
                 <div style={{marginBottom:'30px'}}>
                     <label className="custom-checkbox">
                         <input
@@ -558,7 +558,7 @@ const Become = () => {
             <section className={['container', 'main-banner'].join(' ')}>
                 <div className="cleaner-registration">
                     <div className="registration-header" ref={containerRef}>
-                        <h1 className={'help-text'} style={{textAlign:'center', color:'navy'}}>Register as a Cleaner</h1>
+                        <h1 className={'experience-text'} style={{textAlign:'center', color:'navy'}}>Register as a Cleaner</h1>
                         <p style={{textAlign:'center'}}>Join our platform and start earning today</p>
                     </div>
 

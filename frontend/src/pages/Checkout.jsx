@@ -786,6 +786,106 @@ const Checkout = () => {
                 "Dalmeny House, South Queensferry, EH30 9TQ",
                 "Hopetoun Farm Shop, South Queensferry, EH30 9SL"
             ]
+        },
+        {
+            id: 21,
+            postcode: "EH18",
+            name: "Lasswade",
+            addresses: [
+                "Lasswade High School, Eskdale Drive, Lasswade, EH18 1PB",
+                "Danderhall Medical Centre, 1 Oak Lane, Danderhall, EH18 1BU",
+                "Polton Mill, Lasswade Road, EH18 1PP"
+            ]
+        },
+        {
+            id: 22,
+            postcode: "EH19",
+            name: "Bonnyrigg",
+            addresses: [
+                "Bonnyrigg Town Hall, High Street, Bonnyrigg, EH19 2AE",
+                "Lochrin Kennels, 22 Broomieknowe, Bonnyrigg, EH19 2JG",
+                "Newbattle Abbey College, Newbattle Road, EH19 3JA"
+            ]
+        },
+        {
+            id: 23,
+            postcode: "EH20",
+            name: "Loanhead",
+            addresses: [
+                "Loanhead Leisure Centre, Clerk Street, Loanhead, EH20 9DR",
+                "IKEA Edinburgh, Straiton Retail Park, EH20 9PW",
+                "Pentland Hills Regional Park, EH20 9QZ"
+            ]
+        },
+        {
+            id: 24,
+            postcode: "EH21",
+            name: "Musselburgh",
+            addresses: [
+                "Musselburgh Racecourse, Linkfield Road, EH21 7RG",
+                "The Brunton Theatre, Ladywell Way, EH21 6AA",
+                "Musselburgh Golf Club, Monktonhall, EH21 6SW"
+            ]
+        },
+        {
+            id: 25,
+            postcode: "EH22",
+            name: "Dalkeith",
+            addresses: [
+                "Dalkeith Country Park, EH22 2NA",
+                "St David's RC High School, Cousland Road, EH22 2PS",
+                "Eskmills Railway Station, EH22 1AG"
+            ]
+        },
+        {
+            id: 26,
+            postcode: "EH23",
+            name: "Gorebridge",
+            addresses: [
+                "Gorebridge Leisure Centre, Hunterfield Road, EH23 4TT",
+                "Arniston House, Gorebridge, EH23 4RY",
+                "Newtongrange Railway Station, EH23 4LF"
+            ]
+        },
+        {
+            id: 27,
+            postcode: "EH24",
+            name: "Roslin",
+            addresses: [
+                "Rosslyn Chapel, Chapel Loan, EH25 9PU",
+                "Roslin Institute, EH25 9RG",
+                "Bilston Glen Industrial Estate, EH25 9SP"
+            ]
+        },
+        {
+            id: 28,
+            postcode: "EH25",
+            name: "Roslin",
+            addresses: [
+                "Roslyn Glen Country Park, EH25 9LX",
+                "Eskview Medical Centre, 1 Eskview Terrace, EH25 9JA",
+                "Roslin War Memorial, EH25 9PX"
+            ]
+        },
+        {
+            id: 29,
+            postcode: "EH26",
+            name: "Easter Bush",
+            addresses: [
+                "The Royal (Dick) School of Veterinary Studies, EH25 9RG",
+                "Bush House, Easter Bush Campus, EH25 9RG",
+                "Pentland Hills Walking Routes, EH26 0PJ"
+            ]
+        },
+        {
+            id: 30,
+            postcode: "EH27",
+            name: "Kirknewton",
+            addresses: [
+                "Kirknewton War Memorial, EH27 8DA",
+                "East Calder Library, Langton Road, EH27 8DQ",
+                "Harperrig Reservoir, EH27 8DN"
+            ]
         }
     ];
 

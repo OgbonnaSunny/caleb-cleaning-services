@@ -1075,6 +1075,162 @@ const Locations = () => {
       name: "The Inch",
     },
 
+    {
+      id: 40,
+      postcode: "EH18",
+      name: "Lasswade",
+      addresses: [
+        "Lasswade High School, Eskdale Drive, Lasswade, EH18 1PB",
+        "Danderhall Medical Centre, 1 Oak Lane, Danderhall, EH18 1BU",
+        "Polton Mill, Lasswade Road, EH18 1PP"
+      ]
+    },
+    {
+      id: 41,
+      postcode: "EH19",
+      name: "Bonnyrigg",
+      addresses: [
+        "Bonnyrigg Town Hall, High Street, Bonnyrigg, EH19 2AE",
+        "Lochrin Kennels, 22 Broomieknowe, Bonnyrigg, EH19 2JG",
+        "Newbattle Abbey College, Newbattle Road, EH19 3JA"
+      ]
+    },
+    {
+      id: 42,
+      postcode: "EH20",
+      name: "Loanhead",
+      addresses: [
+        "Loanhead Leisure Centre, Clerk Street, Loanhead, EH20 9DR",
+        "IKEA Edinburgh, Straiton Retail Park, EH20 9PW",
+        "Pentland Hills Regional Park, EH20 9QZ"
+      ]
+    },
+    {
+      id: 43,
+      postcode: "EH21",
+      name: "Musselburgh",
+      addresses: [
+        "Musselburgh Racecourse, Linkfield Road, EH21 7RG",
+        "The Brunton Theatre, Ladywell Way, EH21 6AA",
+        "Musselburgh Golf Club, Monktonhall, EH21 6SW"
+      ]
+    },
+    {
+      id: 44,
+      postcode: "EH22",
+      name: "Dalkeith",
+      addresses: [
+        "Dalkeith Country Park, EH22 2NA",
+        "St David's RC High School, Cousland Road, EH22 2PS",
+        "Eskmills Railway Station, EH22 1AG"
+      ]
+    },
+    {
+      id: 45,
+      postcode: "EH23",
+      name: "Gorebridge",
+      addresses: [
+        "Gorebridge Leisure Centre, Hunterfield Road, EH23 4TT",
+        "Arniston House, Gorebridge, EH23 4RY",
+        "Newtongrange Railway Station, EH23 4LF"
+      ]
+    },
+    {
+      id: 46,
+      postcode: "EH24",
+      name: "Roslin",
+      addresses: [
+        "Rosslyn Chapel, Chapel Loan, EH25 9PU",
+        "Roslin Institute, EH25 9RG",
+        "Bilston Glen Industrial Estate, EH25 9SP"
+      ]
+    },
+    {
+      id: 47,
+      postcode: "EH25",
+      name: "Roslin",
+      addresses: [
+        "Roslyn Glen Country Park, EH25 9LX",
+        "Eskview Medical Centre, 1 Eskview Terrace, EH25 9JA",
+        "Roslin War Memorial, EH25 9PX"
+      ]
+    },
+    {
+      id: 48,
+      postcode: "EH26",
+      name: "Easter Bush",
+      addresses: [
+        "The Royal (Dick) School of Veterinary Studies, EH25 9RG",
+        "Bush House, Easter Bush Campus, EH25 9RG",
+        "Pentland Hills Walking Routes, EH26 0PJ"
+      ]
+    },
+    {
+      id: 49,
+      postcode: "EH27",
+      name: "Kirknewton",
+      addresses: [
+        "Kirknewton War Memorial, EH27 8DA",
+        "East Calder Library, Langton Road, EH27 8DQ",
+        "Harperrig Reservoir, EH27 8DN"
+      ]
+    },
+       // council
+    { id: 50, name: "Midlothian", type: "Council Area", notable: "Local government region south of Edinburgh" },
+    { id: 51, name: "Dalkeith", type: "Town", notable: "Historic county town with Dalkeith Palace" },
+    { id: 52, name: "Bonnyrigg", type: "Town", notable: "Former mining town, now a residential hub" },
+    { id: 53, name: "Penicuik", type: "Town", notable: "Former paper-mill town near Pentland Hills" },
+    { id: 54, name: "Loanhead", type: "Town", notable: "Home to Straiton Retail Park" },
+    { id: 55, name: "Gorebridge", type: "Town", notable: "Arniston House estate" },
+    { id: 56, name: "Newtongrange", type: "Village", notable: "National Mining Museum Scotland" },
+    { id: 57, name: "Roslin", type: "Village", notable: "Rosslyn Chapel and Roslin Institute" },
+    { id: 58, name: "Bilston", type: "Village", notable: "Bilston Glen Viaduct" },
+    { id: 59, name: "Lasswade", type: "Village", notable: "Polton Mill and scenic river walks" },
+
+    // Villages (IDs 60-79)
+    { id: 60, name: "Mayfield", type: "Village", notable: "Post-war residential development" },
+    { id: 61, name: "Eskbank", type: "Village", notable: "Eskbank Railway Station (heritage line)" },
+    { id: 62, name: "Auchendinny", type: "Village", notable: "18th-century paper mill ruins" },
+    { id: 63, name: "Temple", type: "Village", notable: "Knights Templar connections" },
+    { id: 64, name: "Carrington", type: "Village", notable: "Rural farmland and Carrington Church" },
+    { id: 65, name: "Rosewell", type: "Village", notable: "Roslin Glen Country Park access" },
+    { id: 66, name: "Pathhead", type: "Village", notable: "Pathhead Sands and Prestonhall Estate" },
+    { id: 67, name: "Fushiebridge", type: "Hamlet", notable: "Fushiebridge Inn and Fala Flow" },
+    { id: 68, name: "North Middleton", type: "Village", notable: "Middleton Limeworks" },
+    { id: 69, name: "Glencreg", type: "Hamlet", notable: "Glencreg House" },
+    { id: 70, name: "Howgate", type: "Hamlet", notable: "Howgate Inn (historic coaching stop)" },
+    { id: 71, name: "Edinburgh Airport", type: "Area", notable: "Technically in West Lothian but serves Midlothian" },
+    { id: 72, name: "Borthwick", type: "Village", notable: "Borthwick Castle (15th-century fortress)" },
+    { id: 73, name: "Crichton", type: "Village", notable: "Crichton Collegiate Church" },
+    { id: 74, name: "Vogrie", type: "Hamlet", notable: "Vogrie Country Park" },
+    { id: 75, name: "Tynewater", type: "Village", notable: "Tyneholm Farm" },
+    { id: 76, name: "Newlandrig", type: "Hamlet", notable: "Small farming community" },
+    { id: 77, name: "Edgehead", type: "Village", notable: "Near A68 scenic route" },
+    { id: 78, name: "Tynedale", type: "Area", notable: "Tyne Valley walks" },
+    { id: 79, name: "Fala", type: "Village", notable: "Fala Flow moorland" },
+
+    // Historical/Outlying Areas (IDs 80-99)
+    { id: 80, name: "Arniston", type: "Estate", notable: "Arniston House (historic mansion)" },
+    { id: 81, name: "Prestonhall", type: "Estate", notable: "Prestonhall House" },
+    { id: 82, name: "Polton", type: "Village", notable: "Polton Mill and River North Esk" },
+    { id: 83, name: "Temple Kirk", type: "Ruins", notable: "Medieval church ruins" },
+    { id: 84, name: "Birkenside", type: "Hamlet", notable: "Birkenside House" },
+    { id: 85, name: "Sheriffhall", type: "Junction", notable: "Major road interchange" },
+    { id: 86, name: "Smeaton", type: "Hamlet", notable: "Smeaton House" },
+    { id: 87, name: "Easter Howgate", type: "Hamlet", notable: "Near Howgate Inn" },
+    { id: 88, name: "Oatslie", type: "Area", notable: "Residential part of Penicuik" },
+    { id: 89, name: "Hillend", type: "Area", notable: "Hillend Ski Centre (Pentlands)" },
+    { id: 90, name: "Nine Mile Burn", type: "Hamlet", notable: "Scenic stop on A702" },
+    { id: 91, name: "Silverburn", type: "Park", notable: "Silverburn Park in Penicuik" },
+    { id: 92, name: "Glencorse", type: "Area", notable: "Glencorse Barracks" },
+    { id: 93, name: "Mortonhall", type: "Estate", notable: "Mortonhall Caravan Park" },
+    { id: 94, name: "Gowkley Moss", type: "Landmark", notable: "Peatland area" },
+    { id: 95, name: "Cauldcoats", type: "Hamlet", notable: "Near Gorebridge" },
+    { id: 96, name: "Ford", type: "Hamlet", notable: "Fordel Hill" },
+    { id: 97, name: "Salters Road", type: "Area", notable: "Industrial zone in Dalkeith" },
+    { id: 98, name: "Eldindean", type: "Farm", notable: "Rural farmland" },
+    { id: 99, name: "Glenholm", type: "Valley", notable: "Remote glen in Pentlands"}
+
   ];
   const edinburghLocations = [
     {
@@ -1117,7 +1273,6 @@ const Locations = () => {
 
 
 
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [locations, setLocations] = useState(edinburghLocations);
   const [locationList, setLocationList] = useState(miniLocations2);
@@ -1139,10 +1294,15 @@ const Locations = () => {
 
 
   useEffect(() => {
+    const masterList = [];
+    masterList.push(...edinburghLocations);
+    masterList.push(...edinburghDistricts);
+    masterList.push(...allLocations);
+    masterList.push(...sampleLocations);
     if (searchTerm.trim() === '') {
       setFilteredLocations(locations);
     } else {
-      const filtered = locations.filter(location =>
+      const filtered = masterList.filter(location =>
           location.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredLocations(filtered);
@@ -1216,6 +1376,16 @@ const Locations = () => {
     navigate('/checkout', { state: { postcode: postcode } });
   };
 
+  const handleLocationSearch = (e) => {
+    e.preventDefault();
+    if (e.target.value.length > 0) {
+      setCleanerLocation(e.target.value);
+      return;
+    }
+    setSearchTerm('');
+    setCleanerLocation('');
+  }
+
   return (
       <div style={{
         display: 'flex',
@@ -1238,9 +1408,10 @@ const Locations = () => {
                     type="text"
                     placeholder="find cleaner closest to you"
                     value={cleanerLocation}
-                    onChange={(e) => setCleanerLocation(e.target.value)}
+                    onChange={handleLocationSearch}
                 />
-                <button className="search-button">
+                <button className="search-button"
+                onClick={(e) => setSearchTerm(cleanerLocation)}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                     <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                   </svg>

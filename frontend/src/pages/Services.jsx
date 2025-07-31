@@ -450,7 +450,7 @@ const Services = () => {
     {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
     {id:'pay', src: Currency, stage:'Stage 2', name: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
     {id:'manage',src: Manage,  stage: 'Stage 3', name: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
-        ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use MyAccount on our website or the eMop App to keep track of your booking']}
+        ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use our website to keep track of your booking']}
   ]
 
   const handServiceClick = (service) => {
@@ -5240,12 +5240,12 @@ const Services = () => {
             </div>
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px'}}>
+          <section className={'main-banner'} style={{marginTop:'50px', marginBottom:'30px'}}>
             <div className="container">
               <div>
                 <h2 style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
                 <div>
-                  <div className="services-grid">
+                  <div className="burden-container">
                     {stages.map(stage => (
                         <div key={stage.id} className="service-card">
                           <img src={stage.src} alt="" className={'cart-image'}/>
