@@ -5155,7 +5155,8 @@ const Services = () => {
                   {services.map( serviceItem => (
                       <div key={serviceItem.id} >
                         <button style={serviceName === serviceItem.title ? active: notActive}
-                                onClick={() => {setServiceName(serviceItem.title); setServiceDesc(serviceItem.description)}} className="word-item">
+                                onClick={() => {setServiceName(serviceItem.title); setServiceDesc(serviceItem.description)}}
+                                className="word-item">
                           {serviceItem.title}
                         </button>
                       </div>

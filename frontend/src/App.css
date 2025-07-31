@@ -1807,6 +1807,17 @@ locations-hero {
   font-size: 16px;
 }
 
+@media (max-width: 768px) {
+ .word-item {
+   padding: 4px 8px;
+   background-color: #f0f0f0;
+   border-radius: 20px;
+   box-shadow: var(--shadow);
+   white-space: nowrap;
+   font-size: 10px;
+ }
+}
+
 .scroll-button {
   background-color: #4CAF50;
   color: white;
