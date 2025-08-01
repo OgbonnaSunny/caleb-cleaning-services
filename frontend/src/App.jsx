@@ -35,6 +35,7 @@ import TenancyList from './pages/TenancyList.jsx';
 import CashBack from './pages/CashBack.jsx'
 import CheckoutHome from "./pages/CheckoutHome.jsx";
 import CleanerProfile from './pages/CleanerProfile.jsx';
+import { Navigate } from 'react-router-dom';
 
 function App() {
 
@@ -42,7 +43,7 @@ function App() {
         <div>
             <BrowserRouter>
                 <Navigation />
-                <Routes>
+                <Routes path="/frontend">
                     <Route path="/" element={<Overview />} />
                     <Route path="/cleanerprofile" element={<CleanerProfile/>} />
                     <Route path="/checkouthome" element={<CheckoutHome />} />
@@ -78,7 +79,7 @@ function App() {
                     <Route path="/booking" element={<Booking />} />
                     <Route path="/sitemap" element={<Sitemap />} />
                     <Route path="/admin" element={<Admin />} />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </BrowserRouter>
         </div>
