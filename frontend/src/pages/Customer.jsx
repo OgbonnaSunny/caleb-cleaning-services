@@ -1,13 +1,24 @@
 import React, {useState, useRef, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import LOGO from "../images/logo3.png";
 import { MdAdd, MdRemove,  MdArrowDownward, MdArrowUpward, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
-import {FaCertificate, FaFileAlt, FaPoundSign, FaQuestionCircle, FaUserTie} from "react-icons/fa";
+import {
+    FaCertificate,
+    FaFileAlt,
+    FaHome,
+    FaMapMarkerAlt,
+    FaPoundSign,
+    FaQuestionCircle,
+    FaUserTie
+} from "react-icons/fa";
+import api from "./api.js";
 
 
 const Customer = () => {
+    const navigate = useNavigate();
 
-    const topNavItems = ['Future Booking', 'History'];
+    const topNavItems = ['Active Booking', 'History'];
     const bottomNavItems = [
         {id: 1, name: 'Account'},
         {id: 2, name: 'Reward'},
@@ -36,49 +47,140 @@ const Customer = () => {
     }
 
     const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
+    const [booking, setBooking] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
+    const [history, setHistory] = useState([]);
+    const [newOrders, setNewOrders] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const NewOrders = () => {
+
+        return (
+            <div className={'support-page'}>
+                {isLoading ?
+                    <div className="progress-bar-container">
+                        <div className="spinner"></div>
+                        <p style={{textAlign:'center'}}>Loading data...</p>
+                    </div>
+                    : (newOrders.length <= 0 || newOrders === null) ?
+                        <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
+                            <p style={{textAlign:'center'}}>{message}</p>
+                        </div> :
+                        <div className="grid-container">
+                            {newOrders.map(order => (
+                                <div key={order.id}  className={'stat-card'}>
+                                    <p style={{textAlign:'center'}}>{order.orderId}</p>
+                                    <div className={'new-order-container'}>
+                                        <p style={{textAlign:'start'}}>{formatDate(order.bookDate)}</p>
+                                        <p style={{textAlign:'end',fontWeight:'900' }}>{order.plan}</p>
+                                    </div>
+                                    <div className={'new-order-container'}>
+                                        <FaMapMarkerAlt style={{width:'20px'}} />
+                                        <p style={{textAlign:'start', width:'15%'}}>EH66JN</p>
+                                        <p className={'truncate-text'}>{order.address}</p>
+                                        <FaHome onClick={() => navigate('/sitemap', {state: {address: order.address}})} style={{width:'30%'}} />
+                                    </div>
+                                    <div className={'new-order-container'}>
+                                        <p>Estimated duration</p>
+                                        <h4 style={{textAlign:'end'}}>{formatTime(order.duration)}</h4>
+                                    </div>
+                                    <div className={'new-order-container'}>
+                                        <p style={{flex:'1'}}>Estimated Amount</p>
+                                        <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
+                                    </div>
+                                    <button disabled={acceptingOrders}
+                                            onClick={() => acceptOrder(order.id)}
+                                            className={acceptingOrders ? 'back-button' : 'next-button'}>
+                                        Accept this job
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                }
+            </div>
+        );
+    }
 
     useEffect(() => {
-        /* const fetchCleanerData = () => {
+         const fetchCleanerData = () => {
              setIsLoading(true);
              const user1 = JSON.parse(localStorage.getItem('user'));
-             api.post('/api/users/record', {email: user1.email})
+             api.post('/api/booking/new-booking', {email: user1.email})
                  .then(response => {
-                     const { user } = response.data;
-                     if (user) {
-                         localStorage.setItem('user', JSON.stringify(user));
-                         setValue('personal', {
-                             ...getValues().personal,
-                             firstName: user.firstName,
-                             lastName: user.lastName,
-                             phone: user.phone,
-                             address: user.address,
-                             email: user.email,
-                             nationalInsurance: user.NIN,
-                             bio: user.bio,
-                             emergencyContact: user.emergency,
-                         });
-                         setValue('work', user.workExperience);
-                         setValue('availability', user.available);
-                         setValue('notifications', user.notification);
+                     const { booking } = response.data;
+                     if (booking) {
+                         setNewOrders(booking);
                      }
                      else {
-                         setSuccessMessage('Error updating user');
-                         setBgColor('red');
+                         setMessage('Error updating user');
                      }
                  })
                  .catch(error => {
-                     if (error.response.status === 401 && (user1.email === null || user1.email === undefined)) {
-                         setSuccessMessage('User with the specified username not found');
-                         return;
-                     }
-                     setSuccessMessage('Error fetching profile data')
+                     setMessage('Error fetching new ordder')
                  })
                  .finally(() => {
                      setIsLoading(false);
                  })
          };
-         fetchCleanerData();*/
+         fetchCleanerData()
     }, []);
+
+    useEffect(() => {
+
+    })
+
+    const handleNewOrder = () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            navigate('/checkout');
+            return;
+        }
+        setMessage('User data not found');
+    }
+
+    const History = () => {
+        return (
+            <div className={'support-page'}>
+                {loadingHistory ?
+                    <div className="progress-bar-container">
+                        <div className="spinner"></div>
+                        <p style={{textAlign:'center'}}>Loading data...</p>
+                    </div>
+                    : (history.length <= 0 || history === null) ?
+                        <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
+                            <p style={{textAlign:'center'}}>{message}</p>
+                        </div> :
+                        <div className="grid-container">
+                            {history.map(order => (
+                                <div key={order.id} className={'price-container'} >
+                                    <p style={{textAlign:'center'}}>{order.orderId}</p>
+                                    <div className={'order-container'}>
+                                        <h4 style={{width:'40%'}}>Customer</h4>
+                                        <h3 style={{textAlign:'end'}}>{order.customer}</h3>
+                                    </div>
+
+                                    <div className={'order-container'}>
+                                        <h4 style={{width:'50%'}}>Amount</h4>
+                                        <h3 style={{textAlign:'end'}}>£{order.estimatedAmount}</h3>
+                                    </div>
+
+                                    <div className={'order-container'}>
+                                        <h4 style={{width:'50%'}}>Duration</h4>
+                                        <h3 style={{textAlign:'end'}}>{formatTime(order.duration)}</h3>
+                                    </div>
+
+                                    <div className={'order-container'}>
+                                        <h4 style={{width:'50%'}}>Date</h4>
+                                        <h3 style={{textAlign:'end'}}>{formatTime(order.completedDate)}</h3>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                }
+            </div>
+        );
+    }
 
 
     return (
@@ -89,10 +191,10 @@ const Customer = () => {
                     {topNavItems.map((item, index) => (
                         <div key={`top-${index}`} className="nav-order-item"
                              onClick={() => setActiveMenu(item)}>
-                            <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
+                            <h3  style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
                         </div>
                     ))}
-                    <MdAdd />
+                    <MdAdd onClick={handleNewOrder}  size={50} style={{width:'40px' , marginRight:'10px'}}/>
                 </div>
             </nav>
 
