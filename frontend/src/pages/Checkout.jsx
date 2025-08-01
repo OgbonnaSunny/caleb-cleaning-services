@@ -2078,6 +2078,13 @@ const Checkout = () => {
     }
 
     const updateBookingOnDatabase =  async () => {
+        const customerData = JSON.parse(localStorage.getItem('user'));
+        if (!customerData) {
+            return;
+        }
+
+        const customerEmail = customerData.email;
+
 
         const orderId = await getOrderId();
 
@@ -2119,7 +2126,7 @@ const Checkout = () => {
              clientSecret: clientSecret,
              nature: formData.nature,
              plan: formData.plan,
-             email: formData.email,
+             email: customerEmail,
              rate: formData.rate,
              timeCompleted: '',
              extraTime: 0,
@@ -2144,6 +2151,7 @@ const Checkout = () => {
             assignedCleanerName: '',
             assignedCleanerEmail: '',
             assignedCleanerPhone: '',
+            customerEmail: customerEmail,
         };
 
         api.post('/api/booking', orderData )

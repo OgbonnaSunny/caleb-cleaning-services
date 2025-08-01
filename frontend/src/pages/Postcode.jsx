@@ -41,10 +41,6 @@ const Postcode = () => {
         checkPostcodeExists(postcode);
     }
 
-// Example usage
-    const currentPostcode = "SW1A 1AA";
-    console.log(isValidUKPostcodeFormat(currentPostcode)); // true
-
 
 // Example usage
     checkPostcodeExists("SW1A 1AA").then( exists => {

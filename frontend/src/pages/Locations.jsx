@@ -1291,10 +1291,17 @@ const Locations = () => {
 
   useEffect(() => {
     const masterList = [];
-    masterList.push(...edinburghLocations);
-    masterList.push(...edinburghDistricts);
-    masterList.push(...allLocations);
-    masterList.push(...sampleLocations);
+    if (edin) {
+      masterList.push(...edinburghLocations);
+      masterList.push(...edinburghDistricts);
+    }
+    if (more) {
+      masterList.push(...edinburghLocations);
+      masterList.push(...edinburghDistricts);
+      masterList.push(...allLocations);
+      masterList.push(...sampleLocations);
+    }
+
     if (searchTerm.trim() === '') {
       setFilteredLocations(locations);
     } else {

@@ -1,7 +1,6 @@
 import { useParams, useLocation} from 'react-router-dom'
 import React, {useState, useEffect} from "react";
 import Footer from "./CityFooter.jsx";
-import services from "./Services.jsx";
 import Domestic from '../images/domestic.png'
 import Upholstery from '../images/upholstery2.png'
 import Regular from '../images/regular.png'
@@ -23,22 +22,19 @@ import Shelf from '../images/shelf.png'
 import Bed from '../images/bed.png'
 import Neat from '../images/neat.png'
 import Kept from '../images/kept.png'
-import {IoArrowUp, IoArrowDown } from 'react-icons/io5'
-import { IoMdArrowDown, IoMdArrowUp } from 'react-icons/io'
 import { FaArrowLeft, FaArrowRight  } from 'react-icons/fa';
 import Sweeping from "../images/sweeping.png";
 import Arranged from "../images/arranged.png";
+import { isValidUKPostcodeFormat, checkPostcodeExists } from './Postcode.jsx'
+import { useNavigate } from 'react-router-dom';
 
 const City = () => {
+    const navigate = useNavigate();
     const location  = useLocation();
      const state  = location?.state;
      const [city, setCity] = useState(state?.name)
      const [quote, setQuote] = useState("");
-
-     const [isClicked, setIsClicked] = useState(false);
-     const [buttonText, setButtonText] = useState("Show");
-
-     const [question1, setQuestion1] = useState('');
+    const [question1, setQuestion1] = useState('');
      const [question2, setQuestion2] = useState('');
      const [question3, setQuestion3] = useState('');
      const [question4, setQuestion4] = useState('');
@@ -86,6 +82,13 @@ const City = () => {
         width: '60px',
         color: 'navy',
     });
+    const [postcode1, setPostcode1] = useState('');
+    const [postcode2, setPostcode2] = useState('');
+    const [postcode3, setPostcode3] = useState('');
+    const [postcode4, setPostcode4] = useState('');
+    const [postcode5, setPostcode5] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const HandQuote = () => {}
 
@@ -201,6 +204,34 @@ const City = () => {
 
     }
 
+    const handleSubmit = (postcode) => {
+        if (loading) return;
+        setLoading(true)
+        setError(null)
+        if (!postcode.trim()) {
+            setError('Please enter a postcode');
+            setLoading(false)
+            window.scroll({top: 0, behavior: 'smooth'});
+            return;
+        }
+        if (!isValidUKPostcodeFormat(postcode)) {
+            setError(`${postcode} is not a valid postcode`);
+            setLoading(false)
+            window.scroll({top: 0, behavior: 'smooth'});
+            return;
+        }
+        checkPostcodeExists(postcode).then(exists => {
+            if (!exists) {
+                setError(`${postcode} does not exist`);
+                window.scroll({top: 0, behavior: 'smooth'});
+                setLoading(false)
+                return;
+            }
+        })
+        setLoading(false)
+        navigate('/checkout', { state: { postcode: postcode } });
+    };
+
 
     return (
         <div style={{
@@ -210,15 +241,17 @@ const City = () => {
         }}>
             <section>
                 <div className={'container'}>
-                    <h2 style={{textAlign:'center', margin:'20px', color:'navy'}}>{`Domestic cleaning services in ${city}`}</h2>
+                    {error && <p style={{textAlign:'center'}} className={'error-message'}>{error}</p>}
+                    <h2 className={'experience-text'} style={{textAlign:'center', margin:'20px', color:'navy'}}>{`Domestic cleaning services in ${city}`}</h2>
                     <div className="search-container">
                         <input
                             type="text"
                             placeholder="Enter your full post code"
-                            value={quote}
-                            onChange={(e) => setQuote(e.target.value)}
+                            value={postcode1}
+                            onChange={(e) => setPostcode1(e.target.value)}
                         />
-                        <button className="search-button">
+                        <button className="search-button"
+                                onClick={() => handleSubmit(postcode1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                 <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                             </svg>
@@ -231,7 +264,7 @@ const City = () => {
 
             <section className={'main-banner'}>`
                 <div className="container">
-                    <h2 style={{textAlign:'center', color:'brown'}}>{`Our services in ${city}`}</h2>
+                    <h2 className={'experience-text'} style={{textAlign:'center', color:'brown'}}>{`Our services in ${city}`}</h2>
                     <div className="grid-container">
                         {serviceDetails.map((service) => (
                             <div key={service.id} className="service-card">
@@ -246,7 +279,7 @@ const City = () => {
             </section>
             <section className={'main-banner'} style={{marginTop:'30px'}}>
                 <div className="container">
-                    <h2 style={{textAlign:'center', marginBottom:'20px'}} >{`How much does a house cleaning cost in ${city}?`}</h2>
+                    <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'20px'}} >{`How much does a house cleaning cost in ${city}?`}</h2>
                     <div className="idea-container">
                         <div className="service-card" style={{marginBottom:'20px'}}>
                             <h3 style={{textAlign:'center'}}>Regular house cleaning</h3>
@@ -255,10 +288,11 @@ const City = () => {
                                 <input
                                     type="text"
                                     placeholder="Enter your full post code"
-                                    value={quote}
-                                    onChange={(e) => setQuote(e.target.value)}
+                                    value={postcode2}
+                                    onChange={(e) => setPostcode2(e.target.value)}
                                 />
-                                <button className="search-button">
+                                <button className="search-button"
+                                onClick={() => handleSubmit(postcode2)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                         <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                                     </svg>
@@ -273,10 +307,11 @@ const City = () => {
                                 <input
                                     type="text"
                                     placeholder="Enter your full post code"
-                                    value={quote}
-                                    onChange={(e) => setQuote(e.target.value)}
+                                    value={postcode3}
+                                    onChange={(e) => setPostcode3(e.target.value)}
                                 />
-                                <button className="search-button">
+                                <button className="search-button"
+                                onClick={() => handleSubmit(postcode3)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                         <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                                     </svg>
@@ -415,7 +450,7 @@ const City = () => {
 
             <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className="container" style={{marginBottom:'50px'}}>
-                    <h3 style={{textAlign:'center', color:'navy', marginBottom:'30px'}}>{`Why choose Fly cleaning service in ${city}`}</h3>
+                    <h3 className={'experience-text'} style={{textAlign:'center', color:'navy', marginBottom:'30px'}}>{`Why choose Fly cleaning service in ${city}`}</h3>
                     <div className={'grid-container'}>
                         {reasons.map(reason => (
                             <div key={reason.id} className={'service-card'}>
@@ -429,7 +464,7 @@ const City = () => {
 
             <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div>
-                    <h2 style={{textAlign:'center', marginBottom:'20px', marginTop:'10px'}}>How Fly cleaning services work</h2>
+                    <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'20px', marginTop:'10px'}}>How Fly cleaning services work</h2>
                     <div className="container">
                         <div className={'idea-container'} >
                             <div className="grid-container">
@@ -443,16 +478,17 @@ const City = () => {
                         </div>
                     </div>
                     <div className={'service-card'} >
-                        <h3 style={{color:'navy', textAlign:'center'}}>Additional domestic cleaning services</h3>
+                        <h3 className={'experience-text'} style={{color:'navy', textAlign:'center'}}>Additional domestic cleaning services</h3>
                         <p style={{textAlign:'center'}}>For advanced cleaning, you can add more services when booking. Most extra cleaning add-ons add half an hour to the cleaning time of your booking.</p>
                         <div className="search-container">
                             <input
                                 type="text"
                                 placeholder="Enter your full post code"
-                                value={quote}
-                                onChange={(e) => setQuote(e.target.value)}
+                                value={postcode4}
+                                onChange={(e) => setPostcode4(e.target.value)}
                             />
-                            <button className="search-button">
+                            <button className="search-button"
+                            onClick={() => setPostcode4(postcode4)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                     <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                                 </svg>
@@ -526,7 +562,7 @@ We provide a regular cleaning service as needed, whether it be daily, weekly, bi
             <section className={'main-banner'} style={{marginTop:'50px', display:'block'}}>
 
                 <div className={'container'}>
-                    <h3 style={{textAlign:'start', color:'navy', marginBottom:'30px'}}>Frequently asked questions</h3>
+                    <h3 className={'experience-text'} style={{textAlign:'start', color:'navy', marginBottom:'30px'}}>Frequently asked questions</h3>
                     <div className={'mini-container'}>
                         <FaArrowRight onClick={handleRight1} style={styleRight1} />
                         <FaArrowLeft onClick={handleLeft1} style={styleLeft1} />
@@ -577,12 +613,16 @@ We provide a regular cleaning service as needed, whether it be daily, weekly, bi
                     <div className="burden-container">
                         <img src={Sweeping} className={'cart-image4'} alt="" />
                         <div className="search-container">
-                            <h1 className={'burden'}>Shift your cleaning burden to us</h1>
+                            <h1 className={'experience-text'}>Shift your cleaning burden to us</h1>
                             <input
                                 type="text" placeholder="Enter your full post code here"
+                                value={postcode5}
                                 style={{textAlign:'center'}}
-                                onChange={(e) => setCleanerLocation(e.target.value)}/>
-                            <button style={{textAlign:'center', margin:'10px'}}>Get a quote</button>
+                                onChange={(e) => setPostcode5(e.target.value)}/>
+                            <button className={'submit-button'} style={{textAlign:'center', margin:'10px'}}
+                            onClick={() => handleSubmit(postcode5)}>
+                                Get a quote
+                            </button>
                         </div>
                         <img src={Arranged} className={'cart-image4'} alt="" />
                     </div>
