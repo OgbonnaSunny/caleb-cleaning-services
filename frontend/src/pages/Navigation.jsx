@@ -34,15 +34,15 @@ const Navigation = () => {
 
     const emitter = new EventEmitter();
     const navLinks = [
-        {id:1, name: 'Overview', path: '/frontend/overview' },
-        {id:2, name: 'Locations', path: '/frontend/locations' },
-        {id:3, name: 'Services', path: '/frontend/services' },
-        {id:4, name: 'Pricing', path: '/frontend/pricing' },
-        {id:5, name: 'Blog', path: '/frontend/about' },
-        {id:6, name: 'Gift', path: '/frontend/gift' },
-        {id:7, name: 'Help', path: '/frontend/help' },
-        {id:8, name: 'Reclean', path: '/frontend/reclean' },
-        {id:9, name: 'Cleaners', path: '/frontend/become' },
+        {id:1, name: 'Overview', path: '/overview' },
+        {id:2, name: 'Locations', path: '/locations' },
+        {id:3, name: 'Services', path: '/services' },
+        {id:4, name: 'Pricing', path: '/pricing' },
+        {id:5, name: 'Blog', path: '/about' },
+        {id:6, name: 'Gift', path: '/gift' },
+        {id:7, name: 'Help', path: '/help' },
+        {id:8, name: 'Reclean', path: '/reclean' },
+        {id:9, name: 'Cleaners', path: '/become' },
     ];
 
     const showAdmin = {display: ' '};
@@ -59,7 +59,7 @@ const Navigation = () => {
     };
 
     const location = useLocation();
-    const hideNavbarPaths = ['/frontend/cleanerprofile','/frontend/cashback','/frontend/tenancylist' ,'/frontend/checkout', '/frontend/privacy', '/frontend/cancellation', '/frontend/cookies', '/frontend/booking', '/frontend/terms', '/frontend/customers', '/frontend/cleaners', '/frontend/bookings', '/frontend/reports', '/frontend/settings', '/frontend/logout','/frontend/login','/frontend/signup', '/frontend/sitemap']; // Paths where navbar should be hidden
+    const hideNavbarPaths = ['/cleanerprofile',' /cashback','/tenancylist' ,'/checkout', '/privacy', '/cancellation', '/cookies', '/booking', '/terms', '/customers', '/cleaners', '/bookings', '/reports', '/settings', '/logout','/login','/signup', '/sitemap']; // Paths where navbar should be hidden
     const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
 
     const [activeTab, setActiveTab] = useState('/overview');
@@ -104,10 +104,10 @@ const Navigation = () => {
     const handleAuth = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
-          navigate('/frontend/logout');
+          navigate('/logout');
       }
       else {
-          navigate('/frontend/login');
+          navigate('/login');
       }
     }
 
@@ -118,9 +118,9 @@ const Navigation = () => {
                     <div className="navbar-logo" >
                         <img src={LOGO} alt="logo" className="logo-icon"  />
                         <p className="email">flyclean02@gmail.com</p>
-                        <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
-                        <MdDashboard style={{color:'navy'}} onClick={() => navigate('/frontend/cleanerprofile')}  className={'logo-icon2'}/>
-                        <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon2'} />
+                        <FaUserTie  onClick={handleAuth} className={'logo-icon'} />
+                        <MdDashboard style={{color:'navy'}} size={20}  onClick={() => navigate('/cleanerprofile')}  className={'logo-icon'}/>
+                        <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon'} />
                         <FaBars style={{width:'20px', height:'30px'}}  className={` hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>open</FaBars>
                     </div>
                     <ul className={`nav-menu ${isMobile ? 'mobile' : ''} ${isOpen ? 'active' : ''}`}>

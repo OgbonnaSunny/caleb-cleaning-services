@@ -33,19 +33,17 @@ export default defineConfig({
       }
     }
   },
+  base: '/',
   build: {
-    outDir: 'dist/frontend',
+    outDir: 'dist',
     emptyOutDir: true,
-    sourcemap: true,
     rollupOptions: {
       output: {
-        // Use consistent hashing for files
-        assetFileNames: 'assets/[name]-[hash].[ext]',
-        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        entryFileNames: 'assets/[name]-[hash].js'
       }
     }
   },
-  base: '/frontend/',
   envDir: './'
 });
 
