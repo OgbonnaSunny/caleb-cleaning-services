@@ -78,7 +78,7 @@ function App() {
                     <Route path="/booking" element={<Booking />} />
                     <Route path="/sitemap" element={<Sitemap />} />
                     <Route path="/admin" element={<Admin />} />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={<Overview />} />
                 </Routes>
             </BrowserRouter>
         </div>
