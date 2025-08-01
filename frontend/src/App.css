@@ -1137,8 +1137,8 @@ img {
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 3rem;
-  height: 2rem;
+  width: 40px;
+  height: 80px;
   cursor: pointer;
 }
 @media (max-width: 768px) {
@@ -1146,8 +1146,8 @@ img {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 3rem;
-    height: 2rem;
+    width: 40px;
+    height: 80px;
     cursor: pointer;
   }
 }
@@ -6497,6 +6497,11 @@ tr:hover {
 
 .logo-icon {
   width: 100px;
+  height: 80px;
+}
+.logo-icon2 {
+  width: 100px;
+  height: 30px;
 }
 
 .profile-name {
@@ -6506,10 +6511,14 @@ tr:hover {
 }
 
 @media (max-width: 768px) {
-  .logo-icon {
-    width: 30px;
-    height: 50px;
+  .logo-icon2 {
+    width: 40px;
+    height: 80px;
     margin: 8px;
+  }
+  .logo-icon {
+    width: 50px;
+    height: 50px;
   }
   .profile-name {
     font-weight: bold;

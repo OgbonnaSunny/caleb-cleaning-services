@@ -118,9 +118,9 @@ const Navigation = () => {
                     <div className="navbar-logo" >
                         <img src={LOGO} alt="logo" className="logo-icon"  />
                         <p className="email">flyclean02@gmail.com</p>
-                        <FaUserTie  onClick={handleAuth} className={'logo-icon'} />
-                        <MdDashboard style={{color:'navy'}} onClick={() => navigate('/frontend/cleanerprofile')}  className={'logo-icon'}/>
-                        <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon'} />
+                        <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
+                        <MdDashboard style={{color:'navy'}} onClick={() => navigate('/frontend/cleanerprofile')}  className={'logo-icon2'}/>
+                        <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon2'} />
                         <FaBars style={{width:'20px', height:'30px'}}  className={` hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>open</FaBars>
                     </div>
                     <ul className={`nav-menu ${isMobile ? 'mobile' : ''} ${isOpen ? 'active' : ''}`}>
