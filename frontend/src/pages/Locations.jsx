@@ -1177,13 +1177,9 @@ const Locations = () => {
     },
        // council
     { id: 50, name: "Midlothian", type: "Council Area", notable: "Local government region south of Edinburgh" },
-    { id: 51, name: "Dalkeith", type: "Town", notable: "Historic county town with Dalkeith Palace" },
-    { id: 52, name: "Bonnyrigg", type: "Town", notable: "Former mining town, now a residential hub" },
     { id: 53, name: "Penicuik", type: "Town", notable: "Former paper-mill town near Pentland Hills" },
     { id: 54, name: "Loanhead", type: "Town", notable: "Home to Straiton Retail Park" },
-    { id: 55, name: "Gorebridge", type: "Town", notable: "Arniston House estate" },
     { id: 56, name: "Newtongrange", type: "Village", notable: "National Mining Museum Scotland" },
-    { id: 57, name: "Roslin", type: "Village", notable: "Rosslyn Chapel and Roslin Institute" },
     { id: 58, name: "Bilston", type: "Village", notable: "Bilston Glen Viaduct" },
     { id: 59, name: "Lasswade", type: "Village", notable: "Polton Mill and scenic river walks" },
 

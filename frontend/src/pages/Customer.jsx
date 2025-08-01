@@ -1,17 +1,84 @@
-import React, {useState, useRef, useEffect, useForm} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import LOGO from "../images/logo3.png";
+import { MdAdd, MdRemove,  MdArrowDownward, MdArrowUpward, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
+import { useForm } from 'react-hook-form';
+import {FaCertificate, FaFileAlt, FaPoundSign, FaQuestionCircle, FaUserTie} from "react-icons/fa";
 
 
 const Customer = () => {
 
-    const topNavItems = ['New', 'Jobs', 'History'];
+    const topNavItems = ['Future Booking', 'History'];
     const bottomNavItems = [
-        {id: 1, name: 'Setting'},
+        {id: 1, name: 'Account'},
         {id: 2, name: 'Finance'},
         {id: 3, name: 'Docs'},
         {id: 4, name: 'Support'},
         {id: 5, name: 'Profile'},
     ];
+
+    const renderMenuIcon = (id) => {
+        if (id === null || id === undefined) return;
+        if (id === 1) {
+            return <FaCertificate className={'bottom-icon'} />;
+        }
+        if (id === 2) {
+            return <FaPoundSign className={'bottom-icon'} />;
+        }
+        if (id === 3) {
+            return <FaFileAlt className={'bottom-icon'} />;
+        }
+        if (id === 4) {
+            return <FaQuestionCircle className={'bottom-icon'} />;
+        }
+        if (id === 5) {
+            return <FaUserTie className={'bottom-icon'} />;
+        }
+    }
+
+    const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
+
+    useEffect(() => {
+        /* const fetchCleanerData = () => {
+             setIsLoading(true);
+             const user1 = JSON.parse(localStorage.getItem('user'));
+             api.post('/api/users/record', {email: user1.email})
+                 .then(response => {
+                     const { user } = response.data;
+                     if (user) {
+                         localStorage.setItem('user', JSON.stringify(user));
+                         setValue('personal', {
+                             ...getValues().personal,
+                             firstName: user.firstName,
+                             lastName: user.lastName,
+                             phone: user.phone,
+                             address: user.address,
+                             email: user.email,
+                             nationalInsurance: user.NIN,
+                             bio: user.bio,
+                             emergencyContact: user.emergency,
+                         });
+                         setValue('work', user.workExperience);
+                         setValue('availability', user.available);
+                         setValue('notifications', user.notification);
+                     }
+                     else {
+                         setSuccessMessage('Error updating user');
+                         setBgColor('red');
+                     }
+                 })
+                 .catch(error => {
+                     if (error.response.status === 401 && (user1.email === null || user1.email === undefined)) {
+                         setSuccessMessage('User with the specified username not found');
+                         return;
+                     }
+                     setSuccessMessage('Error fetching profile data')
+                 })
+                 .finally(() => {
+                     setIsLoading(false);
+                 })
+         };
+         fetchCleanerData();*/
+    }, []);
 
 
     return (
@@ -25,18 +92,11 @@ const Customer = () => {
                             <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
                         </div>
                     ))}
+                    <MdAdd />
                 </div>
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
-                {activeMenu === topNavItems[0] && <NewOrders /> }
-                {activeMenu === topNavItems[1] && <MyOrders /> }
-                {activeMenu === topNavItems[2] && <History /> }
-                {activeMenu === bottomNavItems[3].name && <SupportPage /> }
-                {activeMenu === bottomNavItems[4].name && <ProfilePage /> }
-                {activeMenu === bottomNavItems[1].name && <Finance /> }
-                {activeMenu === bottomNavItems[2].name && <Docs /> }
-                {activeMenu === bottomNavItems[0].name && <SettingsPage /> }
 
             </main>
 

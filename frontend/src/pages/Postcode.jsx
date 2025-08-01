@@ -2,10 +2,16 @@ import React, { useState, useEffect, useRef} from "react";
 import { useNavigate } from 'react-router-dom'
 
 export function isValidUKPostcodeFormat(postcode) {
+    // // Remove all whitespace and convert to uppercase
+    const cleanedPostcode = postcode.replace(/\s/g, "").toUpperCase();
+
+    // Reinsert the space before the last 3 characters
+    const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
+
     // Regular expression for UK currentPostcode validation
     const regex = /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$/;
 
-    return regex.test(postcode);
+    return regex.test(normalPostcode);
 }
 
 export async function checkPostcodeExists(postcode) {
