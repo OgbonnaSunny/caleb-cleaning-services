@@ -78,9 +78,7 @@ const Navigation = () => {
             }
         };
 
-        if (location.pathname !== activeTab) {
-            setActiveTab(location.pathname);
-        }
+        setActiveTab(location.pathname);
 
         function checkLoginStatus() {
             try {

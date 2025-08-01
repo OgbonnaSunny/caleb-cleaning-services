@@ -44,7 +44,7 @@ function App() {
         <div>
             <BrowserRouter>
                 <Navigation />
-                <Routes path="/frontend">
+                <Routes>
                     <Route path="/" element={<Overview />} />
                     <Route path="/cleanerprofile" element={<CleanerProfile/>} />
                     <Route path="/customer" element={<Customer />} />
