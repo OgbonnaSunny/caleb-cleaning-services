@@ -35,6 +35,7 @@ import TenancyList from './pages/TenancyList.jsx';
 import CashBack from './pages/CashBack.jsx'
 import CheckoutHome from "./pages/CheckoutHome.jsx";
 import CleanerProfile from './pages/CleanerProfile.jsx';
+import Customer from './pages/Customer.jsx';
 import { Navigate } from 'react-router-dom';
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
                 <Routes path="/frontend">
                     <Route path="/" element={<Overview />} />
                     <Route path="/cleanerprofile" element={<CleanerProfile/>} />
+                    <Route path="/customer" element={<Customer />} />
                     <Route path="/checkouthome" element={<CheckoutHome />} />
                     <Route path="/cashback" element={<CashBack />} />
                     <Route path="/tenancylist" element={<TenancyList />} />

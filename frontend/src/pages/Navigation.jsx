@@ -44,8 +44,6 @@ const Navigation = () => {
         {id: 8, name: 'Reclean', path: '/reclean' },
         {id: 9, name: 'Cleaners', path: '/become' },
         {id: 10, name: 'Admin', path: '/admin' },
-        {id: 11, name: 'My App', path: '/cleanerprofile' },
-        {id: 12, name: 'My App2', path: '/customer' },
     ];
 
     const showAdmin = {display: ' '};
@@ -62,7 +60,7 @@ const Navigation = () => {
     };
 
     const location = useLocation();
-    const hideNavbarPaths = ['/admin', '/customer', '/cleanerprofile',' /cashback','/tenancylist' ,'/checkout', '/privacy', '/cancellation', '/cookies', '/booking', '/terms', '/customers', '/cleaners', '/bookings', '/reports', '/settings', '/logout','/login','/signup', '/sitemap']; // Paths where navbar should be hidden
+    const hideNavbarPaths = ['/admin', '/customer', '/cleanerprofile', '/cashback','/tenancylist' ,'/checkout', '/privacy', '/cancellation', '/cookies', '/booking', '/terms','/cleaners', '/bookings', '/reports', '/settings', '/logout','/login','/signup', '/sitemap']; // Paths where navbar should be hidden
     const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
 
     const [activeTab, setActiveTab] = useState('/overview');
@@ -122,8 +120,8 @@ const Navigation = () => {
                         <img src={LOGO} alt="logo" className="logo-icon"  />
                         <p className="email">flyclean02@gmail.com</p>
                         <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
-                        <MdDashboard style={{color:'navy', display:'none'}} size={20}  onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
-                        <MdAdminPanelSettings size={20} style={{color:'purple', display:'none'}}  onClick={() => navigate('/admin')} className={'logo-icon2'} />
+                        <MdDashboard style={{color:'navy'}} size={20}  onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
+                        <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
                         <FaBars style={{width:'20px', height:'30px'}}  className={` hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>open</FaBars>
                     </div>
                     <ul className={`nav-menu ${isMobile ? 'mobile' : ''} ${isOpen ? 'active' : ''}`}>

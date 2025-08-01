@@ -575,7 +575,7 @@ img {
   box-shadow: var(--shadow);
 }
 .experience-text {
-  font-size: xx-large;
+  font-size: xxx-large;
 }
 
 @media (max-width: 768px) {
@@ -1059,7 +1059,7 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  max-width: 1400px;
   font-size: 1rem;
   position: sticky;
   top: 0;

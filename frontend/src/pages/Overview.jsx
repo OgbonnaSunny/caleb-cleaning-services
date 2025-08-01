@@ -205,14 +205,14 @@ const Overview = () => {
 
             <section className={"main-banner"}>
                 <div className="container">
-                    <div className="row" style={{paddingBottom:'50px'}}>
-                        <h1>Fly Cleaners</h1>
+                    <div className="row" style={{paddingBottom:'50px', marginTop:'30px'}}>
+                        <h1 className={'experience-text'}>Fly Cleaners</h1>
                         <p>
                             Hiring cleaners in West London goes beyond affordability, and flymax profesional cleaning services in West London save you time, ensure proper house cleaning, and give your surroundings a breath of fresh air. The types of domestic cleaning services offered extend well beyond the standard packages, so you can easily customise your order depending on what your specific requirements for cleaning are at the time, for example, you can easily order end of tenancy cleaning or office cleaning.
                         </p>
                     </div>
                     <div className="section-header">
-                        <h2>Our Cleaning Services</h2>
+                        <h1 className={'experience-text'}>Our Cleaning Services</h1>
                         <p>We offer comprehensive cleaning solutions tailored to your needs</p>
                     </div>
                     <div style={{display:'block'}} className={'main-banner'}>
@@ -238,7 +238,7 @@ const Overview = () => {
                         ))}
                     </div>
                     <div className={'main-banner'}>
-                        <h2 style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
+                        <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
                         <div>
                             <div className="burden-container">
                                 {stages.map(stage => (
@@ -273,7 +273,7 @@ const Overview = () => {
                     </div>
 
                     <div className={'main-banner'} style={{marginTop:'30px'}}>
-                        <h3 style={{textAlign:'center', marginBottom:'20px'}}>Why Fly cleaners?</h3>
+                        <h3 className={'experience-text'} style={{textAlign:'center', marginBottom:'20px'}}>Why Fly cleaners?</h3>
                         <div className='image-container'>
                             <img src={OfficeCleaner} alt={"cleaner"} className="image-display" />
                             <p style={{alignContent:'center', marginTop:'10px', marginLeft:'10px', maxWidth:'600px'}}>
