@@ -43,41 +43,41 @@ function App() {
             <BrowserRouter>
                 <Navigation />
                 <Routes>
-                    <Route path="/" element={<Overview />} />
-                    <Route path="/cleanerprofile" element={<CleanerProfile/>} />
-                    <Route path="/checkouthome" element={<CheckoutHome />} />
-                    <Route path="/cashback" element={<CashBack />} />
-                    <Route path="/tenancylist" element={<TenancyList />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/logout" element={<Logout />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/assign" element={<Assign />} />
-                    <Route path="/postcode" element={<Postcode />} />
-                    <Route path="/sidebar" element={<Sidebar />} />
-                    <Route path="/bookings" element={<Bookings />} />
-                    <Route path="/customers" element={<Customers />} />
-                    <Route path="/cleaners" element={<Cleaners />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/reports" element={<Reports />} />
-                    <Route path="/overview" element={<Overview />} />
-                    <Route path="/locations" element={<Locations />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/pricing" element={<Pricing />} />
-                    <Route path="/about" element={<Blog />} />
-                    <Route path="/gift" element={<Gift />} />
-                    <Route path="/help" element={<Help />} />
-                    <Route path="/reclean" element={<Reclean />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/become" element={<BecomeCleaner />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/city" element={<City />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/cancellation" element={<Cancellation />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/cookies" element={<Cookies />} />
-                    <Route path="/booking" element={<Booking />} />
-                    <Route path="/sitemap" element={<Sitemap />} />
-                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/frontend/" element={<Overview />} />
+                    <Route path="/frontend/cleanerprofile" element={<CleanerProfile/>} />
+                    <Route path="/frontend/checkouthome" element={<CheckoutHome />} />
+                    <Route path="/frontend/cashback" element={<CashBack />} />
+                    <Route path="/frontend/tenancylist" element={<TenancyList />} />
+                    <Route path="/frontend/checkout" element={<Checkout />} />
+                    <Route path="/frontend/logout" element={<Logout />} />
+                    <Route path="/frontend/login" element={<Login />} />
+                    <Route path="/frontend/assign" element={<Assign />} />
+                    <Route path="/frontend/postcode" element={<Postcode />} />
+                    <Route path="/frontend/sidebar" element={<Sidebar />} />
+                    <Route path="/frontend/bookings" element={<Bookings />} />
+                    <Route path="/frontend/customers" element={<Customers />} />
+                    <Route path="/frontend/cleaners" element={<Cleaners />} />
+                    <Route path="/frontend/settings" element={<Settings />} />
+                    <Route path="/frontend/reports" element={<Reports />} />
+                    <Route path="/frontend/overview" element={<Overview />} />
+                    <Route path="/frontend/locations" element={<Locations />} />
+                    <Route path="/frontend/services" element={<Services />} />
+                    <Route path="/frontend/pricing" element={<Pricing />} />
+                    <Route path="/frontend/about" element={<Blog />} />
+                    <Route path="/frontend/gift" element={<Gift />} />
+                    <Route path="/frontend/help" element={<Help />} />
+                    <Route path="/frontend/reclean" element={<Reclean />} />
+                    <Route path="/frontend/contact" element={<Contact />} />
+                    <Route path="/frontend/become" element={<BecomeCleaner />} />
+                    <Route path="/frontend/signup" element={<Signup />} />
+                    <Route path="/frontend/city" element={<City />} />
+                    <Route path="/frontend/privacy" element={<Privacy />} />
+                    <Route path="/frontend/cancellation" element={<Cancellation />} />
+                    <Route path="/frontend/frontend/terms" element={<Terms />} />
+                    <Route path="/frontend/cookies" element={<Cookies />} />
+                    <Route path="/frontend/booking" element={<Booking />} />
+                    <Route path="/frontend/sitemap" element={<Sitemap />} />
+                    <Route path="/frontend/admin" element={<Admin />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

@@ -51,9 +51,9 @@ const Footer = () => {
     ];
 
     const whoWeAre = [
-        {id:'about', name: 'About us', path:'/about'},
-        {id:'contact', name: 'Contact us', path:'/contact'},
-        {id:'reviews', name: 'Reviews', path:'/reviews'},
+        {id:'about', name: 'About us', path:'/frontend/about'},
+        {id:'contact', name: 'Contact us', path:'/frontend/contact'},
+        {id:'reviews', name: 'Reviews', path:'/frontend/reviews'},
     ]
 
     const cleanerLocations = [
@@ -74,7 +74,7 @@ const Footer = () => {
     const currentLocation = location.pathname
     const hide = {display:'none'};
     const show = {display:''};
-    const hideNavbarPaths = ['/pricing', '/blog', '/reclean', '/sitemap']; // Paths where navbar should be hidden
+    const hideNavbarPaths = ['/frontend/pricing', '/frontend/blog', '/frontend/reclean', '/frontend/sitemap']; // Paths where navbar should be hidden
     const names = ['Pricing', 'Blog', 'Reclean Guarantee', 'Sitemap']
     const pathIncluded = hideNavbarPaths.includes(location.pathname);
 
@@ -85,28 +85,28 @@ const Footer = () => {
             <div className="container" >
 
                 <div className="footer-content" >
-                    <div className="footer-section" style={currentLocation === '/locations' ? hide : show}>
+                    <div className="footer-section" style={currentLocation === '/frontend/locations' ? hide : show}>
                         <h3 style={{color:'white'}}>Cleaner locations</h3>
                         <ul>
                             {cleanerLocations.map(location => (
                                 <li key={location.id}>
-                                    <Link to="/city" state={{ id: location.id, name: location.name }}>
+                                    <Link to="/frontend/city" state={{ id: location.id, name: location.name }}>
                                         {location.name}
                                     </Link>
                                 </li>
                             ))}
                             <li>
-                                <Link to={`/locations`} style={{color:'green', marginTop:'20px'}}>See more</Link>
+                                <Link to={`/frontend/locations`} style={{color:'green', marginTop:'20px'}}>See more</Link>
                             </li>
                         </ul>
                     </div>
 
-                    <div className="footer-section" style={currentLocation === '/services' ? hide : show}>
+                    <div className="footer-section" style={currentLocation === '/frontend/services' ? hide : show}>
                         <h3 style={{color:'white'}}>Our services</h3>
                         <ul>
                             {services.map( service => (
                                 <li key={service.id}>
-                                    <Link to={'/services'} state={{ id: service.id, name: service.title }}>
+                                    <Link to={'/frontend/services'} state={{ id: service.id, name: service.title }}>
                                         {service.title}
                                     </Link>
                                 </li>
@@ -150,7 +150,7 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>For cleaners</h3>
                         <ul>
                             <li>
-                                <Link to={'/become'}>
+                                <Link to={'/frontend/become'}>
                                     <p>Become a fly cleaner</p>
                                 </Link>
                             </li>
@@ -167,8 +167,8 @@ const Footer = () => {
                 <div className="footer-bottom">
                     <p>{new Date().getFullYear()} Flymax. All rights reserved.</p>
                     <div className="legal-links">
-                        <Link to="/privacy">Privacy Policy</Link>
-                        <Link to="/terms">Terms & Conditions</Link>
+                        <Link to="/frontend/privacy">Privacy Policy</Link>
+                        <Link to="/frontend/terms">Terms & Conditions</Link>
                     </div>
                 </div>
             </div>

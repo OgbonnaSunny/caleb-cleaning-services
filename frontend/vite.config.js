@@ -3,14 +3,25 @@ import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [
+    react(),
+    svgr({
+      svgrOptions: { icon: true }
+    })
+  ],
   resolve: {
     alias: {
-      events: 'events'  // Explicitly tell Vite where to find events
+      events: 'events',
+      // Add other aliases if needed
     }
   },
   optimizeDeps: {
-    include: ['events']  // Force Vite to bundle it
+    include: ['events'],
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      }
+    }
   },
   server: {
     proxy: {
@@ -18,10 +29,17 @@ export default defineConfig({
         target: 'http://localhost:8081',
         changeOrigin: true,
         secure: false,
+        rewrite: path => path.replace(/^\/api/, '')
       }
     }
   },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: true
+  },
   base: '/frontend/',
+  envDir: './'
 });
 
 
