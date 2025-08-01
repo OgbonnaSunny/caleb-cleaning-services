@@ -10,7 +10,7 @@ const Customer = () => {
     const topNavItems = ['Future Booking', 'History'];
     const bottomNavItems = [
         {id: 1, name: 'Account'},
-        {id: 2, name: 'Finance'},
+        {id: 2, name: 'Reward'},
         {id: 3, name: 'Docs'},
         {id: 4, name: 'Support'},
         {id: 5, name: 'Profile'},
@@ -19,7 +19,7 @@ const Customer = () => {
     const renderMenuIcon = (id) => {
         if (id === null || id === undefined) return;
         if (id === 1) {
-            return <FaCertificate className={'bottom-icon'} />;
+            return <FaUserTie className={'bottom-icon'} />;
         }
         if (id === 2) {
             return <FaPoundSign className={'bottom-icon'} />;
