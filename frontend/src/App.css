@@ -4660,7 +4660,7 @@ button:disabled {
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-olor: dodgerblue;
+  border-color: dodgerblue;
   border-radius: 10px;
   border: dotted;
 }
