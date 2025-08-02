@@ -49,16 +49,17 @@ const Customer = () => {
     const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
     const [booking, setBooking] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState(null);
     const [history, setHistory] = useState([]);
     const [newOrders, setNewOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [newBookingLoading, setNewBookingLoading] = useState(false);
+    const [historyLoading, setHistoryLoading] = useState(false);
 
     const NewOrders = () => {
 
         return (
             <div className={'support-page'}>
-                {isLoading ?
+                {newBookingLoading ?
                     <div className="progress-bar-container">
                         <div className="spinner"></div>
                         <p style={{textAlign:'center'}}>Loading data...</p>
@@ -102,14 +103,14 @@ const Customer = () => {
         );
     }
 
-    useEffect(() => {
-        /* const fetchCleanerData = () => {
+    /*useEffect(() => {
+         const fetchCleanerData = () => {
              const user = JSON.parse(localStorage.getItem('user'));
              if (user === null || user === undefined) {
                  setMessage('User not signed in');
                  return;
              }
-             setIsLoading(true);
+             setNewBookingLoading(true);
              api.post('/api/booking/new-booking', {email: user.email})
                  .then(response => {
                      const { booking } = response.data;
@@ -124,15 +125,40 @@ const Customer = () => {
                      setMessage('Error fetching new ordder')
                  })
                  .finally(() => {
-                     setIsLoading(false);
+                     setNewBookingLoading(false);
                  })
          };
-         fetchCleanerData()*/
+         fetchCleanerData()
     }, []);
 
     useEffect(() => {
+         const fetchCleanerData = () => {
+             const user = JSON.parse(localStorage.getItem('user'));
+             if (user === null || user === undefined) {
+                 setMessage('User not signed in');
+                 return;
+             }
+             setHistoryLoading(true);
+             api.post('/api/booking/completed', {email: user.email})
+                 .then(response => {
+                     const { booking } = response.data;
+                     if (booking) {
+                         setHistory(booking);
+                     }
+                     else {
+                         setMessage('Error updating user');
+                     }
+                 })
+                 .catch(error => {
+                     setMessage('Error fetching new ordder')
+                 })
+                 .finally(() => {
+                     setHistoryLoading(false);
+                 })
+         };
+         fetchCleanerData()
+    }, []);*/
 
-    })
 
     const handleNewOrder = () => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -146,7 +172,7 @@ const Customer = () => {
     const History = () => {
         return (
             <div className={'support-page'}>
-                {loadingHistory ?
+                {historyLoading ?
                     <div className="progress-bar-container">
                         <div className="spinner"></div>
                         <p style={{textAlign:'center'}}>Loading data...</p>
@@ -186,9 +212,14 @@ const Customer = () => {
         );
     }
 
+    useEffect(() => {
+        setTimeout(() => setMessage(null), 4000);
+    }, [message]);
+
 
     return (
         <div className="sticky-nav-container">
+            {message && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
             <nav  className='top-order-nav'>
                 <div className="nav-order-content">
                     <img src={LOGO} className={'logo-icon'}/>

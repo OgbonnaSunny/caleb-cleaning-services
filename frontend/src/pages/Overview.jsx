@@ -164,8 +164,8 @@ const Overview = () => {
             <section className="hero-banner">
                 <div className="container">
                     <div className="hero-content">
-                        <h2 style={{color:'white', margin:"10px"}}>Professional Cleaning Services in West London</h2>
-                        <p style={{margin:'10px'}}>Reliable, affordable, and thorough cleaning for homes and businesses across West London</p>
+                        <h2 style={{color:'white', margin:"10px"}}>Professional Cleaning Services in Edinburgh</h2>
+                        <p style={{margin:'10px', marginTop:'20px'}}>Reliable, affordable, and thorough cleaning for homes and businesses across Edinburgh</p>
                         <div className="hero-buttons" style={{margin:'10px'}}>
                             <button onClick={() => navigate('/services')} className="cta-button secondary">
                                 Learn More

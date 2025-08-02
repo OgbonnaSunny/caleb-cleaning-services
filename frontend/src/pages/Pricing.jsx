@@ -139,10 +139,31 @@ const Pricing = () => {
     }
   ]
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!postcode.trim()) {
+      setError('Please enter a postcode');
+      return;
+    }
+    if (!isValidUKPostcodeFormat(postcode)) {
+      setError(`${postcode} is not a valid postcode`);
+      return;
+    }
+    checkPostcodeExists(postcode).then(exists => {
+      if (!exists) {
+        setError(`${postcode} does not exist`);
+        return;
+      }
+    })
+
+    navigate('/checkout', { state: { postcode: postcode } });
+  };
+
   const scrollContainerRef = useRef(null);
   const [price, setPrice] = useState('');
   const [service, setService] = useState(serviceList[0]);
   const [postcode, setPostcode] = useState('');
+  const [postcodeId, setPostcodeId] = useState('');
   const [error, setError] = useState('');
   const [clearText, setClearText] = useState({display: ''});
   const [layout, setLayout] = useState( <div><section>
@@ -157,24 +178,8 @@ const Pricing = () => {
               Welcome to Fly Cleaning service, where we transform your space into a spotless sanctuary! Whether it's your home or office,
               our professional team delivers top-notch cleaning services tailored to your needs. With eco-friendly products, attention to detail,
               and affordable pricing, we take the hassle out of cleaning, so you don’t have to. Enjoy a fresher, healthier environment without lifting a finger.
-              Book your cleaning today and let us handle the mess!
+              Choose a cleaning type above to view details and proceed to book your cleaning and let us handle the mess!
             </p>
-            <section className="search-section">
-              <div className="search-container">
-                <input
-                    type="text"
-                    placeholder="Enter your full post code"
-                    value={postcode}
-                    onChange={(e) => setPostcode(e.target.value)}
-                />
-                <button className="search-button">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                  </svg>
-                  Ok
-                </button>
-              </div>
-            </section>
           </div>
         </div>
       </div>
@@ -1006,14 +1011,12 @@ const Pricing = () => {
             <div>
               <h3 className={'main-banner'} style={{color:'navy', textAlign:'center'}}>What is house cleaner price per hour?</h3>
               <div>
-                <div className="services-grid" style={{paddingBottom:'30px', paddingTop:'30px'}}>
+                <div className="burden-container" style={{paddingBottom:'30px', paddingTop:'30px'}}>
                   {pricings.map(pricings => (
                       <div key={pricings.id} className="service-card">
                         <h3>{pricings.name}</h3>
                         <p style={{color:'blue'}}>{pricings.price}</p>
                         <p style={{textAlign:'start'}}>{pricings.desc}</p>
-                        <input type={"text"} placeholder={"Enter your full post code"} style={{marginBottom:'10px', marginTop:'10px', padding:'10px'}} />
-                        <button className="service-button">Give me quote</button>
                       </div>
                   ))}
                 </div>
@@ -1725,22 +1728,6 @@ const Pricing = () => {
                         hygienic quality, and durability. They include vacuuming the carpet, scrubbing dirt and stains out of it, and using a
                         carpet washer to wash the carpet. In Edinburgh, carpet cleaning prices start at £48 per hour.
                       </p>
-                      <section className="search-section">
-                        <div className="search-container">
-                          <input
-                              type="text"
-                              placeholder="Enter full post code"
-                              value={postcode}
-                              onChange={(e) => setPostcode(e.target.value)}
-                          />
-                          <button className="search-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                              <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                            </svg>
-                            Ok
-                          </button>
-                        </div>
-                      </section>
                     </div>
                   </div>
                 </div>
@@ -1876,22 +1863,6 @@ const Pricing = () => {
                         The life of your furniture can be renewed and extended, and it frequently involves vacuuming, spot removal, and upholstery cleaning.
                         Prices for sofa cleaning with Fly cleaners begin at £48/h.
                       </p>
-                      <section className="search-section">
-                        <div className="search-container">
-                          <input
-                              type="text"
-                              placeholder="Enter full post code"
-                              value={postcode}
-                              onChange={(e) => setPostcode(e.target.value)}
-                          />
-                          <button className="search-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                              <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                            </svg>
-                            Ok
-                          </button>
-                        </div>
-                      </section>
                     </div>
                   </div>
                 </div>
@@ -2028,26 +1999,16 @@ const Pricing = () => {
     styleRight3, styleRight4, styleRight5, factors, tenancyList,
     carpetList, benefits, sofaDetail, upholsteryList]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setClearText({display: ''})
-    if (!postcode.trim()) {
-      setError('Please enter a postcode');
-      return;
-    }
-    if (!isValidUKPostcodeFormat(postcode)) {
-      setError(`${postcode} is not a valid postcode`);
-      return;
-    }
-    checkPostcodeExists(postcode).then(exists => {
-      if (!exists) {
-        setError(`${postcode} does not exist`);
-        return;
-      }
-    })
 
-    navigate('/checkout', { state: { postcode: postcode } });
-  };
+  const resetPostcode = () => {
+    setPostcode('')
+    setError('')
+  }
+
+
+  useEffect(() => {
+    setTimeout(() => resetPostcode(), 5000);
+  }, [error]);
 
   return (
       <div style={{
@@ -2055,7 +2016,7 @@ const Pricing = () => {
         flexDirection: 'column',
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
-        {error && <label style={clearText} className={['slide-in', 'error-label'].join(' ')} >{error}</label>}
+        {error && <label style={{width:'400px', height:'50px', textAlign:'center'}} className={['slide-in', 'error-label'].join(' ')} >{error}</label>}
         <section className={'price-banner'} style={{marginBottom:'30px'}} >
           <div className="container" style={{marginBottom:'30px',  display:'block'}}>
             <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning type!</h2>
@@ -2073,6 +2034,23 @@ const Pricing = () => {
               </div>
               <FaArrowRight onClick={scrollRight} style={{color:'navy'}} />
             </div>
+            <section className="search-section">
+              <div className="search-container">
+                <input
+                    type="text"
+                    id={'100'}
+                    placeholder="Enter full post code"
+                    value={postcodeId === '100' ? postcode : ''}
+                    onChange={(e) => {setPostcode(e.target.value); setPostcodeId(e.target.id)}}
+                />
+                <button onClick={handleSubmit} className="search-button">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                  </svg>
+                  Ok
+                </button>
+              </div>
+            </section>
           </div>
         </section>
 
@@ -2115,8 +2093,9 @@ const Pricing = () => {
                 <input
                     type="text" placeholder="Enter your full post code here"
                     style={{textAlign:'center'}}
-                    value={postcode}
-                    onChange={(e) => setPostcode(e.target.value)}/>
+                    id={'1'}
+                    value={postcode === '1' ? postcode : ''}
+                    onChange={(e) => {setPostcode(e.target.value); setPostcodeId(e.target.id)}}/>
                 <button className={'next-button'} onClick={handleSubmit} style={{textAlign:'center', margin:'10px'}}>Get a quote</button>
               </div>
               <img src={Arranged} className={'cart-image4'} alt="" />
