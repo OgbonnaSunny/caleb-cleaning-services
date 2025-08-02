@@ -48,7 +48,6 @@ import {
     useStripe,
     useElements
 } from '@stripe/react-stripe-js';
-const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -56,6 +55,7 @@ import { useFormik } from 'formik';
 import { debounce } from 'lodash';
 
 const Checkout = () => {
+    const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
     const location = useLocation();
     const { postcode } = location.state || {};
 

@@ -8,7 +8,6 @@ import {
     useElements
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import CheckoutHome from "./CheckoutHome.jsx";
 import api from './api.js'
 import Checkout from "./Checkout.jsx";
 //import { VisaIcon, MastercardIcon } from '@stripe/stripe-icons';

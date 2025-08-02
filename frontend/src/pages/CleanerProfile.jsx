@@ -1465,9 +1465,6 @@ const CleanerProfile = () => {
 
         const handleSubmit = (e) => {
             e.preventDefault();
-            // In a real app, this would send to your api
-            console.log('Form submitted:', formData);
-            setSubmitted(true);
             setFormData({
                 name: '',
                 employeeId: '',
@@ -1476,7 +1473,6 @@ const CleanerProfile = () => {
                 message: '',
                 urgency: 'normal'
             });
-            setTimeout(() => setSubmitted(false), 5000);
         };
 
         const faqs = [

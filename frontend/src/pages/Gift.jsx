@@ -28,13 +28,6 @@ const Gift = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsProcessing(true);
-
-        // Simulate processing
-        setTimeout(() => {
-            setIsProcessing(false);
-            setOrderComplete(true);
-        }, 2000);
     };
 
     if (orderComplete) {

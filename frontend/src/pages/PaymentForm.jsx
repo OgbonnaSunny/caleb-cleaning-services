@@ -4,9 +4,9 @@ import { loadStripe } from '@stripe/stripe-js';
 import api from "./api.js";
 
 // Load CheckoutHome outside the component
-const stripePromise = loadStripe('your_publishable_key');
 
 const PaymentForm = () => {
+    const stripePromise = loadStripe('your_publishable_key');
     const [email, setEmail] = useState('');
     const [customerId, setCustomerId] = useState('');
     const [paymentMethods, setPaymentMethods] = useState([]);

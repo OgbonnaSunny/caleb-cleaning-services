@@ -23,16 +23,9 @@ const ClientsForm = () => {
                headers: {'Content-Type': 'application/json'},
                body: JSON.stringify({tableName, columns}),
            });
-           if (!response.ok) {
-               alert('Failed to save client.')
-           }
-           else {
-               alert('Successfully created client.')
-           }
 
         } catch (error) {
             console.log(`Error: ${error}`)
-            alert('error occured')
         }
     }
 

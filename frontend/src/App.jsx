@@ -89,5 +89,4 @@ function App() {
     );
 }
 
-window.open('/pricy/cancellation', '_blank');
 export default App;

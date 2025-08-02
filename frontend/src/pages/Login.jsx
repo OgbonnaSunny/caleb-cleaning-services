@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from './api.js'
 import {Link, useNavigate} from "react-router-dom";
-import CheckoutHome from "./CheckoutHome.jsx";
 import Payment from "./Payment.jsx";
 import LOGO from "../images/logo3.png";
 

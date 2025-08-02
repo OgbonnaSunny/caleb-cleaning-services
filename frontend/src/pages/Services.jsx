@@ -5134,10 +5134,6 @@ const Services = () => {
     navigate('/checkout', { state: { postcode: postcode } });
   };
 
-  useEffect(() => {
-    setTimeout(() => setClearText({display: 'none'}), 4000)
-  }, [error])
-
   // words-container
 
   return (

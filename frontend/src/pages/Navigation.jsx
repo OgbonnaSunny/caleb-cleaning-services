@@ -116,7 +116,7 @@ const Navigation = () => {
                 <div style={{display:'block'} } >
                     <div className="navbar-logo" >
                         <img src={LOGO} alt="logo" className="logo-icon"  />
-                        <p className="email">flyclean02@gmail.com</p>
+                        <p className="email">Fly Cleaner</p>
                         <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
                         <MdDashboard style={{color:'navy'}} size={20}  onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
                         <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />

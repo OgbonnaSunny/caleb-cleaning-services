@@ -30,7 +30,6 @@ const Settings = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Save settings logic would go here
-        alert('Settings saved successfully!');
     };
 
     return (
