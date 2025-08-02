@@ -127,7 +127,7 @@ const Customer = () => {
                      setIsLoading(false);
                  })
          };
-         fetchCleanerData()
+       //  fetchCleanerData()
     }, []);
 
     useEffect(() => {
