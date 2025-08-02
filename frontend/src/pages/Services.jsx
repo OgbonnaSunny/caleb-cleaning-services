@@ -5231,7 +5231,9 @@ const Services = () => {
                       </div>
                   ))}
                 </div>
-                <button onClick={handleResultChange} style={{width:'150px', background:'white', color:'blue', marginTop:'10px'}}>{resultList.length === miniResults.length ? 'See more' : 'See less'}</button>
+                <button onClick={handleResultChange} style={{width:'150px', background:'white', color:'blue', marginTop:'10px'}}>
+                  {resultList.length === miniResults.length ? 'See more' : 'See less'}
+                </button>
               </div>
             </div>
           </section>

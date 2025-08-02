@@ -116,11 +116,11 @@ const Navigation = () => {
                 <div style={{display:'block'} } >
                     <div className="navbar-logo" >
                         <img src={LOGO} alt="logo" className="logo-icon"  />
-                        <p className="email">Fly Cleaner</p>
+                        <p className="experience-text">Fly Cleaner</p>
                         <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
-                        <MdDashboard style={{color:'navy'}} size={20}  onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
-                        <MdAdminPanelSettings size={20} style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
-                        <FaBars style={{width:'20px', height:'30px'}}  className={` hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>open</FaBars>
+                        <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
+                        <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
+                        <FaBars style={{width:'40px', height:'30px', marginLeft:'10px'}}  className={` hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>open</FaBars>
                     </div>
                     <ul className={`nav-menu ${isMobile ? 'mobile' : ''} ${isOpen ? 'active' : ''}`}>
                         {navLinks.map(link => (<li key={link.id} className="nav-item" >
