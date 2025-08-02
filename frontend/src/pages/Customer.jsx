@@ -103,7 +103,7 @@ const Customer = () => {
     }
 
     useEffect(() => {
-         const fetchCleanerData = () => {
+        /* const fetchCleanerData = () => {
              const user = JSON.parse(localStorage.getItem('user'));
              if (user === null || user === undefined) {
                  setMessage('User not signed in');
@@ -127,7 +127,7 @@ const Customer = () => {
                      setIsLoading(false);
                  })
          };
-       //  fetchCleanerData()
+         fetchCleanerData()*/
     }, []);
 
     useEffect(() => {
