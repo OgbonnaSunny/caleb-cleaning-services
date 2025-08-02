@@ -1465,7 +1465,7 @@ const CleanerProfile = () => {
 
         const handleSubmit = (e) => {
             e.preventDefault();
-            // In a real app, this would send to your backend
+            // In a real app, this would send to your api
             console.log('Form submitted:', formData);
             setSubmitted(true);
             setFormData({

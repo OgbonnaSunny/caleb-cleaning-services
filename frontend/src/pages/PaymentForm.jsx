@@ -78,7 +78,7 @@ const PaymentForm = () => {
         setIsSubmitting(true);
         setMessage('');
         try {
-            // First create subscription on backend
+            // First create subscription on api
             const response = await fetch('/create-subscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

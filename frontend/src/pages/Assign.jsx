@@ -7,7 +7,7 @@ const Assign = () => {
 
   const handleSubmit = (e) => {
       e.preventDefault();
-      setAreaList([]); // to be replaced with backend code
+      setAreaList([]); // to be replaced with api code
       setAreaName('');
 
   }
