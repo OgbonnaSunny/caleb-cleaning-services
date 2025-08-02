@@ -104,9 +104,13 @@ const Customer = () => {
 
     useEffect(() => {
          const fetchCleanerData = () => {
+             const user = JSON.parse(localStorage.getItem('user'));
+             if (user === null || user === undefined) {
+                 setMessage('User not signed in');
+                 return;
+             }
              setIsLoading(true);
-             const user1 = JSON.parse(localStorage.getItem('user'));
-             api.post('/api/booking/new-booking', {email: user1.email})
+             api.post('/api/booking/new-booking', {email: user.email})
                  .then(response => {
                      const { booking } = response.data;
                      if (booking) {
