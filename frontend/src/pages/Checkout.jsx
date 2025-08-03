@@ -53,11 +53,15 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { debounce } from 'lodash';
+import LOGO from "../images/logo3.png";
+import {Surface} from "recharts";
 
 const Checkout = () => {
     const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
     const location = useLocation();
     const { postcode } = location.state || {};
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef(null);
 
     let stripe;
     let elements;
@@ -2598,6 +2602,7 @@ const Checkout = () => {
 
                     </div>
                     <div className={'question-container'}>
+                        {formData.totalAmount > 0 && <div> <Summary /></div> }
                         {starter !== starters[2].starter &&  <div>
                             <div style={{display:'flex', justifyContent:'center'}}>
                                 < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px'}}
@@ -2735,9 +2740,37 @@ const Checkout = () => {
         );
     }
 
+
     function Summary() {
+
+        useEffect(() => {
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting === isVisible) {
+                        return;
+                    }
+                    setIsVisible(entry.isIntersecting);
+                },
+                {
+                    root: null, // viewport
+                    rootMargin: '0px',
+                    threshold: 0.2 // 10% of the element must be visible
+                }
+            );
+
+            if (ref.current) {
+                observer.observe(ref.current);
+            }
+
+            return () => {
+                if (ref.current) {
+                    observer.unobserve(ref.current);
+                }
+            };
+        }, []);
+
         return (
-            <div className={'checkout-summary-container'}>
+            <div ref={ref} className={'checkout-summary-container'}>
                 <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
                     <h3 style={{textAlign:'center', marginBottom:'5px'}}>Booking Summary</h3>
                     <div className={'checkout-summary-unit'}>
@@ -3491,6 +3524,7 @@ const Checkout = () => {
     }, [debouncedSave]);
 
     const Data = () => {
+        const [name, setName] = useState('');
 
         return (
             <Form>
@@ -3710,239 +3744,251 @@ const Checkout = () => {
                 flexDirection: "column",
                 minHeight: "100vh",
             }}>
-
-            <div style={{
-                width:'100%',
-                display:'flex',
-                flexDirection:'column',
-                justifyContent:'center',
-                marginTop:'20px'}}>
-                <div className={['form-group', 'main-banner'].join(' ')}>
-                    <Steps />
-                    {currentStep <= 0 &&  <Plan /> }
-                    {currentStep === 1 &&  <Schedule />}
-                    {currentStep === 2 && <Task /> }
-                    {currentStep === 3 &&  <Data /> }
-                    {(currentStep === 4 || currentStep === 5)  && <div>
-                        <div className={['checkout-box', 'main-banner'].join(' ')}>
-                            <div  className={['checkout-container', 'main-banner'].join(' ')}>
-                                <div>
-                                    <div>
-                                        <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                            <input
-                                                id="policy"
-                                                name={'policy'}
-                                                type='checkbox'
-                                                onChange={() => setFormData({...formData, policy: !formData.policy})}
-                                            />
-                                            <label style={{marginTop:'10px', marginLeft:'10px', maxWidth:'900px'}}>Fly cleaners require personal data to process your booking.
-                                                For more information please see our <Link to={'/privacy'} style={{color:'blue'}}>Privacy </Link>policy.
-                                                By ticking this box you accept our <Link to={'/booking'} style={{color:'blue'}}>Booking</Link>,
-                                                <Link style={{color:'blue'}} to={'/terms'}>Terms & Conditions</Link> and <Link style={{color:'blue'}} to={'/cancellation'}>Cancellation </Link>policies.</label>
-                                        </div>
-                                        {errors.policy && <span className="error-message">{errors.policy}</span>}
-                                    </div>
-                                    <div>
-                                        <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                            <input
-                                                id="authorization"
-                                                name={'authorization'}
-                                                type='checkbox'
-                                                onChange={() => setFormData({...formData, authorization: !formData.authorization})}
-                                            />
-                                            <label style={{marginTop:'10px', marginLeft:'10px', maxWidth:'900px'}}>
-                                                In accordance with the Strong Customer Authentication Regulation (SCA), I authorise you, Fly cleaners,
-                                                to send instructions to the financial institution that issue my card to take payments from my card in accordance with the <Link to={'/terms'} style={{color:'blue'}}>terms of my agreement</Link> with you
-                                            </label>
-                                        </div>
-                                        {errors.authorization && <span className="error-message">{errors.authorization}</span>}
-                                    </div>
-                                </div>
-                                { (clientSecret !== null && clientSecret !== undefined && clientSecret.trim().length > 0) && <PaymentPlatform />}
-                            </div>
-                            <div className="question-container">
-                                <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
-                                    <h3 style={{textAlign:'center', marginBottom:'20px'}}>Booking Summary</h3>
-                                    <div style={{display:'flex', flexDirection:'row', alignItems:'start', justifyContent:'center'}}>
-                                        <p style={{textAlign:'center'}}>{format(formData.date, 'EEEE, d MMMM yyyy')} {formData.time}</p>
-                                    </div>
-                                    <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
-                                        <p style={{width:'40px'}}>Tarrif</p>
-                                        {formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
-                                        {!formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan} <span style={{fontWeight:'lighter'}}>Subscription</span></h3> }
-                                    </div>
-                                    <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
-                                        <p>Rate</p>
-                                        <h3 style={{textAlign:'end'}}>£{formData.rate}/h</h3>
-                                    </div>
-                                    <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
-                                        <p>Minimum Price</p>
-                                        <h3 style={{textAlign:'end'}}>£{formData.minimumEstimate}</h3>
-                                    </div>
-
-                                    {!formData.onSubscription &&  <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
-                                        <p>Level of dirt</p>
-                                        <h3 style={formData.nature === 'Light' ? {color:'green', textAlign:'end'} :
-                                            formData.nature === 'Medium' ? {color:'blue', textAlign:'end'}: {color:'red', textAlign:'end'}}>
-                                            {formData.nature}
-                                        </h3>
-                                    </div> }
-
-                                    {formData.durationQty > 0 &&  <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
-                                        <p>Estimated duration</p>
-                                        <h3 style={{textAlign:'end'}}>{formData.duration}</h3>
-                                    </div> }
-
-                                </div>
-                                {formData.booking.map(task => (
-                                    <div key={task.id}>
-                                        <div className={task.totalPrice <= 10 ? 'one':
-                                            task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
-                                            <div className={'line'} style={{height:'1px'}}/>
-                                            <div className={'summary-row'}>
-                                                {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
-                                                {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
-                                                {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
-                                                                                              onClick={() =>
-                                                                                              {task.id <= 10 ? addRoomQuote(task.id) : addApplienceQuote(task.id)}}
-                                                /> }
-                                                <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
-                                                <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} />
-                                            </div>
-                                            <div className={'line'} style={{height:'1px'}}/>
-                                        </div>
-                                    </div>
-                                ))}
-                                {formData.choresPrevPrice > 0 && <div>
-                                    {formData.chores.map(task => (
-                                        <div key={task.id}>
-                                            <div className={'chores'}>
-                                                <div className={'summary-row'}>
-                                                    {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
-                                                    {task.time.length > 0 && <p style={{textAlign:'center', flex:'1'}}>{task.time}</p> }
-                                                    <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
-                                                    <FaTimes style={{width:'30px', marginLeft:'10px'}}
-                                                             onClick={() => setFormData({...formData,
-                                                                 totalAmount: (formData.totalAmount - formData.choresPrevPrice),
-                                                                 choresPrevPrice: 0,
-                                                                 erranTimeInMinutes: 0,
-                                                                 errandTime: '0'
-                                                             })
-                                                             }/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>}
-                                <div className={'line'} style={{height:'2px'}}/>
-                                {formData.totalAmount > 0 && <div className={'total'}>
-                                    <h3 style={{fontSize:'x-large'}} >Estimated amount</h3>
-                                    <p style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</p>
-                                </div>}
-                                <div className={'line'} style={{height:'2px'}}/>
-                                {starter !== starters[2].starter && <div>
-                                    <div style={{display:'flex', alignItems:'baseline', flexDirection:'row',justifyContent:'space-between', marginTop:'50px'}}>
-                                        <h3 style={{flex:'1'}}>Need to know</h3>
-                                        <FaArrowRight size={20} className={formData.show2 === true ? 'rotate-up': 'rotate-down'}
-                                                      style={{alignSelf:'end', marginBottom:'10px', width:'30px'}}
-                                                      onClick={() => {formData.show2 === true ? setFormData({...formData, show2: false}) :
-                                                          setFormData({...formData, show2: true})}}
-                                        />
-                                    </div>
-
-                                    <div style={formData.show2 === true ? showQs : hideQs}>
-                                        {paymentFAQs2.map(question => (
-                                            <div key={question.id}>
+            <div className="sticky-nav-container">
+                <nav  className='top-order-nav'>
+                    {(formData.totalAmount > 0 && !isVisible) &&
+                        <p className={'booking-amount'}>
+                            Total Amount: £{formData.totalAmount}
+                    </p> }
+                    <div className="nav-order-content">
+                        <img style={{display:'none'}} src={LOGO} className={'logo-icon'}/>
+                        <Steps />
+                    </div>
+                </nav>
+                <main className={["main-content", "main-banner"].join(" ")}>
+                    <div style={{
+                        width:'100%',
+                        display:'flex',
+                        flexDirection:'column',
+                        justifyContent:'center',
+                        marginTop:'20px'}}>
+                        <div className={['form-group', 'main-banner'].join(' ')}>
+                            {currentStep <= 0 &&  <Plan /> }
+                            {currentStep === 1 &&  <Schedule />}
+                            {currentStep === 2 && <Task /> }
+                            {currentStep === 3 &&  <Data /> }
+                            {(currentStep === 4 || currentStep === 5)  && <div>
+                                <div className={['checkout-box', 'main-banner'].join(' ')}>
+                                    <div  className={['checkout-container', 'main-banner'].join(' ')}>
+                                        <div>
+                                            <div>
                                                 <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                                    <h4>{question.question}</h4>
-                                                    <MdKeyboardArrowDown className={formData.questionIds2.includes(question.id) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
-                                                                         onClick={() => updateIds2(question.id)}
+                                                    <input
+                                                        id="policy"
+                                                        name={'policy'}
+                                                        type='checkbox'
+                                                        onChange={() => setFormData({...formData, policy: !formData.policy})}
                                                     />
+                                                    <label style={{marginTop:'10px', marginLeft:'10px', maxWidth:'900px'}}>Fly cleaners require personal data to process your booking.
+                                                        For more information please see our <Link to={'/privacy'} style={{color:'blue'}}>Privacy </Link>policy.
+                                                        By ticking this box you accept our <Link to={'/booking'} style={{color:'blue'}}>Booking</Link>,
+                                                        <Link style={{color:'blue'}} to={'/terms'}>Terms & Conditions</Link> and <Link style={{color:'blue'}} to={'/cancellation'}>Cancellation </Link>policies.</label>
                                                 </div>
-                                                {formData.questionIds2.includes(question.id) && <p style={{marginLeft:'10px'}} className={'slide-in'}>{question.answer}</p> }
+                                                {errors.policy && <span className="error-message">{errors.policy}</span>}
+                                            </div>
+                                            <div>
+                                                <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
+                                                    <input
+                                                        id="authorization"
+                                                        name={'authorization'}
+                                                        type='checkbox'
+                                                        onChange={() => setFormData({...formData, authorization: !formData.authorization})}
+                                                    />
+                                                    <label style={{marginTop:'10px', marginLeft:'10px', maxWidth:'900px'}}>
+                                                        In accordance with the Strong Customer Authentication Regulation (SCA), I authorise you, Fly cleaners,
+                                                        to send instructions to the financial institution that issue my card to take payments from my card in accordance with the <Link to={'/terms'} style={{color:'blue'}}>terms of my agreement</Link> with you
+                                                    </label>
+                                                </div>
+                                                {errors.authorization && <span className="error-message">{errors.authorization}</span>}
+                                            </div>
+                                        </div>
+                                        { (clientSecret !== null && clientSecret !== undefined && clientSecret.trim().length > 0) && <PaymentPlatform />}
+                                    </div>
+                                    <div className="question-container">
+                                        <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
+                                            <h3 style={{textAlign:'center', marginBottom:'20px'}}>Booking Summary</h3>
+                                            <div style={{display:'flex', flexDirection:'row', alignItems:'start', justifyContent:'center'}}>
+                                                <p style={{textAlign:'center'}}>{format(formData.date, 'EEEE, d MMMM yyyy')} {formData.time}</p>
+                                            </div>
+                                            <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
+                                                <p style={{width:'40px'}}>Tarrif</p>
+                                                {formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
+                                                {!formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan} <span style={{fontWeight:'lighter'}}>Subscription</span></h3> }
+                                            </div>
+                                            <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
+                                                <p>Rate</p>
+                                                <h3 style={{textAlign:'end'}}>£{formData.rate}/h</h3>
+                                            </div>
+                                            <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
+                                                <p>Minimum Price</p>
+                                                <h3 style={{textAlign:'end'}}>£{formData.minimumEstimate}</h3>
+                                            </div>
+
+                                            {!formData.onSubscription &&  <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
+                                                <p>Level of dirt</p>
+                                                <h3 style={formData.nature === 'Light' ? {color:'green', textAlign:'end'} :
+                                                    formData.nature === 'Medium' ? {color:'blue', textAlign:'end'}: {color:'red', textAlign:'end'}}>
+                                                    {formData.nature}
+                                                </h3>
+                                            </div> }
+
+                                            {formData.durationQty > 0 &&  <div style={{display:'flex', alignItems:'center', padding:'5px'}}>
+                                                <p>Estimated duration</p>
+                                                <h3 style={{textAlign:'end'}}>{formData.duration}</h3>
+                                            </div> }
+
+                                        </div>
+                                        {formData.booking.map(task => (
+                                            <div key={task.id}>
+                                                <div className={task.totalPrice <= 10 ? 'one':
+                                                    task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
+                                                    <div className={'line'} style={{height:'1px'}}/>
+                                                    <div className={'summary-row'}>
+                                                        {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
+                                                        {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
+                                                        {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
+                                                                                                      onClick={() =>
+                                                                                                      {task.id <= 10 ? addRoomQuote(task.id) : addApplienceQuote(task.id)}}
+                                                        /> }
+                                                        <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
+                                                        <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} />
+                                                    </div>
+                                                    <div className={'line'} style={{height:'1px'}}/>
+                                                </div>
                                             </div>
                                         ))}
-
-                                        <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                            <h4>Are my payment details secure?</h4>
-                                            <MdKeyboardArrowDown className={formData.questionIds2.includes(6) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
-                                                                 onClick={() => updateIds2(6)}
-                                            />
-                                        </div>
-                                        {formData.questionIds2.includes(6) && <p style={{marginLeft:'10px'}} className={'slide-in'}>
-                                            Yes, your bank details are securely stored by <Link to={'https://stripe.com/'} style={{color:'blue'}}>Stripe</Link>, our PCI-compliant payment processor. We never store card details directly.
-                                        </p> }
-                                    </div>
-                                </div> }
-                                { starter === starters[2].starter &&
-                                    <div>
-                                        <div style={{display:'flex', alignItems:'baseline', flexDirection:'row',justifyContent:'space-between', marginTop:'50px'}}>
-                                            <h3 style={{flex:'1'}}>Need to know</h3>
-                                            <img src={Info} style={{width:'20px', height:'20px', marginLeft:'10px', color:'black'}}
-                                                 onClick={()=>{formData.showInfo1 === true ?
-                                                     setFormData({...formData, showInfo1: false}) : setFormData({...formData, showInfo1: true})}}
-                                            />
-                                            <img src={Info} style={{width:'20px', height:'20px', marginLeft:'10px'}}
-                                                 onClick={()=>{formData.showInfo2 === true ?
-                                                     setFormData({...formData, showInfo2: false}) : setFormData({...formData, showInfo2: true})}}
-                                            />
-                                            <FaArrowRight size={20} className={formData.show === true ? 'rotate-up': 'rotate-down'}
-                                                          style={{alignSelf:'end', marginBottom:'10px', width:'30px'}}
-                                                          onClick={() => {formData.show === true ? setFormData({...formData, show: false}) :
-                                                              setFormData({...formData, show: true})}}
-                                            />
-                                        </div>
-                                        <div style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', marginTop:'10px', padding:'5px'}}>
-                                            {formData.showInfo1 === true &&  <div style={{flex:'1'}} className={'slide-in'}>
-                                                <h4 style={{color:'blue'}}>Estimated amount</h4>
-                                                <p>
-                                                    As we charge customers by Pay as You Go approach, you will pay only for
-                                                    the real time a cleaner worked at your property.
-                                                    If the cleaning job is completed faster than it was estimated,
-                                                    you will pay less. In case your cleaning job took longer time,
-                                                    you will pay a little bit more but never more than 1 hour extra.
-                                                </p>
-                                            </div>}
-                                            {formData.showInfo2 === true &&  <div style={{flex:'1'}} className={'slide-in'}>
-                                                <h4 style={{color:'blue'}}>Estimated duration</h4>
-                                                <p>
-                                                    Based on your selection our system estimates the time it would take for our Fly cleaners to clean your home and usually,
-                                                    we are able complete your cleaning job within the estimated time however we may need an additional
-                                                    hour if the property is more dirty or larger than estimated.
-                                                </p>
-                                            </div>}
-                                        </div>
-                                        <div style={formData.show === true ? showQs : hideQs}>
-                                            {carpetCleaningFAQs.map(question => (
-                                                <div key={question.id}>
-                                                    <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                                        <h4>{question.question}</h4>
-                                                        <MdKeyboardArrowDown className={formData.questionIds.includes(question.id) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
-                                                                             onClick={() => updateIds(question.id)}
-                                                        />
+                                        {formData.choresPrevPrice > 0 && <div>
+                                            {formData.chores.map(task => (
+                                                <div key={task.id}>
+                                                    <div className={'chores'}>
+                                                        <div className={'summary-row'}>
+                                                            {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
+                                                            {task.time.length > 0 && <p style={{textAlign:'center', flex:'1'}}>{task.time}</p> }
+                                                            <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
+                                                            <FaTimes style={{width:'30px', marginLeft:'10px'}}
+                                                                     onClick={() => setFormData({...formData,
+                                                                         totalAmount: (formData.totalAmount - formData.choresPrevPrice),
+                                                                         choresPrevPrice: 0,
+                                                                         erranTimeInMinutes: 0,
+                                                                         errandTime: '0'
+                                                                     })
+                                                                     }/>
+                                                        </div>
                                                     </div>
-                                                    {formData.questionIds.includes(question.id) && <p style={{marginLeft:'10px'}} className={'slide-in'}>{question.answer}</p> }
                                                 </div>
                                             ))}
-                                        </div>
-                                    </div>
-                                }
-                            </div>
+                                        </div>}
+                                        <div className={'line'} style={{height:'2px'}}/>
+                                        {formData.totalAmount > 0 && <div className={'total'}>
+                                            <h3 style={{fontSize:'x-large'}} >Estimated amount</h3>
+                                            <p style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</p>
+                                        </div>}
+                                        <div className={'line'} style={{height:'2px'}}/>
+                                        {starter !== starters[2].starter && <div>
+                                            <div style={{display:'flex', alignItems:'baseline', flexDirection:'row',justifyContent:'space-between', marginTop:'50px'}}>
+                                                <h3 style={{flex:'1'}}>Need to know</h3>
+                                                <FaArrowRight size={20} className={formData.show2 === true ? 'rotate-up': 'rotate-down'}
+                                                              style={{alignSelf:'end', marginBottom:'10px', width:'30px'}}
+                                                              onClick={() => {formData.show2 === true ? setFormData({...formData, show2: false}) :
+                                                                  setFormData({...formData, show2: true})}}
+                                                />
+                                            </div>
 
+                                            <div style={formData.show2 === true ? showQs : hideQs}>
+                                                {paymentFAQs2.map(question => (
+                                                    <div key={question.id}>
+                                                        <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
+                                                            <h4>{question.question}</h4>
+                                                            <MdKeyboardArrowDown className={formData.questionIds2.includes(question.id) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
+                                                                                 onClick={() => updateIds2(question.id)}
+                                                            />
+                                                        </div>
+                                                        {formData.questionIds2.includes(question.id) && <p style={{marginLeft:'10px'}} className={'slide-in'}>{question.answer}</p> }
+                                                    </div>
+                                                ))}
+
+                                                <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
+                                                    <h4>Are my payment details secure?</h4>
+                                                    <MdKeyboardArrowDown className={formData.questionIds2.includes(6) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
+                                                                         onClick={() => updateIds2(6)}
+                                                    />
+                                                </div>
+                                                {formData.questionIds2.includes(6) && <p style={{marginLeft:'10px'}} className={'slide-in'}>
+                                                    Yes, your bank details are securely stored by <Link to={'https://stripe.com/'} style={{color:'blue'}}>Stripe</Link>, our PCI-compliant payment processor. We never store card details directly.
+                                                </p> }
+                                            </div>
+                                        </div> }
+                                        { starter === starters[2].starter &&
+                                            <div>
+                                                <div style={{display:'flex', alignItems:'baseline', flexDirection:'row',justifyContent:'space-between', marginTop:'50px'}}>
+                                                    <h3 style={{flex:'1'}}>Need to know</h3>
+                                                    <img src={Info} style={{width:'20px', height:'20px', marginLeft:'10px', color:'black'}}
+                                                         onClick={()=>{formData.showInfo1 === true ?
+                                                             setFormData({...formData, showInfo1: false}) : setFormData({...formData, showInfo1: true})}}
+                                                    />
+                                                    <img src={Info} style={{width:'20px', height:'20px', marginLeft:'10px'}}
+                                                         onClick={()=>{formData.showInfo2 === true ?
+                                                             setFormData({...formData, showInfo2: false}) : setFormData({...formData, showInfo2: true})}}
+                                                    />
+                                                    <FaArrowRight size={20} className={formData.show === true ? 'rotate-up': 'rotate-down'}
+                                                                  style={{alignSelf:'end', marginBottom:'10px', width:'30px'}}
+                                                                  onClick={() => {formData.show === true ? setFormData({...formData, show: false}) :
+                                                                      setFormData({...formData, show: true})}}
+                                                    />
+                                                </div>
+                                                <div style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', marginTop:'10px', padding:'5px'}}>
+                                                    {formData.showInfo1 === true &&  <div style={{flex:'1'}} className={'slide-in'}>
+                                                        <h4 style={{color:'blue'}}>Estimated amount</h4>
+                                                        <p>
+                                                            As we charge customers by Pay as You Go approach, you will pay only for
+                                                            the real time a cleaner worked at your property.
+                                                            If the cleaning job is completed faster than it was estimated,
+                                                            you will pay less. In case your cleaning job took longer time,
+                                                            you will pay a little bit more but never more than 1 hour extra.
+                                                        </p>
+                                                    </div>}
+                                                    {formData.showInfo2 === true &&  <div style={{flex:'1'}} className={'slide-in'}>
+                                                        <h4 style={{color:'blue'}}>Estimated duration</h4>
+                                                        <p>
+                                                            Based on your selection our system estimates the time it would take for our Fly cleaners to clean your home and usually,
+                                                            we are able complete your cleaning job within the estimated time however we may need an additional
+                                                            hour if the property is more dirty or larger than estimated.
+                                                        </p>
+                                                    </div>}
+                                                </div>
+                                                <div style={formData.show === true ? showQs : hideQs}>
+                                                    {carpetCleaningFAQs.map(question => (
+                                                        <div key={question.id}>
+                                                            <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
+                                                                <h4>{question.question}</h4>
+                                                                <MdKeyboardArrowDown className={formData.questionIds.includes(question.id) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
+                                                                                     onClick={() => updateIds(question.id)}
+                                                                />
+                                                            </div>
+                                                            {formData.questionIds.includes(question.id) && <p style={{marginLeft:'10px'}} className={'slide-in'}>{question.answer}</p> }
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                                {currentStep === 4
+                                    && <div style={{marginLeft:'40px,',
+                                        marginRight:'40px',
+                                        padding:'20px', maxWidth:'700px'}} className="form-actions">
+                                        <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
+                                            Back
+                                        </button>
+                                        <button disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
+                                            {processing ? 'Processing data...' : 'Next'}
+                                        </button>
+                                    </div>}
+                            </div> }
                         </div>
-                        {currentStep === 4
-                            && <div style={{marginLeft:'40px,',
-                                marginRight:'40px',
-                                padding:'20px', maxWidth:'700px'}} className="form-actions">
-                                <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
-                                    Back
-                                </button>
-                                <button disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
-                                    {processing ? 'Processing data...' : 'Next'}
-                                </button>
-                            </div>}
-                    </div> }
-                </div>
+                    </div>
+                </main>
             </div>
         </Formik>
     )

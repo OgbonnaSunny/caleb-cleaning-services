@@ -47,17 +47,17 @@ const Reclean = () => {
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
         {error && <label style={clearText} className={['slide-in', 'error-label'].join(' ')} >{error}</label>}
-        <div className={"section-container"}>
-          <section style={{marginTop:'50px', marginBottom:'10px'}}>
+        <div className={"service-banner"}>
+          <section style={{ marginBottom:'10px'}}>
             <div className={'container'} style={{maxWidth:'1200px'}}>
-              <h1 className={'help-text'} style={{color:'navy'}}>Unhappy with your clean? Reclean Guarantee</h1>
-              <p style={{width:'100%'}}>We care about the quality of our services and offer the Reclean Guarantee to our customers.
-                Compensation can be provided in the form of a reclean, credit to your account, complimentary future clean or free additional addons.</p>
+              <h1 className={'experience-text'} style={{color:'navy'}}>Unhappy with your clean? Reclean Guarantee</h1>
+              <p style={{width:'100%', textAlign:'start'}}>We care about the quality of our services and offer the Reclean Guarantee to our customers.
+                Compensation can be provided in the form of a reclean, credit to your account, complimentary future clean or free additional add-ons.</p>
             </div>
           </section>
 
-          <section className={['main-banner', 'container'].join(' ')} style={{marginTop:'50px', marginBottom:'30px'}}>
-            <div className={'main-banner'} style={{display:'block'}} >
+          <section className={['container'].join(' ')} style={{marginTop:'50px', marginBottom:'30px'}}>
+            <div className={''} style={{display:'block'}} >
 
               <div style={{display:'flex', justifyContent:'center'}}>
                 < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px', marginBottom:'30px'}}
@@ -96,7 +96,7 @@ const Reclean = () => {
             </div>
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px'}}>
+          <section className={''} style={{marginTop:'50px'}}>
             <div className={"container"} style={{maxWidth:'800px'}}>
               <div className={'price-container'}>
                 <h2 style={{color:'navy'}}>Book cleaning service</h2>
@@ -108,7 +108,7 @@ const Reclean = () => {
 
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px', marginBottom:'30px'}}>
+          <section className={''} style={{marginTop:'50px', marginBottom:'30px'}}>
             <div className="container">
               <div className="burden-container">
                 <img src={Sweeping} className={'cart-image4'} alt="" />
@@ -126,9 +126,8 @@ const Reclean = () => {
 
           </section>
 
-          < Footer />
         </div>
-
+        < Footer />
       </div>
   );
 }

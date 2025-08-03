@@ -112,9 +112,10 @@ const Navigation = () => {
 
     return (
         <div  style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
-            {shouldShowNavbar && <nav className="navbar"  >
-                <div style={{display:'block'} } >
-                    <div className="navbar-logo" >
+            {shouldShowNavbar &&
+                <nav className="navbar"  >
+                    <div style={{display:'block'} } >
+                        <div className="navbar-logo" >
                         <img src={LOGO} alt="logo" className="logo-icon"  />
                         <p className="experience-text">Fly Cleaner</p>
                         <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
@@ -134,7 +135,8 @@ const Navigation = () => {
                         </li>))}
                     </ul>
                 </div>
-            </nav> }
+            </nav>
+            }
         </div>
     );
 };

@@ -239,31 +239,31 @@ img {
 /* ===== Hero Banner ===== */
 .hero-banner {
   padding: 280px 0 140px;
-  background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
   url('./images/cleaners.png') no-repeat center center/cover;
   color: white;
   text-align: center;
 }
 .service-banner {
-  padding: 280px 0 140px;
-  background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+  padding: 20px 0 140px;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
   url('./images/wave2.png') no-repeat center center/cover;
-  color: white;
+  color: black;
   text-align: center;
 }
 @media (max-width: 768px) {
   .service-banner {
-    padding: 150px 0 80px;
-    background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+    padding: 10px 0 80px;
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('./images/wave2.png') no-repeat center center/cover;
-    color: white;
+    color: black;
     text-align: center;
   }
 }
 
 .location-banner {
   padding: 280px 0 140px;
-  background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
   url('./images/map.png') no-repeat center center/cover;
   color: white;
   text-align: center;
@@ -272,7 +272,7 @@ img {
 @media (max-width: 768px) {
   .location-banner {
     padding: 150px 0 80px;
-    background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('./images/map.png') no-repeat center center/cover;
     color: white;
     text-align: center;
@@ -280,7 +280,7 @@ img {
 }
 .price-banner {
   padding: 280px 0 140px;
-  background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
   url('./images/price.png') no-repeat center center/cover;
   color: white;
   text-align: center;
@@ -288,7 +288,7 @@ img {
 @media (max-width: 768px) {
   .price-banner {
     padding: 150px 0 80px;
-    background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('./images/price.png') no-repeat center center/cover;
     color: white;
     text-align: center;
@@ -297,7 +297,7 @@ img {
 
 .become-banner {
   padding: 220px 0 100px;
-  background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
   url('./images/wave.png') no-repeat center center/cover;
   color: white;
   text-align: center;
@@ -305,7 +305,7 @@ img {
 @media (max-width: 768px) {
   .become-banner {
     padding: 90px 0 40px;
-    background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('./images/wave.png') no-repeat center center/cover;
     color: white;
     text-align: center;
@@ -314,16 +314,16 @@ img {
 
 .help-banner {
   padding: 280px 0 140px;
-  background: linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.10)),
-  url('./images/wave.png') no-repeat center center/cover;
-  color: white;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+  url('./images/wave.png') repeat center center/cover;
+  color: black;
   text-align: center;
 }
 
 @media (max-width: 768px) {
   .help-banner {
     padding: 120px 0 60px;
-    background: linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.10)),
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('./images/wave.png') no-repeat center center/cover;
     color: white;
     text-align: center;
@@ -337,7 +337,7 @@ img {
 }
 
 .footer-banner {
-  background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
   url('./images/footer.png') no-repeat center center/cover;
   color: white;
   padding: 80px 0 0;
@@ -985,7 +985,7 @@ img {
 @media (max-width: 768px) {
   .hero-banner {
     padding: 100px 0 50px;
-    background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
     url('./images/cleaners.png') no-repeat center center/cover;
     color: white;
     text-align: center;
@@ -1031,6 +1031,19 @@ img {
   list-style-type: square;
   margin-bottom: 8px; /* Space between items */
   padding-left: 20px;
+}
+
+ul {
+  list-style-type: square;
+}
+
+ul li::marker {
+  color: blue;
+  font-size: 1.5rem;
+}
+
+ul li {
+  color: black;
 }
 
 .image-display {
@@ -4767,6 +4780,10 @@ input[type="checkbox"]:checked {
   background-color: #ecf0f1;
 }
 
+.booking-amount {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .nav-order-item {
     padding: 0.1rem;
@@ -4774,11 +4791,22 @@ input[type="checkbox"]:checked {
   }
   .main-content {
     flex: 1;
-    padding: 1rem;
+    padding: 0.2rem;
     margin: 0 auto;
     background-color: #ecf0f1;
   }
+  .booking-amount {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    width: 100%;
+    justify-content: flex-end;
+    padding-right: 10px;
+    font-size: medium;
+    color: #646cff;
+  }
 }
+
 
 /* Base Styles */
 .profile-container {
@@ -6496,11 +6524,12 @@ tr:hover {
 }
 
 .logo-icon {
-  width: 100px;
-  height: 80px;
+  width: 80px;
+  height: 100px;
+  margin-right: 10px;
 }
 .logo-icon2 {
-  width: 100px;
+  width: 80px;
   height: 30px;
 }
 

@@ -203,51 +203,68 @@ const Overview = () => {
                 </div>
             </section>
 
-            <section className={"main-banner"}>
-                <div className="container">
-                    <div className="row" style={{paddingBottom:'50px', marginTop:'30px'}}>
-                        <h1 className={'experience-text'}>Fly Cleaners</h1>
-                        <p>
-                            Hiring cleaners in West London goes beyond affordability, and flymax profesional cleaning services in West London save you time, ensure proper house cleaning, and give your surroundings a breath of fresh air. The types of domestic cleaning services offered extend well beyond the standard packages, so you can easily customise your order depending on what your specific requirements for cleaning are at the time, for example, you can easily order end of tenancy cleaning or office cleaning.
-                        </p>
-                    </div>
-                    <div className="section-header">
-                        <h1 className={'experience-text'}>Our Cleaning Services</h1>
-                        <p>We offer comprehensive cleaning solutions tailored to your needs</p>
-                    </div>
-                    <div style={{display:'block'}} className={'main-banner'}>
-                        <div className="services-grid">
-                            {serviceList.map(service => (
-                                <div key={service.id} className="service-card">
-                                    <img src={service.src} alt="" className={'cart-image'}/>
-                                    <h3>{service.title}</h3>
-                                    <p>{service.description}</p>
-                                    <Link to={'/services'} state={{ id: service.id, name: service.title }} style={{width:'100%', textAlign:'center', color:'blue'}}>Learn More</Link>
+            <div className="main-banner">
+                <section className={"main-banner"}>
+                    <div className="container">
+                        <div className="row" style={{paddingBottom:'50px', marginTop:'30px'}}>
+                            <h1 className={'experience-text'}>Fly Cleaners</h1>
+                            <p>
+                                Hiring cleaners in West London goes beyond affordability, and flymax profesional cleaning services in West London save you time, ensure proper house cleaning, and give your surroundings a breath of fresh air. The types of domestic cleaning services offered extend well beyond the standard packages, so you can easily customise your order depending on what your specific requirements for cleaning are at the time, for example, you can easily order end of tenancy cleaning or office cleaning.
+                            </p>
+                        </div>
+                        <div className="section-header">
+                            <h1 className={'experience-text'}>Our Cleaning Services</h1>
+                            <p>We offer comprehensive cleaning solutions tailored to your needs</p>
+                        </div>
+                        <div style={{display:'block'}} className={'main-banner'}>
+                            <div className="services-grid">
+                                {serviceList.map(service => (
+                                    <div key={service.id} className="service-card">
+                                        <img src={service.src} alt="" className={'cart-image'}/>
+                                        <h3>{service.title}</h3>
+                                        <p>{service.description}</p>
+                                        <Link to={'/services'} state={{ id: service.id, name: service.title }} style={{width:'100%', textAlign:'center', color:'blue'}}>Learn More</Link>
+                                    </div>
+                                ))}
+                            </div>
+                            <button onClick={upadateServiceList} style={{width:'150px', background:'white', color:'black'}}>{!isAllServices ? 'See more' : 'See less'}</button>
+                        </div>
+                        <div className={["services-grid", "main-banner"].join(" ")} style={{paddingBottom:'30px', paddingTop:'30px'}}>
+                            {pricings.map(pricings => (
+                                <div key={pricings.id} className="service-card">
+                                    <h3>{pricings.name}</h3>
+                                    <p style={{color:'blue'}}>{pricings.price}</p>
+                                    <p style={{textAlign:'start'}}>{pricings.desc}</p>
                                 </div>
                             ))}
                         </div>
-                        <button onClick={upadateServiceList} style={{width:'150px', background:'white', color:'black'}}>{!isAllServices ? 'See more' : 'See less'}</button>
-                    </div>
-                    <div className={["services-grid", "main-banner"].join(" ")} style={{paddingBottom:'30px', paddingTop:'30px'}}>
-                        {pricings.map(pricings => (
-                            <div key={pricings.id} className="service-card">
-                                <h3>{pricings.name}</h3>
-                                <p style={{color:'blue'}}>{pricings.price}</p>
-                                <p style={{textAlign:'start'}}>{pricings.desc}</p>
+                        <div className={'main-banner'}>
+                            <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
+                            <div>
+                                <div className="burden-container">
+                                    {stages.map(stage => (
+                                        <div key={stage.id} className="service-card">
+                                            <img src={stage.src} alt="" className={'cart-image'}/>
+                                            <h3>{stage.stage}</h3>
+                                            <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.name}</p>
+                                            <ul style={{textAlign:'start'}} className="dot-list">
+                                                {stage.steps.map((item, index) => (
+                                                    <li key={index}>{item}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        ))}
-                    </div>
-                    <div className={'main-banner'}>
-                        <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
+                        </div>
                         <div>
-                            <div className="burden-container">
-                                {stages.map(stage => (
-                                    <div key={stage.id} className="service-card">
-                                        <img src={stage.src} alt="" className={'cart-image'}/>
-                                        <h3>{stage.stage}</h3>
-                                        <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.name}</p>
+                            <h3 style={{ marginBottom:'10px', marginTop:'30px'}}>What is included in Fly basic cleaning services?</h3>
+                            <div className="services-grid">
+                                {pack.map(pack =>(
+                                    <div className="service-card">
+                                        <h3>{pack.name}</h3>
                                         <ul style={{textAlign:'start'}} className="dot-list">
-                                            {stage.steps.map((item, index) => (
+                                            {pack.packs.map((item, index) => (
                                                 <li key={index}>{item}</li>
                                             ))}
                                         </ul>
@@ -255,198 +272,183 @@ const Overview = () => {
                                 ))}
                             </div>
                         </div>
+
+                        <div className={'main-banner'} style={{marginTop:'30px'}}>
+                            <h3 className={'experience-text'} style={{textAlign:'center', marginBottom:'20px'}}>Why Fly cleaners?</h3>
+                            <div className='image-container'>
+                                <img src={OfficeCleaner} alt={"cleaner"} className="image-display" />
+                                <p style={{alignContent:'center', marginTop:'10px', marginLeft:'10px', maxWidth:'600px'}}>
+                                    {reason}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style={{ marginBottom:'10px', marginTop:'30px'}}>What is included in Fly basic cleaning services?</h3>
-                        <div className="services-grid">
-                            {pack.map(pack =>(
-                                <div className="service-card">
-                                    <h3>{pack.name}</h3>
-                                    <ul style={{textAlign:'start'}} className="dot-list">
-                                        {pack.packs.map((item, index) => (
-                                            <li key={index}>{item}</li>
+                </section>
+
+                <section className={["container", "main-banner"].join(" ")}>
+                    <h2 className={'experience-text'} style={{textAlign:'center', marginTop:'30px', marginBottom:'5px'}}>Why Choose Fly Cleaners</h2>
+                    <div className="burden-container">
+                        <div className="about-content">
+                            <ul style={{padding:'10px'}}>
+                                <li>
+                                    <i className="fas fa-check-circle"></i>
+                                    <div style={{marginBottom:'10px'}}>
+                                        <h4 style={{color:'blue', textAlign:'start'}}>Fully Insured Professionals</h4>
+                                        <p>All our cleaners are vetted, insured, and trained to the highest standards</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i className="fas fa-check-circle"></i>
+                                    <div style={{marginBottom:'10px'}}>
+                                        <h4 style={{color:'blue'}}>Flexible Scheduling</h4>
+                                        <p>We work around your schedule with daily, weekly, or monthly options</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i className="fas fa-check-circle"></i>
+                                    <div style={{marginBottom:'10px'}}>
+                                        <h4 style={{color:'blue'}}>Eco-Friendly Options</h4>
+                                        <p>Choose from our range of environmentally friendly cleaning products</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i className="fas fa-check-circle"></i>
+                                    <div style={{marginBottom:'10px'}}>
+                                        <h4 style={{color:'blue'}}>Satisfaction Guaranteed</h4>
+                                        <p>If you're not happy, we'll come back and fix it at no extra cost</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="about-image">
+                            <img src={FlyCleaner} alt="Professional cleaner" className={'cart-image4'} />
+                            <div className="experience-badge">
+                                <span>10+</span>
+                                <p style={{padding:'3px'}}>Years Experience</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className={["testimonials-section", "main-banner"].join(" ")}>
+                    <div className="container">
+                        <div className="section-header">
+                            <h1 className={'experience-text'}>What Our Clients Say</h1>
+                            <p>Don't just take our word for it - hear from our satisfied customers</p>
+                        </div>
+                        <div className="burden-container">
+                            {testimonials.map(testimonial => (
+                                <div key={testimonial.id} className="testimonial-card">
+                                    <div className="rating">
+                                        {[...Array(testimonial.rating)].map((_, i) => (
+                                            <i key={i} className="fas fa-star"></i>
                                         ))}
-                                    </ul>
+                                    </div>
+                                    <p className="testimonial-text">"{testimonial.text}"</p>
+                                    <div className="client-name">— {testimonial.author}</div>
+                                    <div className="client-location">West London</div>
                                 </div>
                             ))}
                         </div>
                     </div>
+                </section>
 
-                    <div className={'main-banner'} style={{marginTop:'30px'}}>
-                        <h3 className={'experience-text'} style={{textAlign:'center', marginBottom:'20px'}}>Why Fly cleaners?</h3>
-                        <div className='image-container'>
-                            <img src={OfficeCleaner} alt={"cleaner"} className="image-display" />
-                            <p style={{alignContent:'center', marginTop:'10px', marginLeft:'10px', maxWidth:'600px'}}>
-                                {reason}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className={["container", "main-banner"].join(" ")}>
-                <h2 className={'experience-text'} style={{textAlign:'center', marginTop:'30px', marginBottom:'5px'}}>Why Choose Fly Cleaners</h2>
-                <div className="burden-container">
-                    <div className="about-content">
-                        <ul style={{padding:'10px'}}>
-                            <li>
-                                <i className="fas fa-check-circle"></i>
-                                <div style={{marginBottom:'10px'}}>
-                                    <h4 style={{color:'blue', textAlign:'start'}}>Fully Insured Professionals</h4>
-                                    <p>All our cleaners are vetted, insured, and trained to the highest standards</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i className="fas fa-check-circle"></i>
-                                <div style={{marginBottom:'10px'}}>
-                                    <h4 style={{color:'blue'}}>Flexible Scheduling</h4>
-                                    <p>We work around your schedule with daily, weekly, or monthly options</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i className="fas fa-check-circle"></i>
-                                <div style={{marginBottom:'10px'}}>
-                                    <h4 style={{color:'blue'}}>Eco-Friendly Options</h4>
-                                    <p>Choose from our range of environmentally friendly cleaning products</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i className="fas fa-check-circle"></i>
-                                <div style={{marginBottom:'10px'}}>
-                                    <h4 style={{color:'blue'}}>Satisfaction Guaranteed</h4>
-                                    <p>If you're not happy, we'll come back and fix it at no extra cost</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="about-image">
-                        <img src={FlyCleaner} alt="Professional cleaner" className={'cart-image4'} />
-                        <div className="experience-badge">
-                            <span>10+</span>
-                            <p style={{padding:'3px'}}>Years Experience</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className={["testimonials-section", "main-banner"].join(" ")}>
-                <div className="container">
-                    <div className="section-header">
-                        <h1 className={'experience-text'}>What Our Clients Say</h1>
-                        <p>Don't just take our word for it - hear from our satisfied customers</p>
-                    </div>
-                    <div className="burden-container">
-                        {testimonials.map(testimonial => (
-                            <div key={testimonial.id} className="testimonial-card">
-                                <div className="rating">
-                                    {[...Array(testimonial.rating)].map((_, i) => (
-                                        <i key={i} className="fas fa-star"></i>
-                                    ))}
-                                </div>
-                                <p className="testimonial-text">"{testimonial.text}"</p>
-                                <div className="client-name">— {testimonial.author}</div>
-                                <div className="client-location">West London</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <section className="main-banner">
-                <div className="container">
-                    <div className="burden-container">
-                        <div className="contact-content">
-                            <h1 className={'experience-text'}>Ready to Transform Your Space?</h1>
-                            <p>Contact us today for a free, no-obligation quote</p>
-                            <div className="contact-methods">
-                                <div className="contact-method">
-                                    <i className="fas fa-phone-alt"></i>
-                                    <h4>Call Us</h4>
-                                    <p>073 6258 7018</p>
-                                    <p>Mon-Sat: 8am-6pm</p>
-                                </div>
-                                <div className="contact-method">
-                                    <i className="fas fa-envelope"></i>
-                                    <h4>Email Us</h4>
-                                    <p>flyclean@gmail.com</p>
-                                    <p>Response within 24 hours</p>
-                                </div>
-                                <div className="contact-method">
-                                    <i className="fas fa-map-marker-alt"></i>
-                                    <h4>Areas We Serve</h4>
-                                    <p>All West London boroughs including Kensington, Chelsea, Hammersmith, and more</p>
+                <section className="main-banner">
+                    <div className="container">
+                        <h1 style={{textAlign:'center'}} className={'experience-text'}>Ready to Transform Your Space?</h1>
+                        <p>Contact us today for a free, no-obligation quote</p>
+                        <div className="burden-container">
+                            <div className="contact-content">
+                                <div className="contact-methods">
+                                    <div className="contact-method">
+                                        <i className="fas fa-phone-alt"></i>
+                                        <h4>Call Us</h4>
+                                        <p>073 6258 7018</p>
+                                        <p>Mon-Sat: 8am-6pm</p>
+                                    </div>
+                                    <div className="contact-method">
+                                        <i className="fas fa-envelope"></i>
+                                        <h4>Email Us</h4>
+                                        <p>flyclean@gmail.com</p>
+                                        <p>Response within 24 hours</p>
+                                    </div>
+                                    <div className="contact-method">
+                                        <i className="fas fa-map-marker-alt"></i>
+                                        <h4>Areas We Serve</h4>
+                                        <p>All West London boroughs including Kensington, Chelsea, Hammersmith, and more</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="contact-form">
-                            <h3>Send Us a Message</h3>
-                            <form onSubmit={sendMessage}>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="name">Your Name</label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
+                            <div className="contact-form">
+                                <h3>Send Us a Message</h3>
+                                <form onSubmit={sendMessage}>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label htmlFor="name">Your Name</label>
+                                            <input
+                                                type="text"
+                                                id="name"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="email">Email Address</label>
+                                            <input
+                                                type="email"
+                                                id="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label htmlFor="phone">Phone Number</label>
+                                            <input
+                                                type="tel"
+                                                id="phone"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="service">Service Needed</label>
+                                            <select
+                                                id="service"
+                                                name="service"
+                                                value={formData.service}
+                                                onChange={handleInputChange}
+                                                required
+                                            >
+                                                {services.map(service => (
+                                                    <option key={service.id} value={service.id}>{service.title}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="email">Email Address</label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            name="email"
-                                            value={formData.email}
+                                        <label htmlFor="message">Your Message</label>
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            value={formData.message}
                                             onChange={handleInputChange}
-                                            required
-                                        />
+                                        ></textarea>
                                     </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="phone">Phone Number</label>
-                                        <input
-                                            type="tel"
-                                            id="phone"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="service">Service Needed</label>
-                                        <select
-                                            id="service"
-                                            name="service"
-                                            value={formData.service}
-                                            onChange={handleInputChange}
-                                            required
-                                        >
-                                            {services.map(service => (
-                                                <option key={service.id} value={service.id}>{service.title}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="message">Your Message</label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleInputChange}
-                                    ></textarea>
-                                </div>
-                                <button type="submit" className="submit-button">Send Message</button>
-                            </form>
+                                    <button type="submit" className="submit-button">Send Message</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <Footer />
            

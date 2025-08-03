@@ -578,120 +578,122 @@ const Help = () => {
         flexDirection: 'column',
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
-        <section className="help-banner">
-          <h1 className={'question-header'} style={{ color:'darkred'}}>Frequently Asked Questions</h1>
-          <h3 className={'header-text'} style={{textAlign:'center', color:'black'}}>
-            There are answers for everyone whether you’re a client and having trouble ordering a cleaning or a cleaner and want to be sure that you’re following the procedure.<br/>
-            Need help? <span style={{color:'navy'}}>Click here to email us</span> —
-            For urgent issues, we aim to respond within minutes. Apart from that please navigate yourself through our FAQ pages
-          </h3>
-          <div>
-            <label style={{color:'blue'}} className="custom-checkbox">
-              <input
-                  type="checkbox"
-                  checked={isClient}
-                  onChange={() => {setIsAll(false); setIsCleaner(false); setIsClient(!isClient)}}
-                  className="hidden-checkbox"
-              />
-              <span className="checkbox-custom"></span>
-              I'm a Client
-            </label>
-            <label className="custom-checkbox" style={{color:'blue'}}>
-              <input
-                  type="checkbox"
-                  checked={isCleaner}
-                  onChange={() => {setIsAll(false); setIsCleaner(!isCleaner); setIsClient(false)}}
-                  className="hidden-checkbox"
-              />
-              <span className="checkbox-custom"></span>
-              I'm a Cleaner
-            </label>
-            <label className="custom-checkbox" style={{color:'blue'}}>
-              <input
-                  type="checkbox"
-                  checked={isAll}
-                  onChange={() => {setIsAll(!isAll); setIsCleaner(false); setIsClient(false)}}
-                  className="hidden-checkbox"
-              />
-              <span className="checkbox-custom"></span>
-              All
-            </label>
-          </div>
+        <div className="service-banner">
+          <section>
+            <h1 className={'experience-text'} style={{ color:'darkred'}}>Frequently Asked Questions</h1>
+            <h3 className={'header-text'} style={{textAlign:'center', color:'black'}}>
+              There are answers for everyone whether you’re a client and having trouble ordering a cleaning or a cleaner and want to be sure that you’re following the procedure.<br/>
+              Need help? <span style={{color:'navy'}}>Click here to email us</span> —
+              For urgent issues, we aim to respond within minutes. Apart from that please navigate yourself through our FAQ pages
+            </h3>
+            <div>
+              <label style={{color:'blue'}} className="custom-checkbox">
+                <input
+                    type="checkbox"
+                    checked={isClient}
+                    onChange={() => {setIsAll(false); setIsCleaner(false); setIsClient(!isClient)}}
+                    className="hidden-checkbox"
+                />
+                <span className="checkbox-custom"></span>
+                I'm a Client
+              </label>
+              <label className="custom-checkbox" style={{color:'blue'}}>
+                <input
+                    type="checkbox"
+                    checked={isCleaner}
+                    onChange={() => {setIsAll(false); setIsCleaner(!isCleaner); setIsClient(false)}}
+                    className="hidden-checkbox"
+                />
+                <span className="checkbox-custom"></span>
+                I'm a Cleaner
+              </label>
+              <label className="custom-checkbox" style={{color:'blue'}}>
+                <input
+                    type="checkbox"
+                    checked={isAll}
+                    onChange={() => {setIsAll(!isAll); setIsCleaner(false); setIsClient(false)}}
+                    className="hidden-checkbox"
+                />
+                <span className="checkbox-custom"></span>
+                All
+              </label>
+            </div>
 
-        </section>
+          </section>
 
-        <section className={'main-banner'}  style={isClient || isAll ? showAll: hideAll}>
-          <h1 className={'help-text'}>For clients</h1>
-          <div className={'container'}>
-            <div className={'grid-container'}  style={{marginTop:'20px'}}>
-              <div style={{display: 'block',  marginTop:'20px'}}>
-                {allClientCategories.map((categoryItem, index) => (
-                    <div key={index}>
-                      <button onClick={() => handleClientCategoryClick(categoryItem)}
-                              className={activeClientCategory !== categoryItem ? 'trapezium-button': 'trapezium-button-active'}>
-                        {categoryItem}</button>
-                    </div>
-                ))}
-              </div>
-              <div className={'question-answer-container'}>
-                {clientQuestions.map((client, index) => (
-                    <div key={client.id} style={{display:'block'}} >
-                      <h3 style={{marginLeft:'20px',marginTop:'20px', textAlign:'start', color:'brown'}}>{client.category}</h3>
-                      {client.questions.map((clientItem, index2) => (
-                          <div key={clientItem.id} className={'main-banner'} >
-                            <div style={{display:'flex', justifyContent:'center'}}>
-                              < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px', marginBottom:'30px'}}
-                                            className={clientIds.includes(`${client.category}${clientItem.id}`) ? 'rotate-down': 'rotate-up'}
-                                            onClick={() => { handleClientQuestion(`${client.category}${clientItem.id}`) }}/>
-                              <div style={{display:'block', paddingLeft:'10px', paddingRight:'10px', marginTop:'20px'}}>
-                                <h4 style={{textAlign:'start'}}>{clientItem.question}</h4>
-                                <p style={clientIds.includes(`${client.category}${clientItem.id}`) ? showQs: hideQs}>{clientItem.answer}</p>
+          <section className={'main-banner'}  style={isClient || isAll ? showAll: hideAll}>
+            <h1 className={'help-text'}>For clients</h1>
+            <div className={'container'}>
+              <div className={'grid-container'}  style={{marginTop:'20px'}}>
+                <div style={{display: 'block',  marginTop:'20px'}}>
+                  {allClientCategories.map((categoryItem, index) => (
+                      <div key={index}>
+                        <button onClick={() => handleClientCategoryClick(categoryItem)}
+                                className={activeClientCategory !== categoryItem ? 'trapezium-button': 'trapezium-button-active'}>
+                          {categoryItem}</button>
+                      </div>
+                  ))}
+                </div>
+                <div className={'question-answer-container'}>
+                  {clientQuestions.map((client, index) => (
+                      <div key={client.id} style={{display:'block'}} >
+                        <h3 style={{marginLeft:'20px',marginTop:'20px', textAlign:'start', color:'brown'}}>{client.category}</h3>
+                        {client.questions.map((clientItem, index2) => (
+                            <div key={clientItem.id} className={'main-banner'} >
+                              <div style={{display:'flex', justifyContent:'center'}}>
+                                < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px', marginBottom:'30px'}}
+                                              className={clientIds.includes(`${client.category}${clientItem.id}`) ? 'rotate-down': 'rotate-up'}
+                                              onClick={() => { handleClientQuestion(`${client.category}${clientItem.id}`) }}/>
+                                <div style={{display:'block', paddingLeft:'10px', paddingRight:'10px', marginTop:'20px'}}>
+                                  <h4 style={{textAlign:'start'}}>{clientItem.question}</h4>
+                                  <p style={clientIds.includes(`${client.category}${clientItem.id}`) ? showQs: hideQs}>{clientItem.answer}</p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                      ))}
-                    </div>
-                ))}
+                        ))}
+                      </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className={'main-banner'} style={isCleaner || isAll ? showAll: hideAll}>
-          <h1 className={'help-text'}>For cleaners</h1>
-          <div className={'container'}>
-            <div className={'grid-container'}  style={{marginTop:'20px'}}>
-              <div style={{display: 'block',  marginTop:'20px'}}>
-                {allCleanerCategories.map((categoryItem, index) => (
-                    <div key={index}>
-                      <button onClick={() => handleCleanertCategoryClick(categoryItem)} className={activeCleanerCategory !== categoryItem ? 'trapezium-button': 'trapezium-button-active'}>
-                        {categoryItem}</button>
-                    </div>
-                ))}
-              </div>
-              <div className={'question-answer-container'}>
-                {cleanerQuestions.map((cleaner, index) => (
-                    <div key={cleaner.id} style={{display:'block'}}>
-                      <h3 style={{marginLeft:'20px',marginTop:'20px', textAlign:'start', color:'brown'}}>{cleaner.category}</h3>
-                      {cleaner.questions.map((cleanerItem, index2) => (
-                          <div key={cleanerItem.id} className={'main-banner'} >
-                            <div style={{display:'flex', justifyContent:'center'}}>
-                              < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px', marginBottom:'30px'}}
-                                            className={cleanerIds.includes(`${cleaner.category}${cleanerItem.id}`) ? 'rotate-down': 'rotate-up'}
-                                            onClick={() => { handleCleanerQuestion(`${cleaner.category}${cleanerItem.id}`) }}/>
-                              <div style={{display:'block', paddingLeft:'10px', paddingRight:'10px', marginTop:'20px'}}>
-                                <h4 style={{textAlign:'start'}}>{cleanerItem.question}</h4>
-                                <p style={cleanerIds.includes(`${cleaner.category}${cleanerItem.id}`) ? showQs: hideQs}>{cleanerItem.answer}</p>
+          <section className={'main-banner'} style={isCleaner || isAll ? showAll: hideAll}>
+            <h1 className={'help-text'}>For cleaners</h1>
+            <div className={'container'}>
+              <div className={'grid-container'}  style={{marginTop:'20px'}}>
+                <div style={{display: 'block',  marginTop:'20px'}}>
+                  {allCleanerCategories.map((categoryItem, index) => (
+                      <div key={index}>
+                        <button onClick={() => handleCleanertCategoryClick(categoryItem)} className={activeCleanerCategory !== categoryItem ? 'trapezium-button': 'trapezium-button-active'}>
+                          {categoryItem}</button>
+                      </div>
+                  ))}
+                </div>
+                <div className={'question-answer-container'}>
+                  {cleanerQuestions.map((cleaner, index) => (
+                      <div key={cleaner.id} style={{display:'block'}}>
+                        <h3 style={{marginLeft:'20px',marginTop:'20px', textAlign:'start', color:'brown'}}>{cleaner.category}</h3>
+                        {cleaner.questions.map((cleanerItem, index2) => (
+                            <div key={cleanerItem.id} className={'main-banner'} >
+                              <div style={{display:'flex', justifyContent:'center'}}>
+                                < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px', marginBottom:'30px'}}
+                                              className={cleanerIds.includes(`${cleaner.category}${cleanerItem.id}`) ? 'rotate-down': 'rotate-up'}
+                                              onClick={() => { handleCleanerQuestion(`${cleaner.category}${cleanerItem.id}`) }}/>
+                                <div style={{display:'block', paddingLeft:'10px', paddingRight:'10px', marginTop:'20px'}}>
+                                  <h4 style={{textAlign:'start'}}>{cleanerItem.question}</h4>
+                                  <p style={cleanerIds.includes(`${cleaner.category}${cleanerItem.id}`) ? showQs: hideQs}>{cleanerItem.answer}</p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                      ))}
-                    </div>
-                ))}
+                        ))}
+                      </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
 
         <Footer />
       </div>

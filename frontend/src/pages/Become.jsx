@@ -413,7 +413,7 @@ const Become = () => {
                             Fly cleaner acts as a powerful platform arranging fast and high-quality service for the clients</h4>
                         <p style={{ marginTop:'30px', color:'black', padding:'10px', maxWidth:'1200px'}}>Our platform facilitates
                             and provides part-time and full-time work for people in the cleaning industry through
-                            live training for eMoppers to guarantee the highest level of quality. We ensure safety for both: Fly cleaners and customers,
+                            live training for Fly cleaaners to guarantee the highest level of quality. We ensure safety for both: Fly cleaners and customers,
                             and solve issues that can arise between them</p>
                     </div>
 

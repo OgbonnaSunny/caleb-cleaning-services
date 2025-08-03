@@ -2579,7 +2579,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <img src={Neat} alt={"cleaners"} className={'cart-image2'}/>
                   <div className="service-card">
@@ -2595,7 +2595,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <img src={NeatBathroom} alt={"cleaners"} className={'cart-image2'}/>
                   <div className="service-card">
@@ -2625,7 +2625,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p style={{color:'navy'}}>Full Deep Cleaning Coverage in Edinburgh</p>
@@ -2641,7 +2641,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section  style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <img src={NeatBathroom} alt={"cleaners"} className={'cart-image2'}/>
                   <div className="service-card">
@@ -2661,7 +2661,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px', maxWidth:'800px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px', maxWidth:'800px'}}>
                 <div className={'price-container'}>
                   <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
                   <p>Our deep cleaners in Edinburgh are fully trained, licensed and background checked to deliver cleaning services in Edinburgh.
@@ -2672,7 +2672,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px', display:'block'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px', display:'block'}}>
                 <div className={'container'}>
                   <h3 style={{textAlign:'start', color:'navy', marginBottom:'30px'}}>Frequently asked questions</h3>
                   <div className={'mini-container'}>
@@ -2745,7 +2745,7 @@ const Services = () => {
       case 'Regular':
         setLayout(
             <div>
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className="container" style={{marginBottom:'30px'}}>
                   <div className={'idea-container'}>
                     <div className={'price-container'}>
@@ -2782,7 +2782,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
                     <h2 style={{color:'navy'}}>Regular cleaning service in Edinburgh</h2>
@@ -2791,7 +2791,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className={'container'}>
                   <h3 style={{color:'navy', marginBottom:'20px', textAlign:'center'}}>Priority areas</h3>
                   <div className="grid-container">
@@ -2807,7 +2807,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p style={{color:'navy'}}>Fly Regular Cleaning in Edinburgh</p>
@@ -2821,7 +2821,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <img src={NeatBathroom} alt={"cleaners"} className={'cart-image2'}/>
                   <div className="price-container">
@@ -2838,7 +2838,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <h3 style={{color:'darkolivegreen'}}>As part of our regular cleaning packages, priority areas for our cleaners include</h3>
@@ -2870,7 +2870,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div style={{display:'block'}}>
                     <h2 style={{color:'navy'}}>Why book regular cleaning from Fly cleaners Edinburgh:</h2>
@@ -2898,7 +2898,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'price-container'}>
                   <h2>Let the results amaze you!</h2>
                   <p>There are multiple tasks that people need to take care of every single day. As a result,
@@ -2910,8 +2910,7 @@ const Services = () => {
                 </div>
               </section>
 
-
-              <section style={{marginTop:'50px', display:'block'}}>
+              <section className={'main-banner'} style={{marginTop:'50px', display:'block'}}>
                 <div className={'container'}>
                   <h3 style={{textAlign:'start', color:'navy', marginBottom:'30px'}}>Frequently asked questions</h3>
                   <div className={'mini-container'}>
@@ -3008,7 +3007,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
                     <h2 style={{color:'navy'}}>Upholstery cleaning service in Edinburgh</h2>
@@ -3051,7 +3050,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p style={{color:'navy'}}>Fly Upholstery cleaning in Edinburgh</p>
@@ -3082,7 +3081,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px', display:'block'}}>
+              <section className={'main-banner'} style={{marginTop:'50px', display:'block'}}>
                 <div className={'container'}>
                   <h3 style={{textAlign:'start', color:'navy', marginBottom:'30px'}}>Frequently asked questions</h3>
                   <div className={'mini-container'}>
@@ -3228,7 +3227,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div style={{display:'block'}}>
                   <h2 style={{color:'navy', marginBottom:'30px'}}>What does the process of oven cleaning look like?</h2>
                   <div className={"grid-container"}>
@@ -3242,7 +3241,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section style={{marginTop:'50px'}}>
+              <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p style={{color:'navy'}}>Why choose Fly cleaners for oven cleaning?</p>
@@ -3259,7 +3258,7 @@ const Services = () => {
                 </div>
               </section>
 
-              <section className={'main-banner'} style={{marginTop:'50px'}}>
+              <section className={'main-banner'}  style={{marginTop:'50px'}}>
                 <div className="price-container">
                   <h2 style={{color:'navy'}}>Let the results amaze you!</h2>
                   <p>
@@ -5143,8 +5142,8 @@ const Services = () => {
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
         {error && <label style={clearText} className={['slide-in', 'error-label'].join(' ')} >{error}</label>}
-        <div>
-          <section className={'service-banner'}  >
+        <div className={'service-banner'}>
+          <section>
             <div className="container" style={{marginBottom:'30px'}}>
               <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning service type</h2>
               <div className="word-scroller-container" style={{marginTop:'20px'}}>
@@ -5183,13 +5182,13 @@ const Services = () => {
             </div>
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px'}}>
+          <section style={{marginTop:'50px'}}>
             <div className="container">
               {layout}
             </div>
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px'}}>
+          <section  style={{marginTop:'50px'}}>
             <div className={'container'}>
               <div style={{display:'block'}} className={'main-banner'}>
                 <h2 style={{textAlign:'center', color:'navy', marginBottom:'30px' }}>Why choose Fly cleaning service?</h2>
@@ -5220,7 +5219,7 @@ const Services = () => {
             </div>
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px'}}>
+          <section  style={{marginTop:'50px'}}>
             <div className="container">
               <div style={{display:'block'}}>
                 <h3 style={{textAlign:'center', color:'navy', marginBottom:'30px'}}>Results</h3>
@@ -5238,7 +5237,7 @@ const Services = () => {
             </div>
           </section>
 
-          <section className={'main-banner'} style={{marginTop:'50px', marginBottom:'30px'}}>
+          <section  style={{marginTop:'50px', marginBottom:'30px'}}>
             <div className="container">
               <div>
                 <h2 style={{textAlign:'center', marginBottom:'10px', marginTop:'10px'}}>How Fly cleaning services work</h2>
@@ -5280,8 +5279,8 @@ const Services = () => {
 
           </section>
 
-          < Footer />
         </div>
+        < Footer />
       </div>
   );
 }

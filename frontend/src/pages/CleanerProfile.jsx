@@ -2642,7 +2642,7 @@ const CleanerProfile = () => {
         <div className="sticky-nav-container">
             <nav  className='top-order-nav'>
                 <div className="nav-order-content">
-                    <img src={LOGO} className={'logo-icon'}/>
+                    <img src={LOGO} className={'logo-icon2'}/>
                     {topNavItems.map((item, index) => (
                         <div key={`top-${index}`} className="nav-order-item"
                              onClick={() => setActiveMenu(item)}>
