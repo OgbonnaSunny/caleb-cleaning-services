@@ -2513,6 +2513,10 @@ const Checkout = () => {
         useEffect(() => {
             const observer = new IntersectionObserver(
                 ([entry]) => {
+                    if (currentStep === 3) {
+                        setIsVisible(false)
+                        return;
+                    }
                     if (entry.isIntersecting === isVisible) {
                         return;
                     }
@@ -3097,59 +3101,6 @@ const Checkout = () => {
         return () => debouncedSave.cancel();
     }, [debouncedSave]);
 
-    const [useOldRecord, setUseOldRecord] = useState(false);
-    const [missingRecord, setMissingRecord] = useState(false);
-    const [oldRecord, setOldRecord] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
-    const [dataErrors, setDataErrors] = useState({});
-    const [acknwoledge, setAcknwoledge] = useState(false);
-    const [dataMessage, setDataMessage] = useState('Required record(s) from your data are missing or incomplete. Please  fill the form to continue');
-
-    const validateData = () => {
-        let newErrors = {};
-        setDataErrors({})
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (!firstName) {
-            newErrors.firstName = 'First name is required';
-        }
-        if (!lastName) {
-            newErrors.lastName = 'last name is required';
-        }
-        if (!phone) {
-            newErrors.phone = 'phone is required';
-        }
-        if (!address) {
-            newErrors.address = 'address is required';
-        }
-        if (!email) {
-            newErrors.email = 'email is required';
-        }
-        else if (!/^\S+@\S+\.\S+$/.test(email)) {
-            newErrors.email = 'Email is invalid';
-        }
-        if (Object.keys(newErrors).length > 0) {
-            setDataErrors(newErrors);
-            return;
-        }
-        if (useOldRecord && !acknwoledge) {
-            setDataMessage('Please review and acknowledge that the records from your data are correct');
-            setMissingRecord(true);
-            return;
-        }
-        setFormData({
-            ...formData,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            address: address,
-        })
-        setCurrentStep(currentStep + 1);
-    }
 
     const handleOldRecordChange = (e) => {
         const change = e.target.checked;
@@ -3196,6 +3147,59 @@ const Checkout = () => {
     }
 
     const Data = () => {
+        const [useOldRecord, setUseOldRecord] = useState(false);
+        const [missingRecord, setMissingRecord] = useState(false);
+        const [oldRecord, setOldRecord] = useState('');
+        const [firstName, setFirstName] = useState('');
+        const [lastName, setLastName] = useState('');
+        const [email, setEmail] = useState('');
+        const [phone, setPhone] = useState('');
+        const [address, setAddress] = useState('');
+        const [dataErrors, setDataErrors] = useState({});
+        const [acknwoledge, setAcknwoledge] = useState(false);
+        const [dataMessage, setDataMessage] = useState('Required record(s) from your data are missing or incomplete. Please  fill the form to continue');
+
+        const validateData = () => {
+            let newErrors = {};
+            setDataErrors({})
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!firstName) {
+                newErrors.firstName = 'First name is required';
+            }
+            if (!lastName) {
+                newErrors.lastName = 'last name is required';
+            }
+            if (!phone) {
+                newErrors.phone = 'phone is required';
+            }
+            if (!address) {
+                newErrors.address = 'address is required';
+            }
+            if (!email) {
+                newErrors.email = 'email is required';
+            }
+            else if (!/^\S+@\S+\.\S+$/.test(email)) {
+                newErrors.email = 'Email is invalid';
+            }
+            if (Object.keys(newErrors).length > 0) {
+                setDataErrors(newErrors);
+                return;
+            }
+            if (useOldRecord && !acknwoledge) {
+                setDataMessage('Please review and acknowledge that the records from your data are correct');
+                setMissingRecord(true);
+                return;
+            }
+            setFormData({
+                ...formData,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                address: address,
+            })
+            setCurrentStep(currentStep + 1);
+        }
 
         return (
             <div>
