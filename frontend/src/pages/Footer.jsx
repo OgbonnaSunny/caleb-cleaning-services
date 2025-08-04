@@ -23,10 +23,10 @@ const Footer = () => {
     const location = useLocation();
 
     const customerActions = [
-        { id: "pricing", name: "Pricing", path: "/pricing" },
         { id: "whats-included", name: "What's included", path: "/what-included" },
         { id: "blog", name: "Blog" },
         { id: "booking-policy", name: "Booking Policy", path: "/booking" },
+        { id: "pricing", name: "Pricing", path: "/pricing" },
         { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation" },
         { id: "terms-conditions", name: "Terms & Conditions", path: "/terms" },
         { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy" },
@@ -176,17 +176,13 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>For our customers</h3>
                         <ul style={{color:'grey'}}>
                             {customerActions.map(action => (
-                                <div style={{display:'flex', alignItems:'center'}} key={action.id}>
-                                    <div className={'footer-mark'}></div>
-                                    <h5 style={{padding:'10px'}} key={action.id}>
-                                        <Link to={action.path} target="_blank" rel="noopener noreferrer" >
-                                            <div>
-                                                <p style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
-                                                    {action.name}
-                                                </p>
-                                            </div>
-                                        </Link>
-                                    </h5>
+                                <div key={action.id} style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
+                                    <div style={{display:'flex', alignItems:'center'}}>
+                                        <div className={'footer-mark'}></div>
+                                        <h5 style={{padding:'10px'}}>
+                                            <Link to={action.path} target="_blank" rel="noopener noreferrer">{action.name}</Link>
+                                        </h5>
+                                    </div>
                                 </div>
                             ))}
                         </ul>

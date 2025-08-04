@@ -126,7 +126,8 @@ const Navigation = () => {
                                 className={` hamburger ${isOpen ? 'open' : ''}`}
                                 onClick={toggleMenu}>
                                 open
-                            </FaBars> }
+                            </FaBars>
+                            }
                             {isOpen && <FaTimes
                                 style={{width:'40px', height:'30px', marginLeft:'10px'}}
                                 className={` hamburger ${isOpen ? 'open' : ''}`}
