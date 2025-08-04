@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css'; // We'll create this CSS file next
-import { FaBars , FaUsers, FaUserTie} from 'react-icons/fa';
+import { FaBars , FaUsers, FaUserTie, FaTimes} from 'react-icons/fa';
 import LOGO from '../images/logo3.png'
 import {useLocation} from 'react-router-dom'
 import {commonjs} from "globals";
@@ -116,12 +116,24 @@ const Navigation = () => {
                 <nav className="navbar"  >
                     <div style={{display:'block'} } >
                         <div className="navbar-logo" >
-                        <img src={LOGO} alt="logo" className="logo-icon"  />
-                        <p className="experience-text">Fly Cleaner</p>
-                        <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
-                        <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
-                        <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
-                        <FaBars style={{width:'40px', height:'30px', marginLeft:'10px'}}  className={` hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>open</FaBars>
+                            <img src={LOGO} alt="logo" className="logo-icon"  />
+                            <p className="experience-text">Fly Cleaner</p>
+                            <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
+                            <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
+                            <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
+                            {!isOpen && <FaBars
+                                style={{width:'40px', height:'30px', marginLeft:'10px'}}
+                                className={` hamburger ${isOpen ? 'open' : ''}`}
+                                onClick={toggleMenu}>
+                                open
+                            </FaBars> }
+                            {isOpen && <FaTimes
+                                style={{width:'40px', height:'30px', marginLeft:'10px'}}
+                                className={` hamburger ${isOpen ? 'open' : ''}`}
+                                onClick={toggleMenu}>
+                                open
+                            </FaTimes>
+                            }
                     </div>
                     <ul className={`nav-menu ${isMobile ? 'mobile' : ''} ${isOpen ? 'active' : ''}`}>
                         {navLinks.map(link => (<li key={link.id} className="nav-item" >

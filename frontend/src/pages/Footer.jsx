@@ -56,7 +56,7 @@ const Footer = () => {
         {id:'reviews', name: 'Reviews', path:'/reviews'},
     ]
 
-    const cleanerLocations = [
+    const cleanerLocations1 = [
         { id: 3, name: "Abbey Wood" },
         { id: 4, name: "Abingdon" },
         { id: 5, name: "Acton Central" },
@@ -70,6 +70,57 @@ const Footer = () => {
         { id: 93, name: "Cannon Hill" },
 
     ]
+
+    const cleanerLocations = [
+        {
+            id: 3,
+            name: "Portobello",
+        },
+        {
+            id: 4,
+            name: "Morningside",
+        },
+        {
+            id: 5,
+            name: "Cramond",
+        },
+        {
+            id: 6,
+            name: "Stockbridge",
+        },
+        {
+            id: 31,
+            name: "Bingham",
+        },
+        {
+            id: 32,
+            name: "Blackhall",
+        },
+        {
+            id: 33,
+            name: "Bonaly",
+        },
+        {
+            id: 34,
+            name: "Burghmuirhead",
+        },
+        {
+            id: 40,
+            name: "West Pilton",
+        },
+        {
+            id: 35,
+            name: "Ratho Station",
+        },
+        {
+            id: 36,
+            name: "Sighthill",
+        },
+        {
+            id: 37,
+            name: "Slateford",
+        },
+    ];
 
     const currentLocation = location.pathname
     const hide = {display:'none'};
@@ -87,15 +138,21 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>Cleaner locations</h3>
                         <ul style={{color:'grey'}}>
                             {cleanerLocations.map(location => (
-                                <li key={location.id}>
-                                    <Link to="/city" state={{ id: location.id, name: location.name }}>
-                                        {location.name}
-                                    </Link>
-                                </li>
+                                <div style={{display:'flex', alignItems:'center'}} key={location.id}>
+                                    <div className={'footer-mark'}></div>
+                                    <h5 style={{padding:'10px'}}>
+                                        <Link to="/city" state={{ id: location.id, name: location.name }}>
+                                            {location.name}
+                                        </Link>
+                                    </h5>
+                                </div>
                             ))}
-                            <li>
-                                <Link to={`/locations`} style={{color:'green', marginTop:'20px'}}>See more</Link>
-                            </li>
+                            <div style={{display:'flex', alignItems:'center'}}>
+                                <div style={{width:'12px', height:'12px', backgroundColor:'blue', borderRadius:'50%'}}></div>
+                                <h5 style={{padding:'10px'}}>
+                                    <Link to={`/locations`} style={{color:'yellow', marginTop:'20px'}}>See more</Link>
+                                </h5>
+                            </div>
                         </ul>
                     </div>
 
@@ -103,53 +160,61 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>Our services</h3>
                         <ul style={{color:'grey'}}>
                             {services.map( service => (
-                                <li key={service.id}>
-                                    <Link to={'/services'} state={{ id: service.id, name: service.title }}>
-                                        <div>
-                                            <p>{service.title}</p>
-                                        </div>
-                                    </Link>
-                                </li>
+                                <div style={{display:'flex', alignItems:'center'}} key={service.id}>
+                                    <div className={'footer-mark'}></div>
+                                    <h5 style={{padding:'10px'}}>
+                                        <Link to={'/services'} state={{ id: service.id, name: service.title }}>
+                                            {service.title}
+                                        </Link>
+                                    </h5>
+                                </div>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>For our customers</h3>
-                        <ul>
+                        <ul style={{color:'grey'}}>
                             {customerActions.map(action => (
-                                <li key={action.id}>
-                                    <Link to={action.path} target="_blank" rel="noopener noreferrer" >
-                                        <div>
-                                            <p style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
-                                                {action.name}
-                                            </p>
-                                        </div>
-                                    </Link>
-                                </li>
+                                <div style={{display:'flex', alignItems:'center'}} key={action.id}>
+                                    <div className={'footer-mark'}></div>
+                                    <h5 style={{padding:'10px'}} key={action.id}>
+                                        <Link to={action.path} target="_blank" rel="noopener noreferrer" >
+                                            <div>
+                                                <p style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
+                                                    {action.name}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    </h5>
+                                </div>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>Who we are!</h3>
-                        <ul>
+                        <ul style={{color:'grey'}}>
                             {whoWeAre.map((who) => (
-                                <li key={who.id}>
-                                    <Link to={who.path}>{who.name}</Link>
-                                </li>
+                                <div style={{display:'flex', alignItems:'center'}} key={who.id}>
+                                    <div className={'footer-mark'}></div>
+                                    <h5 style={{padding:'10px'}}>
+                                        <Link to={who.path}>{who.name}</Link>
+                                    </h5>
+                                </div>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>For cleaners</h3>
-                        <ul>
-                            <li>
-                                <Link to={'/become'}>
-                                    <p>Become a fly cleaner</p>
+                        <ul style={{color:'grey'}}>
+                            <div style={{display:'flex', alignItems:'center'}}>
+                                <div className={'footer-mark'}></div>
+                                <Link style={{padding:'10px'}} to={'/become'}>
+                                    Become a fly cleaner
                                 </Link>
-                            </li>
+                            </div>
                         </ul>
                     </div>
 
