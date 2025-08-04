@@ -139,26 +139,6 @@ const Pricing = () => {
     }
   ]
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!postcode.trim()) {
-      setError('Please enter a postcode');
-      return;
-    }
-    if (!isValidUKPostcodeFormat(postcode)) {
-      setError(`${postcode} is not a valid postcode`);
-      return;
-    }
-    checkPostcodeExists(postcode).then(exists => {
-      if (!exists) {
-        setError(`${postcode} does not exist`);
-        return;
-      }
-    })
-
-    navigate('/checkout', { state: { postcode: postcode } });
-  };
-
   const scrollContainerRef = useRef(null);
   const [price, setPrice] = useState('');
   const [service, setService] = useState(serviceList[0]);
@@ -1002,6 +982,26 @@ const Pricing = () => {
     setQuestion5('')
 
   }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!postcode.trim()) {
+      setError('Please enter a postcode');
+      return;
+    }
+    if (!isValidUKPostcodeFormat(postcode)) {
+      setError(`${postcode} is not a valid postcode`);
+      return;
+    }
+    checkPostcodeExists(postcode).then(exists => {
+      if (!exists) {
+        setError(`${postcode} does not exist`);
+        return;
+      }
+    })
+
+    navigate('/checkout', { state: { postcode: postcode } });
+  };
 
 
   useEffect(() => {

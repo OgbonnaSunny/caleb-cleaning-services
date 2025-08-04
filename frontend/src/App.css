@@ -2274,8 +2274,8 @@ locations-hero {
 
 .error-message {
   color: #e74c3c;
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
+  font-size: 14px;
+  margin-top: 5px;
   display: block;
 }
 
@@ -4665,7 +4665,7 @@ button:disabled {
     align-items: center;
     background-color: gainsboro;
     padding: 12px;
-    font-size: small;
+    font-size: medium;
   }
 }
 
@@ -6187,13 +6187,6 @@ tr:hover {
 .form-group select.error,
 .form-group textarea.error {
   border-color: #e74c3c;
-}
-
-.error-message {
-  color: #e74c3c;
-  font-size: 14px;
-  margin-top: 5px;
-  display: block;
 }
 
 .checkbox-group {

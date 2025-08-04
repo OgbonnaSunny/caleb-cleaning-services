@@ -561,13 +561,14 @@ const Checkout = () => {
         showInfo3: false,
         showInfo4: false,
         bookingEmpty: false,
-        addresses: ['Select addres', 'Select addres', 'Select addres'],
+        addresses: ['Select addres', "1 Princes Street", "10 Royal Mile", "15 North Bridge", "20 St Giles Street", "25 High Street"],
         customer: '',
         firstName: '',
         lastName: '',
         phone: '',
         address: '',
         email: '',
+        postcode: '',
         authorization: false,
         policy: false,
         disableThisDay: false,
@@ -591,306 +592,77 @@ const Checkout = () => {
     }
 
     const edinburghPostcodes = [
-        {
-            id: 1,
-            postcode: "EH1",
-            name: "Edinburgh City Centre",
-            addresses: [
-                "1 Princes Street, Edinburgh, EH1 2EQ",
-                "The Balmoral Hotel, 1 Princes Street, Edinburgh, EH1 2EQ",
-                "Edinburgh Waverley Station, Edinburgh, EH1 1BQ"
-            ]
-        },
-        {
-            id: 2,
-            postcode: "EH2",
-            name: "New Town / City Centre",
-            addresses: [
-                "The Scotch Whisky Experience, 354 Castlehill, Edinburgh, EH2 4AE",
-                "Assembly Rooms, 54 George Street, Edinburgh, EH2 2LR",
-                "Harvey Nichols, 30-34 St Andrew Square, Edinburgh, EH2 2AD"
-            ]
-        },
-        {
-            id: 3,
-            postcode: "EH3",
-            name: "West End / Bruntsfield",
-            addresses: [
-                "The Royal College of Physicians, 9 Queen Street, Edinburgh, EH2 1JQ",
-                "The Dome, 14 George Street, Edinburgh, EH2 2PF",
-                "Tynecastle Park (Hearts FC), Gorgie Road, Edinburgh, EH11 2NL"
-            ]
-        },
-        {
-            id: 4,
-            postcode: "EH4",
-            name: "West Edinburgh (Murrayfield, Cramond, Davidson Mains)",
-            addresses: [
-                "Murrayfield Stadium, Roseburn Street, Edinburgh, EH12 5PJ",
-                "Cramond Kirk, Cramond Glebe Road, Edinburgh, EH4 6NS",
-                "Davidson Mains Park, 5 Quality Street, Edinburgh, EH4 5BP"
-            ]
-        },
-        {
-            id: 5,
-            postcode: "EH5",
-            name: "Trinity, Granton, Newhaven",
-            addresses: [
-                "Ocean Terminal, Ocean Drive, Edinburgh, EH6 6JJ",
-                "Newhaven Harbour, 24 Pier Place, Edinburgh, EH6 4LP",
-                "The Trinity Academy, Craighall Road, Edinburgh, EH6 4RT"
-            ]
-        },
-        {
-            id: 6,
-            postcode: "EH6",
-            name: "Leith",
-            addresses: [
-                "The Royal Yacht Britannia, Ocean Drive, Edinburgh, EH6 6JJ",
-                "Leith Theatre, 28-30 Ferry Road, Edinburgh, EH6 4AE",
-                "The Shore (Leith’s dining area), 1-3 Shore, Edinburgh, EH6 6QW"
-            ]
-        },
-        {
-            id: 7,
-            postcode: "EH7",
-            name: "Leith Walk, Easter Road, Calton Hill",
-            addresses: [
-                "Meadowbank Stadium, 200 London Road, Edinburgh, EH7 6AE",
-                "Prestonfield House Hotel, Priestfield Road, Edinburgh, EH16 5UT",
-                "The Edinburgh Playhouse, 18-22 Greenside Place, Edinburgh, EH1 3AA"
-            ]
-        },
-        {
-            id: 8,
-            postcode: "EH8",
-            name: "Holyrood, Old Town, University of Edinburgh",
-            addresses: [
-                "The Scottish Parliament, Holyrood, Edinburgh, EH99 1SP",
-                "Dynamic Earth, Holyrood Road, Edinburgh, EH8 8AS",
-                "University of Edinburgh Old College, South Bridge, Edinburgh, EH8 9YL"
-            ]
-        },
-        {
-            id: 9,
-            postcode: "EH9",
-            name: "Marchmont, Newington, Grange",
-            addresses: [
-                "The King’s Buildings (University of Edinburgh), Mayfield Road, Edinburgh, EH9 3JL",
-                "Royal Commonwealth Pool, 21 Dalkeith Road, Edinburgh, EH16 5BB",
-                "Prestonfield Golf Club, Priestfield Road, Edinburgh, EH16 5UT"
-            ]
-        },
-        {
-            id: 10,
-            postcode: "EH10",
-            name: "Morningside, Fairmilehead",
-            addresses: [
-                "Morningside Library, 184-192 Morningside Road, Edinburgh, EH10 4PD",
-                "The Braid Hills Hotel, 134 Braid Road, Edinburgh, EH10 6JD",
-                "Fairmilehead Parish Church, 1 Frogston Road West, Edinburgh, EH10 7AA"
-            ]
-        },
-        {
-            id: 11,
-            postcode: "EH11",
-            name: "Gorgie, Dalry, Shandon",
-            addresses: [
-                "Tynecastle Park (Heart of Midlothian FC), McLeod Street, Edinburgh, EH11 2NL",
-                "Gorgie City Farm, 51 Gorgie Road, Edinburgh, EH11 2LA",
-                "Dalry Swim Centre, 46 Dalry Road, Edinburgh, EH11 2AW"
-            ]
-        },
-        {
-            id: 12,
-            postcode: "EH12",
-            name: "Corstorphine, Murrayfield, West Coates",
-            addresses: [
-                "Edinburgh Zoo, 134 Corstorphine Road, Edinburgh, EH12 6TS",
-                "Murrayfield Ice Rink, Riverside Crescent, Edinburgh, EH12 5XN",
-                "Gyle Shopping Centre, 125 The Gyle Centre, Edinburgh, EH12 9JY"
-            ]
-        },
-        {
-            id: 13,
-            postcode: "EH13",
-            name: "Colinton, Juniper Green, Currie",
-            addresses: [
-                "Colinton Parish Church, 9 Bridge Road, Edinburgh, EH13 0LQ",
-                "Currie Rugby Club, 32 Lanark Road West, Edinburgh, EH13 0PQ",
-                "Juniper Green Bowling Club, 170 Lanark Road, Edinburgh, EH13 0DQ"
-            ]
-        },
-        {
-            id: 14,
-            postcode: "EH14",
-            name: "Balerno, Baberton, Wester Hailes",
-            addresses: [
-                "Balerno Parish Church, 2 Main Street, Balerno, Edinburgh, EH14 7EH",
-                "Baberton Golf Club, 50 Baberton Avenue, Edinburgh, EH14 3DR",
-                "Wester Hailes Library, 5 Westside Plaza, Edinburgh, EH14 2ST"
-            ]
-        },
-        {
-            id: 15,
-            postcode: "EH15",
-            name: "Portobello, Craigmillar, Joppa",
-            addresses: [
-                "Portobello Beach Promenade, Edinburgh, EH15 1DB",
-                "Portobello Swim Centre, 57 The Promenade, Edinburgh, EH15 1DX",
-                "Craigmillar Castle, Craigmillar Castle Road, Edinburgh, EH16 4SY"
-            ]
-        },
-        {
-            id: 16,
-            postcode: "EH16",
-            name: "Liberton, Gilmerton, Craigmillar",
-            addresses: [
-                "Liberton Kirk, 1 Kirkgate, Edinburgh, EH16 6RR",
-                "Royal Infirmary of Edinburgh, 51 Little France Crescent, Edinburgh, EH16 4SA",
-                "Gilmerton Community Centre, 4-6 Drum Street, Edinburgh, EH17 8QG"
-            ]
-        },
-        {
-            id: 17,
-            postcode: "EH17",
-            name: "Danderhall, Newcraighall, Edgefield",
-            addresses: [
-                "Danderhall Medical Centre, 1 Oak Lane, Danderhall, Edinburgh, EH16 4EX",
-                "Newcraighall Parish Church, 1 Newcraighall Road, Edinburgh, EH21 8SF",
-                "Edinburgh College (Milton Road Campus), 24 Milton Road East, Edinburgh, EH15 2PP"
-            ]
-        },
-        {
-            id: 18,
-            postcode: "EH28",
-            name: "Kirkliston, Newbridge, Ratho",
-            addresses: [
-                "Kirkliston Leisure Centre, 37 Station Road, Kirkliston, EH29 9AQ",
-                "Ratho Park Golf Club, 7 Baird Road, Ratho, EH28 8RA",
-                "Newbridge Industrial Estate, 1 Newbridge Industrial Estate, EH28 8PJ"
-            ]
-        },
-        {
-            id: 19,
-            postcode: "EH29",
-            name: "Kirkliston, Winchburgh",
-            addresses: [
-                "Kirkliston Primary School, The Loan, Kirkliston, EH29 9EB",
-                "Winchburgh Community Centre, 6-8 High Street, Winchburgh, EH52 6HW",
-                "Drumshoreland Garden Centre, 5 Drumshoreland Road, Kirkliston, EH29 9DU"
-            ]
-        },
-        {
-            id: 20,
-            postcode: "EH30",
-            name: "South Queensferry, Dalmeny",
-            addresses: [
-                "Forth Bridge, South Queensferry, EH30 9SF",
-                "Dalmeny House, South Queensferry, EH30 9TQ",
-                "Hopetoun Farm Shop, South Queensferry, EH30 9SL"
-            ]
-        },
-        {
-            id: 21,
-            postcode: "EH18",
-            name: "Lasswade",
-            addresses: [
-                "Lasswade High School, Eskdale Drive, Lasswade, EH18 1PB",
-                "Danderhall Medical Centre, 1 Oak Lane, Danderhall, EH18 1BU",
-                "Polton Mill, Lasswade Road, EH18 1PP"
-            ]
-        },
-        {
-            id: 22,
-            postcode: "EH19",
-            name: "Bonnyrigg",
-            addresses: [
-                "Bonnyrigg Town Hall, High Street, Bonnyrigg, EH19 2AE",
-                "Lochrin Kennels, 22 Broomieknowe, Bonnyrigg, EH19 2JG",
-                "Newbattle Abbey College, Newbattle Road, EH19 3JA"
-            ]
-        },
-        {
-            id: 23,
-            postcode: "EH20",
-            name: "Loanhead",
-            addresses: [
-                "Loanhead Leisure Centre, Clerk Street, Loanhead, EH20 9DR",
-                "IKEA Edinburgh, Straiton Retail Park, EH20 9PW",
-                "Pentland Hills Regional Park, EH20 9QZ"
-            ]
-        },
-        {
-            id: 24,
-            postcode: "EH21",
-            name: "Musselburgh",
-            addresses: [
-                "Musselburgh Racecourse, Linkfield Road, EH21 7RG",
-                "The Brunton Theatre, Ladywell Way, EH21 6AA",
-                "Musselburgh Golf Club, Monktonhall, EH21 6SW"
-            ]
-        },
-        {
-            id: 25,
-            postcode: "EH22",
-            name: "Dalkeith",
-            addresses: [
-                "Dalkeith Country Park, EH22 2NA",
-                "St David's RC High School, Cousland Road, EH22 2PS",
-                "Eskmills Railway Station, EH22 1AG"
-            ]
-        },
-        {
-            id: 26,
-            postcode: "EH23",
-            name: "Gorebridge",
-            addresses: [
-                "Gorebridge Leisure Centre, Hunterfield Road, EH23 4TT",
-                "Arniston House, Gorebridge, EH23 4RY",
-                "Newtongrange Railway Station, EH23 4LF"
-            ]
-        },
-        {
-            id: 27,
-            postcode: "EH24",
-            name: "Roslin",
-            addresses: [
-                "Rosslyn Chapel, Chapel Loan, EH25 9PU",
-                "Roslin Institute, EH25 9RG",
-                "Bilston Glen Industrial Estate, EH25 9SP"
-            ]
-        },
-        {
-            id: 28,
-            postcode: "EH25",
-            name: "Roslin",
-            addresses: [
-                "Roslyn Glen Country Park, EH25 9LX",
-                "Eskview Medical Centre, 1 Eskview Terrace, EH25 9JA",
-                "Roslin War Memorial, EH25 9PX"
-            ]
-        },
-        {
-            id: 29,
-            postcode: "EH26",
-            name: "Easter Bush",
-            addresses: [
-                "The Royal (Dick) School of Veterinary Studies, EH25 9RG",
-                "Bush House, Easter Bush Campus, EH25 9RG",
-                "Pentland Hills Walking Routes, EH26 0PJ"
-            ]
-        },
-        {
-            id: 30,
-            postcode: "EH27",
-            name: "Kirknewton",
-            addresses: [
-                "Kirknewton War Memorial, EH27 8DA",
-                "East Calder Library, Langton Road, EH27 8DQ",
-                "Harperrig Reservoir, EH27 8DN"
-            ]
-        }
+        // EH1 - City Centre
+        { id: 1, postcode: "EH1 1AB", addresses: ["1 Princes Street", "10 Royal Mile", "15 North Bridge", "20 St Giles Street", "25 High Street"] },
+        { id: 2, postcode: "EH1 2CD", addresses: ["5 Cockburn Street", "12 Canongate", "18 Lawnmarket", "22 Cowgate", "30 Grassmarket"] },
+
+        // EH2 - New Town
+        { id: 3, postcode: "EH2 3EF", addresses: ["3 George Street", "8 Charlotte Square", "14 Queen Street", "19 Rose Street", "27 Thistle Street"] },
+        { id: 4, postcode: "EH2 4GH", addresses: ["6 Hanover Street", "11 Frederick Street", "17 Castle Street", "23 Young Street", "29 Howe Street"] },
+
+        // EH3 - West End
+        { id: 5, postcode: "EH3 5IJ", addresses: ["2 Melville Street", "7 Drumsheugh Gardens", "13 Randolph Crescent", "18 Great King Street", "24 Dundas Street"] },
+        { id: 6, postcode: "EH3 6KL", addresses: ["4 Walker Street", "9 Lynedoch Place", "15 Gloucester Place", "20 Ainslie Place", "26 Moray Place"] },
+
+        // EH4 - Stockbridge/Dean Village
+        { id: 7, postcode: "EH4 1MN", addresses: ["1 Deanhaugh Street", "6 Comely Bank Road", "12 Raeburn Place", "17 St Stephen Street", "23 Eton Terrace"] },
+        { id: 8, postcode: "EH4 2OP", addresses: ["3 Inverleith Row", "8 Arboretum Road", "14 Warriston Road", "19 Canonmills", "25 Goldenacre"] },
+
+        // EH5 - Granton/Trinity
+        { id: 9, postcode: "EH5 3QR", addresses: ["5 Granton Road", "10 Boswall Parkway", "16 West Harbour Road", "21 Newhaven Road", "28 Trinity Crescent"] },
+
+        // EH6 - Leith
+        { id: 10, postcode: "EH6 4ST", addresses: ["2 Leith Walk", "9 Constitution Street", "14 The Shore", "19 Bernard Street", "25 Commercial Street"] },
+        { id: 11, postcode: "EH6 5UV", addresses: ["4 Great Junction Street", "11 Henderson Street", "16 Dock Street", "22 Sandport Street", "29 Baltic Street"] },
+
+        // EH7 - Easter Road/Calton
+        { id: 12, postcode: "EH7 6WX", addresses: ["7 Easter Road", "12 London Road", "18 Montgomery Street", "24 Leith Street", "31 Calton Road"] },
+
+        // EH8 - Holyrood/Southside
+        { id: 13, postcode: "EH8 7YZ", addresses: ["3 Nicolson Street", "10 South Bridge", "15 Clerk Street", "21 Dalkeith Road", "27 Newington Road"] },
+
+        // EH9 - Marchmont/Morningside
+        { id: 14, postcode: "EH9 8ZA", addresses: ["5 Morningside Road", "13 Bruntsfield Place", "18 Marchmont Road", "22 Sciennes Road", "30 Grange Road"] },
+
+        // EH10 - Merchiston/Gorgie
+        { id: 15, postcode: "EH10 9BC", addresses: ["2 Colinton Road", "8 Slateford Road", "15 Gorgie Road", "20 Dalry Road", "26 Ardmillan Terrace"] },
+
+        // EH11 - West Edinburgh
+        { id: 16, postcode: "EH11 1DE", addresses: ["4 Bread Street", "9 Morrison Street", "14 Dalry Road", "21 Haymarket Terrace", "29 West Approach Road"] },
+
+        // EH12 - Corstorphine
+        { id: 17, postcode: "EH12 2FG", addresses: ["6 Corstorphine High Street", "12 St John's Road", "17 Haymarket Terrace", "23 Palmerston Place", "31 Shandwick Place"] },
+
+        // EH13 - Colinton
+        { id: 18, postcode: "EH13 3HI", addresses: ["3 Colinton Road", "10 Dreghorn Link", "16 Pentland Terrace", "21 Colinton Mains Road", "28 Oxgangs Road"] },
+
+        // EH14 - Sighthill/Wester Hailes
+        { id: 19, postcode: "EH14 4JK", addresses: ["5 Wester Hailes Road", "11 Sighthill Road", "19 Calder Road", "24 Longstone Road", "32 Broomhouse Drive"] },
+
+        // EH15 - Portobello
+        { id: 20, postcode: "EH15 5LM", addresses: ["7 Portobello High Street", "14 Brighton Place", "20 Bath Street", "25 Bellfield Street", "33 High Street"] },
+
+        // EH16 - Craigmillar
+        { id: 21, postcode: "EH16 6NO", addresses: ["2 Old Dalkeith Road", "9 Cameron Toll", "15 Mayfield Road", "22 Craigmillar Park", "29 Minto Street"] },
+
+        // EH17 - Newcraighall
+        { id: 22, postcode: "EH17 7PQ", addresses: ["4 Dalkeith Road", "10 Newcraighall Road", "16 Milton Road East", "23 Millerhill Road", "30 Whitehill Street"] },
+
+        // EH20 - Loanhead/Roslin
+        { id: 23, postcode: "EH20 8RS", addresses: ["6 Loanhead Road", "13 Roslin High Street", "18 Bilston Road", "24 Milton Bridge", "31 Roslin Glen Road"] },
+
+        // EH22 - Dalkeith
+        { id: 24, postcode: "EH22 9TU", addresses: ["3 Dalkeith High Street", "11 Eskbank Road", "17 Newtongrange Main Street", "22 Mayfield Road", "29 Buccleuch Street"] },
+
+        // EH30 - South Queensferry
+        { id: 25, postcode: "EH30 1VW", addresses: ["5 South Queensferry High Street", "12 Hopetoun Road", "18 The Loan", "25 Echline Road", "32 Builyeon Road"] },
+
+        // Additional less common EH postcodes
+        { id: 26, postcode: "EH21 2XY", addresses: ["4 Musselburgh High Street", "9 Bridge Street", "15 Newbigging", "20 Inveresk Road", "27 Pinkie Road"] },
+        { id: 27, postcode: "EH23 3ZA", addresses: ["6 Tranent High Street", "11 Windygoul", "17 Macmerry Industrial Estate", "23 Elphinstone Road", "29 Ormiston Road"] },
+        { id: 28, postcode: "EH25 4BC", addresses: ["3 Roslin Research Park", "8 Bush Estate", "14 Pentland Science Park", "19 Roslin Innovation Centre", "26 Wallace Loan"] },
+        { id: 29, postcode: "EH26 5DE", addresses: ["7 Penicuik High Street", "13 Carlops Road", "19 Howgate", "25 Mauricewood Road", "31 Rullion Road"] },
+        { id: 30, postcode: "EH29 6FG", addresses: ["2 Kirkliston Main Street", "8 Winchburgh Road", "14 Niddry Road", "21 Philipstoun Park", "28 Builyeon Road"] }
     ];
 
     const [currentStep, setCurrentStep] = useState(-1);
@@ -1217,6 +989,20 @@ const Checkout = () => {
                 month = 'Dec';
         }
 
+        let addresses = ["Select Address"];
+        addresses.push(...formData.addresses);
+        if (postcode !== null && postcode !== undefined) {
+            addresses = ["Select Address"];
+            const cleanedPostcode = postcode.replace(/\s/g, "").toUpperCase();
+            const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
+            for (let i = 0; i < edinburghPostcodes.length; i++) {
+                if (normalPostcode === edinburghPostcodes[i].postcode) {
+                    addresses.push(...edinburghPostcodes[i].addresses);
+                    break;
+                }
+            }
+        }
+
         if (starter === starters[0].starter || starter === starters[1].starter) {
             setFormData({...formData,
                 dayName: day,
@@ -1231,7 +1017,8 @@ const Checkout = () => {
                 options: optionEstimates,
                 appliance: applienceEstimates,
                 room: roomEstimates,
-                onSubscription: false
+                onSubscription: false,
+                addresses: addresses,
             });
         }
         else {
@@ -1248,7 +1035,8 @@ const Checkout = () => {
                 options: optionEstimates,
                 appliance: sizeBasedPricing,
                 room: endOfTenancyServices,
-                onSubscription: false
+                onSubscription: false,
+                addresses: addresses,
             });
         }
        setSelectedDate(null)
@@ -1653,25 +1441,6 @@ const Checkout = () => {
 
     }, [])
 
-    useEffect(() => {
-        const getAddreses = async () => {
-            try {
-                const response = await fetch(
-                    `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode.trim())}`
-                );
-                const data = await response.json();
-                if (data.status === 200) {
-                    setFormData({...formData, addreses: data.results});
-                }
-                else {
-                    setFormData({...formData, addreses: ['Please provide address']});
-                }
-            } catch (err) {
-                setFormData({...formData, addreses: ['Please provide address']});
-            }
-        }
-        getAddreses()
-    }, [addressCode])
 
     useEffect(() => {
         const checkIfMobile = () => {
@@ -1962,8 +1731,6 @@ const Checkout = () => {
 
         if (!formData.address.trim()) newErrors.address = 'Address is required';
 
-        console.log(newErrors);
-
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
@@ -2227,10 +1994,12 @@ const Checkout = () => {
          //   setPaymentMethods(paymentResponse.data);
 
             setCurrentStep(currentStep+1);
-            setProcessing(false);
         } catch (error) {
             setError("Something went wrong!. Please try again");
-            console.log(error);
+            console.log(error.message);
+            setProcessing(false);
+        }
+        finally {
             setProcessing(false);
         }
     };
@@ -2284,8 +2053,7 @@ const Checkout = () => {
             return;
         }
         setClientSecret(null);
-       // fetchData()
-        updateBookingOnDatabase()
+        fetchData()
     }
 
     function PaymentHome() {
@@ -2293,8 +2061,8 @@ const Checkout = () => {
         elements = useElements();
 
         return (
-            <div>
-                <div style={{maxWidth:"800px", marginLeft:'30px',marginTop:'30px'}}>
+            <div className={'support-page'}>
+                <div style={{maxWidth:"800px"}}>
                     <div className="stripe-card-form">
                         <div className="price-container">
                             <h3 style={{color:'navy', marginBottom:'5px', textAlign:'end'}}>Powered by Stripe</h3>
@@ -2306,7 +2074,7 @@ const Checkout = () => {
                                 />
                             </div>
                             <div className="form-row" style={{ display: 'flex', width: '100%', flexDirection: 'row'}} >
-                                <div   style={{ flex: '1 1 auto', minWidth: '60%' }}>
+                                <div   style={{ flex: '1 1 auto', width: '60%' }}>
                                     <label>Expiration date</label>
                                     <CardExpiryElement
                                         options={elementOptions}
@@ -2314,7 +2082,7 @@ const Checkout = () => {
                                     />
                                 </div>
 
-                                <div style={{ flex: '0 0 auto', maxWidth: '20%' }}>
+                                <div style={{ flex: '0 0 auto', width: '30%' }}>
                                     <label>CVC</label>
                                     <CardCvcElement
                                         options={elementOptions}
@@ -2740,7 +2508,6 @@ const Checkout = () => {
         );
     }
 
-
     function Summary() {
 
         useEffect(() => {
@@ -2770,7 +2537,7 @@ const Checkout = () => {
         }, []);
 
         return (
-            <div ref={ref} className={'checkout-summary-container'}>
+            <div ref={ref} className={'support-page'}>
                 <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
                     <h3 style={{textAlign:'center', marginBottom:'5px'}}>Booking Summary</h3>
                     <div className={'checkout-summary-unit'}>
@@ -2854,7 +2621,7 @@ const Checkout = () => {
                 <div className={'line'} style={{height:'2px'}}/>
 
                 {formData.totalAmount > 0 && <div className={'total'}>
-                    <h3>Estimated amount</h3>
+                    <h4>Estimated Amount</h4>
                     <h2 style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</h2>
                 </div>}
 
@@ -3284,199 +3051,6 @@ const Checkout = () => {
         setFormData({...formData,  [e.target.name]: e.target.value });
     }
 
-   /* const Data = () => {
-        return (
-            <div>
-                <div className={['checkout-box', 'main-banner'].join(' ')}>
-                    <div className={['checkout-container', 'main-banner'].join(' ')}>
-                        <h3 style={{marginTop:'20px'}}>Contact details</h3>
-                        <p style={{marginLeft:'20px', marginBottom:'30px'}}>
-                            Please note that contact details are neccessary in order to enable you manage your orders when they are placed
-                        </p>
-                        <div className="form-step">
-                            <div className="form-group">
-                                <label htmlFor="firstName">First Name*</label>
-                                <input
-                                    type="text"
-                                    id="firstName"
-                                    name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleValueChange}
-                                    className={'button-bg'}
-                                />
-                                {errors.firstName && <span className="error-message">{errors.firstName}</span>}
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="lastName">Last Name*</label>
-                                <input
-                                    type="text"
-                                    id="lastName"
-                                    name="lastName"
-                                    value={formData.lastName}
-                                    onChange={handleValueChange}
-                                    className={'button-bg'}
-                                    required={true}
-                                />
-                                {errors.lastName && <span className="error-message">{errors.lastName}</span>}
-                            </div>
-
-                            <div className="form-group" >
-                                <label htmlFor="email">Email*</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleValueChange}
-                                    required={true}
-                                    className={'button-bg'}
-                                />
-                                {errors.email && <span className="error-message">{errors.email}</span>}
-                            </div>
-
-                            <div className="form-group" >
-                                <label htmlFor="phone">Phone Number*</label>
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleValueChange}
-                                    required={true}
-                                    className={'button-bg'}
-                                />
-                                {errors.phone && <span className="error-message">{errors.phone}</span>}
-                            </div>
-
-                        </div>
-
-                        <div className="form-group">
-                            <select
-                                name="starter"
-                                value={formData.address}
-                                onChange={handleValueChange}
-                                required>
-                                {formData.addresses.map((address, index) => (
-                                    <option key={index} value={address}>{address}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <p>Please provide your addreas if not in the list above</p>
-                            <textarea
-                                id="address"
-                                name="address"
-                                placeholder="Your address"
-                                value={formData.address}
-                                onChange={handleValueChange}
-                                rows="5"
-                                cols="50"
-                                className={'button-bg'}
-                            />
-                            {errors.address && <span className="error-message">{errors.address}</span>}
-                        </div>
-                    </div>
-                    <div className="question-container">
-                        <Summary />
-                        {starter !== starters[2].starter &&  <div>
-                            <div style={{display:'flex', alignItems:'baseline', flexDirection:'row',justifyContent:'space-between', marginTop:'50px'}}>
-                                <h3 style={{flex:'1'}}>Need to know</h3>
-                                <FaArrowRight size={20} className={formData.show2 === true ? 'rotate-up': 'rotate-down'}
-                                              style={{alignSelf:'end', marginBottom:'10px', width:'30px'}}
-                                              onClick={() => {formData.show2 === true ? setFormData({...formData, show2: false}) :
-                                                  setFormData({...formData, show2: true})}}
-                                />
-                            </div>
-                            <div style={formData.show2 === true ? showQs : hideQs}>
-                                {paymentFAQs.map(question => (
-                                    <div key={question.id}>
-                                        <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                            <h4>{question.question}</h4>
-                                            <MdKeyboardArrowDown className={formData.questionIds2.includes(question.id) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
-                                                                 onClick={() => updateIds2(question.id)}
-                                            />
-                                        </div>
-                                        {formData.questionIds2.includes(question.id) && <p style={{marginLeft:'10px'}} className={'slide-in'}>{question.answer}</p> }
-                                    </div>
-                                ))}
-                                <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                    <h4>Are my payment details secure?</h4>
-                                    <MdKeyboardArrowDown className={formData.questionIds2.includes(2) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
-                                                         onClick={() => updateIds2(2)}
-                                    />
-                                </div>
-                                {formData.questionIds2.includes(2) && <p style={{marginLeft:'10px'}} className={'slide-in'}>
-                                    Yes, your bank details are securely stored by <Link to={'https://stripe.com/'} style={{color:'blue'}}>Stripe</Link>, which handles all payments with industry-standard encryption.
-                                </p> }
-                            </div>
-                        </div> }
-                        {starter === starters[2].starter &&  <div>
-                            <div style={{display:'flex', alignItems:'baseline', flexDirection:'row',justifyContent:'space-between', marginTop:'50px'}}>
-                                <h3 style={{flex:'1'}}>Need to know</h3>
-                                <img src={Info} style={{width:'20px', height:'20px', marginLeft:'10px', color:'black'}}
-                                     onClick={()=>{formData.showInfo1 === true ?
-                                         setFormData({...formData, showInfo1: false}) : setFormData({...formData, showInfo1: true})}}
-                                />
-                                <img src={Info} style={{width:'20px', height:'20px', marginLeft:'10px'}}
-                                     onClick={()=>{formData.showInfo2 === true ?
-                                         setFormData({...formData, showInfo2: false}) : setFormData({...formData, showInfo2: true})}}
-                                />
-                                <FaArrowRight size={20} className={formData.show === true ? 'rotate-up': 'rotate-down'}
-                                              style={{alignSelf:'end', marginBottom:'10px', width:'30px'}}
-                                              onClick={() => {formData.show === true ? setFormData({...formData, show: false}) :
-                                                  setFormData({...formData, show: true})}}
-                                />
-                            </div>
-                            <div style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', marginTop:'10px', padding:'5px'}}>
-                                {formData.showInfo1 === true &&  <div style={{flex:'1'}} className={'slide-in'}>
-                                    <h4 style={{color:'blue'}}>Estimated amount</h4>
-                                    <p>
-                                        As we charge customers by Pay as You Go approach, you will pay only for
-                                        the real time a cleaner worked at your property.
-                                        If the cleaning job is completed faster than it was estimated,
-                                        you will pay less. In case your cleaning job took longer time,
-                                        you will pay a little bit more but never more than 1 hour extra.
-                                    </p>
-                                </div>}
-                                {formData.showInfo2 === true &&  <div style={{flex:'1'}} className={'slide-in'}>
-                                    <h4 style={{color:'blue'}}>Estimated duration</h4>
-                                    <p>
-                                        Based on your selection our system estimates the time it would take for our Fly cleaners to clean your home and usually,
-                                        we are able complete your cleaning job within the estimated time however we may need an additional
-                                        hour if the property is more dirty or larger than estimated.
-                                    </p>
-                                </div>}
-                            </div>
-                            <div style={formData.show === true ? showQs : hideQs}>
-                                {carpetCleaningFAQs.map(question => (
-                                    <div key={question.id}>
-                                        <div style={{display:'flex', alignItems:'center', flexDirection:'row', marginTop:'20px'}}>
-                                            <h4>{question.question}</h4>
-                                            <MdKeyboardArrowDown className={formData.questionIds.includes(question.id) ? 'rotate-up': 'rotate-down'} size={30} style={{width:'30px', marginLeft:'10px'}}
-                                                                 onClick={() => updateIds(question.id)}
-                                            />
-                                        </div>
-                                        {formData.questionIds.includes(question.id) && <p style={{marginLeft:'10px'}} className={'slide-in'}>{question.answer}</p> }
-                                    </div>
-                                ))}
-                            </div>
-                        </div> }
-                    </div>
-                </div>
-                <div style={{marginLeft:'40px,', marginRight:'40px', padding:'20px', maxWidth:'700px'}} className="form-actions">
-                    <button type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
-                        Back
-                    </button>
-                    <button type="button" className="next-button" onClick={validation3}>
-                        Next
-                    </button>
-                </div>
-            </div>
-        );
-    }*/
-
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().required('First name is required'),
         lastName: Yup.string().required('Last name is required'),
@@ -3523,92 +3097,216 @@ const Checkout = () => {
         return () => debouncedSave.cancel();
     }, [debouncedSave]);
 
+    const [useOldRecord, setUseOldRecord] = useState(false);
+    const [missingRecord, setMissingRecord] = useState(false);
+    const [oldRecord, setOldRecord] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [dataErrors, setDataErrors] = useState({});
+    const [acknwoledge, setAcknwoledge] = useState(false);
+    const [dataMessage, setDataMessage] = useState('Required record(s) from your data are missing or incomplete. Please  fill the form to continue');
+
+    const validateData = () => {
+        let newErrors = {};
+        setDataErrors({})
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!firstName) {
+            newErrors.firstName = 'First name is required';
+        }
+        if (!lastName) {
+            newErrors.lastName = 'last name is required';
+        }
+        if (!phone) {
+            newErrors.phone = 'phone is required';
+        }
+        if (!address) {
+            newErrors.address = 'address is required';
+        }
+        if (!email) {
+            newErrors.email = 'email is required';
+        }
+        else if (!/^\S+@\S+\.\S+$/.test(email)) {
+            newErrors.email = 'Email is invalid';
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setDataErrors(newErrors);
+            return;
+        }
+        if (useOldRecord && !acknwoledge) {
+            setDataMessage('Please review and acknowledge that the records from your data are correct');
+            setMissingRecord(true);
+            return;
+        }
+        setFormData({
+            ...formData,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone,
+            address: address,
+        })
+        setCurrentStep(currentStep + 1);
+    }
+
+    const handleOldRecordChange = (e) => {
+        const change = e.target.checked;
+        if (change === false) {
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setPhone('');
+            setAddress('');
+        }
+        else {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user === null || user === undefined) {
+                setMissingRecord(true);
+            }
+            else {
+                if (!user.firstName || !user.lastName || !user.email || !user.phone || !user.address) {
+                    setMissingRecord(true);
+                }
+            }
+            if (missingRecord) {
+                setFirstName('');
+                setLastName('');
+                setEmail('');
+                setPhone('');
+                setAddress('');
+                setDataMessage('Required record(s) from your data are missing or incomplete. Please  fill the form to continue')
+                return;
+            }
+            setFirstName(user.firstName);
+            setLastName(user.lastName);
+            setEmail(user.email);
+            setPhone(user.phone);
+            setAddress(user.address);
+        }
+        setUseOldRecord(!useOldRecord);
+        setAcknwoledge(false);
+    }
+
+    const handleAcknwoledgeChange = (e) => {
+        e.preventDefault();
+        setAcknwoledge(!acknwoledge);
+        setMissingRecord(false);
+    }
+
     const Data = () => {
-        const [name, setName] = useState('');
 
         return (
-            <Form>
+            <div>
                 <div className={['checkout-box', 'main-banner'].join(' ')}>
                     <div className={['checkout-container', 'main-banner'].join(' ')}>
-                        <h3 style={{ marginTop: '20px' }}>Contact details</h3>
+                        <h3 className={'experience-text'} style={{ marginTop: '20px' }}>Contact details</h3>
                         <p style={{ marginLeft: '20px', marginBottom: '30px' }}>
                             Please note that contact details are necessary to manage your orders
                         </p>
-
+                        <div  style={{display:'flex', alignItems:'center', gap: '5px'}}>
+                            <input
+                                type="checkbox"
+                                checked={useOldRecord}
+                                onChange={handleOldRecordChange}
+                                name="useOldRecord"
+                            />
+                            <h3 className={'experience-text'} htmlFor="useOldRecord">Use records from my data</h3>
+                        </div>
                         <div className="form-step">
                             <div className="form-group">
                                 <label htmlFor="firstName">First Name*</label>
-                                <Field
+                                <input
                                     type="text"
                                     id="firstName"
                                     name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleFieldChange}
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                     className="button-bg"
                                 />
-                                <ErrorMessage name="firstName" component="span" className="error-message" />
+                                {dataErrors.firstName && <label style={{color:'red'}}>{dataErrors.firstName}</label>}
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="lastName">Last Name*</label>
-                                <Field
+                                <input
                                     type="text"
                                     id="lastName"
                                     name="lastName"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                     className="button-bg"
                                 />
-                                <ErrorMessage name="lastName" component="span" className="error-message" />
+                                {dataErrors.lastName && <label style={{color:'red'}}>{dataErrors.lastName}</label>}
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="email">Email*</label>
-                                <Field
+                                <input
                                     type="email"
                                     id="email"
                                     name="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="button-bg"
                                 />
-                                <ErrorMessage name="email" component="span" className="error-message" />
+                                {dataErrors.email && <label style={{color:'red'}}>{dataErrors.email}</label>}
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="phone">Phone Number*</label>
-                                <Field
+                                <input
                                     type="tel"
                                     id="phone"
                                     name="phone"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
                                     className="button-bg"
                                 />
-                                <ErrorMessage name="phone" component="span" className="error-message" />
+                                {dataErrors.phone && <label style={{color:'red'}}>{dataErrors.phone}</label>}
                             </div>
                         </div>
 
                         <div className="form-group">
-                            <Field
-                                as="select"
+                            <select
                                 name="address"
-                                className="button-bg"
-                            >
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                className="button-bg">
                                 {formData.addresses.map((address, index) => (
                                     <option key={index} value={address}>{address}</option>
                                 ))}
-                            </Field>
-                            <ErrorMessage name="address" component="span" className="error-message" />
+                            </select>
                         </div>
 
                         <div className="form-group">
                             <p>Please provide your address if not in the list above</p>
-                            <Field
-                                as="textarea"
+                            <input
+                                type="textarea"
                                 id="address"
                                 name="address"
                                 placeholder="Your address"
                                 rows="5"
                                 cols="50"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
                                 className="button-bg"
                             />
-                            <ErrorMessage name="address" component="span" className="error-message" />
+                            {dataErrors.address && <label style={{color:'red'}}>{dataErrors.address}</label>}
                         </div>
+
+                        {useOldRecord &&
+                            <div  style={{display:'flex', alignItems:'center', gap: '5px'}}>
+                                <input
+                                    type="checkbox"
+                                    checked={acknwoledge}
+                                    onChange={handleAcknwoledgeChange}
+                                    name="acknowledge"
+                                />
+                                <label htmlFor="acknowledge">I acknowledge that the records from my data are correct</label>
+                            </div>
+                        }
                     </div>
                     <div className="question-container">
                         <Summary />
@@ -3697,30 +3395,31 @@ const Checkout = () => {
                         </div> }
                     </div>
                 </div>
+                {missingRecord && <label style={{color:'red', paddingLeft:'10px', paddingRight:'10px'}}>{dataMessage}</label>}
                 <div style={{marginLeft:'40px,', marginRight:'40px', padding:'20px', maxWidth:'700px'}} className="form-actions">
                     <button type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                         Back
                     </button>
-                    <button type="button" className="next-button" onClick={validation3}>
+                    <button type="button" className="next-button" onClick={validateData}>
                         Next
                     </button>
                 </div>
-            </Form>
+            </div>
         );
     };
 
     function PaymentPlatform() {
         return(
             <div className={'slide-in'}>
-                <h2 style={{marginTop:'50px'}}>Payment details</h2>
-                <p>
+                <h2 style={{color:'blue', paddingLeft:'10px'}}>Payment details</h2>
+                <p style={{paddingLeft:'15px', paddingRight:'5px'}}>
                     Please note that your payement details are securely
-                    stored and managed by third-party. See need to know
+                    stored and managed by third-party.
                 </p>
                 <Elements stripe={stripePromise}>
                     <PaymentHome  />
                 </Elements>
-                <div style={{marginLeft:'40px,', marginRight:'40px', padding:'20px', maxWidth:'900px'}} className="form-actions">
+                <div style={{maxWidth:'900px'}} className="form-actions">
                     <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep - 1)}>
                         Back
                     </button>
@@ -3732,11 +3431,9 @@ const Checkout = () => {
         );
     }
 
-
+// checkout-summary-container
     return (
         <Formik
-            initialValues={formData}
-            validationSchema={validationSchema}
             onSubmit={handlePayment}
             className={['form-group', 'main-banner'].join(' ')}
             style={{
@@ -3767,8 +3464,9 @@ const Checkout = () => {
                             {currentStep === 1 &&  <Schedule />}
                             {currentStep === 2 && <Task /> }
                             {currentStep === 3 &&  <Data /> }
-                            {(currentStep === 4 || currentStep === 5)  && <div>
-                                <div className={['checkout-box', 'main-banner'].join(' ')}>
+                            {currentStep === 4  &&
+                                <div>
+                                    <div className={['checkout-box', 'main-banner'].join(' ')}>
                                     <div  className={['checkout-container', 'main-banner'].join(' ')}>
                                         <div>
                                             <div>
@@ -3802,7 +3500,6 @@ const Checkout = () => {
                                                 {errors.authorization && <span className="error-message">{errors.authorization}</span>}
                                             </div>
                                         </div>
-                                        { (clientSecret !== null && clientSecret !== undefined && clientSecret.trim().length > 0) && <PaymentPlatform />}
                                     </div>
                                     <div className="question-container">
                                         <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
@@ -3974,18 +3671,22 @@ const Checkout = () => {
                                     </div>
 
                                 </div>
-                                {currentStep === 4
-                                    && <div style={{marginLeft:'40px,',
-                                        marginRight:'40px',
-                                        padding:'20px', maxWidth:'700px'}} className="form-actions">
-                                        <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
-                                            Back
-                                        </button>
-                                        <button disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
-                                            {processing ? 'Processing data...' : 'Next'}
-                                        </button>
-                                    </div>}
-                            </div> }
+                                    <div style={{marginLeft:'40px,',
+                                    marginRight:'40px',
+                                    padding:'20px', maxWidth:'700px'}} className="form-actions">
+                                    <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
+                                        Back
+                                    </button>
+                                    <button disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
+                                        {processing ? 'Processing data...' : 'Next'}
+                                    </button>
+                                </div>
+                                </div>
+                            }
+                            {(clientSecret !== null && clientSecret !== undefined && clientSecret.trim().length > 0 && currentStep === 5) &&
+                                <div>
+                                    <PaymentPlatform />
+                                </div>}
                         </div>
                     </div>
                 </main>
