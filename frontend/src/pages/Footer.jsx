@@ -85,7 +85,7 @@ const Footer = () => {
                 <div className="footer-content" >
                     <div className="footer-section" style={currentLocation === '/locations' ? hide : show}>
                         <h3 style={{color:'white'}}>Cleaner locations</h3>
-                        <ul>
+                        <ul style={{color:'grey'}}>
                             {cleanerLocations.map(location => (
                                 <li key={location.id}>
                                     <Link to="/city" state={{ id: location.id, name: location.name }}>
@@ -101,7 +101,7 @@ const Footer = () => {
 
                     <div className="footer-section" style={currentLocation === '/services' ? hide : show}>
                         <h3 style={{color:'white'}}>Our services</h3>
-                        <ul>
+                        <ul style={{color:'grey'}}>
                             {services.map( service => (
                                 <li key={service.id}>
                                     <Link to={'/services'} state={{ id: service.id, name: service.title }}>
