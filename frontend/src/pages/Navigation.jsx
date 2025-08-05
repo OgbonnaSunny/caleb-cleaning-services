@@ -67,16 +67,18 @@ const Navigation = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     useEffect(() => {
-        if (location.pathname === '/' || location.pathname === '') {
+        if (location.pathname === null || location.pathname === undefined) {
+            navigate('/overview');
+            return;
+        }
+        if (location.pathname === '/') {
             setActiveTab('/overview');
         }
         else {
             setActiveTab(location.pathname);
         }
-        console.log(location.pathname);
     }, [location.pathname]);
 
 
@@ -88,17 +90,6 @@ const Navigation = () => {
                 setIsOpen(false);
             }
         };
-
-        /*function checkLoginStatus() {
-            try {
-                api.get('http://localhost:8081/api/login/status')
-                    .then((response) => {
-                        setIsAuthenticated(response.isAuthenticated);
-                    })
-            } catch {
-                setIsAuthenticated(false);
-            }
-        }*/
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);

@@ -1389,6 +1389,8 @@ const Locations = () => {
     setCleanerLocation('');
   }
 
+  const handleOnChange = (e) => {}
+
   return (
       <div style={{
         display: 'flex',
@@ -1429,12 +1431,12 @@ const Locations = () => {
           <div style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
             <div className={'location-name'}
             onClick={() => updateList('Edin')}>
-              <input type={'checkbox'} checked={edin}/>
+              <input type={'checkbox'} onChange={handleOnChange} checked={edin}/>
               <h2 className={'experience-text'} style={{marginLeft:'5px'}} >Edinburgh Only</h2>
             </div>
             <div className={'location-name'}
             onClick={() => updateList('More')}>
-              <input type={'checkbox'} checked={more}/>
+              <input type={'checkbox'} onChange={handleOnChange} checked={more}/>
               <h2 className={'experience-text'} style={{marginLeft:'5px'}} >More Locations</h2>
             </div>
 
