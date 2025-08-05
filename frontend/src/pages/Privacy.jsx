@@ -38,8 +38,8 @@ const Privacy = () => {
                 <p style={{marginBottom:'30px'}}>
                     1 Overview<br/><br/>
 
-                    1.1. We (“Flymax Ltd”) collect and use personal data or information about individuals for specific and lawful purposes. Individuals could include customers, employees, temporary and agency workers, contractors and suppliers.
-                    1.2. We understand that your personal data is important to you, and we have a responsibility to you to ensure that the information we collect and use is done so proportionately, correctly and safely. This policy sets out how we comply with our data protection obligations.
+                    1.1. We (“Flymax Ltd”) collect and use personal data or information about individuals for specific and lawful purposes. Individuals could include customers, employees, temporary and agency workers, contractors and suppliers.<br/>
+                    1.2. We understand that your personal data is important to you, and we have a responsibility to you to ensure that the information we collect and use is done so proportionately, correctly and safely. This policy sets out how we comply with our data protection obligations.<br/><br/>
                     2 Our Details<br/>
 
                     2.1. Our registered office address is: Suite 5 3rd Floor, Sovereign House, 1 Albert Place, London, England, N31QB.<br/>
@@ -99,7 +99,7 @@ const Privacy = () => {
                     10 Your rights<br/><br/>
 
                     10.1. You have certain rights in relation to the personal information we hold about you. These rights are as follows:<br/>
-                    10.1.1. >Right to be informed – you have a right to be told about how we use your personal data. We communicate the right to be informed via this privacy policy.<br/>
+                    10.1.1. Right to be informed – you have a right to be told about how we use your personal data. We communicate the right to be informed via this privacy policy.<br/>
                     10.1.2. Right of access – you have the right to request a copy of the information that we hold about you. (This right is similar to a subject access request).<br/>
                     10.1.3. Right of rectification – you have a right to correct data that we hold about you that is inaccurate or incomplete.<br/>
                     10.1.4. Right to erasure (right to be forgotten) – in certain circumstances you can ask for the data we hold about you to be erased from our records.<br/>
