@@ -69,8 +69,19 @@ const Navigation = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [isAuthenticated, setIsAuthenticated] = useState(null);
 
+    useEffect(() => {
+        if (location.pathname === '/' || location.pathname === '') {
+            setActiveTab('/overview');
+        }
+        else {
+            setActiveTab(location.pathname);
+        }
+        console.log(location.pathname);
+    }, [location.pathname]);
+
 
     useEffect(() => {
+
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
             if (window.innerWidth > 768) {
@@ -78,9 +89,7 @@ const Navigation = () => {
             }
         };
 
-        setActiveTab(location.pathname);
-
-        function checkLoginStatus() {
+        /*function checkLoginStatus() {
             try {
                 api.get('http://localhost:8081/api/login/status')
                     .then((response) => {
@@ -89,7 +98,7 @@ const Navigation = () => {
             } catch {
                 setIsAuthenticated(false);
             }
-        }
+        }*/
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
@@ -98,7 +107,7 @@ const Navigation = () => {
 
         return () => emitter.off('auth', checkLoginStatus);
 
-    }, [location.pathname]);
+    }, []);
 
     const handleAuth = () => {
       const user = JSON.parse(localStorage.getItem('user'));
