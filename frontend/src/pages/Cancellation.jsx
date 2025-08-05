@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import LOGO from "../images/logo3.png";
+import LOGO from "../images/logo4.png";
 
 const Cancellation = () => {
 

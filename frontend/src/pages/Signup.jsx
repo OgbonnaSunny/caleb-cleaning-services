@@ -11,7 +11,7 @@ import * as events from "node:events";
 import postcode, {isValidUKPostcodeFormat, checkPostcodeExists} from "./Postcode.jsx";
 import axios from 'axios'
 import {Link, useNavigate } from 'react-router-dom'
-import LOGO from "../images/logo3.png";
+import LOGO from "../images/logo4.png";
 
 const Signup = () => {
     const navigate = useNavigate();

@@ -3,7 +3,7 @@ import '../App.css';
 import Navigation from './NavigationLinks.jsx'
 import NavigationItem from './Navigation.jsx'
 import OfficeCleaner from '../images/officeCleaner.png'
-import FlyCleaner from '../images/flyCleaners.png'
+import FlyCleaner from '../images/uniform.png'
 import LivingRoom from '../images/livingRoom.png'
 import { Link } from 'react-router-dom'
 import Domestic from '../images/domestic.png'
@@ -321,7 +321,7 @@ const Overview = () => {
                             </ul>
                         </div>
                         <div className="about-image">
-                            <img src={FlyCleaner} alt="Professional cleaner" className={'cart-image4'} />
+                            <img src={FlyCleaner} alt="Professional cleaner" className={'cart-image2'} />
                             <div className="experience-badge">
                                 <span>10+</span>
                                 <p style={{padding:'3px'}}>Years Experience</p>

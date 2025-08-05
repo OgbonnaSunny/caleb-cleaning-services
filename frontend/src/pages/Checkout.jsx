@@ -53,7 +53,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { debounce } from 'lodash';
-import LOGO from "../images/logo3.png";
+import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
 
 const Checkout = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import Footer from './Footer.jsx'
-import LOGO from "../images/logo3.png";
+import LOGO from "../images/logo4.png";
 import {Link, useLocation } from 'react-router-dom'
 
 const Terms = () => {

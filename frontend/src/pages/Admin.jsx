@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { NavLink, Link } from 'react-router-dom';
 import { FaHome, FaCalendarAlt, FaUsers, FaUserShield, FaChartLine, FaCog } from 'react-icons/fa';
-import LOGO from '../images/logo3.png';
+import LOGO from '../images/logo4.png';
 
 const Admin = () => {
     const statsData = [

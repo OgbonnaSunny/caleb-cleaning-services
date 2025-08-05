@@ -579,14 +579,14 @@ const Help = () => {
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
         <div className="service-banner">
-          <section style={{padding:'10px'}}>
-            <h1 className={'experience-text'} style={{ color:'darkred'}}>Frequently Asked Questions</h1>
-            <h3 className={'header-text'} style={{textAlign:'start', color:'black'}}>
+          <section className={'support-page'}>
+            <h1 className={'experience-text'} style={{ color:'darkred', padding:'8px', textAlign:'start'}}>Frequently Asked Questions</h1>
+            <p className={'header-text'} style={{textAlign:'start', color:'black', padding:'10px' }}>
               There are answers for everyone whether you’re a client and having trouble ordering a cleaning or a cleaner and want to be sure that you’re following the procedure.<br/>
               Need help? <span style={{color:'navy'}}>Click here to email us</span> —
               For urgent issues, we aim to respond within minutes. Apart from that please navigate yourself through our FAQ pages
-            </h3>
-            <div>
+            </p>
+            <div className={'burden-container'}>
               <label style={{color:'blue'}} className="custom-checkbox">
                 <input
                     type="checkbox"
@@ -595,7 +595,7 @@ const Help = () => {
                     className="hidden-checkbox"
                 />
                 <span className="checkbox-custom"></span>
-                I'm a Client
+                Client
               </label>
               <label className="custom-checkbox" style={{color:'blue'}}>
                 <input
@@ -605,7 +605,7 @@ const Help = () => {
                     className="hidden-checkbox"
                 />
                 <span className="checkbox-custom"></span>
-                I'm a Cleaner
+                Cleaner
               </label>
               <label className="custom-checkbox" style={{color:'blue'}}>
                 <input

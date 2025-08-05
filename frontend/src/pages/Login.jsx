@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from './api.js'
 import {Link, useNavigate} from "react-router-dom";
 import Payment from "./Payment.jsx";
-import LOGO from "../images/logo3.png";
+import LOGO from "../images/logo4.png";
 
 const Login = () => {
     const navigate = useNavigate();

@@ -9,7 +9,7 @@ import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { isToday, differenceInDays } from 'date-fns';
 import { Link } from 'react-router-dom';
-import LOGO from "../images/logo3.png";
+import LOGO from "../images/logo4.png";
 import { Helmet } from 'react-helmet';
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
