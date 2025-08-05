@@ -575,7 +575,7 @@ img {
   box-shadow: var(--shadow);
 }
 .experience-text {
-  font-size: xxx-large;
+  font-size: xx-large;
 }
 
 @media (max-width: 768px) {
@@ -1077,6 +1077,7 @@ ul li {
   position: sticky;
   top: 0;
   z-index: 10;
+  margin: 0 auto;
   padding: 0 10px;
 
 
@@ -6518,8 +6519,8 @@ tr:hover {
 }
 
 .logo-icon {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   margin-right: 10px;
 }
 .logo-icon2 {
@@ -6540,8 +6541,9 @@ tr:hover {
     margin: 8px;
   }
   .logo-icon {
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 40px;
+    margin-bottom: 10px;
   }
   .profile-name {
     font-weight: bold;
