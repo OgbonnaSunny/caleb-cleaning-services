@@ -1391,6 +1391,8 @@ const Locations = () => {
 
   const handleOnChange = (e) => {}
 
+  // target="_blank" rel="noopener noreferrer"
+
   return (
       <div style={{
         display: 'flex',
@@ -1477,7 +1479,7 @@ const Locations = () => {
                         <div className="card-content">
                           <ul>
                             <li style={{textAlign:'center'}}>
-                              <Link to="/city" state={{ id: location.id, name: location.name }}>
+                              <Link to="/city"  state={{ id: location.id, name: location.name }}>
                                 {location.name}
                               </Link>
                             </li>

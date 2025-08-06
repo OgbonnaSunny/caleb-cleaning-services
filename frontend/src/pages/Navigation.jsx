@@ -38,12 +38,11 @@ const Navigation = () => {
         {id: 2, name: 'Locations', path: '/locations' },
         {id: 3, name: 'Services', path: '/services' },
         {id: 4, name: 'Pricing', path: '/pricing' },
-        {id: 5, name: 'Blog', path: '/about' },
+        {id: 5, name: 'Blog', path: '/blog' },
         {id: 6, name: 'Gift', path: '/gift' },
         {id: 7, name: 'Help', path: '/help' },
         {id: 8, name: 'Reclean', path: '/reclean' },
-        {id: 9, name: 'Cleaners', path: '/become' },
-        {id: 10, name: 'Admin', path: '/admin' },
+        {id: 9, name: 'Cleaners', path: '/become' }
     ];
 
     const showAdmin = {display: ' '};
@@ -69,15 +68,54 @@ const Navigation = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
-        if (location.pathname === null || location.pathname === undefined) {
-            navigate('/overview');
-            return;
+        const user = JSON.parse(localStorage.getItem('user'));
+        switch (location.pathname) {
+            case '/cleanerprofile':
+                if (user != null && user !== undefined) {
+                    document.title = user.firstName.charAt(0) + user.firstName.slice(1);
+                }
+                else {
+                    document.title = "My App";
+                }
+                break;
+
+            case '/customer':
+                if (user != null && user !== undefined) {
+                    document.title = user.firstName.charAt(0) + user.firstName.slice(1);
+                }
+                else {
+                    document.title = "My App";
+                }
+                break;
+
+           case '/checkout':
+               document.title = "Booking";
+               break;
+
+           case '/login':
+               document.title = "Login";
+               break;
+
+           case '/signup':
+               document.title = "Signup";
+               break;
+
+            case '/logout':
+                document.title = "Logout";
+                break;
         }
+
+        for (let i = 0; i < navLinks.length; i++) {
+            if (navLinks[i].path === location.pathname) {
+                const title = navLinks[i].name.charAt(0).toUpperCase() + navLinks[i].name.slice(1);
+                document.title = title;
+                setActiveTab(navLinks[i].path);
+                break;
+            }
+        }
+
         if (location.pathname === '/') {
             setActiveTab('/overview');
-        }
-        else {
-            setActiveTab(location.pathname);
         }
     }, [location.pathname]);
 
@@ -100,14 +138,28 @@ const Navigation = () => {
 
     }, []);
 
+
     const handleAuth = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
-          navigate('/logout');
+          window.open('/logout', '_blank');
       }
       else {
-          navigate('/login');
+          window.open('/login', '_blank');
       }
+    }
+
+    const handleNavigation = (path) => {
+        let inMainNav = false;
+        for (let i = 0; i < navLinks.length; i++) {
+            if (navLinks[i].path === path) {
+                inMainNav = true;
+                break;
+            }
+        }
+        if (inMainNav) {
+            setActiveTab(path);
+        }
     }
 
     return (
@@ -119,8 +171,9 @@ const Navigation = () => {
                             <img src={LOGO} alt="logo" className="logo-icon"  />
                             <p  className="experience-text">Fly Cleaner</p>
                             <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
-                            <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
-                            <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
+                            <MdDashboard style={{color:'navy'}} onClick={() => window.open('/cleanerprofile', '_blank')}  className={'logo-icon2'}/>
+                            <MdDashboard  style={{color:'purple'}}  onClick={() => window.open('/customer', '_blank')} className={'logo-icon2'} />
+                            <MdAdminPanelSettings  style={{color:'purple'}}  onClick={() => window.open('/admin', '_blank')} className={'logo-icon2'} />
                             {!isOpen && <FaBars
                                 style={{width:'40px', height:'30px', marginLeft:'10px'}}
                                 className={` hamburger ${isOpen ? 'open' : ''}`}
@@ -142,7 +195,7 @@ const Navigation = () => {
                                 to={link.path}
                                 style={activeTab === link.path ? {color:'brown', textDecoration: 'underline'} : {color:'', textDecoration: ''}}
                                 className={activeTab === link.path ? 'active' : ''}
-                                onClick={() => { isMobile && setIsOpen(false); setActiveTab(link.path)}}>
+                                onClick={() => { isMobile && setIsOpen(false); handleNavigation(link.path)}}>
                                 {link.name}
                             </Link>
                         </li>))}

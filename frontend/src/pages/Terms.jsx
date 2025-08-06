@@ -24,6 +24,10 @@ const Terms = () => {
     ]
     const location = useLocation();
 
+    useEffect(() => {
+        document.title = "Terms & Conditions";
+    })
+
     return (
         <div style={{
             display: 'flex',

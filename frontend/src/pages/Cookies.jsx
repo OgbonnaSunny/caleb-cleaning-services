@@ -1,4 +1,4 @@
-import React from 'react'
+import React , { useEffect } from 'react'
 import LOGO from '../images/logo4.png'
 import {Link } from 'react-router-dom'
 
@@ -229,6 +229,10 @@ const Cookies = () => {
             path: '/privacy',
         },
     ]
+
+    useEffect(() => {
+        document.title = "Cookie Policy";
+    })
 
 
 

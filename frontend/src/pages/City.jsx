@@ -1,4 +1,4 @@
-import { useParams, useLocation} from 'react-router-dom'
+import {useParams, useLocation, redirect} from 'react-router-dom'
 import React, {useState, useEffect} from "react";
 import Footer from "./CityFooter.jsx";
 import Domestic from '../images/domestic.png'
@@ -25,7 +25,7 @@ import Kept from '../images/kept.png'
 import { FaArrowLeft, FaArrowRight  } from 'react-icons/fa';
 import Sweeping from "../images/sweeping.png";
 import Arranged from "../images/arranged.png";
-import { isValidUKPostcodeFormat, checkPostcodeExists } from './Postcode.jsx'
+import postcode, { isValidUKPostcodeFormat, checkPostcodeExists } from './Postcode.jsx'
 import { useNavigate } from 'react-router-dom';
 
 const City = () => {
@@ -232,6 +232,21 @@ const City = () => {
         navigate('/checkout', { state: { postcode: postcode } });
     };
 
+    useEffect(() => {
+        if (city === null || city === undefined) {
+            return;
+        }
+        function replaceLastSegment(newSegment) {
+            const path = window.location.pathname;
+            const segments = path.split('/');
+            segments[segments.length - 1] = newSegment;
+            return segments.join('/').replace(/[ ,]+/g, '-');
+        }
+        window.history.replaceState(null, '', replaceLastSegment(city));
+        document.title = city.charAt(0).toUpperCase() + city.slice(1);
+
+    }, [city])
+
 
     return (
         <div style={{
@@ -277,6 +292,7 @@ const City = () => {
                 </div>
 
             </section>
+
             <section className={'main-banner'} style={{marginTop:'30px'}}>
                 <div className="container">
                     <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'20px'}} >{`How much does a house cleaning cost in ${city}?`}</h2>
@@ -629,7 +645,6 @@ We provide a regular cleaning service as needed, whether it be daily, weekly, bi
                 </div>
 
             </section>
-
 
             < Footer />
         </div>

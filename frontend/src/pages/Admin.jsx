@@ -1,12 +1,11 @@
 // components/Dashboard.js
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import StatsCard from './StatsCard.jsx';
 import Bookings from './Bookings.jsx';
 import CleaningSchedule from './CleaningSchedule.jsx';
 import ServiceAreas from './ServiceAreas.jsx';
 import Sidebar from './Sidebar.jsx';
 import { FaPoundSign, FaCalendarCheck, FaUserTie, FaMapMarkerAlt, FaBars, FaTimes  } from 'react-icons/fa';
-import { useState, useEffect, useRef} from 'react';
 import { useNavigate } from 'react-router-dom'
 
 import { NavLink, Link } from 'react-router-dom';
@@ -47,6 +46,10 @@ const Admin = () => {
 
     const active = {color:'green', width:'40px', height:'30px', marginRight: '20px'};
     const notActive = {color:' ', width:'40px', height:'30px', marginRight: '20px'};
+
+    useEffect(() => {
+        document.title = 'Admin';
+    })
 
 
     return (

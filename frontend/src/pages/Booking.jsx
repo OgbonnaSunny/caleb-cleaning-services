@@ -1,4 +1,4 @@
-import React from 'react'
+import React , { useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import LOGO from "../images/logo4.png";
 
@@ -54,6 +54,10 @@ const Booking = () => {
             path: '/privacy',
         },
     ]
+
+    useEffect(() => {
+        document.title = "Booking Policy";
+    })
 
     return (
         <div style={{

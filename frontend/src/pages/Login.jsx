@@ -128,7 +128,8 @@ const Login = () => {
 
                     <button type="submit" className={loading ? "back-button" : "next-button" }  disabled={loading}>Submit</button>
 
-                    <p style={{marginTop:'20px'}}>Don't have an account? <Link style={{color:'navy'}} to={'/signup'}>sign up</Link></p>
+                    <p style={{marginTop:'20px'}}>Don't have an account? <Link style={{color:'navy'}} to={'/signup'} target="_blank" rel="noopener noreferrer">
+                        sign up</Link></p>
                 </form>
             </div>
         </div>

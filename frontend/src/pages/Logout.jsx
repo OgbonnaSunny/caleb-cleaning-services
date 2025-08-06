@@ -55,7 +55,7 @@ const Logout = () => {
                             Logout
                         </button>
                     </div>
-                    <p style={{marginTop:'20px'}}>Didn't login yet? <Link style={{color:'navy'}} to={'/login'}>Login</Link></p>
+                    <p style={{marginTop:'20px'}}>Didn't login yet? <Link style={{color:'navy'}} to={'/login'} target="_blank" rel="noopener noreferrer">Login</Link></p>
                 </form>
             </div>
         </div>

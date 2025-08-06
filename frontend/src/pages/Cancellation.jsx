@@ -1,4 +1,4 @@
-import React from 'react'
+import React , { useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import LOGO from "../images/logo4.png";
 
@@ -41,6 +41,10 @@ const Cancellation = () => {
             path: '/privacy',
         },
     ]
+
+    useEffect(() => {
+        document.title = 'Cancellation Policy';
+    })
 
     return (
         <div style={{

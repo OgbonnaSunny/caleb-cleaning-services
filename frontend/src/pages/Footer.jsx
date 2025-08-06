@@ -23,16 +23,19 @@ const Footer = () => {
     const location = useLocation();
 
     const customerActions = [
-        { id: "whats-included", name: "What's included", path: "/what-included" },
-        { id: "blog", name: "Blog" },
         { id: "booking-policy", name: "Booking Policy", path: "/booking" },
         { id: "pricing", name: "Pricing", path: "/pricing" },
         { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation" },
         { id: "terms-conditions", name: "Terms & Conditions", path: "/terms" },
         { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy" },
         { id: "cookies-policy", name: "Cookies Policy", path: "/cookies" },
-        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
         { id: "sitemap", name: "Sitemap", path: "/sitemap" }
+    ]
+
+    const special = [
+        { id: "whats-included", name: "What's included", path: "/services" },
+        { id: "blog", name: "Blog", path: "/blog" },
+        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
     ]
 
     const services = [
@@ -176,11 +179,29 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>For our customers</h3>
                         <ul style={{color:'grey'}}>
                             {customerActions.map(action => (
-                                <div key={action.id} style={pathIncluded && names.includes(action.name) && action.path === location.pathname ? hide : show}>
+                                <div key={action.id} style={pathIncluded && names.includes(action.name)
+                                && action.path === location.pathname ? hide : show}>
                                     <div style={{display:'flex', alignItems:'center'}}>
                                         <div className={'footer-mark'}></div>
                                         <h5 style={{padding:'10px'}}>
                                             <Link to={action.path} target="_blank" rel="noopener noreferrer">{action.name}</Link>
+                                        </h5>
+                                    </div>
+                                </div>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="footer-section">
+                        <h3 style={{color:'white'}}>Get more insight</h3>
+                        <ul style={{color:'grey'}}>
+                            {special.map(action => (
+                                <div key={action.id} style={pathIncluded && names.includes(action.name)
+                                && action.path === location.pathname ? hide : show}>
+                                    <div style={{display:'flex', alignItems:'center'}}>
+                                        <div className={'footer-mark'}></div>
+                                        <h5 style={{padding:'10px'}}>
+                                            <Link to={action.path}>{action.name}</Link>
                                         </h5>
                                     </div>
                                 </div>
@@ -224,8 +245,8 @@ const Footer = () => {
                 <div className="footer-bottom">
                     <p>{new Date().getFullYear()} Flymax. All rights reserved.</p>
                     <div className="legal-links">
-                        <Link to="/privacy">Privacy Policy</Link>
-                        <Link to="/terms">Terms & Conditions</Link>
+                        <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
+                        <Link to="/terms" target="_blank" rel="noopener noreferrer">Terms & Conditions</Link>
                     </div>
                 </div>
             </div>

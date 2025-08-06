@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { useEffect }  from "react";
 import LOGO from "../images/logo4.png";
 import { Link } from 'react-router-dom'
 
@@ -22,6 +22,10 @@ const Privacy = () => {
             path: '/cookies',
         },
     ]
+
+    useEffect(() => {
+        document.title = "Privacy Policy";
+    })
 
     return (
         <div style={{

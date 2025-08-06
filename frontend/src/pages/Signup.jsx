@@ -378,7 +378,7 @@ const Signup = () => {
                        Next
                    </button>
                    
-                   <p style={{marginTop:'20px'}}>Already have an account? <Link style={{color:'navy'}} to={'/login'}>sign in</Link></p>
+                   <p style={{marginTop:'20px'}}>Already have an account? <Link style={{color:'navy'}} to={'/login'} target="_blank" rel="noopener noreferrer">sign in</Link></p>
                </div>}
 
                {stage === 2 && <div className="steps">
