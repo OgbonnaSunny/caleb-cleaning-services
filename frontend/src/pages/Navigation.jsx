@@ -59,13 +59,14 @@ const Navigation = () => {
     };
 
     const location = useLocation();
-    const hideNavbarPaths = ['/admin', '/customer', '/cleanerprofile', '/cashback','/tenancylist' ,'/checkout', '/privacy', '/cancellation', '/cookies', '/booking', '/terms','/cleaners', '/bookings', '/reports', '/settings', '/logout','/login','/signup', '/sitemap']; // Paths where navbar should be hidden
-    const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
+    const hideNavbarPaths = ['/cashback','/checkout', '/bookings', '/reports', '/settings']; // Paths where navbar should be hidden
+    let shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
 
     const [activeTab, setActiveTab] = useState('/overview');
     const [isScrolled, setIsScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [showNav, setShowNav] = useState(true);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -89,7 +90,7 @@ const Navigation = () => {
                 break;
 
            case '/checkout':
-               document.title = "Booking";
+               document.title = "Book Cleaning";
                break;
 
            case '/login':
@@ -114,10 +115,28 @@ const Navigation = () => {
             }
         }
 
+        if (!navLinks.includes(location.pathname)) {
+            setShowNav(false);
+        }
+        else {
+            setShowNav(true);
+        }
+
         if (location.pathname === '/') {
             setActiveTab('/overview');
+            document.title = "Overview";
         }
     }, [location.pathname]);
+
+    const handleHomeNav = () => {
+        const path = window.location.pathname;
+        if (path === '/' || path === '/overview') {
+            window.location.reload();
+            document.title = "Overview";
+            return;
+        }
+        navigate('/overview');
+    }
 
 
     useEffect(() => {
@@ -164,11 +183,11 @@ const Navigation = () => {
 
     return (
         <div  style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
-            {shouldShowNavbar &&
+            {showNav &&
                 <nav className="navbar"  >
                     <div style={{display:'block'} } >
                         <div className="navbar-logo" >
-                            <img src={LOGO} alt="logo" className="logo-icon"  />
+                            <img src={LOGO} alt="logo" className="logo-icon" onClick={handleHomeNav} />
                             <p  className="experience-text">Fly Cleaner</p>
                             <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
                             <MdDashboard style={{color:'navy'}} onClick={() => window.open('/cleanerprofile', '_blank')}  className={'logo-icon2'}/>

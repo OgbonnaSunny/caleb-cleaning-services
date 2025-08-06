@@ -2258,7 +2258,7 @@ const Checkout = () => {
                                     </div>
                                     <div style={{marginTop:'25px'}}>
                                         <h3>Do you need End of Tenancy cleaning?</h3>
-                                        <p>Please check our Check-list <Link to={'/tenancylist'} style={{color:'blue'}}>here</Link> <label style={{color:'red'}}>( Additional £39 )</label></p>
+                                        <p>Please check our Check-list <Link to={'/tenancylist'} target="_blank" rel="noopener noreferrer" style={{color:'blue'}}>here</Link> <label style={{color:'red'}}>( Additional £39 )</label></p>
                                     </div>
                                 </div>
                             </div>}

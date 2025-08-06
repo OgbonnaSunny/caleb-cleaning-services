@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import LOGO from "../images/logo4.png";
 
@@ -23,32 +23,6 @@ const TenancyList = () => {
                 "Wipe down extractor fan",
                 "Clean plugs, light switches",
                 "Hoover & mop floors"
-            ]
-        },
-        {
-            id: 2,
-            plan: "Kitchen",
-            taskList: [
-                "Remove the cobweb and dust from the ceiling",
-                "Clean both inside and outside refrigerator & freezer (defrosted in advance by customer)",
-                "Clean and polish all kitchen cupboards and drawers both inside and out",
-                "Microwave is wiped down inside & out",
-                "Clean all sides of washing soap dispenser, machine, and filters",
-                "Clean dishwasher and remove limescale",
-                "Clean and degrease inside of oven, polish outside parts",
-                "Clean and polish hob & grill",
-                "Clean, degrease and polish extractor fan + filters",
-                "Remove mould and grease from wall tiles, wash down and polish",
-                "Clean exterior of all kitchen appliances such as kettle, toaster, etc.",
-                "Wipe and wash down kitchen countertops",
-                "Remove lime scale and polish sink / shine taps",
-                "Clean windows from the inside; wipe down window sills / window ledges",
-                "Wipe all woodwork (doors, door frames, skirting boards)",
-                "Wipe down radiators",
-                "Clean plugs, light switches",
-                "Get rid of leftover rubbish",
-                "Rinse out rubbish bins",
-                "Hoover and mop the floor"
             ]
         },
         {
@@ -88,10 +62,6 @@ const TenancyList = () => {
                 "Hoover and mop the floors"
             ]
         },
-        {id: 5,
-            plan: "Appliances",
-            taskList: ["Please pay extra attention to cleaning appliances"]
-        },
         {
             id: 6,
             plan: "Dishwasher",
@@ -118,16 +88,6 @@ const TenancyList = () => {
             ]
         },
         {
-            id: 8,
-            plan: "Tumble Dryer",
-            taskList: [
-                "Clean inside and out",
-                "Inspect the rubber seal",
-                "Clean the soap dispenser drawer",
-                "Inspect and clean the filter"
-            ]
-        },
-        {
             id: 9,
             plan: "Ovens and Microwaves",
             taskList: [
@@ -151,7 +111,47 @@ const TenancyList = () => {
                 "De-grease handles",
                 "Remove grime"
             ]
-        }
+        },
+        {id: 5,
+            plan: "Appliances",
+            taskList: ["Please pay extra attention to cleaning appliances"]
+        },
+        {
+            id: 8,
+            plan: "Tumble Dryer",
+            taskList: [
+                "Clean inside and out",
+                "Inspect the rubber seal",
+                "Clean the soap dispenser drawer",
+                "Inspect and clean the filter"
+            ]
+        },
+        {
+            id: 2,
+            plan: "Kitchen",
+            taskList: [
+                "Remove the cobweb and dust from the ceiling",
+                "Clean both inside and outside refrigerator & freezer (defrosted in advance by customer)",
+                "Clean and polish all kitchen cupboards and drawers both inside and out",
+                "Microwave is wiped down inside & out",
+                "Clean all sides of washing soap dispenser, machine, and filters",
+                "Clean dishwasher and remove limescale",
+                "Clean and degrease inside of oven, polish outside parts",
+                "Clean and polish hob & grill",
+                "Clean, degrease and polish extractor fan + filters",
+                "Remove mould and grease from wall tiles, wash down and polish",
+                "Clean exterior of all kitchen appliances such as kettle, toaster, etc.",
+                "Wipe and wash down kitchen countertops",
+                "Remove lime scale and polish sink / shine taps",
+                "Clean windows from the inside; wipe down window sills / window ledges",
+                "Wipe all woodwork (doors, door frames, skirting boards)",
+                "Wipe down radiators",
+                "Clean plugs, light switches",
+                "Get rid of leftover rubbish",
+                "Rinse out rubbish bins",
+                "Hoover and mop the floor"
+            ]
+        },
     ];
 
     const links = [
@@ -173,6 +173,10 @@ const TenancyList = () => {
         },
     ]
 
+    useEffect(() => {
+        document.title = 'Tenancy Checklist';
+    })
+
     return (
         <div style={{
             marginTop:'50px',
@@ -181,9 +185,10 @@ const TenancyList = () => {
             minHeight:'100vh',
         }}>
             <div className={['main-banner', 'container'].join(' ')}>
-                <div className={['container', 'main-banner'].join(' ')} style={{display:'flex', flexDirection: 'row', marginTop:'20px', marginBottom:'30px', maxWidth:'1200px'}}>
-                    <img src={LOGO} className={'logo-container'}/>
-                    <h2 className={'help-text'} style={{textAlign:'start', color:'navy'}}>End of tenancy cleaning checklist</h2>
+                <div className={['container', 'main-banner'].join(' ')}
+                     style={{display:'flex', flexDirection: 'row', marginTop:'20px', marginBottom:'30px', maxWidth:'1200px'}}>
+                    <img src={LOGO} className={'logo-icon2'}/>
+                    <h2 className={'experience-text'} style={{textAlign:'start', color:'navy'}}>End of tenancy cleaning checklist</h2>
                 </div>
 
                 <p style={{marginTop:'30px'}}>
@@ -191,14 +196,16 @@ const TenancyList = () => {
                     receive the highest level of service. eMop cleaning list includes the areas/rooms our expert team cleans
                     while at your property. Our end of tenancy cleaning checklist is as follows:
                 </p>
-                {cleaningTasksByArea.map(task => (
-                    <div key={task.id}>
-                        <h3 style={{color:'blue', marginTop:'30px', marginBottom:'10px'}}>
-                            {task.plan}
-                        </h3>
-                        {task.taskList.map((item, index) => (<ul className={'dot-list'}><li>{item}</li></ul>))}
-                    </div>
-                ))}
+                <div className={'grid-container'}>
+                    {cleaningTasksByArea.map(task => (
+                        <div key={task.id}>
+                            <h3 style={{color:'blue', marginTop:'30px', marginBottom:'10px'}}>
+                                {task.plan}
+                            </h3>
+                            {task.taskList.map((item, index) => (<ul className={'dot-list'}><li>{item}</li></ul>))}
+                        </div>
+                    ))}
+                </div>
 
                 <h4 style={{marginTop:'20px'}}>Important notes</h4>
                 <p style={{marginLeft:'20px', marginBottom:'30px'}}>

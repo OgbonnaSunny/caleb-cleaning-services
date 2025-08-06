@@ -232,9 +232,7 @@ const Cookies = () => {
 
     useEffect(() => {
         document.title = "Cookie Policy";
-    })
-
-
+    }, [])
 
     return (
         <div style={{
