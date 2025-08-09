@@ -1570,9 +1570,13 @@ const CleanerProfile = () => {
         fetchCleanerData();
     }, []);
 
+    useEffect(() => {
+        setTimeout(() => setSuccessMessage(null), 5000);
+    }, [successMessage])
+
+    const [dataForUpdate, setDataForUpdate] = useState('');
+    const [runCounter, setRunCounter] = useState(0);
     const SettingsPage = () => {
-        const [dataForUpdate, setDataForUpdate] = useState('');
-        const [runCounter, setRunCounter] = useState(0);
 
         const handlePreferredAreaChange = (area) => {
             const currentAreas = getValues().work.preferredAreas

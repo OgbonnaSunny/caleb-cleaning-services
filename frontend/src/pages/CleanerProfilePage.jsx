@@ -168,7 +168,6 @@ const ProfilePage = ({emailFromProile}) => {
     const [reviewCount, setReviewCount] = useState(cleaner.reviewCount);
     const [bio, setBio] = useState(cleaner.bio);
     const [phone, setPhone] = useState(cleaner.phone);
-
     const [availability, setAvailability] = useState({
         monday: { morning: false, afternoon: false, evening: false },
         tuesday: { morning: false, afternoon: false, evening: false },
@@ -178,15 +177,6 @@ const ProfilePage = ({emailFromProile}) => {
         saturday: { morning: false, afternoon: false, evening: false },
         sunday: { morning: false, afternoon: false, evening: false }
     });
-
-    /*const [monday, setMonday] = useState({ morning: false, afternoon: false, evening: false });
-    const [tuesday, setTuesday] = useState({ morning: false, afternoon: false, evening: false });
-    const [wednesday, setwednesday] = useState({ morning: false, afternoon: false, evening: false });
-    const [thursday, setThursday] = useState({ morning: false, afternoon: false, evening: false });
-    const [friday, setFriday] = useState({ morning: false, afternoon: false, evening: false });
-    const [saturday, setSaturday] = useState({ morning: false, afternoon: false, evening: false });
-    const [sunday, setSunday] = useState({ morning: false, afternoon: false, evening: false });*/
-
     const [specialties, setSpecialties] = useState(["Eco-friendly cleaning", "Pet-friendly products", "Stain removal"]);
     const [languages, setLanguages] = useState(["English"]);
     const [services, setServices] = useState(["House Cleaning", "Office Cleaning", "Deep Cleaning", "Carpet Cleaning"]);
@@ -232,42 +222,20 @@ const ProfilePage = ({emailFromProile}) => {
                 return;
             }
             setIsLoading(true);
-            api.post('/api/users/record', {email: email})
+            api.post('/api/reviews/record', {email: email})
                 .then(response => {
-                    const { user } = response.data;
-                    if (user) {
-                        setValue('personal', {
-                            ...getValues().personal,
-                            firstName: user.firstName,
-                            lastName: user.lastName,
-                            phone: user.phone,
-                            address: user.address,
-                            email: user.email,
-                            nationalInsurance: user.NIN,
-                            bio: user.bio,
-                            emergencyContact: user.emergency,
-                        });
-                        setValue('work', user.workExperience);
-                        setValue('availability', user.available);
-                        setValue('notifications', user.notification);
+                    const { allReviews } = response.data;
+                    if (allReviews) {
 
-                        const photo = user.photo ?? null;
-                        if (photo !== null) {
-                            reader.readAsDataURL(photo);
-                            reader.onload = (e) => {
-                                setProfilePhoto(e.target.result);
-                            }
-
-                        }
                     }
                     else {
-                        setSuccessMessage('Error occured while retrieving data');
+                        setSuccessMessage('Error occured while retrieving reviews');
                         setBgColor('red');
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    setSuccessMessage('Error fetching profile data')
+                    setSuccessMessage('Error while fetching reviews');
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -277,12 +245,15 @@ const ProfilePage = ({emailFromProile}) => {
     }, [email]);
 
     useEffect(() => {
+        if (emailFromProile !== null && emailFromProile !== undefined) {
+            setEmail(emailFromProile);
+        }
+    }, [emailFromProile]);
+
+    useEffect(() => {
          const fetchCleanerData = () => {
-             if (emailFromProile === null || emailFromProile === undefined) {
-                 return;
-             }
              setIsLoading(true);
-             api.post('/api/users/record', {email: emailFromProile})
+             api.post('/api/users/record', {email: email})
                  .then(response => {
                      const { user } = response.data;
                      if (user) {
@@ -293,6 +264,8 @@ const ProfilePage = ({emailFromProile}) => {
                          setBio(user.bio);
                          setProfilePhoto(user.photo_path);
                          setAvailability(user.available);
+                         setServices(user.workExperience.services);
+                         setSpecialties(user.workExperience.specialities)
                      }
                      else {
                          setSuccessMessage('Error updating user');
@@ -307,8 +280,10 @@ const ProfilePage = ({emailFromProile}) => {
                      setIsLoading(false);
                  })
          };
-         fetchCleanerData()
-    }, [emailFromProile]);
+        if (email !== null || email !== undefined) {
+            fetchCleanerData();
+        }
+    }, [email]);
 
 
     return (
@@ -448,7 +423,7 @@ const ProfilePage = ({emailFromProile}) => {
 
                     {activeTab2 === 'services' && (
                         <div className="services-section">
-                            <h2 className={'experience-text'}>Services Offered</h2>
+                            <h1 className={'experience-text'}>Services Offered</h1>
                             <div className="services-grid">
                                 {services.map((service, index) => (
                                     <div key={index} className="stats-card">
@@ -466,7 +441,7 @@ const ProfilePage = ({emailFromProile}) => {
 
                             <div className="materials-section">
                                 <h2 className={'experience-text'}>Preferred Cleaning Materials</h2>
-                                <p>Company primarily uses eco-friendly, non-toxic cleaning products that are safe for children and pets.</p>
+                                <p>Fly cleaner primarily uses eco-friendly, non-toxic cleaning products that are safe for children and pets.</p>
                             </div>
                         </div>
                     )}
