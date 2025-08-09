@@ -392,9 +392,9 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <p>{booking.cleaner}</p>
-                                                {bookingIdForReview !== booking.id && <FaPen style={{width:'30px'}} onClick={bookingIdForReview === -1 ? () => {setBookingIdForReview(booking.id); setCleanerEmail(booking.cleanerEmail); setCustomer(booking.customer)}: null} />}
+                                                {bookingIdForReview !== booking.id && <FaPen style={{width:'30px', marginBottom:'15px'}} onClick={bookingIdForReview === -1 ? () => {setBookingIdForReview(booking.id); setCleanerEmail(booking.cleanerEmail); setCustomer(booking.customer)}: null} />}
                                                 {bookingIdForReview === booking.id && <FaTimes style={{width:'30px'}} onClick={() => {setBookingIdForReview(-1); setReview(''); setRating(1)}} />}
-                                                <FaUserTie onClick={() => goToCleanerProfile(booking.cleanerEmail, booking.customer)} size={20} style={{width:'30px', color:'dodgerblue'}} />
+                                                <FaUserTie onClick={() => goToCleanerProfile(booking.cleanerEmail, booking.customer)} size={30} style={{width:'30px', color:'dodgerblue', marginLeft: '10%'}} />
                                             </div>
                                             {booking.id === bookingIdForReview && <div>
                                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom:'10px'}}>

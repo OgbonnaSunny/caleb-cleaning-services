@@ -275,7 +275,7 @@ const Customer = () => {
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
-                {activeTopMenu === 'Active Booking' && <Bookings cancellable={true} user={'client'}/>}
+                {activeTopMenu === 'Active' && <Bookings cancellable={true} user={'client'}/>}
                 {activeTopMenu === 'History' && <Bookings history={history} user={'client'} />}
             </main>
 
