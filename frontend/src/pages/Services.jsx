@@ -453,7 +453,7 @@ const Services = () => {
         ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use our website to keep track of your booking']}
   ]
 
-  const handServiceClick = (service) => {
+  const handServiceClick = (plan) => {
     setServiceName(service.title);
   }
 
@@ -2192,27 +2192,27 @@ const Services = () => {
   const kitchenCleaningServices = [
     {
       id: 1,
-      service: "Deep tank oven cleaning: In order to clean your cooker as thoroughly as possible, we will send a dedicated specialist to ensure it is disassembled and deep cleaned."
+      plan: "Deep tank oven cleaning: In order to clean your cooker as thoroughly as possible, we will send a dedicated specialist to ensure it is disassembled and deep cleaned."
     },
     {
       id: 2,
-      service: "Spot wall washing: When the wall and its condition allow it, you can accomplish this. However, keep in mind that sometimes the wall might need repairs rather than cleaning."
+      plan: "Spot wall washing: When the wall and its condition allow it, you can accomplish this. However, keep in mind that sometimes the wall might need repairs rather than cleaning."
     },
     {
       id: 3,
-      service: "Appliance cleaning: Cleaning thoroughly all kitchen appliances, including the ovens, stovetops, microwaves, refrigerators, and dishwashers. Grease, food particles, and stains can all be eliminated in this process."
+      plan: "Appliance cleaning: Cleaning thoroughly all kitchen appliances, including the ovens, stovetops, microwaves, refrigerators, and dishwashers. Grease, food particles, and stains can all be eliminated in this process."
     },
     {
       id: 4,
-      service: "Trash can sanitising: To get rid of bacteria and bad odours, our cleaners disinfect and deodorise the trash cans."
+      plan: "Trash can sanitising: To get rid of bacteria and bad odours, our cleaners disinfect and deodorise the trash cans."
     },
     {
       id: 5,
-      service: "Cabinet cleaning: We clean the outside and inside of cabinets to get rid of dirt, stains, and food residue."
+      plan: "Cabinet cleaning: We clean the outside and inside of cabinets to get rid of dirt, stains, and food residue."
     },
     {
       id: 6,
-      service: "Deep cleaning of areas that are hard to reach: We focus on spaces that are frequently missed during routine cleaning, like those in small gaps, under sinks, and behind appliances."
+      plan: "Deep cleaning of areas that are hard to reach: We focus on spaces that are frequently missed during routine cleaning, like those in small gaps, under sinks, and behind appliances."
     }
   ];
 
@@ -2541,7 +2541,7 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>One-off deep cleaning service</h2>
+                    <h2 style={{color:'navy'}}>One-off deep cleaning plan</h2>
                     <p  >When you make your reservation, you can ask for extra specialist services
                       like spring cleaning, deep house cleaning services, office cleaning, regular
                       cleaning services, upholstery cleaning, end of tenancy cleaning,
@@ -2569,9 +2569,9 @@ const Services = () => {
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p style={{color:'navy'}}>Deep Cleaning</p>
-                    <p>Whether you need a deep cleaning service once or often, Fly cleaner offers professional deep cleaning services in the Edinburgh area.
+                    <p>Whether you need a deep cleaning plan once or often, Fly cleaner offers professional deep cleaning services in the Edinburgh area.
                       The thought of having to dedicate time to clean your property, flat, office (commercial cleaning), or any other location might be depressing. However, assigning this job to reliable expert and fully insured cleaners with years of expertise will greatly reduce your workload.
-                      You can be confident that we have staff with the highest standards for the task if you're seeking expert deep cleaning services in Edinburgh. As the premier and go-to option for deep cleaning in Edinburgh, our achievements over the years speak for themselves, and we take satisfaction in our very good service, which is suitable for any of your cleaning needs.
+                      You can be confident that we have staff with the highest standards for the task if you're seeking expert deep cleaning services in Edinburgh. As the premier and go-to option for deep cleaning in Edinburgh, our achievements over the years speak for themselves, and we take satisfaction in our very good plan, which is suitable for any of your cleaning needs.
                       We are all aware of how time-consuming and annoying cleaning your whole property feels. For a one-off deep clean in Edinburgh, Fly cleaner is the best choice.
                       Our professional cleaners will work on as many things as we can in the allocated time, while also considering your cleanliness needs and preferences.</p>
                   </div>
@@ -2667,7 +2667,7 @@ const Services = () => {
                   <p>Our deep cleaners in Edinburgh are fully trained, licensed and background checked to deliver cleaning services in Edinburgh.
                     Fly is known for delivering cleaning of the highest quality, and that will never change. We guarantee complete satisfaction after our deep cleaners
                     are done with your property in Edinburgh. Did you know you can book other services alongside deep cleaning as well,
-                    like moving home service? Send us a message today
+                    like moving home plan? Send us a message today
                   </p>
                 </div>
               </section>
@@ -2785,8 +2785,8 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Regular cleaning service in Edinburgh</h2>
-                    <p>Our standard cleaning service includes everything you need to get your home in order as quickly as possible. You can book additional services when you make your booking.</p>
+                    <h2 style={{color:'navy'}}>Regular cleaning plan in Edinburgh</h2>
+                    <p>Our standard cleaning plan includes everything you need to get your home in order as quickly as possible. You can book additional services when you make your booking.</p>
                   </div>
                 </div>
               </section>
@@ -2994,8 +2994,8 @@ const Services = () => {
                       </div>
                     </div>
                     <div className={'price-container'}>
-                      <h3 style={{color:'navy'}}>Upholstery cleaning service in Edinburgh</h3>
-                      {carpetCleaningServices.map(service => (
+                      <h3 style={{color:'navy'}}>Upholstery cleaning plan in Edinburgh</h3>
+                      {carpetCleaningServices.map(plan => (
                           <div key={service.id}>
                             <ul className={'dot-list'}>
                               <li>{service.name}</li>
@@ -3010,8 +3010,8 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Upholstery cleaning service in Edinburgh</h2>
-                    <p>Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                    <h2 style={{color:'navy'}}>Upholstery cleaning plan in Edinburgh</h2>
+                    <p>Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking..</p>
                   </div>
                 </div>
@@ -3058,7 +3058,7 @@ const Services = () => {
                       Spillage and stains shouldn't be the only reasons to clean your upholstery. Your sofa and armchairs can collect dirt and dust overtime. Imagine the amount of time you sat on it.
                       Would you wear the same trousers for the same length of time? We wouldn't, and you wouldn't either! If not cleaned regularly,
                       furniture such as sofas and armchairs can become a breeding ground for bacteria and germs. Fly cleaner's upholstery
-                      cleaning service removes visible dirt from the surface, such as dust and debris. Our cleaners will also
+                      cleaning plan removes visible dirt from the surface, such as dust and debris. Our cleaners will also
                       remove any stains on your furniture, using special stain removing products. eMop's cleaning solution
                       includes removal of bad odour - this can be particularly a
                       problem if you have pets or smoke indoors. Our upholstery cleaning solution also includes sanitisation.
@@ -3074,7 +3074,7 @@ const Services = () => {
                 <div className="price-container">
                   <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
                   <p>
-                    Avoid letting your upholstery lose its appeal by ordering our upholstery cleaning service right now and
+                    Avoid letting your upholstery lose its appeal by ordering our upholstery cleaning plan right now and
                     experiencing the difference of our superior cleaning standards. Count on us to revitalize your
                     furnishings and make your home healthier and more appealing. Make a reservation with us right away.
                   </p>
@@ -3220,8 +3220,8 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Oven cleaning service in Edinburgh</h2>
-                    <p>Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                    <h2 style={{color:'navy'}}>Oven cleaning plan in Edinburgh</h2>
+                    <p>Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.</p>
                   </div>
                 </div>
@@ -3262,7 +3262,7 @@ const Services = () => {
                 <div className="price-container">
                   <h2 style={{color:'navy'}}>Let the results amaze you!</h2>
                   <p>
-                    Find out the secret to a spotless, expertly cleaned oven. Our professional oven cleaning service in Edinburgh guarantees thorough, environmentally
+                    Find out the secret to a spotless, expertly cleaned oven. Our professional oven cleaning plan in Edinburgh guarantees thorough, environmentally
                     responsible cleaning to make your kitchen sparkle. Make an appointment right now for an oven that is safer, cleaner, and more effective.
                     We guarantee complete customer satisfaction!</p>
                 </div>
@@ -3407,9 +3407,9 @@ const Services = () => {
               <section style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>End of Tenancy cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>End of Tenancy cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.</p>
                   </div>
                 </div>
@@ -3454,7 +3454,7 @@ const Services = () => {
                       Restore your property to its pristine state by booking a professional end of tenancy cleaning with us today.
                       Our standout feature is our 24/7 availability, enabling you to schedule cleaning at your convenience.
                       Just allow our cleaners a 4-hour window from the time of your end-of-tenancy booking to their arrival.
-                      This service is perfect for those in urgent need of tenancy cleaners, especially when their previous cleaner has become unavailable.
+                      This plan is perfect for those in urgent need of tenancy cleaners, especially when their previous cleaner has become unavailable.
                       We offer a suitable tenancy cleaning package, enabling you to select which areas of your property require cleaning. While we provide an estimate,
                       we only charge you for the time our cleaner spent at your rental property.
                     </p>
@@ -3545,8 +3545,8 @@ const Services = () => {
                           </div>
                       ))}
                       <p style={officeList.length == miniOffice.length ? {display:'none'} : {display:''}}>
-                        Our cleaning service priority is your complete satisfaction, especially when it comes to lease cleaning.
-                        We understand that every client has unique requirements, and thus, our service is fully customizable to meet your specific needs.
+                        Our cleaning plan priority is your complete satisfaction, especially when it comes to lease cleaning.
+                        We understand that every client has unique requirements, and thus, our plan is fully customizable to meet your specific needs.
                         Our comprehensive and flexible approach ensures that your rental property is restored to a pristine condition, and you have the freedom to select what needs cleaning.
                         To guarantee exceptional results, we strictly adhere to our comprehensive cleaning checklist.</p>
                       <button onClick={handleOfficeTask} style={{color:'blue', width:'150px', background:'white'}}>{officeList.length === miniOffice.length ? 'See more ': 'See less'}</button>
@@ -3560,7 +3560,7 @@ const Services = () => {
                 <div className={'price-container'}>
                   <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
                   <p>
-                    We know that every client has specific needs, and for this reason our service is customisable.
+                    We know that every client has specific needs, and for this reason our plan is customisable.
                     Our flexible design lets you choose what needs cleaning. Here is our full Checklist.
                   </p>
                 </div>
@@ -3652,7 +3652,7 @@ const Services = () => {
                     </div>
                     <div className={'price-container'}>
                       <h3 style={{color:'navy'}}>What is included in carpet cleaning in Edinburgh?</h3>
-                      {carpetCheckList.map(service => (
+                      {carpetCheckList.map(plan => (
                           <div key={service.id}>
                             <ul className={'dot-list'}>
                               <li>{service.name}</li>
@@ -3667,9 +3667,9 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Carpet cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>Carpet cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.
                     </p>
                   </div>
@@ -3690,7 +3690,7 @@ const Services = () => {
                     <div className="price-container">
                       <h3>Cleaning process</h3>
                       <p>
-                        Using cutting-edge machinery and potent cleaning agents are part of the standard professional service for carpet cleaning. Fly clearners Edinburgh carpet cleaners frequently employ dry cleaning or hot water extraction (sometimes known as "steam cleaning") techniques, depending on the type of carpet and its state.
+                        Using cutting-edge machinery and potent cleaning agents are part of the standard professional plan for carpet cleaning. Fly clearners Edinburgh carpet cleaners frequently employ dry cleaning or hot water extraction (sometimes known as "steam cleaning") techniques, depending on the type of carpet and its state.
                         During a hot water extraction, the carpet is totally extracted after hot water and a cleaning solution are pumped into it. Dry cleaning procedures may call for the use of specialised chemicals or foams.
                       </p>
                     </div>
@@ -3698,7 +3698,7 @@ const Services = () => {
                     <div className="price-container">
                       <h3>Finishing touch</h3>
                       <p>
-                        When cleaning a carpet, eMop carpet cleaning Edinburgh team use powerful extraction tools and air movers if needed to ensure proper drying. Our specialist cleaning service crew also does a final inspection to guarantee that all stains and spots have been removed and the carpet looks clean and new. Applying stain protection is also part of the final touches.
+                        When cleaning a carpet, eMop carpet cleaning Edinburgh team use powerful extraction tools and air movers if needed to ensure proper drying. Our specialist cleaning plan crew also does a final inspection to guarantee that all stains and spots have been removed and the carpet looks clean and new. Applying stain protection is also part of the final touches.
                       </p>
                     </div>
                   </div>
@@ -3813,7 +3813,7 @@ const Services = () => {
                 <div className="container" style={{marginBottom:'30px', maxWidth:'800px'}}>
                   <div className={'price-container'}>
                     <h3 style={{color:'navy'}}>What is included in office cleaning in Edinburgh?</h3>
-                    {officeTasks.map(service => (
+                    {officeTasks.map(plan => (
                         <div key={service.id}>
                           <ul className={'dot-list'}>
                             <li>{service.task}</li>
@@ -3827,9 +3827,9 @@ const Services = () => {
               <section style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Business office cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>Business office cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.
                     </p>
                   </div>
@@ -3840,7 +3840,7 @@ const Services = () => {
                 <div className={'container'}>
                   <h3 style={{color:'navy', marginBottom:'20px', textAlign:'center'}}>Office cleaning</h3>
                   <div className="grid-container">
-                    {specializedCleaningServices.map(service => (
+                    {specializedCleaningServices.map(plan => (
                         <div key={service.id} className={'price-container'}>
                           <h3>{service.name}</h3>
                           <ul className={'dot-list'}>
@@ -3853,13 +3853,13 @@ const Services = () => {
               </section>
 
               <section style={{marginTop:'50px'}}>
-                <h2 style={{color:'navy'}}>Choose trusted office cleaning service in Edinburgh</h2>
+                <h2 style={{color:'navy'}}>Choose trusted office cleaning plan in Edinburgh</h2>
                 <div className={'idea-container'}>
                   <div className="service-card">
                     <p>
                       When customers enter your office, their first impressions matter. If the office space is clean,
                       tidy and generally pleasant to be in, it sets your relationship with the customer on the right path.
-                      Our office cleaning service in Edinburgh is here to help you present your business in the best possible light.
+                      Our office cleaning plan in Edinburgh is here to help you present your business in the best possible light.
                       An uncluttered, spotless work environment sends an important message to your customers as well as your employees.
                       Fly  is dedicated to achieving and maintaining the highest standards when it comes to commercial cleaning services.
                       Our crew of skilled office cleaners in Edinburgh is composed of enthusiastic, committed experts.
@@ -3875,7 +3875,7 @@ const Services = () => {
               <div className={'idea-container'}>
                 <img src={Cleaners} alt={"cleaners"} className={'cart-image2'}/>
                 <div className="service-card">
-                  <h3 style={{color:'navy'}}>More reasons you should use our reliable service</h3>
+                  <h3 style={{color:'navy'}}>More reasons you should use our reliable plan</h3>
                   {competitiveAdvantages.map(task =>(
                       <div key={task.id}>
                         <ul className={'dot-list'}>
@@ -3891,8 +3891,8 @@ const Services = () => {
               <section style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
-                    <h3 style={{color:'navy'}}>Easily customised commercial cleaning service</h3>
-                    <p>There are occasions when you don't require a specific service as part of your office cleaning,
+                    <h3 style={{color:'navy'}}>Easily customised commercial cleaning plan</h3>
+                    <p>There are occasions when you don't require a specific plan as part of your office cleaning,
                       or you wish to include something extra. You might wish to adjust the cleaning schedule based on t
                       he kind of office you have or your demands at a particular moment.
                       We provide a long list of commercial services in addition to the typical office cleaning packages, including:
@@ -3914,7 +3914,7 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={'idea-container'}>
                   <div className="service-card">
-                    <h3 style={{color:'navy'}}>Cleaning service for office kitchen includes</h3>
+                    <h3 style={{color:'navy'}}>Cleaning plan for office kitchen includes</h3>
                     <ul className={'dot-list'}>
                       <li>Washing dishes</li>
                       <li>Wiping down appliances</li>
@@ -3929,7 +3929,7 @@ const Services = () => {
                 <div className={'idea-container'}>
                   <img src={Office} alt={"cleaners"} className={'cart-image2'}/>
                   <div className="service-card">
-                    <h3 style={{color:'navy'}}>Why book office cleaning service from Fly cleaners Edinburgh?</h3>
+                    <h3 style={{color:'navy'}}>Why book office cleaning plan from Fly cleaners Edinburgh?</h3>
                     <ul className={'dot-list'}>
                       <li>All of our office cleaning personnel are certified and covered by insurance</li>
                       <li>To guarantee a high-quality clean, we provide all the cleaning materials and machinery</li>
@@ -3946,7 +3946,7 @@ const Services = () => {
                   <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
                   <p>
                     Our cutting-edge cleaning techniques eliminate the need for chemicals that are bad for the environment and our people,
-                    while leaving your business clean and safe. Our level of service is extraordinary, and we are also kind to people and the environment.
+                    while leaving your business clean and safe. Our level of plan is extraordinary, and we are also kind to people and the environment.
                     We take great pride in our tight working relationships with our clients. Don't pass up the chance to have expert cleaners handle your office's cleaning needs.
                   </p>
                 </div>
@@ -4045,7 +4045,7 @@ const Services = () => {
                     </div>
                     <div className={'service-card'}>
                       <h3 style={{color:'navy'}}>What is included in Same Day cleaning in Edinburgh?</h3>
-                      {cleaningChecklist.map(service => (
+                      {cleaningChecklist.map(plan => (
                           <div key={service.id}>
                             <ul className={'dot-list'}>
                               <li>{service.item}</li>
@@ -4060,9 +4060,9 @@ const Services = () => {
               <section style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Same Day cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>Same Day cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible. You can book additional services when you make your booking
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible. You can book additional services when you make your booking
                     </p>
                   </div>
                 </div>
@@ -4073,7 +4073,7 @@ const Services = () => {
                   <img src={Office} alt={"cleaners"} className={'cart-image2'}/>
                   <div className="service-card">
                     <h3 style={{color:'navy'}}>Try our last-minute cleaning services</h3>
-                    {highlist.map(service => (
+                    {highlist.map(plan => (
                         <div key={service.id}>
                           <ul className={'dot-list'}>
                             <li>{service.item}</li>
@@ -4104,7 +4104,7 @@ const Services = () => {
                     <p>You must pay more for your maids for a single day of washing and maintenance because hotel cleaning is more difficult than you might assume.
                       Our Same day cleaning services employ professionals with greater knowledge and training in hotel management cleaning services.
                       The complete cleaning process will be handled by our hard-working team in a single day after they arrive on time.
-                      Cleaning of the living space, cooking area, restrooms, and front lobby are all included in the chores. Booking our same day cleaning service is easy - just enter your postcode in the form on our website and choose our professional cleaning services.</p>
+                      Cleaning of the living space, cooking area, restrooms, and front lobby are all included in the chores. Booking our same day cleaning plan is easy - just enter your postcode in the form on our website and choose our professional cleaning services.</p>
                   </div>
                 </div>
               </section>
@@ -4115,9 +4115,9 @@ const Services = () => {
                   <div className="service-card">
                     <p>
                       For major businesses, corporate buildings, and residential properties, we provide same-day carpet cleaning.
-                      We offer a thorough service to remove tough stains from your carpet and restore its fresh, recently purchased appearance.
+                      We offer a thorough plan to remove tough stains from your carpet and restore its fresh, recently purchased appearance.
                       We are Edinburgh's leading authority on same-day cleaning services. For your carpets, we provide punctual dry cleaning,
-                      steam cleaning, stain treatment, and pet odour removal services. It's easy to book us, even if it's for a last minute cleaning service.</p>
+                      steam cleaning, stain treatment, and pet odour removal services. It's easy to book us, even if it's for a last minute cleaning plan.</p>
                   </div>
                   <img src={Carpet} alt={"cleaners"} className={'cart-image2'}/>
                 </div>
@@ -4157,11 +4157,11 @@ const Services = () => {
                     <p>
                       Our same day office cleaning services enable you to give your team a smart, clean, and hygienic working environment in addition to
                       enhancing the first impression that customers get of your business right on your doorstep.
-                      Fly professional cleaners constantly provide a standard of service that is at the highest level
+                      Fly professional cleaners constantly provide a standard of plan that is at the highest level
                       due to our years of experience and our strong internal project management system infrastructure.
                       Our area managers assist our highly qualified and committed team, and they are all available to
                       make sure that you are always satisfied with our cleaning services.
-                      Our cleaning service in Edinburgh offers you the assistance you need, whether you're in a tiny office, a big commercial facility,
+                      Our cleaning plan in Edinburgh offers you the assistance you need, whether you're in a tiny office, a big commercial facility,
                       or on several different sites with different needs. Fly expert cleaners work with domestic and
                       commercial properties and ensure efficient cleaning of any premises.</p>
                   </div>
@@ -4237,9 +4237,9 @@ const Services = () => {
               <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Move-In cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>Move-In cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking..</p>
                   </div>
                 </div>
@@ -4248,7 +4248,7 @@ const Services = () => {
 
               <section style={{marginTop:'50px'}}>
                 <div style={{display:'block'}}>
-                  <h2 style={{color:'navy', marginBottom:'30px'}}>How does a move-in cleaning service work?</h2>
+                  <h2 style={{color:'navy', marginBottom:'30px'}}>How does a move-in cleaning plan work?</h2>
                   <div className={"grid-container"}>
                     {moveInCleaningProcess.map(task => (
                         <div key={task.id} className={'price-container'}>
@@ -4338,7 +4338,7 @@ const Services = () => {
                     <FaArrowRight onClick={handleRight1M} style={styleRight1} />
                     <FaArrowLeft onClick={handleLeft1M} style={styleLeft1} />
                     <div className={'question-container'}>
-                      <p style={{textAlign:'start', verticalAlign:'top', color:'navy'}}>How much does a move-in cleaning service cost?</p>
+                      <p style={{textAlign:'start', verticalAlign:'top', color:'navy'}}>How much does a move-in cleaning plan cost?</p>
                       <p style={{marginLeft:'10px'}}>{question1}</p>
                     </div>
                   </div>
@@ -4445,7 +4445,7 @@ const Services = () => {
                     </div>
                     <div className={'price-container'}>
                       <h3 style={{color:'navy'}}>What is included in rug cleaning in Edinburgh?</h3>
-                      {rugCleaningServices.map(service => (
+                      {rugCleaningServices.map(plan => (
                           <div key={service.id}>
                             <ul className={'dot-list'}>
                               <li>{service.item}</li>
@@ -4460,9 +4460,9 @@ const Services = () => {
               <section style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Rug cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>Rug cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.</p>
                   </div>
                 </div>
@@ -4539,7 +4539,7 @@ const Services = () => {
                       Fly cleaners as a cleaning agency provides top carpet and upholstery cleaning services just like other rug cleaning companies.<br/><br/>
                       Our rug cleaning in Edinburgh is customised to meet the unique requirements of your residence or place of business. Our machines are all top-of-the-line, commercial products,
                       and we only utilise the best rug cleaning solutions. Our personnel have received extensive training in the art of rug cleaning and stain removal.<br/><br/>
-                      Fly cleaner has a team of rug cleaning technicians who are certified and insured. We take great pride in being able to offer the best rug cleaning service.
+                      Fly cleaner has a team of rug cleaning technicians who are certified and insured. We take great pride in being able to offer the best rug cleaning plan.
                       We always go above and beyond to satisfy your requirements and expectations.
                     </p>
                   </div>
@@ -4553,7 +4553,7 @@ const Services = () => {
                     <p>
                       Fly professional cleaners use a sanitation method that forces pressurised hot water and detergent into your rug to give it the deepest clean possible. This offers a thorough cleaning that is not achievable with simple vacuuming or even dry rug washing.
                       Carpets receive a lot of foot movement and have dirt deeply embedded in them. They are deep in the carpet pile, where harmful microbes are present.<br/><br/>
-                      Our expert cleaning techniques guarantee that even the most stubborn stains and bacteria are thoroughly and neatly eliminated. For this, we employ a hot water extraction technique in our rug cleaning Edinburgh service, which is carried out by a machine that sends high-pressure water loaded with cleaning solution into the rug's deepest, darkest crevices.<br/><br/>
+                      Our expert cleaning techniques guarantee that even the most stubborn stains and bacteria are thoroughly and neatly eliminated. For this, we employ a hot water extraction technique in our rug cleaning Edinburgh plan, which is carried out by a machine that sends high-pressure water loaded with cleaning solution into the rug's deepest, darkest crevices.<br/><br/>
                       Our cleaning methods are perfect for you if you or a member of your family has asthma or other allergies, because it significantly decreases allergens, including fungi, mould, dust mites, and mildew. Even the toughest stains and filth can be removed from rugs with this method of cleaning.
                     </p>
                   </div>
@@ -4706,9 +4706,9 @@ const Services = () => {
               <section style={{marginTop:'50px'}}>
                 <div className={"container"} style={{maxWidth:'800px'}}>
                   <div className={'price-container'}>
-                    <h2 style={{color:'navy'}}>Kitchen Deep cleaning service in Edinburgh</h2>
+                    <h2 style={{color:'navy'}}>Kitchen Deep cleaning plan in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.
                     </p>
                   </div>
@@ -4738,7 +4738,7 @@ const Services = () => {
                     <p>
                       Deep kitchen cleaning is distinct from routine or spring cleaning since it removes the filth and grime that is embedded deep within your home.<br/><br/>
                       It cleans places that are typically not covered by a normal or spring clean, such as kitchen appliances like the oven and washing machine,
-                      removing built-up filth. Typically, we send two or more cleaners to accomplish this type of cleaning service because it takes longer than usual.<br/><br/>
+                      removing built-up filth. Typically, we send two or more cleaners to accomplish this type of cleaning plan because it takes longer than usual.<br/><br/>
                       Kitchen deep cleaning extends beyond the usual responsibilities of daily cleaning, such as wiping countertops and doing the dishes. In order to provide a
                       more thorough effect, it involves thorough cleaning of the grout, cupboards, appliances, and other difficult-to-reach locations.<br/><br/>
                       Descaling appliances, cleaning vents and exhaust fans, sanitising garbage cans, and disinfecting surfaces are additional deep cleaning activities
@@ -4774,7 +4774,7 @@ const Services = () => {
                       {kitchenCleaningServices.map(itemTask => (
                           <div key={itemTask.id}>
                             <ul className={'dot-list'}>
-                              <li>{itemTask.service}</li>
+                              <li>{itemTask.plan}</li>
                             </ul>
                           </div>
                       ))}
@@ -4787,7 +4787,7 @@ const Services = () => {
                 <div className={'price-container'}>
                   <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
                   <p>
-                    You will be delighted with the outcomes of our excellent kitchen cleaning service, which will also add brightness to your entire home.
+                    You will be delighted with the outcomes of our excellent kitchen cleaning plan, which will also add brightness to your entire home.
                     We highly recommend our professional kitchen deep cleaning services to people who are busy and/or have children or pets.
                   </p>
                 </div>
@@ -4920,7 +4920,7 @@ const Services = () => {
                   <div className={'price-container'}>
                     <h2 style={{color:'navy'}}>Professional Bathroom Cleaning Services in Edinburgh</h2>
                     <p>
-                      Our standard cleaning service includes everything you need to get your home in order as quickly as possible.
+                      Our standard cleaning plan includes everything you need to get your home in order as quickly as possible.
                       You can book additional services when you make your booking.
                     </p>
                   </div>
@@ -4949,9 +4949,9 @@ const Services = () => {
                   <div className="service-card">
                     <h3 style={{color:'navy', marginBottom:'20px'}}>Professional Bathroom Cleaning Services In Edinburgh</h3>
                     <p>
-                      Fly bathroom cleaners have years of experience offering professional thorough bathroom cleaning service to homes throughout London.
+                      Fly bathroom cleaners have years of experience offering professional thorough bathroom cleaning plan to homes throughout London.
                       They have seen a lot of bathroom cases and know how to fix them all, whether there are calcium deposits on the taps, or accumulation of waste in the toilet.<br/>
-                      When you make a reservation for deep bathroom cleaning service with us, you can be confident that the cleaners visiting your home are completely vetted for security
+                      When you make a reservation for deep bathroom cleaning plan with us, you can be confident that the cleaners visiting your home are completely vetted for security
                       and routinely receive safety and risk training.<br/>
                       Additionally, the team is renowned for being kind, considerate, discreet, and on time, which are qualities that are crucial when working in private residences.
                     </p>
@@ -4982,9 +4982,9 @@ const Services = () => {
                   <div className="service-card">
                     <h3>Bathroom Cleaning Checklist</h3>
                     <p>
-                      For bathrooms of all sizes and shapes, Fly cleaner professional bathroom cleaners take great delight in providing a thorough bathroom deep cleaning service.
+                      For bathrooms of all sizes and shapes, Fly cleaner professional bathroom cleaners take great delight in providing a thorough bathroom deep cleaning plan.
                       When it comes to thoroughly keeping your bathroom clean, we don't cut corners. The typical checklist of our
-                      bathroom cleaning service includes the following fundamental duties:
+                      bathroom cleaning plan includes the following fundamental duties:
                     </p>
                     {bathroomCleaningTasks.map(task => (
                         <div key={task.id}>
@@ -5145,7 +5145,7 @@ const Services = () => {
         <div className={'service-banner'}>
           <section>
             <div className="container" style={{marginBottom:'30px'}}>
-              <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning service type</h2>
+              <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning plan type</h2>
               <div className="word-scroller-container" style={{marginTop:'20px'}}>
                 <FaArrowLeft onClick={scrollLeft} />
                 <div className="words-container" ref={scrollContainerRef}>
@@ -5191,7 +5191,7 @@ const Services = () => {
           <section  style={{marginTop:'50px'}}>
             <div className={'container'}>
               <div style={{display:'block'}} className={'main-banner'}>
-                <h2 style={{textAlign:'center', color:'navy', marginBottom:'30px' }}>Why choose Fly cleaning service?</h2>
+                <h2 style={{textAlign:'center', color:'navy', marginBottom:'30px' }}>Why choose Fly cleaning plan?</h2>
                 <div className={'grid-container'}>
                   <div className={'price-container'}>
                     <img src={Available}/>

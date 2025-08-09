@@ -9,23 +9,20 @@ import {
     FaHome,
     FaMapMarkerAlt,
     FaPoundSign,
-    FaQuestionCircle,
+    FaQuestionCircle, FaUserCircle,
     FaUserTie
 } from "react-icons/fa";
 import api from "./api.js";
+import { FaCalendarCheck} from 'react-icons/fa';
+import Bookings from './Bookings.jsx';
 
 
 const Customer = () => {
     const navigate = useNavigate();
 
     const topNavItems = ['Active Booking', 'History'];
-    const bottomNavItems = [
-        {id: 1, name: 'Account'},
-        {id: 2, name: 'Reward'},
-        {id: 3, name: 'Docs'},
-        {id: 4, name: 'Support'},
-        {id: 5, name: 'Profile'},
-    ];
+    const [topItems, setTopItems] = useState(topNavItems);
+    const [activeTopMenu, setActiveTopMenu] = useState(topItems[0]);
 
     const renderMenuIcon = (id) => {
         if (id === null || id === undefined) return;
@@ -46,7 +43,6 @@ const Customer = () => {
         }
     }
 
-    const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
     const [booking, setBooking] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
@@ -54,6 +50,16 @@ const Customer = () => {
     const [newOrders, setNewOrders] = useState([]);
     const [newBookingLoading, setNewBookingLoading] = useState(false);
     const [historyLoading, setHistoryLoading] = useState(false);
+    const [activeBottomMenu, setActiveBottomMenu] = useState('Booking');
+
+    const bottomNavItems = [
+        {id: 1, name: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
+                {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}/>},
+        {id: 2, name: 'Booking', items: ['Active Booking', 'History'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
+                {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
+        {id: 4, name: 'Support', items: ['Live chat', 'Contact us'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
+                {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
+    ];
 
     const NewOrders = () => {
 
@@ -102,6 +108,22 @@ const Customer = () => {
             </div>
         );
     }
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        function replaceLastSegment(newSegment) {
+            const path = window.location.pathname;
+            const segments = path.split('/');
+            segments[segments.length - 1] = newSegment;
+            return segments.join('/');
+        }
+        if (user !== null && user !== undefined) {
+            const path = window.location.pathname;
+            const fullPath = `${path}/${user.firstName}`;
+            window.history.replaceState(null, '', fullPath);
+        }
+
+    }, [])
 
     /*useEffect(() => {
          const fetchCleanerData = () => {
@@ -216,6 +238,19 @@ const Customer = () => {
         setTimeout(() => setMessage(null), 4000);
     }, [message]);
 
+    const handleTopItem = (item) => {
+        setActiveTopMenu(item);
+        switch (activeBottomMenu) {
+
+        }
+    }
+
+    const handleBottomItem = (index) => {
+        const item = bottomNavItems[index];
+        setTopItems(item.items)
+        setActiveBottomMenu(item.name)
+    }
+
 
     return (
         <div className="sticky-nav-container">
@@ -223,28 +258,39 @@ const Customer = () => {
             <nav  className='top-order-nav'>
                 <div className="nav-order-content">
                     <img src={LOGO} className={'logo-icon'}/>
-                    {topNavItems.map((item, index) => (
+                    {topItems.map((item, index) => (
                         <div key={`top-${index}`} className="nav-order-item"
-                             onClick={() => setActiveMenu(item)}>
-                            <h3  style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
+                             onClick={() => handleTopItem(item)}>
+                            <h3  style={activeTopMenu === item ? {color:'goldenrod', textDecoration:'underline'}:
+                                {color:'', textDecoration:'none'} } >
+                                {item}
+                            </h3>
                         </div>
                     ))}
-                    <MdAdd onClick={handleNewOrder}  size={50} style={{width:'40px' , marginRight:'10px'}}/>
+                    <div className={'book-icon'} onClick={handleNewOrder}>
+                        <MdAdd  size={40} style={{width:'40px', marginRight:'10px'}}/>
+                        <h3>New</h3>
+                    </div>
                 </div>
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
-
+                {activeTopMenu === 'Active Booking' && <Bookings cancellable={true} user={'client'}/>}
+                {activeTopMenu === 'History' && <Bookings history={history} user={'client'} />}
             </main>
 
             <nav  className='bottom-order-nav'>
                 <div className="nav-order-content">
                     {bottomNavItems.map((item, index) => (
                         <div key={`bottom-${item.id}`} className="nav-order-item"
-                             onClick={() => setActiveMenu(item.name)}>
-                            <div style={activeMenu === item.name ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
-                                {renderMenuIcon(item.id)}
-                                <h3 style={activeMenu === item.name ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>{item.name}</h3>
+                             onClick={() => handleBottomItem(index)}>
+                            <div style={activeTopMenu === item.name ?
+                                {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
+                                {item.icon}
+                                <h3 style={activeBottomMenu === item.name ?
+                                    {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
+                                    {item.name}
+                                </h3>
                             </div>
                         </div>
                     ))}

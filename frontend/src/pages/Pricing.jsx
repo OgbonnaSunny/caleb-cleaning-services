@@ -149,13 +149,13 @@ const Pricing = () => {
   const [layout, setLayout] = useState( <div><section>
       <div className={'container'} style={{maxWidth:'800px'}}>
         <div style={{display:'block', marginTop:'50px'}}>
-          <h2 style={{color:'navy', marginBottom:'30px'}}>Fly cleaning service prices</h2>
+          <h2 style={{color:'navy', marginBottom:'30px'}}>Fly cleaning plan prices</h2>
           <div className="price-container">
             <p style={{textAlign:'end', color:'red'}}>Cashback up to £150</p>
             <h3 style={{textAlign:'center'}}>Choose a cleaning type</h3>
             <p style={{color:'navy'}}>from £16</p>
             <p>
-              Welcome to Fly Cleaning service, where we transform your space into a spotless sanctuary! Whether it's your home or office,
+              Welcome to Fly Cleaning plan, where we transform your space into a spotless sanctuary! Whether it's your home or office,
               our professional team delivers top-notch cleaning services tailored to your needs. With eco-friendly products, attention to detail,
               and affordable pricing, we take the hassle out of cleaning, so you don’t have to. Enjoy a fresher, healthier environment without lifting a finger.
               Choose a cleaning type above to view details and proceed to book your cleaning and let us handle the mess!
@@ -1027,7 +1027,7 @@ const Pricing = () => {
                     <p style={{color:'brown'}}>What is house cleaner price per hour?</p>
                     <div className={'idea-container'}>
                       <div style={{display: 'block'}}>
-                        <p>Given that domestic cleaning prices vary across the UK depending on location, nature of the cleaning, and size of the property, we will need to know the postcode of the residence for which you are interested in a domestic cleaning service. We will offer you free price quotes for weekly,forthnightly, monthly, and one off cleanings</p>
+                        <p>Given that domestic cleaning prices vary across the UK depending on location, nature of the cleaning, and size of the property, we will need to know the postcode of the residence for which you are interested in a domestic cleaning plan. We will offer you free price quotes for weekly,forthnightly, monthly, and one off cleanings</p>
                         <p style={{marginTop:'20px'}}>We are happy to offer you the following cleaning services:</p>
                         <div>
                           <ul className={'dot-list'}>
@@ -1056,9 +1056,9 @@ const Pricing = () => {
                           <li>Kitchen - wiping and polishing all surfaces and worktops, mopping and vacuuming the floors, cleaning equipment and appliances, washing the dishes, cleaning doors and handles. You can also request cleaning inside the fridge, the oven and the microwave, arranging things inside kitchen cabinets, etc.</li>
                           <li>Our cleaning cost is the most affordable in the UK.</li>
                           <li>Amost all of our clients recommend us. This shows the quality of services we render.</li>
-                          <li>To always provide our clients with a high-quality service, our cleaning company conducts routine quality control tests.</li>
+                          <li>To always provide our clients with a high-quality plan, our cleaning company conducts routine quality control tests.</li>
                           <li>We offer same day cleaning solutions for our customers.</li>
-                          <li>Our service options are flexible and are available every day of the week to meet your cleaning needs.</li>
+                          <li>Our plan options are flexible and are available every day of the week to meet your cleaning needs.</li>
                           <li>Our prices are clear and direct. You get to know them once you’re booking for our specialist cleaning services.</li>
                         </ul>
                       </div>
@@ -1073,10 +1073,10 @@ const Pricing = () => {
                       <div className="service-card">
                         <h3 style={{color:'navy'}}>Cleaning prices for extra services</h3>
                         <ul className={'dot-list'}>
-                          <li>For an additional cost, eMop provides additional services. That may entail outdoor and deep cleaning service, carpet cleaning, window washing, fridge, microwave, ironing, bed making, kitchen, bathroom, bookcase, oven and grill cleaning.</li>
+                          <li>For an additional cost, eMop provides additional services. That may entail outdoor and deep cleaning plan, carpet cleaning, window washing, fridge, microwave, ironing, bed making, kitchen, bathroom, bookcase, oven and grill cleaning.</li>
                           <li>If you find that you require any of these services, be sure to research the cost of our house cleaning. Be aware that the minimum charge for the extra aid prices starts at £9 to £25 on an hourly rate.</li>
-                          <li>If you're looking for a trustworthy cleaning service that's reasonably priced and also provides other solutions, eMop is the ideal option. We provide carpet cleaning, upholstery, and end of tenancy cleaning, for instance, at very affordable prices.</li>
-                          <li>Additionally, one of our many areas of expertise is window washing. Delivering exceptional service to every customer has always been the priority of our professional cleaners</li>
+                          <li>If you're looking for a trustworthy cleaning plan that's reasonably priced and also provides other solutions, eMop is the ideal option. We provide carpet cleaning, upholstery, and end of tenancy cleaning, for instance, at very affordable prices.</li>
+                          <li>Additionally, one of our many areas of expertise is window washing. Delivering exceptional plan to every customer has always been the priority of our professional cleaners</li>
                         </ul>
                       </div>
                     </div>
@@ -1101,9 +1101,9 @@ const Pricing = () => {
                     <div className={'idea-container'}>
                       <img src={Regular} alt={"cleaners"} className={'cart-image2'}/>
                       <div className="service-card">
-                        <h3 style={{color:'navy'}}>Try our pay as you go service</h3>
+                        <h3 style={{color:'navy'}}>Try our pay as you go plan</h3>
                         <ul className={'dot-list'}>
-                          <li>This service means that payment on our website is handled by a safe third-party supplier. Once the job is finished, your card won't be charged until then. It's quite practical to pay as you go for cleaning solutions.</li>
+                          <li>This plan means that payment on our website is handled by a safe third-party supplier. Once the job is finished, your card won't be charged until then. It's quite practical to pay as you go for cleaning solutions.</li>
                           <li>Without committing to a lengthy contract, you can utilise it to clean your property or place of business. You make the necessary payments, and the cleaners then arrive and take care of everything.</li>
                           <li>For customers who may want a flexible and non-committing cleaning solution, this may be a fantastic choice.</li>
                         </ul>
@@ -1179,7 +1179,7 @@ const Pricing = () => {
                     </div>
                   </div>
                   <div className="price-container" style={{marginTop:'50px', maxWidth:'800px'}}>
-                    <h3 style={{textAlign:'center'}}>One-off deep cleaning service</h3>
+                    <h3 style={{textAlign:'center'}}>One-off deep cleaning plan</h3>
                     <p>When you make your reservation, you can ask for extra specialist services like spring cleaning, deep house cleaning services, office cleaning, regular cleaning services, upholstery cleaning, end of tenancy cleaning, and professional carpet cleaning services.</p>
                   </div>
                 </div>
@@ -1225,7 +1225,7 @@ const Pricing = () => {
                     <div className="service-card">
                       <h3 style={{color:'brown'}}>Finishing touch</h3>
                       <p>
-                        Fly carpet cleaners ensure that the carpet dries efficiently after cleaning by using powerful extraction instruments and, if required, air movers. In order to ensure that all stains and spots have been removed and the carpet looks clean and new, our expert carpet cleaning service staff also performs a final inspection.
+                        Fly carpet cleaners ensure that the carpet dries efficiently after cleaning by using powerful extraction instruments and, if required, air movers. In order to ensure that all stains and spots have been removed and the carpet looks clean and new, our expert carpet cleaning plan staff also performs a final inspection.
                         The comprehensiveness and customer satisfaction of eMop's professional carpet cleaning services make them a trustworthy choice for maintaining the stain- and wear-resistant qualities of your rugs.
                       </p>
                     </div>
@@ -1238,9 +1238,9 @@ const Pricing = () => {
                   <div className={'idea-container'}>
                     <div className="service-card">
                       <p style={{color:'navy'}}>Deep Cleaning</p>
-                      <p>Whether you need a deep cleaning service once or often, Fly cleaners offers professional deep cleaning services in the Edinburgh area.
+                      <p>Whether you need a deep cleaning plan once or often, Fly cleaners offers professional deep cleaning services in the Edinburgh area.
                         The thought of having to dedicate time to clean your property, flat, office (commercial cleaning), or any other location might be depressing. However, assigning this job to reliable expert and fully insured cleaners with years of expertise will greatly reduce your workload.
-                        You can be confident that we have staff with the highest standards for the task if you're seeking expert deep cleaning services. As the premier and go-to option for deep cleaning in Edinburgh, our achievements over the years speak for themselves, and we take satisfaction in our very good service, which is suitable for any of your cleaning needs.
+                        You can be confident that we have staff with the highest standards for the task if you're seeking expert deep cleaning services. As the premier and go-to option for deep cleaning in Edinburgh, our achievements over the years speak for themselves, and we take satisfaction in our very good plan, which is suitable for any of your cleaning needs.
                         We are all aware of how time-consuming and annoying cleaning your whole property feels. For a one-off deep clean in Edinburgh, eMop is the best choice.
                         Our professional cleaners will work on as many things as we can in the allocated time, while also considering your cleanliness needs and preferences.</p>
                     </div>
@@ -1256,11 +1256,11 @@ const Pricing = () => {
                     <div className="service-card">
                       <h3 style={{color:'darkolivegreen'}}>Why choose Fly cleaners for deep cleaning?</h3>
                       <ul className={'dot-list'}>
-                        <li>We stand out from other deep cleaning service providers in Edinburgh because of our accountability, commitment to quality, and professionalism. All Edinburgh landlords and tenants love our work because we always deliver a healthy home at the end of the day.</li>
+                        <li>We stand out from other deep cleaning plan providers in Edinburgh because of our accountability, commitment to quality, and professionalism. All Edinburgh landlords and tenants love our work because we always deliver a healthy home at the end of the day.</li>
                         <li>Our highly recommended services offer our customers the opportunity to select a day and time that works for you. Even on short notice, house cleaning appointments can be made in advance with our booking system.</li>
-                        <li>In addition to our one-off cleaning service, we can tailor our orders to include weekly, fortnightly, or monthly appointments; this is one of the finest things about the eMop professional deep cleaning services.</li>
-                        <li>You pay for only the service provided.</li>
-                        <li>We have highly trained cleaners that can give you the high-quality deep cleaning service that our agency is associated with in the cleaning industry. A large part of our friendly team is made up of local cleaners who are familiar with the Edinburgh area. This makes us stand out as the best cleaning company.</li>
+                        <li>In addition to our one-off cleaning plan, we can tailor our orders to include weekly, fortnightly, or monthly appointments; this is one of the finest things about the eMop professional deep cleaning services.</li>
+                        <li>You pay for only the plan provided.</li>
+                        <li>We have highly trained cleaners that can give you the high-quality deep cleaning plan that our agency is associated with in the cleaning industry. A large part of our friendly team is made up of local cleaners who are familiar with the Edinburgh area. This makes us stand out as the best cleaning company.</li>
                       </ul>
                     </div>
                   </div>
@@ -1331,7 +1331,7 @@ const Pricing = () => {
                 <div className="container" style={{marginBottom:'30px'}}>
                   <div style={{display:'block'}}>
                     <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
-                    <p>Our deep cleaners are fully trained, licensed and background checked to deliver cleaning services in Edinburgh. eMop is known for delivering cleaning of the highest quality, and that will never change. We guarantee complete satisfaction after our deep cleaners are done with your property in Edinburgh. Did you know you can book other services alongside deep cleaning as well, like moving home service? Send us a message today</p>
+                    <p>Our deep cleaners are fully trained, licensed and background checked to deliver cleaning services in Edinburgh. eMop is known for delivering cleaning of the highest quality, and that will never change. We guarantee complete satisfaction after our deep cleaners are done with your property in Edinburgh. Did you know you can book other services alongside deep cleaning as well, like moving home plan? Send us a message today</p>
                   </div>
                 </div>
               </section>
@@ -1412,7 +1412,7 @@ const Pricing = () => {
                       <p style={{textAlign:'end', color:'red'}}>Cashback up to £150</p>
                       <h3 style={{textAlign:'center'}}>Office cleaning</h3>
                       <p style={{color:'navy'}}>from £16</p>
-                      <p>Professional cleaning and maintenance services for workplaces and other business settings are part of our office cleaning service. Vacuuming, dusting, sanitising toilets, and maintaining a neat space for staff and customers are among the duties carried out by eMop cleaners.</p>
+                      <p>Professional cleaning and maintenance services for workplaces and other business settings are part of our office cleaning plan. Vacuuming, dusting, sanitising toilets, and maintaining a neat space for staff and customers are among the duties carried out by eMop cleaners.</p>
                     </div>
                   </div>
                 </div>
@@ -1457,7 +1457,7 @@ const Pricing = () => {
 
                         Cleaners generally operate outside of regular business hours, such as early in the morning or late in the afternoon, to reduce disruption to daily office operations. However, the cleaning contract ought to mention the hours.
 
-                        To be clear, everything listed below is included in our office cleaning service. This includes dusting every piece of furniture, washing every glass surface, vacuuming and mopping the floors, removing the trash, and doing tests for ATP and hygiene.
+                        To be clear, everything listed below is included in our office cleaning plan. This includes dusting every piece of furniture, washing every glass surface, vacuuming and mopping the floors, removing the trash, and doing tests for ATP and hygiene.
                       </p>
                     </div>
                     <img src={Sweeping} alt="" className={'cart-image'}/>
@@ -1571,7 +1571,7 @@ const Pricing = () => {
                       <p style={{textAlign:'end', color:'red'}}>Cashback up to £150</p>
                       <h3 style={{textAlign:'center'}}>End of Tenancy cleaning</h3>
                       <p style={{color:'navy'}}>from £16</p>
-                      <p>An end of tenancy cleaning service is a professional cleaning and maintenance task carried out at the conclusion of a rental contract. In order to get the place ready for new renters, it attempts to bring it back to its pre-damage state while maintaining cleanliness and fixing any issues in the entire property.</p>
+                      <p>An end of tenancy cleaning plan is a professional cleaning and maintenance task carried out at the conclusion of a rental contract. In order to get the place ready for new renters, it attempts to bring it back to its pre-damage state while maintaining cleanliness and fixing any issues in the entire property.</p>
                     </div>
                   </div>
                 </div>
@@ -1624,7 +1624,7 @@ const Pricing = () => {
                     <div style={{display:'block'}}>
                       <h3 style={{color:'navy'}}>What Determines the Price of End of Tenancy Cleaning?</h3>
                       <p>
-                        Depending on the expert service you pick and what services they offer, the specifics of an end of tenancy clean will vary. Normally, your home will receive a deep clean, including dusting and cleaning any cabinets, cupboards, and drawers by a professional cleaner to remove any stains.
+                        Depending on the expert plan you pick and what services they offer, the specifics of an end of tenancy clean will vary. Normally, your home will receive a deep clean, including dusting and cleaning any cabinets, cupboards, and drawers by a professional cleaner to remove any stains.
                         The sinks, bathtubs, and showers will be scrubbed clean, as well as any en suite bathrooms, and the tiles will be cleaned to get rid of any mold. In-depth limescale removal cleaning will be performed on the shower head.
                         Deep cleaning of all surfaces, including the floors, walls, skirting boards and ceilings, is typically part of the procedure. Ovens, refrigerators, washing machines, and other kitchen appliances all receive thorough interior and exterior cleaning.
                         The fixtures, tiles, and grout in bathrooms and kitchens go through a thorough cleaning and disinfection process. In addition to completely vacuuming or steam cleaning the carpets and furniture, windows, frames, and sills are cleaned. All areas are dusted, and cobwebs are also removed.
@@ -1859,7 +1859,7 @@ const Pricing = () => {
                       <h3 style={{textAlign:'center'}}>Upholstery cleaning</h3>
                       <p style={{color:'navy'}}>from £48</p>
                       <p>
-                        A sofa cleaning service comprises maintaining and cleaning couches and sofas to get rid of stains, odours, and other impurities.
+                        A sofa cleaning plan comprises maintaining and cleaning couches and sofas to get rid of stains, odours, and other impurities.
                         The life of your furniture can be renewed and extended, and it frequently involves vacuuming, spot removal, and upholstery cleaning.
                         Prices for sofa cleaning with Fly cleaners begin at £48/h.
                       </p>
@@ -1999,12 +1999,10 @@ const Pricing = () => {
     styleRight3, styleRight4, styleRight5, factors, tenancyList,
     carpetList, benefits, sofaDetail, upholsteryList]);
 
-
   const resetPostcode = () => {
     setPostcode('')
     setError('')
   }
-
 
   useEffect(() => {
     setTimeout(() => resetPostcode(), 5000);
@@ -2017,6 +2015,7 @@ const Pricing = () => {
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
         {error && <label style={{width:'400px', height:'50px', textAlign:'center'}} className={['slide-in', 'error-label'].join(' ')} >{error}</label>}
+
         <section className={'price-banner'} style={{marginBottom:'30px'}} >
           <div className="container" style={{marginBottom:'30px',  display:'block'}}>
             <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning type!</h2>

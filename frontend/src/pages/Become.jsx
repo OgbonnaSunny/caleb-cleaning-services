@@ -20,9 +20,9 @@ const Become = () => {
     const cleanerData = {
         firstName: '', lastName:'', postcode:'', email:'',
         password:'', roles:'cleaner', phone:'', address:'', termsAccepted: false,
-        photo: null, Identity: null, NI: null, addressProof: null,
+        photo: null, identity: null, ni: null, addressProof: null,
         isActive: false, isOnLeave: false, payRate: 0,
-        NIN: null, bio: null, emergency: null,
+        NIN: null, bio: 'A professional cleaner with attention to details', emergency: null,
         workExperience: null, available: null, notification: null
     }
 
@@ -45,6 +45,7 @@ const Become = () => {
     const [NIPreview, setNIPreview] = useState(false);
     const [addressProofPreview, setAddressProofPreview] = useState(null);
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleImage = (e) => {
         const newErrors = {}
@@ -52,7 +53,7 @@ const Become = () => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         if (imageId === 'photo') {
-            formData.photo = file;
+            setFormData({...formData, photo: file});
             if (!isValidFileSize(file)) {
                 newErrors.photo = 'file is too large';
             }
@@ -67,22 +68,22 @@ const Become = () => {
             }
         }
         if (imageId === 'id') {
-            formData.Identity = file;
+            setFormData({...formData, identity: file});
             if (!isValidFileSize(file)) {
-                newErrors.Identity = 'file is too large';
+                newErrors.identity = 'file is too large';
             }
             else if (!isValidFileType(file)) {
-                newErrors.Identity = 'file is invalid';
+                newErrors.identity = 'file is invalid';
             }
             else if (!isValidFileType(file) && !isValidFileSize(file)) {
-                newErrors.Identity = 'file is invalid';
+                newErrors.identity = 'file is invalid';
             }
             reader.onload = (e) => {
                 setIDPreview(e.target.result);
             }
         }
         if (imageId === 'addressProof') {
-            formData.addressProof = file;
+            setFormData({...formData, addressProof: file});
             if (!isValidFileSize(file)) {
                 newErrors.addressProof = 'file is too large';
             }
@@ -96,25 +97,26 @@ const Become = () => {
                 setAddressProofPreview(e.target.result);
             }
         }
-        if (imageId === 'NI') {
-            formData.NI = file;
+        if (imageId === 'ni') {
+            setFormData({...formData, ni: file});
             if (!isValidFileSize(file)) {
-                newErrors.NI = 'file is too large';
+                newErrors.ni = 'file is too large';
             }
             else if (!isValidFileType(file)) {
-                newErrors.NI = 'file is invalid';
+                newErrors.ni = 'file is invalid';
             }
             else if (!isValidFileType(file) && !isValidFileSize(file)) {
-                newErrors.NI = 'file is invalid';
+                newErrors.ni = 'file is invalid';
             }
             reader.onload = (e) => {
                 setNIPreview(e.target.result);
             }
         }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+        }
 
-        setErrors(newErrors);
-
-    };
+    }
 
     const handleChange = (e) => {
         const { name, value, type, checked, file } = e.target;
@@ -122,7 +124,7 @@ const Become = () => {
             ...prev,
             [name]: type === 'checkbox' ? checked : value,
         }));
-    };
+    }
 
     const validateStep1 = () => {
         const newErrors = {};
@@ -145,19 +147,24 @@ const Become = () => {
         if (!valid) {
             newErrors.postcode = "postcode not valid";
         }
+
+        if (!formData.address.trim()) newErrors.address = 'Address is required';
+
         checkPostcodeExists(formData.postcode).then(exists => {
             if (!exists) {
                 newErrors.postcode = "Postcode does not exist";
             }
         });
 
-        if (!formData.NI.trim()) newErrors.NI = 'NI is required';
+        if (!formData.NIN.trim()) newErrors.NIN = 'NI is required';
 
-        if (!isValidNINumber(formData.NI)) newErrors.NI = 'NI is invalid';
+      //  if (!isValidNINumber(formData.NIN)) newErrors.NIN = 'NI is invalid';
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
+            return false;
         }
+        return true;
     };
 
     function isValidNINumber(niNumber) {
@@ -188,7 +195,7 @@ const Become = () => {
             return false;
         }
 
-        // Additional checks for temporary NI numbers
+        // Additional checks for temporary ni numbers
         const suffix = cleaned.charAt(8);
         if (['T', 'F'].includes(suffix)) {
             // Temporary numbers have additional rules
@@ -236,10 +243,10 @@ const Become = () => {
             if (!isValidFileType(formData.photo)) newErrors.photo = 'Photo is invalid';
         }
 
-        if (!formData.Identity) newErrors.Identity = 'ID is required';
-        if (formData.Identity) {
-            if (!isValidFileSize(formData.Identity)) newErrors.Identity = 'ID is too large';
-            if (!isValidFileType(formData.Identity)) newErrors.Identity = 'ID is invalid';
+        if (!formData.identity) newErrors.Identity = 'ID is required';
+        if (formData.identity) {
+            if (!isValidFileSize(formData.identity)) newErrors.Identity = 'ID is too large';
+            if (!isValidFileType(formData.identity)) newErrors.Identity = 'ID is invalid';
         }
 
         if (!formData.addressProof) newErrors.addressProof = 'proof of address is required';
@@ -248,32 +255,47 @@ const Become = () => {
             if (!isValidFileType(formData.addressProof)) newErrors.addressProof = 'proof of address is invalid';
         }
 
-        if (!formData.NI) newErrors.NI = 'NI is required';
-        if (formData.NI) {
-            if (!isValidFileSize(formData.NI)) newErrors.NI = 'NI is too large';
-            if (!isValidFileType(formData.NI)) newErrors.NI = 'NI  is invalid';
+        if (!formData.ni) newErrors.NI = 'NI is required';
+        if (formData.ni) {
+            if (!isValidFileSize(formData.ni)) newErrors.NI = 'NI is too large';
+            if (!isValidFileType(formData.ni)) newErrors.NI = 'NI  is invalid';
         }
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
+            return false;
         }
+        return true;
     }
 
     const handleNext = () => {
         if (validateStep1()) {
-            setCurrentStep(2);
+            setCurrentStep(currentStep+1);
         }
     };
 
     const handleNext2 = () => {
         if (validateStep2()) {
-            setCurrentStep(3);
+            setCurrentStep(currentStep+1);
         }
     }
 
+    const validateProofs = () => {
+        const newErrors = {};
+        if (!formData.identity) newErrors.identity = 'ID is required';
+        if (!formData.photo) newErrors.photo = 'Photo is required';
+        if (!formData.ni) newErrors.ni = 'NI is required';
+        if(!formData.addressProof) newErrors.addressProof = 'Proof of address is required';
+        if(Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return false;
+        }
+        return true;
+    }
+
     const handleNext3 = () => {
-      if (validateStep3()) {
-          setCurrentStep(4);
+      if (validateStep3() && validateProofs()) {
+          setCurrentStep(currentStep+1);
       }
     }
 
@@ -369,15 +391,63 @@ const Become = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        api.post('/api/users', formData)
+        setLoading(true);
+
+        const data = new FormData();
+
+        // Append text fields
+        data.append('firstName', formData.firstName);
+        data.append('lastName', formData.lastName);
+        data.append('postcode', formData.postcode);
+        data.append('email', formData.email);
+        data.append('password', formData.password);
+        data.append('roles', formData.roles);
+        data.append('phone', formData.phone);
+        data.append('address', formData.address);
+        data.append('termsAccepted', formData.termsAccepted);
+        data.append('isActive', formData.isActive);
+        data.append('isOnLeave', formData.isOnLeave);
+        data.append('payRate', formData.payRate);
+        data.append('NIN', formData.NIN);
+        data.append('bio', formData.bio);
+        data.append('emergency', formData.emergency);
+        data.append('workExperience', formData.workExperience);
+        data.append('available', formData.available);
+        data.append('notification', formData.notification);
+
+        // Append file fields
+        const newErrors = {};
+        if (formData.photo) data.append('photo', formData.photo);
+        else {newErrors.photo = 'photo is required';}
+
+        if (formData.identity) data.append('identity', formData.identity);
+        else {newErrors.identity = 'ID is required';}
+
+        if (formData.ni) data.append('ni', formData.ni);
+        else {newErrors.ni = 'NI is required';}
+
+        if (formData.addressProof) data.append('addressProof', formData.addressProof);
+        else {newErrors.addressProof = 'Address proof is required';}
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            setLoading(false);
+            return;
+        };
+
+
+
+        api.post('/api/users', data)
             .then((res) => {
-                setMessage(`${formData.firstName} is successfully registered!`);
-                setCurrentStep(5)
-                navigate('/api/login')
+                setCurrentStep(currentStep+1)
+                navigate('/login')
             })
             .catch((err) => {
                 console.log(err);
                 setMessage('Registration failed');
+            })
+            .finally(() => {
+                setLoading(false);
             })
     };
 
@@ -400,6 +470,12 @@ const Become = () => {
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }}>
+            {loading && <div className="raise-progress-bar-container">
+                <div className="progress-bar-container">
+                    <div className="spinner"></div>
+                    <p style={{textAlign:'center'}}>processing credentials...</p>
+                </div>
+            </div>}
             <section className={'become-banner'}>
                 <div className={'container'} >
                     <h1 className={'help-text'} style={{textAlign:'start'}}>Become a cleaner</h1>
@@ -482,7 +558,7 @@ const Become = () => {
                                     <ul className={'dot-list'}>
                                         <li>- Photo</li>
                                         <li>- Identity</li>
-                                        <li>- NI</li>
+                                        <li>- ni</li>
                                         <li>- Proof of the address</li>
                                     </ul>
                                 </li>
@@ -657,13 +733,26 @@ const Become = () => {
                                     <label htmlFor="NI">NI*</label>
                                     <input
                                         type="text"
-                                        id="ni"
-                                        name="NI"
-                                        value={formData.NI}
+                                        id="NIN"
+                                        name="NIN"
+                                        value={formData.NIN}
                                         onChange={handleChange}
-                                        className={errors.NI ? 'error' : 'button-bg'}
+                                        className={errors.NIN ? 'error' : 'button-bg'}
                                     />
-                                    {errors.NI && <span className="error-message">{errors.NI}</span>}
+                                    {errors.NIN && <span className="error-message">{errors.NIN}</span>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="Address">Address*</label>
+                                    <textarea
+                                        id="address"
+                                        name="address"
+                                        value={formData.address}
+                                        rows={5}
+                                        onChange={handleChange}
+                                        className={errors.address ? 'error' : 'button-bg'}
+                                    />
+                                    {errors.address && <span className="error-message">{errors.address}</span>}
                                 </div>
 
                                 <button type="button" className="next-button" onClick={handleNext}>
@@ -704,7 +793,7 @@ const Become = () => {
                                 </div>
 
                                 <div className="form-group checkbox-group">
-                                    <div className="idea-container" style={{marginLeft:'20px'}}>
+                                    <div style={{marginLeft:'20px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                         <input
                                             type="checkbox"
                                             id="termsAccepted"
@@ -712,7 +801,6 @@ const Become = () => {
                                             checked={formData.termsAccepted}
                                             onChange={handleChange}
                                             className={errors.termsAccepted ? 'error' : ''}
-                                            style={{height:'30px', width:'30px'}}
                                         />
                                         <p>I accept the <Link to={'/terms'} style={{color:'blue'}} >terms and conditions</Link> and <Link to={'/privacy'} style={{color:'blue'}}>privacy</Link> policies</p>
                                     </div>
@@ -720,7 +808,7 @@ const Become = () => {
                                 </div>
 
                                 <div className="form-actions">
-                                    <button type="button" className="back-button" onClick={() => setCurrentStep(1)}>
+                                    <button type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
                                     </button>
                                     <button type="button" className="next-button" onClick={handleNext2}>
@@ -753,7 +841,7 @@ const Become = () => {
                                         </div>
 
                                         <div className="form-group">
-                                            <spam style={{fontSize:'medium'}}>Upload Identity</spam>
+                                            <spam style={{fontSize:'medium'}}>Upload ID Card</spam>
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
@@ -762,28 +850,28 @@ const Become = () => {
                                                 ref={inputRef2}
                                                 onClick={() => setImageId('id')}
                                                 onChange={handleImage}
-                                                className={errors.Identity ? 'error' : ''}
+                                                className={errors.identity ? 'error' : ''}
                                                 style={{background:'olive', color:'white', borderRadius:'13px', border:'brown'}}
                                             />
                                             {IDPreview && <img src={IDPreview} className={'preview'}/>}
-                                            {errors.Identity && <span className="error-message">{errors.Identity}</span>}
+                                            {errors.identity && <span className="error-message">{errors.identity}</span>}
                                         </div>
 
                                         <div className="form-group">
-                                            <spam style={{fontSize:'medium'}}>Upload NI</spam>
+                                            <spam style={{fontSize:'medium'}}>Upload NI proof</spam>
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                id="NI"
-                                                name="NI"
+                                                id="ni"
+                                                name="ni"
                                                 ref={inputRef4}
-                                                onClick={() => setImageId('NI')}
+                                                onClick={() => setImageId('ni')}
                                                 onChange={handleImage}
-                                                className={errors.Identity ? 'error' : ''}
+                                                className={errors.identity ? 'error' : ''}
                                                 style={{background:'olive', color:'white', borderRadius:'13px', border:'brown'}}
                                             />
                                             {NIPreview && <img src={NIPreview} className={'preview'}/>}
-                                            {errors.NI && <span className="error-message">{errors.NI}</span>}
+                                            {errors.ni && <span className="error-message">{errors.ni}</span>}
                                         </div>
 
                                         <div className="form-group">
@@ -806,7 +894,7 @@ const Become = () => {
                                 </div>
 
                                 <div className="form-actions">
-                                    <button type="button" className="back-button" onClick={() => setCurrentStep(2)}>
+                                    <button type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
                                     </button>
                                     <button type="button" className="next-button" onClick={handleNext3}>
@@ -819,10 +907,10 @@ const Become = () => {
                         {currentStep === 4 && (
                             <div className="form-step">
                                 <div className="form-actions">
-                                    <button type="button" className="back-button" onClick={() => setCurrentStep(3)}>
+                                    <button disabled={loading} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
                                     </button>
-                                    <button type="submit" className="submit-button">
+                                    <button disabled={loading} type="submit" className="submit-button">
                                         Register
                                     </button>
                                 </div>

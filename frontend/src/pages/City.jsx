@@ -281,7 +281,7 @@ const City = () => {
                 <div className="container">
                     <h2 className={'experience-text'} style={{textAlign:'center', color:'brown'}}>{`Our services in ${city}`}</h2>
                     <div className="grid-container">
-                        {serviceDetails.map((service) => (
+                        {serviceDetails.map((plan) => (
                             <div key={service.id} className="service-card">
                                 <img src={service.src} alt="" className={'cart-image'}/>
                                 <h4 style={{color:'navy', textAlign:'center', marginBottom:'10px'}}>{service.name}</h4>
@@ -466,7 +466,7 @@ const City = () => {
 
             <section className={'main-banner'} style={{marginTop:'50px'}}>
                 <div className="container" style={{marginBottom:'50px'}}>
-                    <h3 className={'experience-text'} style={{textAlign:'center', color:'navy', marginBottom:'30px'}}>{`Why choose Fly cleaning service in ${city}`}</h3>
+                    <h3 className={'experience-text'} style={{textAlign:'center', color:'navy', marginBottom:'30px'}}>{`Why choose Fly cleaning plan in ${city}`}</h3>
                     <div className={'grid-container'}>
                         {reasons.map(reason => (
                             <div key={reason.id} className={'service-card'}>
@@ -525,7 +525,7 @@ const City = () => {
                         <div className="service-card">
                             <p>Our domestic cleaners can render one-off, end-of-tenancy, deep cleaning, and regular cleaning services. This full range of professional cleaning services in St Albans is affordable and customisable.
                                 If you need cleaners in St Albans that will show up to your house even on short notice and clean your bedrooms, kitchen, toilet, cabinets, and living room, and even provide laundry services like washing and ironing, eMop has the right cleaners for you.
-                                One-off visits, as well as regular appointments, are available from eMop professional cleaning services in St Albans. No matter the service, it is carried out to the greatest standards possible by our reliable house cleaning crew.</p>
+                                One-off visits, as well as regular appointments, are available from eMop professional cleaning services in St Albans. No matter the plan, it is carried out to the greatest standards possible by our reliable house cleaning crew.</p>
                         </div>
                     </div>
                 </div>
@@ -552,10 +552,10 @@ const City = () => {
                     <div className={'idea-container'}>
                         <img src={Domestic} alt={"cleaners"} className={'cart-image2'}/>
                         <div className="service-card">
-                            <p style={{color:'navy'}}>Cleaning service that cares for your home</p>
+                            <p style={{color:'navy'}}>Cleaning plan that cares for your home</p>
                             <p>{`In ${city},  our cleaners offer expert house cleaning services. Our domestic cleaning services are followed with other packages like laundry, one-off and other deep cleaning for home homes and offices.
 Nobody enjoys having to clean their house in their free time. Our cleaners are responsible for that. Home cleaning services from eMop in St Albans offer you back time to focus on activities you enjoy.
-We provide a regular cleaning service as needed, whether it be daily, weekly, bi-weekly, or monthly, and we provide all of our own cleaning supplies. eMop has trusted cleaners with experience in providing cleaning solutions for shared housing, small offices, social areas of apartments, and family residences.`}</p>
+We provide a regular cleaning plan as needed, whether it be daily, weekly, bi-weekly, or monthly, and we provide all of our own cleaning supplies. eMop has trusted cleaners with experience in providing cleaning solutions for shared housing, small offices, social areas of apartments, and family residences.`}</p>
                         </div>
                     </div>
                 </div>

@@ -17,6 +17,7 @@ const Logout = () => {
                 if (response.data) {
                     localStorage.removeItem('user');
                     navigate('/overview');
+                    window.close();
                 }
             })
             .catch((error) => {

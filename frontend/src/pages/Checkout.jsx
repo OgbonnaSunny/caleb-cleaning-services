@@ -108,7 +108,7 @@ const Checkout = () => {
     const roomEstimates = [
         {
             id: 1,
-            service: "Bedroom",
+            plan: "Bedroom",
             time: "≈25min",
             time2: 25,
             src: BedroomIcon,
@@ -118,7 +118,7 @@ const Checkout = () => {
         },
         {
             id: 2,
-            service: "Living/Dining",
+            plan: "Living/Dining",
             time: "≈30min",
             time2: 30,
             src: LivingRoomIcon,
@@ -128,7 +128,7 @@ const Checkout = () => {
         },
         {
             id: 3,
-            service: "Bathroom",
+            plan: "Bathroom",
             time: "≈45min",
             time2: 45,
             src: BathroomIcon,
@@ -138,7 +138,7 @@ const Checkout = () => {
         },
         {
             id: 4,
-            service: "Hall",
+            plan: "Hall",
             time: "≈10min",
             time2: 10,
             src: HallIcon,
@@ -148,7 +148,7 @@ const Checkout = () => {
         },
         {
             id: 5,
-            service: "Staircase",
+            plan: "Staircase",
             time: "≈15min",
             time2: 15,
             src: StaircaseIcon,
@@ -158,7 +158,7 @@ const Checkout = () => {
         },
         {
             id: 6,
-            service: "Toilet",
+            plan: "Toilet",
             time: "≈15min",
             time2: 15,
             src: ToiletIcon,
@@ -168,7 +168,7 @@ const Checkout = () => {
         },
         {
             id: 7,
-            service: "Kitchen",
+            plan: "Kitchen",
             time: "≈45min",
             time2: 45,
             src: KitchenIcon,
@@ -178,7 +178,7 @@ const Checkout = () => {
         },
         {
             id: 8,
-            service: "Office room",
+            plan: "Office room",
             time: "≈20min",
             time2: 20,
             src: OfficeIcon,
@@ -188,7 +188,7 @@ const Checkout = () => {
         },
         {
             id: 9,
-            service: "Conservatory",
+            plan: "Conservatory",
             time: "≈25min",
             time2: 25,
             src: ConservatoryIcon,
@@ -198,7 +198,7 @@ const Checkout = () => {
         },
         {
             id: 10,
-            service: "Garage",
+            plan: "Garage",
             time: "≈30min",
             time2: 30,
             src: GarageIcon,
@@ -212,7 +212,7 @@ const Checkout = () => {
 
         {
             id: 11,
-            service: "Fridge (inside)",
+            plan: "Fridge (inside)",
             time: "≈30min",
             time2: 30,
             src: FridgeIcon,
@@ -222,7 +222,7 @@ const Checkout = () => {
         },
         {
             id: 12,
-            service: "Windows (inside)",
+            plan: "Windows (inside)",
             time: "≈20min",
             time2: 20,
             src: WindowIcon,
@@ -232,7 +232,7 @@ const Checkout = () => {
         },
         {
             id: 13,
-            service: "Ironing",
+            plan: "Ironing",
             time: "≈60min",
             time2: 60,
             src: IroningIcon,
@@ -242,7 +242,7 @@ const Checkout = () => {
         },
         {
             id: 14,
-            service: "Microwave (inside)",
+            plan: "Microwave (inside)",
             time: "≈10min",
             time2: 10,
             src: MicrowaveIcon,
@@ -252,7 +252,7 @@ const Checkout = () => {
         },
         {
             id: 15,
-            service: "Kitchen (inside)",
+            plan: "Kitchen (inside)",
             time: "≈60min",
             time2: 60,
             src: KitchenInsideIcon,
@@ -262,7 +262,7 @@ const Checkout = () => {
         },
         {
             id: 16,
-            service: "Bed making",
+            plan: "Bed making",
             time: "≈10min",
             time2: 10,
             src: BedmakingIcon,
@@ -272,7 +272,7 @@ const Checkout = () => {
         },
         {
             id: 17,
-            service: "Bookcase",
+            plan: "Bookcase",
             time: "≈25min",
             time2: 25,
             src: BookcaseIcon,
@@ -284,7 +284,7 @@ const Checkout = () => {
 
     const optionEstimates = [
         {id: 71,
-            service: "Laundry",
+            plan: "Laundry",
             time: "",
             time2: 0,
             addition: "(Additional £9)",
@@ -297,7 +297,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {id: 72,
-            service: "Oven",
+            plan: "Oven",
             time: "≈30min",
             time2: 30,
             addition: "(Additional £25)",
@@ -310,7 +310,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {id: 73,
-            service: "Oven & Grill",
+            plan: "Oven & Grill",
             time: "≈45min",
             time2: 45,
             addition: "(Additional £35)",
@@ -327,7 +327,7 @@ const Checkout = () => {
     const endOfTenancyServices = [
         {
             id: 1,
-            service: "Single Bedroom",
+            plan: "Single Bedroom",
             unitPrice: 24,
             time: "£24",
             time2: 30,
@@ -337,7 +337,7 @@ const Checkout = () => {
         },
         {
             id: 2,
-            service: "Double Bedroom",
+            plan: "Double Bedroom",
             unitPrice: 32,
             time: "£32",
             time2: 40,
@@ -347,7 +347,7 @@ const Checkout = () => {
         },
         {
             id: 3,
-            service: "Living room",
+            plan: "Living room",
             unitPrice: 32,
             time: "£32",
             time2: 40,
@@ -357,7 +357,7 @@ const Checkout = () => {
         },
         {
             id: 4,
-            service: "Dining room",
+            plan: "Dining room",
             unitPrice: 32,
             time: "£32",
             time2: 40,
@@ -367,7 +367,7 @@ const Checkout = () => {
         },
         {
             id: 5,
-            service: "Office",
+            plan: "Office",
             unitPrice: 20,
             time: "£20",
             time2: 25,
@@ -377,7 +377,7 @@ const Checkout = () => {
         },
         {
             id: 6,
-            service: "Hall",
+            plan: "Hall",
             unitPrice: 12,
             time: "£12",
             time2: 15,
@@ -387,7 +387,7 @@ const Checkout = () => {
         },
         {
             id: 7,
-            service: "Toilet",
+            plan: "Toilet",
             unitPrice: 12,
             time: "£12",
             time2: 15,
@@ -397,7 +397,7 @@ const Checkout = () => {
         },
         {
             id: 8,
-            service: "Bathroom",
+            plan: "Bathroom",
             unitPrice: 20,
             time: "£20",
             time2: 25,
@@ -407,7 +407,7 @@ const Checkout = () => {
         },
         {
             id: 9,
-            service: "Through lounge",
+            plan: "Through lounge",
             unitPrice: 44,
             time: "£44",
             time2: 55,
@@ -417,7 +417,7 @@ const Checkout = () => {
         },
         {
             id: 10,
-            service: "Staircase",
+            plan: "Staircase",
             unitPrice: 36,
             time: "£36",
             time2: 45,
@@ -430,7 +430,7 @@ const Checkout = () => {
     const sizeBasedPricing = [
         {
             id: 30,
-            service: "Small (35 sq.ft.)",
+            plan: "Small (35 sq.ft.)",
             unitPrice: 16,
             time: "£16",
             time2: 20,
@@ -440,7 +440,7 @@ const Checkout = () => {
         },
         {
             id: 31,
-            service: "Medium (70 sq.ft.)",
+            plan: "Medium (70 sq.ft.)",
             unitPrice: 24,
             time: "£24",
             time2: 30,
@@ -450,7 +450,7 @@ const Checkout = () => {
         },
         {
             id: 32,
-            service: "Large (100 sq.ft.)",
+            plan: "Large (100 sq.ft.)",
             unitPrice: 32,
             time: "£32",
             time2: 45,
@@ -462,7 +462,7 @@ const Checkout = () => {
 
     const endOfTenancyStaircase = [
         {id: 25,
-            service: "Staircase",
+            plan: "Staircase",
             time: "£36",
             time2: 45,
             addition: "",
@@ -507,7 +507,7 @@ const Checkout = () => {
 
     const newChore = {
         id: '',
-        service: '',
+        plan: '',
         time: '',
         time2: 0,
         src: '',
@@ -1166,7 +1166,7 @@ const Checkout = () => {
             const price = newOptions[i].unitPrice + newOptions[i].additionPrice;
             const newOption = {
                 id: newOptions[i].id,
-                service: newOptions[i].service,
+                plan: newOptions[i].plan,
                 time: newOptions[i].time,
                 time2: newOptions[i].time2,
                 src: newOptions[i].src,
@@ -1298,7 +1298,7 @@ const Checkout = () => {
         const id = 'Errand & chores'
         const newChores = {
             id: id,
-            service: 'Errand & chores',
+            plan: 'Errand & chores',
             time: time,
             time2: 0,
             src: '',
@@ -1360,7 +1360,7 @@ const Checkout = () => {
         const id = 'Errand & chores'
         const newChores = {
             id: id,
-            service: 'Errand & chores',
+            plan: 'Errand & chores',
             time: time,
             time2: 0,
             src: '',
@@ -1499,7 +1499,7 @@ const Checkout = () => {
 
         const newAddition = {
             id: service,
-            service: service,
+            plan: service,
             time: "",
             time2: 0,
             src: '',
@@ -1880,10 +1880,10 @@ const Checkout = () => {
             const duration = formData.booking[i].time2;
             let book;
             if (duration > 0) {
-                book = {room: formData.booking[i].service,  count: formData.booking[i].count}
+                book = {room: formData.booking[i].plan,  count: formData.booking[i].count}
             }
             else {
-                book = {room: formData.booking[i].service,  count: 'Needed'}
+                book = {room: formData.booking[i].plan,  count: 'Needed'}
             }
             booking.push(book);
         }
@@ -1891,7 +1891,7 @@ const Checkout = () => {
          const bookDetails = {
              bookDate: `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`,
              orderId: orderId,
-             customer: formData.customer,
+             customer: `${formData.firstName} ${formData.lastName}`,
              payment: formData.totalAmount,
              paymentIntentId: paymentIntentId,
              clientSecret: clientSecret,
@@ -2586,7 +2586,7 @@ const Checkout = () => {
                             task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
                             <div className={'line'} style={{height:'1px'}}/>
                             <div className={'summary-row'}>
-                                {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
+                                {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
                                 {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
                                 {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
                                                                               onClick={() =>
@@ -2605,7 +2605,7 @@ const Checkout = () => {
                         <div key={task.id}>
                             <div className={'chores'}>
                                 <div className={'summary-row'}>
-                                    {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
+                                    {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
                                     {task.time.length > 0 && <p style={{textAlign:'center', flex:'1'}}>{task.time}</p> }
                                     <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
                                     <FaTimes style={{width:'30px', marginLeft:'10px'}}
@@ -2650,7 +2650,7 @@ const Checkout = () => {
                                         <img src={task.src} style={{width:'50px', height:'55px'}} alt='' />
                                         <div style={{marginLeft:'10px'}}>
                                             <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
-                                                {task.service} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> }
+                                                {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> }
                                             </h5>
                                             <p>{task.time}</p>
                                         </div>
@@ -2675,7 +2675,7 @@ const Checkout = () => {
                                         <img src={task.src} style={{width:'50px', height:'55px'}} alt='' />
                                         <div style={{marginLeft:'10px'}}>
                                             <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
-                                                {task.service} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
+                                                {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
                                             <p>{task.time}</p>
                                         </div>
                                         <MdRemove style={{background:'white', color:'black', width:'50%', height:'25px'}}
@@ -2699,7 +2699,7 @@ const Checkout = () => {
                                         <img src={task.src} style={{width:'50px', height:'55px'}} alt='' />
                                         <div style={{marginLeft:'10px'}}>
                                             <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
-                                                {task.service} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
+                                                {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
                                             {task.time.length > 0 && <p>{task.time}</p>}
                                             {task.addition.length > 0 && <p style={{color:'blue'}}>{task.addition}</p>}
                                         </div>
@@ -2922,7 +2922,7 @@ const Checkout = () => {
                                             <img src={task.src} style={{width:'50px', height:'55px'}} alt='' />
                                             <div style={{marginLeft:'10px'}}>
                                                 <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
-                                                    {task.service} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> }
+                                                    {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> }
                                                 </h5>
                                                 <p>{task.time}</p>
                                             </div>
@@ -2943,7 +2943,7 @@ const Checkout = () => {
                                             <img src={task.src} style={index === 0 ? {width:'20px', height:'25px'} : index === 1 ? {width:'30px', height:'35px'}: {width:'50px', height:'55px'} } alt='' />
                                             <div style={{marginLeft:'10px'}}>
                                                 <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
-                                                    {task.service} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
+                                                    {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
                                                 <p>{task.time}</p>
                                             </div>
                                             <MdRemove style={{background:'white', color:'black', width:'50%', height:'25px'}}
@@ -3545,7 +3545,7 @@ const Checkout = () => {
                                                     task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
                                                     <div className={'line'} style={{height:'1px'}}/>
                                                     <div className={'summary-row'}>
-                                                        {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
+                                                        {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
                                                         {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
                                                         {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
                                                                                                       onClick={() =>
@@ -3563,7 +3563,7 @@ const Checkout = () => {
                                                 <div key={task.id}>
                                                     <div className={'chores'}>
                                                         <div className={'summary-row'}>
-                                                            {task.time2 > 0 ? <p>{task.service} {task.time2}min </p> : <p>{task.service}</p>}
+                                                            {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
                                                             {task.time.length > 0 && <p style={{textAlign:'center', flex:'1'}}>{task.time}</p> }
                                                             <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
                                                             <FaTimes style={{width:'30px', marginLeft:'10px'}}

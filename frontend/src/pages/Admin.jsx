@@ -98,7 +98,10 @@ const Admin = () => {
 
                         <div className="dashboard-content">
                             <div className="content-left">
-                                <Bookings />
+                                <Bookings
+                                    cancellable={false}
+                                    user={'admin'}
+                                />
                             </div>
                             <div className="content-right">
                                 <CleaningSchedule />

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css'; // We'll create this CSS file next
 import { FaBars , FaUsers, FaUserTie, FaTimes} from 'react-icons/fa';
-import LOGO from '../images/logo3.png'
+import LOGO from '../images/logo4.png'
 import {useLocation} from 'react-router-dom'
 import {commonjs} from "globals";
 import api from './api.js';
@@ -60,7 +60,7 @@ const Navigation = () => {
 
     const location = useLocation();
     const hideNavbarPaths = ['/cashback','/checkout', '/bookings', '/reports', '/settings']; // Paths where navbar should be hidden
-    let shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
+    let shouldShowNavbar =  navLinks.includes(location.pathname);
 
     const [activeTab, setActiveTab] = useState('/overview');
     const [isScrolled, setIsScrolled] = useState(false);
@@ -69,6 +69,7 @@ const Navigation = () => {
     const [showNav, setShowNav] = useState(true);
 
     useEffect(() => {
+        let show = false;
         const user = JSON.parse(localStorage.getItem('user'));
         switch (location.pathname) {
             case '/cleanerprofile':
@@ -115,17 +116,20 @@ const Navigation = () => {
             }
         }
 
-        if (!navLinks.includes(location.pathname)) {
-            setShowNav(false);
-        }
-        else {
-            setShowNav(true);
-        }
-
         if (location.pathname === '/') {
             setActiveTab('/overview');
             document.title = "Overview";
         }
+        else {
+            for (let i = 0; i < navLinks.length; i++) {
+                if (navLinks[i].path === location.pathname) {
+                    show = true;
+                    break;
+                }
+            }
+            setShowNav(show);
+        }
+
     }, [location.pathname]);
 
     const handleHomeNav = () => {
@@ -189,7 +193,7 @@ const Navigation = () => {
                         <div className="navbar-logo" >
                             <img src={LOGO} alt="logo" className="logo-icon" onClick={handleHomeNav} />
                             <p  className="experience-text">Fly Cleaner</p>
-                            <FaUserTie  onClick={handleAuth} className={'logo-icon2'} />
+                            <FaUserTie className={'logo-icon2'} style={{marginBottom:'13px'}}   onClick={handleAuth}  />
                             <MdDashboard style={{color:'navy'}} onClick={() => window.open('/cleanerprofile', '_blank')}  className={'logo-icon2'}/>
                             <MdDashboard  style={{color:'purple'}}  onClick={() => window.open('/customer', '_blank')} className={'logo-icon2'} />
                             <MdAdminPanelSettings  style={{color:'purple'}}  onClick={() => window.open('/admin', '_blank')} className={'logo-icon2'} />

@@ -46,8 +46,8 @@ const Login = () => {
             if (success === true) {
                 console.log(success);
                 localStorage.setItem("user", JSON.stringify(user));
-           //     setFormData({email: '', password: ''});
-                const role = user.role;
+                console.log(user);
+                const role = user.roles;
                 if (role === 'admin') {
                     navigate('/admin');
                     return;
@@ -65,6 +65,7 @@ const Login = () => {
             else {
                 setMessage("Invalid email or password");
             }
+            window.close();
         } catch (error) {
             const errorMessage = error.response?.data?.error || error.message;
             setMessage(errorMessage);

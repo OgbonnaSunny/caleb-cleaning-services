@@ -24,7 +24,6 @@ const Footer = () => {
 
     const customerActions = [
         { id: "booking-policy", name: "Booking Policy", path: "/booking" },
-        { id: "pricing", name: "Pricing", path: "/pricing" },
         { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation" },
         { id: "terms-conditions", name: "Terms & Conditions", path: "/terms" },
         { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy" },
@@ -36,6 +35,7 @@ const Footer = () => {
         { id: "whats-included", name: "What's included", path: "/services" },
         { id: "blog", name: "Blog", path: "/blog" },
         { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
+        { id: "pricing", name: "Pricing", path: "/pricing" },
     ]
 
     const services = [

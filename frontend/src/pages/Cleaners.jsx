@@ -53,7 +53,7 @@ const Cleaners = () => {
 
     const [activeTab, setActiveTab] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
-    const [cleaner, setCleaner] = useState({});
+    const [cleanerData, setCleanerData] = useState({});
     const [activeServiceName, setActiveServiceName] = useState('');
     const [showTools, setShowTools] = useState(false);
     const [cleaners, setCleaners] = useState(allCeaners);
@@ -100,13 +100,13 @@ const Cleaners = () => {
             <div className={['slidings', 'cleaners-tabs', showTools ? 'visible' : 'hidden'].join(' ')} style={{marginTop: '10px'}}>
                 <div className="price-container">
                     <div style={{marginBottom:'20px', display:'flex', justifyContent:'stretch',  alignItems: 'baseline'}}>
-                        <h3 style={{textAlign:'center', marginLeft:'20px'}}>{`Updating profile for ${cleaner.name}`}</h3>
-                        < FaArrowRight onClick={() => setShowTools(false)} style={{height:'20px', width:'20px'}} />
+                        <h3 style={{textAlign:'center', marginLeft:'20px'}}>{`Updating profile for ${cleanerData.name}`}</h3>
                     </div>
                     <div className="grid-container">
                         {cleanerActions.map((action, index) => (
                             <div key={index} className="actions">
-                                <button className="service-card" style={{color:'green', textAlign:'center'}} onClick={() => setActiveServiceName(action)}>{action}</button>
+                                <button className="service-card" style={{color:'green', textAlign:'center'}}
+                                        onClick={() => setActiveServiceName(action)}>{action}</button>
                             </div>
                         ))}
                     </div>
@@ -165,7 +165,7 @@ const Cleaners = () => {
             <div className="grid-container">
                 {filteredCleaners.length > 0 ? (
                     filteredCleaners.map(cleaner => (
-                        <div key={cleaner.id} className="service-card" onClick={() => { setCleaner(cleaner); setShowTools(true)}}>
+                        <div key={cleaner.id} className="service-card">
                             <div style={{display: 'block'}}>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                     <h5>{cleaner.name}</h5>
@@ -203,7 +203,7 @@ const Cleaners = () => {
                                 <div className="cleaner-services">
                                     <h4>Services:</h4>
                                     <div className="services-tags">
-                                        {cleaner.services.map((service, index) => (
+                                        {cleaner.services.map((plan, index) => (
                                             <span key={index} className="service-tag">{service}</span>
                                         ))}
                                     </div>
@@ -214,10 +214,12 @@ const Cleaners = () => {
 
                                 <div className="action-buttons">
                                     <button className="edit-btn">
-                                        <FaUserEdit />
+                                        <FaUserEdit onClick={() => { setCleanerData(cleaner); setShowTools(true) }} />
                                     </button>
                                     <button className="delete-btn">
-                                        <FaUserTimes />
+                                        <FaUserTimes
+                                            style={(cleanerData.id === cleaner.id && showTools) ? {color:'red'} : {color:''}}
+                                            onClick={cleaner.id === cleanerData.id ? () => { setShowTools(false) } : null } />
                                     </button>
                                 </div>
                             </div>

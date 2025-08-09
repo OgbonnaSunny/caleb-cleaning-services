@@ -4,10 +4,10 @@ import { FaCalendarAlt } from 'react-icons/fa';
 
 const CleaningSchedule = () => {
     const schedule = [
-        { time: "09:00 AM", customer: "James Wilson", service: "Regular Clean" },
-        { time: "11:30 AM", customer: "Olivia Smith", service: "Deep Clean" },
-        { time: "02:00 PM", customer: "Robert Brown", service: "Move Out Clean" },
-        { time: "04:30 PM", customer: "Emily Davis", service: "Regular Clean" }
+        { time: "09:00 AM", customer: "James Wilson", plan: "Regular Clean" },
+        { time: "11:30 AM", customer: "Olivia Smith", plan: "Deep Clean" },
+        { time: "02:00 PM", customer: "Robert Brown", plan: "Move Out Clean" },
+        { time: "04:30 PM", customer: "Emily Davis", plan: "Regular Clean" }
     ];
 
     return (
@@ -31,7 +31,7 @@ const CleaningSchedule = () => {
                                 </div>
                                 <div className="schedule-details">
                                     <h3>{item.customer}</h3>
-                                    <p>{item.service}</p>
+                                    <p>{item.plan}</p>
                                 </div>
                                 <button style={{background:'cadetblue', color:'white', textAlign:'center'}} className="service-card">Assign</button>
                             </div>

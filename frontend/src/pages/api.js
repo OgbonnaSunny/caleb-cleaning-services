@@ -6,9 +6,6 @@ const api = axios.create({
     origin: 'http://localhost:5173', // Your Vite/React frontend
     withCredentials: true,
     credentials: 'include',
-    headers: {
-        'Content-Type': 'application/json',
-    }
 });
 
 // Add CSRF token to requests

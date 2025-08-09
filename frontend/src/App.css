@@ -2915,8 +2915,8 @@ a:hover {
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
+  align-items: start;
+  padding: 7px 10px;
   border-bottom: 1px solid var(--gray-light);
 }
 
@@ -6519,7 +6519,7 @@ tr:hover {
 }
 
 .logo-icon {
-  width: 50px;
+  width: 100px;
   height: 50px;
   margin-right: 10px;
 }
@@ -6536,12 +6536,11 @@ tr:hover {
 
 @media (max-width: 768px) {
   .logo-icon2 {
-    width: 50px;
-    height: 60px;
+    width: 60px;
     margin: 8px;
   }
   .logo-icon {
-    width: 30px;
+    width: 60px;
     height: 40px;
     margin-bottom: 10px;
   }
@@ -6565,4 +6564,14 @@ tr:hover {
   border-radius: 20%;
   background-color: darkred;
   padding: 3px;
+}
+.book-icon {
+  width: 80px;
+  height: 30px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 30px;
+  background-color: lightpink;
+  align-items: center;
 }

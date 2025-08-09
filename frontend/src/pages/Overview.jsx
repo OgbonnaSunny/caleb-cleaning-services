@@ -45,7 +45,7 @@ const Overview = () => {
         phone:'',
         email:'',
         message:'',
-        service:'',
+        plan:'',
     });
     const [serviceList, setServiceList] = useState(miniService);
     const [isAllServices, setIsAllServices] = useState(false)
@@ -188,11 +188,11 @@ const Overview = () => {
                             <div className="form-group">
                                 <select
                                     name="service"
-                                    value={formData.service}
+                                    value={formData.plan}
                                     onChange={handleInputChange}
                                     required>
-                                    {services.map(service => (
-                                        <option key={service.id} value={service.id}>{service.title}</option>
+                                    {services.map(plan => (
+                                        <option key={plan.id} value={plan.title}>{plan.title}</option>
                                     ))}
                                 </select>
                             </div>
@@ -218,12 +218,12 @@ const Overview = () => {
                         </div>
                         <div style={{display:'block'}} className={'main-banner'}>
                             <div className="services-grid">
-                                {serviceList.map(service => (
-                                    <div key={service.id} className="service-card">
-                                        <img src={service.src} alt="" className={'cart-image'}/>
-                                        <h3>{service.title}</h3>
-                                        <p>{service.description}</p>
-                                        <Link to={'/services'} state={{ id: service.id, name: service.title }} style={{width:'100%', textAlign:'center', color:'blue'}}>Learn More</Link>
+                                {serviceList.map(plan => (
+                                    <div key={plan.id} className="service-card">
+                                        <img src={plan.src} alt="" className={'cart-image'}/>
+                                        <h3>{plan.title}</h3>
+                                        <p>{plan.description}</p>
+                                        <Link to={'/services'} state={{ id: plan.id, name: plan.title }} style={{width:'100%', textAlign:'center', color:'blue'}}>Learn More</Link>
                                     </div>
                                 ))}
                             </div>
@@ -423,12 +423,12 @@ const Overview = () => {
                                             <select
                                                 id="service"
                                                 name="service"
-                                                value={formData.service}
+                                                value={formData.plan}
                                                 onChange={handleInputChange}
                                                 required
                                             >
-                                                {services.map(service => (
-                                                    <option key={service.id} value={service.id}>{service.title}</option>
+                                                {services.map(plan => (
+                                                    <option key={plan.id} value={plan.title}>{plan.title}</option>
                                                 ))}
                                             </select>
                                         </div>

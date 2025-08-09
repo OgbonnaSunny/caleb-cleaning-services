@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { FaStar, FaRegStar, FaCheck, FaClock, FaMapMarkerAlt,
     FaBroom, FaShieldAlt, FaUserTie, FaCertificate,
     FaPoundSign, FaLifeRing, FaQuestionCircle,
-    FaFilePdf, FaFile, FaFileAlt, FaHome, FaTimes, FaBars, FaPen} from 'react-icons/fa';
+    FaFilePdf, FaFile, FaFileAlt, FaHome, FaTimes, FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft} from 'react-icons/fa';
 import api from './api.js';
 import { useNavigate } from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
@@ -14,6 +14,7 @@ import { Helmet } from 'react-helmet';
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
 import { useForm } from 'react-hook-form';
+import ProfilePage from './CleanerProfilePage.jsx';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
@@ -170,30 +171,13 @@ const CleanerProfile = () => {
     const [acceptingOrders, setAcceptingOrders] = useState(false);
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [message, setMessage] = useState('No new orders yet.');
-    const [email, setEmail] = useState('sarah@gmail.com');
-    const [cleanerName, setCleanerName] = useState("Sarah Jones");
-    const [phoneNumber, setPhoneNumber] = useState('+4477012376');
+    const [email, setEmail] = useState(null);
+    const [cleanerName, setCleanerName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [myOrders, setMyOrders] = useState([myOrderData]);
     const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
     const [newOrders, setNewOrders] = useState([bookData]);
     const [myOderCount, setMyOderCount] = useState(0);
-    const [cleaner, setCleaner] = useState({
-        name: cleanerName,
-        profileImage: "https://randomuser.me/api/portraits/women/45.jpg",
-        rating: 4.8,
-        reviewCount: 127,
-        yearsExperience: 'Less than 1 year',
-        location: "London, UK",
-        services: ["House Cleaning", "Office Cleaning", "Deep Cleaning", "Carpet Cleaning"],
-        bio: "Professional cleaner with 5 years of experience providing top-quality cleaning services across London. I take pride in my attention to detail and commitment to customer satisfaction.",
-        certifications: ["BICSc Certified", "COVID-19 Safety Certified"],
-        availability: ["Monday-Friday: 8am-6pm", "Saturday: 9am-2pm"],
-        languages: ["English"],
-        hourlyRate: "£15-£25 (depending on service)",
-        company: "Fly Cleaners Ltd",
-        specialities: ["Eco-friendly cleaning", "Pet-friendly products", "Stain removal"],
-        recentlyViewed: ["Bleach", "Microfiber cloths", "Vacuum cleaner"]
-    });
     const [history, setHistory] = useState([historyData]);
     const [idForUpdate, setIdForUpdate] = useState(-1);
     const { register, setValue, getValues, handleSubmit, formState, watch, reset, formState: { errors }, trigger }
@@ -274,7 +258,7 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-        /*const fetchOrders = async () => {
+        const fetchOrders = async () => {
             setIsLoading(true)
             try {
                 const newOrderResponse = await api.get('api/booking/new');
@@ -294,7 +278,7 @@ const CleanerProfile = () => {
         }
         if (activeMenu === topNavItems[0]) {
             fetchOrders();
-        }*/
+        }
     }, [activeMenu])
 
     const NewOrders = () => {
@@ -345,300 +329,7 @@ const CleanerProfile = () => {
         );
     }
 
-    const ProfilePage = () => {
-        const [isFavorite, setIsFavorite] = useState(false);
 
-        const renderStars = (rating) => {
-            const stars = [];
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-
-            for (let i = 1; i <= 5; i++) {
-                if (i <= fullStars) {
-                    stars.push(<FaStar style={{width:'15px'}} key={i} className="star filled" />);
-                } else if (i === fullStars + 1 && hasHalfStar) {
-                    stars.push(<FaStar style={{width:'15px'}} key={i} className="star half-filled" />);
-                } else {
-                    stars.push(<FaRegStar style={{width:'15px'}} key={i} className="star" />);
-                }
-            }
-            return stars;
-        };
-
-
-        return (
-            <div className="profile-container">
-                <div className="profile-header">
-                    <div className="profile-image-container">
-                        <img src={cleaner.profileImage}  className="profile-image" />
-                    </div>
-
-                    <div className="profile-info">
-                        <h3 className={'profile-name'}>{getValues().personal.firstName} {getValues().personal.lastName}</h3>
-                        <p className="review-count">
-                            <span className="rating-value">{cleaner.rating} </span> ({cleaner.reviewCount})
-                            reviews
-                        </p>
-
-                        <div className="meta-info">
-                            <p className="meta-item"><FaUserTie style={{width:'20px'}} /> {getValues().work.cleaningExperience} experience</p>
-                            <p className="meta-item"><FaMapMarkerAlt style={{width:'20px'}} />  <span style={{textAlign:'start'}}>{getValues().personal.address}</span></p>
-                            <p className="meta-item"> <FaBroom style={{width:'20px'}} /> <span style={{textAlign:'start'}}>Flymax Ltd</span></p>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div className="profile-tabs">
-                    <button
-                        className={`tab-btn ${activeTab2 === 'about' ? 'active' : ''}`}
-                        onClick={() => setActiveTab2('about')}>
-                        About
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab2 === 'services' ? 'active' : ''}`}
-                        onClick={() => setActiveTab2('services')}>
-                        Services
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab2 === 'reviews' ? 'active' : ''}`}
-                        onClick={() => setActiveTab2('reviews')}>
-                        Reviews
-                    </button>
-                </div>
-
-                <div className="tab-content">
-                    {activeTab2 === 'about' && (
-                        <div className="about-section">
-                            <h2>About {getValues().personal.firstName} {getValues().personal.lastName}</h2>
-                            <p>{getValues().personal.bio}</p>
-                            <div className="details-section">
-                                <h3><FaClock style={{width:'40px'}} /> Availability</h3>
-                                <div className="availability-grid">
-                                    {(getValues().availability.monday.morning ||
-                                        getValues().availability.monday.afternoon ||
-                                            getValues().availability.monday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Monday</h3>
-                                            {getValues().availability.monday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.monday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.monday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-                                    {(getValues().availability.tuesday.morning ||
-                                        getValues().availability.tuesday.afternoon ||
-                                        getValues().availability.tuesday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Tuesday</h3>
-                                            {getValues().availability.tuesday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.tuesday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.tuesday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-                                    {(getValues().availability.wednesday.morning ||
-                                        getValues().availability.wednesday.afternoon ||
-                                        getValues().availability.wednesday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Wednesday</h3>
-                                            {getValues().availability.wednesday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.wednesday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.wednesday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-                                    {(getValues().availability.thursday.morning ||
-                                            getValues().availability.thursday.afternoon ||
-                                            getValues().availability.thursday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Thursday</h3>
-                                            {getValues().availability.thursday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.thursday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.thursday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-                                    {(getValues().availability.friday.morning ||
-                                        getValues().availability.friday.afternoon ||
-                                        getValues().availability.friday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Friday</h3>
-                                            {getValues().availability.friday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.friday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.friday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-                                    {(getValues().availability.saturday.morning ||
-                                        getValues().availability.saturday.afternoon ||
-                                        getValues().availability.saturday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Saturday</h3>
-                                            {getValues().availability.saturday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.saturday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.saturday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-                                    {(getValues().availability.sunday.morning ||
-                                        getValues().availability.sunday.afternoon ||
-                                        getValues().availability.sunday.evening) &&
-                                        <div className="availability-day">
-                                            <h3>Sunday</h3>
-                                            {getValues().availability.sunday.morning && <label style={{marginTop:'5px'}}>Morning (8am-12pm)</label>}
-                                            {getValues().availability.sunday.afternoon && <label style={{marginTop:'5px'}}>Afternoon (12pm-5pm)</label>}
-                                            {getValues().availability.sunday.evening && <label style={{marginTop:'5px'}}>Evening (5pm-9pm)</label>}
-                                        </div>
-                                    }
-
-                                </div>
-
-                                <h3>Languages Spoken</h3>
-                                <div className="grid-container">
-                                    {cleaner.languages.map((lang, index) => (
-                                        <span key={index} className="language-badge">{lang}</span>
-                                    ))}
-                                </div>
-
-                                <h3 style={{textAlign:'center'}}>Specialities</h3>
-                                <div className="grid-container">
-                                    {getValues().work.specialities.map((spec, index) => (
-                                        <span style={{width:'100%'}} key={index} className="speciality-badge">
-                                            <FaCheck style={{width:'40px'}} className="check-icon" />
-                                            {spec}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab2 === 'services' && (
-                        <div className="services-section">
-                            <h2>Services Offered</h2>
-                            <div className="services-grid">
-                                {getValues().work.services.map((service, index) => (
-                                    <div key={index} className="stats-card">
-                                        <h3 style={{textAlign:'center'}}>{service}</h3>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="pricing-section">
-                                <h2>Pricing Information</h2>
-                                <p><strong>Standard Rate:</strong>Company rate</p>
-                                <p><strong>Discounts:</strong>Company authorized</p>
-                                <p><strong>Travel Fee:</strong>According to company's policy</p>
-                            </div>
-
-                            <div className="materials-section">
-                                <h2>Preferred Cleaning Materials</h2>
-                                <p>Company primarily uses eco-friendly, non-toxic cleaning products that are safe for children and pets.</p>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab2 === 'reviews' && (
-                        <div>
-                            {getValues().review.length > 0 &&
-                                <div className="reviews-section">
-                                    <h2>Customer Reviews</h2>
-                                    <div className="review-summary">
-                                        <div className="overall-rating">
-                                        <p className="stars">{renderStars(cleaner.rating)}</p>
-                                        <p className="big-rating">{cleaner.rating}</p>
-                                        <p style={{textAlign:'end'}} className="review-count">{cleaner.reviewCount} reviews</p>
-                                    </div>
-
-                                        <div className="rating-breakdown">
-                                            <div className="rating-bar">
-                                                <span>5 stars</span>
-                                                <div className="bar-container">
-                                                    <div className="bar" style={{ width: '85%' }}></div>
-                                                </div>
-                                                <span>85%</span>
-                                            </div>
-                                            <div className="rating-bar">
-                                            <span>4 stars</span>
-                                            <div className="bar-container">
-                                                <div className="bar" style={{ width: '10%' }}></div>
-                                            </div>
-                                            <span>10%</span>
-                                        </div>
-                                            <div className="rating-bar">
-                                            <span>3 stars</span>
-                                            <div className="bar-container">
-                                                <div className="bar" style={{ width: '3%' }}></div>
-                                            </div>
-                                            <span>3%</span>
-                                        </div>
-                                            <div className="rating-bar">
-                                            <span>2 stars</span>
-                                            <div className="bar-container">
-                                                <div className="bar" style={{ width: '1%' }}></div>
-                                            </div>
-                                            <span>1%</span>
-                                        </div>
-                                            <div className="rating-bar">
-                                            <span>1 star</span>
-                                            <div className="bar-container">
-                                                <div className="bar" style={{ width: '1%' }}></div>
-                                            </div>
-                                            <span>1%</span>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    {!showAllReviews &&
-                                        <div className={'grid-container'}>
-                                            {getValues().review.map((review, index) => (
-                                                <div key={index}>
-                                                    {index <= 2 && <div key={review.id} className="review-card">
-                                                        <div className="review-header">
-                                                            <div className="reviewer-info">
-                                                                <h4>Michael Brown</h4>
-                                                                <div className="review-rating">
-                                                                    {renderStars(review.rating)}
-                                                                    <span className="review-date">{review.time}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="review-content">
-                                                            <p>{review.review}</p>
-                                                        </div>
-                                                    </div>  }
-                                                </div>
-                                            ))}
-                                        </div>
-                                    }
-                                    {showAllReviews &&
-                                        <div className={'grid-container'}>
-                                            {getValues().review.map((review, index) => (
-                                                <div key={review.id} className="review-card">
-                                                    <div className="review-header">
-                                                        <div className="reviewer-info">
-                                                            <h4>Michael Brown</h4>
-                                                            <div className="review-rating">
-                                                                {renderStars(review.rating)}
-                                                                <span className="review-date">{review.time}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="review-content">
-                                                        <p>{review.review}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    }
-                                    {getValues().review.length > 3 &&
-                                        <button onClick={() => setShowAllReviews(!showAllReviews)}
-                                                className="view-all-reviews">
-                                            {showAllReviews ? 'View Less Reviews' : 'View All Reviews'}
-                                        </button>
-                                    }
-                                </div>}
-                            {getValues().review.length <= 0 && <p>No review for {getValues().personal.firstName} {getValues().personal.lastName} yet </p> }
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    };
 
     useEffect(() => {
         window.scroll({top: 0, behavior: 'smooth'});
@@ -1167,7 +858,10 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-       /* const myOders = async () => {
+        const myOders = async () => {
+            if (email === null || email === undefined) {
+                return;
+            }
             setIsLoadMyOrders(true);
             const userData = {email: email}
             try {
@@ -1192,7 +886,7 @@ const CleanerProfile = () => {
         }
         if (activeMenu === topNavItems[1]) {
             myOders()
-        }*/
+        }
     }, [activeMenu]);
 
     const MyOrders = () => {
@@ -1377,7 +1071,10 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-        /*const history = async () => {
+        const history = async () => {
+            if (email === null || email === undefined) {
+                return;
+            }
             setLoadingHistory(true);
             try {
                 const acceptResponse = await api.post('/api/booking/history', {email: email});
@@ -1397,7 +1094,7 @@ const CleanerProfile = () => {
         }
         if (activeMenu === topNavItems[2]) {
             history()
-        }*/
+        }
     }, [activeMenu]);
 
     const History = () => {
@@ -1813,9 +1510,27 @@ const CleanerProfile = () => {
     };
 
     useEffect(() => {
-       /* const fetchCleanerData = () => {
-            setIsLoading(true);
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                setEmail(user.email);
+            }
+            else {
+                setEmail('sarah@gmail.com');
+            }
+
+        } catch (error) {
+            setEmail('sarah@gmail.com');
+        }
+    }, [])
+
+    useEffect(() => {
+        const fetchCleanerData = () => {
             const user1 = JSON.parse(localStorage.getItem('user'));
+            if (user1 === null || user1 === undefined) {
+                return;
+            }
+            setIsLoading(true);
             api.post('/api/users/record', {email: user1.email})
                 .then(response => {
                     const { user } = response.data;
@@ -1852,7 +1567,7 @@ const CleanerProfile = () => {
                     setIsLoading(false);
                 })
         };
-        fetchCleanerData();*/
+        fetchCleanerData();
     }, []);
 
     const SettingsPage = () => {
@@ -1876,7 +1591,6 @@ const CleanerProfile = () => {
         }
 
         const onSubmit = async (e) => {
-            return;
             e.preventDefault();
             if (getValues().personal.email === null || getValues().personal.email === ''
                 || getValues().personal.email === undefined) {
@@ -2657,7 +2371,7 @@ const CleanerProfile = () => {
                 {activeMenu === topNavItems[1] && <MyOrders /> }
                 {activeMenu === topNavItems[2] && <History /> }
                 {activeMenu === bottomNavItems[3].name && <SupportPage /> }
-                {activeMenu === bottomNavItems[4].name && <ProfilePage /> }
+                {(activeMenu === bottomNavItems[4].name && email) && <ProfilePage emailFromProile={email} /> }
                 {activeMenu === bottomNavItems[1].name && <Finance /> }
                 {activeMenu === bottomNavItems[2].name && <Docs /> }
                 {activeMenu === bottomNavItems[0].name && <SettingsPage /> }

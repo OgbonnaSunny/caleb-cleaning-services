@@ -1,59 +1,551 @@
-// components/Bookings.js
-import React from 'react';
-import { FaHome, FaClock, FaCheckCircle, FaTimesCircle, FaMapMarkerAlt } from 'react-icons/fa';
 
-const Bookings = () => {
+import React, { useState, useEffect } from 'react';
+import {
+    FaHome,
+    FaClock,
+    FaCheckCircle,
+    FaTimesCircle,
+    FaMapMarkerAlt,
+    FaPen,
+    FaTimes,
+    FaArrowCircleRight,
+    FaArrowCircleLeft,
+    FaArrowAltCircleRight,
+    FaArrowRight,
+    FaArrowLeft,
+    FaStar, FaRegStar, FaUserTie
+} from 'react-icons/fa';
+import api from './api.js'
+import { useNavigate } from 'react-router-dom';
+
+const Bookings = ( {cancellable =  false, user, history }) => {
+    const navigate = useNavigate();
     const bookings = [
-        { id: 1, postcode: "G10AS", customer: "Sarah Johnson", address: "25 Park Lane, London", time: "Today, 10:00 AM", service: "Deep Clean", status: "confirmed" },
-        { id: 2, postcode: "O10AS", customer: "Michael Brown", address: "42 Kensington High St", time: "Today, 12:30 PM", service: "Regular Clean", status: "confirmed" },
-        { id: 3, postcode: "W10AR", customer: "Emma Wilson", address: "7 Chelsea Bridge Rd", time: "Today, 2:00 PM", service: "Move in Clean", status: "pending" },
-        { id: 4, postcode: "G10AS",  customer: "David Smith", address: "33 Baker Street", time: "Tomorrow, 9:00 AM", service: "Regular Clean", status: "confirmed" },
-        { id: 5, postcode: "B10AS", customer: "Lisa Taylor", address: "18 Oxford Street", time: "Tomorrow, 11:00 AM", service: "Deep Clean", status: "cancelled" }
+        { id: 1, postcode: "G10AS", cleanerEmail:'tina@gmail.com', cleaner: 'Sam Boy', customer: "Sarah Johnson", address: "25 Park Lane, London", date: '3 months ago', time: "Today, 10:00 AM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "2h 45m", estimatedAmount: 45.76 },
+        { id: 2, postcode: "O10AS", cleanerEmail:'ben@gmail.com',  cleaner: 'Joe Guy', customer: "Michael Brown", address: "42 Kensington High St", date: '6 months ago', time: "Today, 12:30 PM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "1h 20m", estimatedAmount: 16.99  },
+        { id: 3, postcode: "W10AR", cleanerEmail:'gin@gmail.com', cleaner: 'Jane Dia',  customer: "Emma Wilson", address: "7 Chelsea Bridge Rd", date:'9 months ago', time: "Today, 2:00 PM", nature: 'Medium', plan: "Subscription", status: "pending", duration: "45m", estimatedAmount: 62.00  },
+        { id: 4, postcode: "G10AS", cleanerEmail:'pin@gmail,com', cleaner: 'Samantha Bay',  customer: "David Smith", address: "33 Baker Street", date:'1 year ago', time: "Tomorrow, 9:00 AM", nature: 'Medium', plan: "One-off", status: "confirmed", duration: "3h 55m", estimatedAmount: 95.12  },
+        { id: 5, postcode: "B10AS", cleanerEmail:'hjj@gmail.com', cleaner: 'June Far', customer: "Lisa Taylor", address: "18 Oxford Street", date:'3 weeks ago', time: "Tomorrow, 11:00 AM", nature: 'Heavy', plan: "One-off", status: "cancelled", duration: "4h 05m", estimatedAmount: 25.06  }
     ];
 
+    const [allBookingData, setAllBookingData] = useState(bookings);
+    const [todayBooking, setTodayBooking] = useState(bookings);
+    const [last7DaysBooking, setLast7DaysBooking] = useState([]);
+    const [clientHistory, setClientHistory] = useState(bookings);
+
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState(null);
+    const [email, setEmail] = useState("");
+    const [pageCount, setPageCount] = useState(0);
+    const [currentBookings, setCurrentBookings] = useState(allBookingData.length);
+    const [exhausted , setExhausted] = useState(false);
+    const [exhaustedToday, setExhaustedToday] = useState(false);
+    const [exhausted7Days, setExhausted7Days] = useState(false);
+    const [customer, setCustomer] = useState('');
+    const [cleanerEmail, setCleanerEmail] = useState('');
+    const [bookingIdForReview, setBookingIdForReview] = useState(-1);
+    const [rating, setRating] = useState(1);
+    const [review, setReview] = useState('');
+    const [bgColor, setBgColor] = useState('red');
+
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user === null || user === undefined) {
+            return;
+        }
+        setEmail(user.email)
+        if (user === 'client') {
+            setLoading(true);
+            const data = {email: user.email, limit: 20, offset: allBookingData.length};
+            api.post('api/booking/customer-active-order', data)
+                .then((response) => {
+                    const { bookings } = response.data;
+                    if (bookings) {
+                        const allBooking = [];
+                        const newData = [];
+                        newData.push(...bookings);
+                        if (newData.length > 0) {
+                            allBooking.push(...allBookingData);
+                            allBooking.push(...newData);
+                            setAllBookingData(allBooking);
+                            setExhausted(false);
+                        }
+                        else {
+                            setExhausted(true);
+                        }
+                    }
+                    else {
+                        setMessage("No active bookings found");
+                        setExhausted(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.status.data);
+                    setMessage("Error while fetching booking data.");
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+    }, [pageCount])
+
+    useEffect(() => {
+        if (user === 'admin') {
+            setLoading(true);
+            const data = {limit: 20, offset: todayBooking.length};
+            api.post('api/booking/today', data)
+                .then((res) => {
+                    const { bookings } = res.data;
+                    if (bookings) {
+                        const allBooking = [];
+                        const newData = [];
+                        newData.push(...bookings);
+                        if (newData.length > 0) {
+                            allBooking.push(...allBookingData);
+                            allBooking.push(...newData);
+                            setTodayBooking(allBooking);
+                            setExhaustedToday(false);
+                        }
+                        else {
+                            setExhaustedToday(true);
+                        }
+                    }
+                    else {
+                        setMessage("No active bookings found for today");
+                        setExhaustedToday(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.status.data);
+                    setMessage("Error while fetching booking data.");
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+    }, [pageCount])
+
+    useEffect(() => {
+        if (user === 'admin') {
+            setLoading(true);
+            const data = {limit: 20, offset: last7DaysBooking.length};
+            api.post('api/booking/last-seven-days', data)
+                .then((res) => {
+                    const { bookings } = res.data;
+                    if (bookings) {
+                        const allBooking = [];
+                        const newData = [];
+                        newData.push(...bookings);
+                        if (newData.length > 0) {
+                            allBooking.push(...allBookingData);
+                            allBooking.push(...newData);
+                            setLast7DaysBooking(allBooking);
+                            setExhausted7Days(false);
+                        }
+                        else {
+                            setExhausted7Days(true);
+                        }
+                    }
+                    else {
+                        setMessage("No active bookings found for today");
+                        setExhausted7Days(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.status.data);
+                    setMessage("Error while fetching booking data.");
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+    }, [pageCount])
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (user === 'client') {
+                    if (!loading && !exhausted) {
+                        setPageCount(prev => prev + 1);
+                    }
+                }
+                if (user === 'admin') {
+                    if (!loading && !exhausted) {
+                        setPageCount(prev => prev + 1);
+                    }
+                    if (!loading && !exhausted) {
+                        setPageCount(prev => prev + 1);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loading]);
+
+    useEffect(() => {
+        const resetMessage = () => {
+            setMessage(null);
+            setBgColor('red')
+        }
+
+        setTimeout(()=> resetMessage(), 5000);
+
+    }, [message]);
+
+    const handleSubmit = async (id) => {
+        if (!email) {
+            return;
+        }
+        setLoading(true);
+        setMessage(null);
+        if (cancellable) {
+            api.post('api/booking/cancel', {email: email, id: id})
+                .then((response) => {
+                    const { success } = response.data;
+                    if (success) {
+                        setPageCount(pageCount + 1);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setMessage("Error while fetching booking data.");
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+    }
+
+    const renderNunber = (id) => {
+        if (id.toString().length === 1) {
+            return `FC000${id}`
+        }
+        if (id.toString().length === 2) {
+            return `FC00${id}`
+        }
+        if (id.toString().length === 3) {
+            return `FC0${id}`
+        }
+        return `FC${id}`
+    }
+
+    const renderStars = (rating) => {
+        const stars = [];
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+
+        for (let i = 1; i <= 5; i++) {
+            if (i <= fullStars) {
+                stars.push(<FaStar style={{width:'15px'}} key={i} className="star filled" />);
+            } else if (i === fullStars + 1 && hasHalfStar) {
+                stars.push(<FaStar style={{width:'15px'}} key={i} className="star half-filled" />);
+            } else {
+                stars.push(<FaRegStar style={{width:'15px'}} key={i} className="star" />);
+            }
+        }
+        return stars;
+    };
+
+    const writeReview = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        const reviewData = { customer: customer, cleanerEmail: cleanerEmail, review: review , rating: rating };
+        console.log(reviewData);
+        try {
+            const response = await api.post('/api/reviews', reviewData)
+            const { success} = response.data;
+            if (success) {
+                setBgColor('green');
+                setMessage("Review sent successful");
+            }
+        } catch (error) {
+          //  console.log(error);
+            setMessage("Error occured while sending review");
+        } finally {
+            setLoading(false);
+            setReview('')
+        }
+    }
+
+    const goToCleanerProfile = (email, cleaner) => {
+        window.open(`/cleanerprofilepage?cleaner=${encodeURIComponent(cleaner)}&email=${encodeURIComponent(email)}`, "_blank");
+    }
+
     return (
-        <div style={{
+        <div className={'support-page'} style={{
             display: 'flex',
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }}>
-            <div className="recent-bookings card">
-                <div className="card-header">
-                    <h2 style={{color:'navy'}}>Recent Bookings</h2>
-                    <button className="btn-view-all" style={{color:'red'}}>View All</button>
-                </div>
-                <div className="card-body">
-                    <div className="grid-container">
-                        {bookings.map(booking => (
-                            <div key={booking.id} className="service-card">
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                    <FaHome className="icon-small" />
-                                    <h3>{booking.customer}</h3>
-                                </div>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                    <FaMapMarkerAlt className="icon-small"/>
-                                    <p>{booking.address}</p>
-                                </div>
-
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                    <FaClock className="icon-small" />
-                                    <p> {booking.time}</p>
-                                </div>
-                                <span className={`booking-service ${booking.service.toLowerCase().replace(' ', '-')}`}>{booking.service}</span>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                    <span>{booking.status}</span>
-                                    <div className={`booking-status ${booking.status}`} >
-                                        {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
-                                        {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'yellow'}} />}
-                                        {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
-
-                                    </div>
-                                </div>
+            {message && <label style={{backgroundColor: bgColor, color:'white'}}>{message}</label>}
+            {user === 'client' &&
+                <div>
+                    {!history && (<div>
+                        <div className="recent-bookings card">
+                            <div className="card-header">
+                                <h2 className={'experience-text'} style={{color:'navy'}}>Active booking</h2>
+                                {allBookingData.length > 0 && <button className="btn-view-all" style={{color:'red'}}>View All</button>}
                             </div>
-                        ))}
-                    </div>
+                            {allBookingData.length > 0 &&  <div className="card-body">
+                                <div className="grid-container">
+                                    {allBookingData.map(booking => (
+                                        <div key={booking.id} className="service-card">
+                                            <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <FaHome className="icon-small" />
+                                                <h3>{booking.customer}</h3>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <FaMapMarkerAlt className="icon-small"/>
+                                                <p>{booking.address}</p>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <FaClock className="icon-small" />
+                                                <p> {booking.time}</p>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
+                                                    {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
+                                                    {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'lightpink'}} />}
+                                                    {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
+                                                    <p>Status</p>
+                                                </div>
+                                                <p style={{textAlign:'end'}}>{booking.status}</p>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <p>Amount</p>
+                                                <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <p>Duration</p>
+                                                <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
+                                            </div>
+
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <h4>{booking.plan}</h4>
+                                                <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :
+                                                    booking.nature === 'Medium' ? {color:'lightpink', textAlign:'end'}: {color:'red', textAlign:'end'}}>
+                                                    {booking.nature}
+                                                </p>
+                                            </div>
+
+                                            <button onClick={() => handleSubmit(booking.id)} className="btn btn-primary"
+                                                    style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
+                                                        !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
+                                                            {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
+                                                    disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading)}>
+                                                {cancellable ? 'Cancel booking' : 'Assign cleaner'}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div> }
+                        </div>
+                        {(!loading && allBookingData.length <= 0) && <div style={{marginLeft:'30px'}}><p>No active booking data was found</p></div>}
+                    </div>)}
+                    {history && (<div>
+                        <div className="recent-bookings card">
+                            <div className="card-header">
+                                <h2 className={'experience-text'} style={{color:'navy'}}>History</h2>
+                                {clientHistory.length > 0 && <button className="btn-view-all" style={{color:'red'}}>View All</button>}
+                            </div>
+                            {clientHistory.length > 0 &&  <div className="card-body">
+                                <div className="grid-container">
+                                    {allBookingData.map(booking => (
+                                        <div key={booking.id} className="service-card">
+                                            <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <FaHome className="icon-small" />
+                                                <h3>{booking.customer}</h3>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <FaMapMarkerAlt className="icon-small"/>
+                                                <p>{booking.address}</p>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <FaClock className="icon-small" />
+                                                <p> {booking.date}</p>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
+                                                    {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
+                                                    {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'lightpink'}} />}
+                                                    {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
+                                                    <p>Status</p>
+                                                </div>
+                                                <p style={{textAlign:'end'}}>{booking.status}</p>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <p>Amount</p>
+                                                <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <p>Duration</p>
+                                                <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
+                                            </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                                <p>{booking.cleaner}</p>
+                                                {bookingIdForReview !== booking.id && <FaPen style={{width:'30px'}} onClick={bookingIdForReview === -1 ? () => {setBookingIdForReview(booking.id); setCleanerEmail(booking.cleanerEmail); setCustomer(booking.customer)}: null} />}
+                                                {bookingIdForReview === booking.id && <FaTimes style={{width:'30px'}} onClick={() => {setBookingIdForReview(-1); setReview(''); setRating(1)}} />}
+                                                <FaUserTie onClick={() => goToCleanerProfile(booking.cleanerEmail, booking.customer)} size={20} style={{width:'30px', color:'dodgerblue'}} />
+                                            </div>
+                                            {booking.id === bookingIdForReview && <div>
+                                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom:'10px'}}>
+                                                    <p>Rating: {rating}</p>
+                                                    <FaArrowCircleLeft size={20} style={{width:'30px', color:'blue'}} onClick={rating > 1 ? () => setRating(rating - 1) : null}/>
+                                                    <FaArrowCircleRight size={20} style={{width:'30px', color:'blue'}} onClick={rating < 5 ? () => setRating(rating + 1) : null} />
+                                                </div>
+                                                <textarea style={{backgroundColor:'linen', color:'black'}} rows={5} value={review} onChange={(e) => setReview(e.target.value)}  name={'review'}/>
+                                                <button onClick={writeReview}
+                                                        style={{borderRadius:'30px', marginTop:'6px'}}
+                                                        className={'submit-button'}
+                                                        disabled={(booking.id !== bookingIdForReview || booking.status === 'pending'
+                                                            || booking.status === 'cancelled' || loading || review === '')}>
+                                                    Write review
+                                                </button>
+                                            </div>}
+
+                                        </div>
+                                    ))}
+                                </div>
+                            </div> }
+                        </div>
+                        {(!loading && clientHistory.length <= 0) && <div style={{marginLeft:'30px'}}><p>No booking history was found</p></div>}
+                    </div>)}
                 </div>
-            </div>
+            }
+            {user === 'admin' && <div>
+                <div className="recent-bookings card">
+                    <div className="card-header">
+                        <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Recent Bookings</h2>
+                        {todayBooking.length > 0 && <button className="btn-view-all" style={{color:'red'}}>View All</button>}
+                    </div>
+                    {todayBooking.length > 0 &&  <div className="card-body">
+                        <div className="grid-container">
+                            {todayBooking.map(booking => (
+                                <div key={booking.id} className="service-card">
+                                    <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <FaHome className="icon-small" />
+                                        <h3>{booking.customer}</h3>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <FaMapMarkerAlt className="icon-small"/>
+                                        <p>{booking.address}</p>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <FaClock className="icon-small" />
+                                        <p> {booking.time}</p>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
+                                            {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
+                                            {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'lightpink'}} />}
+                                            {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
+                                            <p>Status</p>
+                                        </div>
+                                        <p style={{textAlign:'end'}}>{booking.status}</p>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <p>Amount</p>
+                                        <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <p>Duration</p>
+                                        <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
+                                    </div>
+
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <h4>{booking.plan}</h4>
+                                        <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :
+                                            booking.nature === 'Medium' ? {color:'lightpink', textAlign:'end'}: {color:'red', textAlign:'end'}}>
+                                            {booking.nature}
+                                        </p>
+                                    </div>
+
+                                    <button onClick={() => handleSubmit(booking.id)} className="btn btn-primary"
+                                            style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
+                                                !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
+                                                    {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
+                                            disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading)}>
+                                        {cancellable ? 'Cancel booking' : 'Assign cleaner'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>}
+                    {(!loading && todayBooking.length <= 0) && <div><p>No active booking for today was found</p></div>}
+                </div>
+                <div className="recent-bookings card">
+                    <div className="card-header">
+                        <h2 className={'experience-text'} style={{color:'navy'}}>Last 7 days Bookings</h2>
+                        {last7DaysBooking.length > 0 &&  <button className="btn-view-all" style={{color:'red'}}>View All</button> }
+                    </div>
+                    {last7DaysBooking.length > 0 && <div className="card-body">
+                        <div className="grid-container">
+                            {last7DaysBooking.map(booking => (
+                                <div key={booking.id} className="service-card">
+                                    <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <FaHome className="icon-small" />
+                                        <h3>{booking.customer}</h3>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <FaMapMarkerAlt className="icon-small"/>
+                                        <p>{booking.address}</p>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <FaClock className="icon-small" />
+                                        <p> {booking.time}</p>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
+                                            {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
+                                            {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'lightpink'}} />}
+                                            {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
+                                            <p>Status</p>
+                                        </div>
+                                        <p style={{textAlign:'end'}}>{booking.status}</p>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <p>Amount</p>
+                                        <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
+                                    </div>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <p>Duration</p>
+                                        <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
+                                    </div>
+
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                        <h4>{booking.plan}</h4>
+                                        <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :
+                                            booking.nature === 'Medium' ? {color:'lightpink', textAlign:'end'}: {color:'red', textAlign:'end'}}>
+                                            {booking.nature}
+                                        </p>
+                                    </div>
+
+                                    <button onClick={() => handleSubmit(booking.id)} className="btn btn-primary"
+                                            style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
+                                                !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
+                                                    {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
+                                            disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading)}>
+                                        {cancellable ? 'Cancel booking' : 'Assign cleaner'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div> }
+                    {(!loading && last7DaysBooking.length <= 0) && <div style={{marginLeft:'30px'}}><p>No record found for last 7 days</p></div>}
+                </div>
+            </div>}
+            {loading && (<div><p>Loading data...</p></div>)}
         </div>
     );
 };
