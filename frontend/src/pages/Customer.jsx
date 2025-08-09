@@ -20,7 +20,7 @@ import Bookings from './Bookings.jsx';
 const Customer = () => {
     const navigate = useNavigate();
 
-    const topNavItems = ['Active Booking', 'History'];
+    const topNavItems = ['Active', 'History'];
     const [topItems, setTopItems] = useState(topNavItems);
     const [activeTopMenu, setActiveTopMenu] = useState(topItems[0]);
 
