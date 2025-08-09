@@ -55,7 +55,7 @@ const Customer = () => {
     const bottomNavItems = [
         {id: 1, name: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}/>},
-        {id: 2, name: 'Booking', items: ['Active Booking', 'History'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
+        {id: 2, name: 'Booking', items: ['Active', 'History'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
         {id: 4, name: 'Support', items: ['Live chat', 'Contact us'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
