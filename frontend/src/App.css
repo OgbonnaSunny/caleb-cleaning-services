@@ -6495,6 +6495,7 @@ tr:hover {
 
   .chart-wrapper {
     height: 250px;
+    width: 100%;
   }
 }
 

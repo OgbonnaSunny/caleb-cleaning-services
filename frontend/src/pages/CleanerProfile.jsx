@@ -794,29 +794,29 @@ const CleanerProfile = () => {
             };
 
             return (
-                <div style={{display: 'flex', flexDirection: 'row', flex:'2.5'}}>
-                    <select value={startDay} onChange={handleStartChange}
-                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
-                        <option value="">Day</option>
-                        {days.map(day => (
-                            <option key={`start-${day}`} value={day}>
-                                {day}
-                            </option>
-                        ))}
-                    </select>
-
-                    <span style={{width:'10px', marginRight:'8px', marginLeft:'5px', marginTop:'5px'}}> to </span>
-
-                    <select value={endDay} onChange={handleEndChange}
-                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
-                        <option value="">Day</option>
-                        {days.map(day => (
-                            <option key={`end-${day}`} value={day} disabled={day < startDay}>
-                                {day}
-                            </option>
-                        ))}
-                    </select>
-
+                <div style={{display: 'flex', flexDirection: 'row', flex:'2.5', gap:'5px'}}>
+                    <label>From
+                        <select value={startDay} onChange={handleStartChange}
+                                style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                            <option value="">Day</option>
+                            {days.map(day => (
+                                <option key={`start-${day}`} value={day}>
+                                    {day}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label>To
+                        <select value={endDay} onChange={handleEndChange}
+                                style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                            <option value="">Day</option>
+                            {days.map(day => (
+                                <option key={`end-${day}`} value={day} disabled={day < startDay}>
+                                    {day}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
             );
         }
