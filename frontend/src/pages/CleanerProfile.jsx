@@ -757,6 +757,70 @@ const CleanerProfile = () => {
             }));
         };
 
+        const [error, setError] = useState('');
+
+        function CustomDayRangePicker() {
+            const [startDay, setStartDay] = useState(3);
+            const [endDay, setEndDay] = useState(5);
+
+            const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+            const handleStartChange = (e) => {
+                const newStart = Number(e.target.value);
+                if (newStart <= 0) {
+                    setStartDay(null);
+                    return;
+                }
+                setStartDay(newStart);
+                if (newStart > endDay) {
+                    setError('Start day cannot be after end day');
+                } else {
+                    setError('');
+                }
+            };
+
+            const handleEndChange = (e) => {
+                const newEnd = Number(e.target.value);
+                if (newEnd <= 0) {
+                    setEndDay(null)
+                    return;
+                }
+                setEndDay(newEnd);
+                if (newEnd < startDay) {
+                    setError('End day cannot be before start day');
+                } else {
+                    setError('');
+                }
+            };
+
+            return (
+                <div style={{display: 'flex', flexDirection: 'row', flex:'2.5'}}>
+                    <select value={startDay} onChange={handleStartChange}
+                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                        <option value="">Day</option>
+                        {days.map(day => (
+                            <option key={`start-${day}`} value={day}>
+                                {day}
+                            </option>
+                        ))}
+                    </select>
+
+                    <span style={{width:'10px', marginRight:'8px', marginLeft:'5px', marginTop:'5px'}}> to </span>
+
+                    <select value={endDay} onChange={handleEndChange}
+                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                        <option value="">Day</option>
+                        {days.map(day => (
+                            <option key={`end-${day}`} value={day} disabled={day < startDay}>
+                                {day}
+                            </option>
+                        ))}
+                    </select>
+
+                </div>
+            );
+        }
+
         function CustomDatePicker() {
             const [year, setYear] = useState('');
             const [month, setMonth] = useState('');
@@ -792,11 +856,7 @@ const CleanerProfile = () => {
                         <option value="">Month</option>
                         {months.map(m => <option style={{backgroundColor:'#f2f2f2'}} key={m.id} value={m.name}>{m.name}</option>)}
                     </select>
-                    <select value={day} onChange={(e) => setDay(e.target.value)}
-                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', 'flex':'1'}}>
-                        <option value="">Day</option>
-                        {days.map(d => <option key={d} style={{backgroundColor:'#f2f2f2'}} value={d}>{d}</option>)}
-                    </select>
+                    <CustomDayRangePicker />
                 </div>
             );
         }
@@ -818,7 +878,10 @@ const CleanerProfile = () => {
                             <p style={{color:'darkred'}}>£{stats.pendingIncome.toFixed(2)}</p>
                         </div>
                     </div>
-                    <CustomDatePicker />
+                    <div className="stat-card">
+                        <CustomDatePicker />
+                        {error && <div style={{ color: 'red' }}>{error}</div>}
+                    </div>
                 </header>
 
                 <nav className="dashboard-nav">
