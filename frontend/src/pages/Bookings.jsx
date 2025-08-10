@@ -21,10 +21,10 @@ import { useNavigate } from 'react-router-dom';
 const Bookings = ( {cancellable =  false, user, history }) => {
     const navigate = useNavigate();
     const bookings = [
-        { id: 1, postcode: "G10AS", cleanerEmail:'tina@gmail.com', cleaner: 'Sam Boy', customer: "Sarah Johnson", address: "25 Park Lane, London", date: '3 months ago', time: "Today, 10:00 AM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "2h 45m", estimatedAmount: 45.76 },
-        { id: 2, postcode: "O10AS", cleanerEmail:'ben@gmail.com',  cleaner: 'Joe Guy', customer: "Michael Brown", address: "42 Kensington High St", date: '6 months ago', time: "Today, 12:30 PM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "1h 20m", estimatedAmount: 16.99  },
-        { id: 3, postcode: "W10AR", cleanerEmail:'gin@gmail.com', cleaner: 'Jane Dia',  customer: "Emma Wilson", address: "7 Chelsea Bridge Rd", date:'9 months ago', time: "Today, 2:00 PM", nature: 'Medium', plan: "Subscription", status: "pending", duration: "45m", estimatedAmount: 62.00  },
-        { id: 4, postcode: "G10AS", cleanerEmail:'pin@gmail,com', cleaner: 'Samantha Bay',  customer: "David Smith", address: "33 Baker Street", date:'1 year ago', time: "Tomorrow, 9:00 AM", nature: 'Medium', plan: "One-off", status: "confirmed", duration: "3h 55m", estimatedAmount: 95.12  },
+        { id: 1, postcode: "G10AS", cleanerEmail:'ogbonnasundaycy@gmail.com', cleaner: 'Sunday Ogbonna', customer: "Sarah Johnson", address: "25 Park Lane, London", date: '3 months ago', time: "Today, 10:00 AM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "2h 45m", estimatedAmount: 45.76 },
+        { id: 2, postcode: "O10AS", cleanerEmail:'ogbonnasundaycy@gmail.com',  cleaner: 'Sunday Ogbonna', customer: "Michael Brown", address: "42 Kensington High St", date: '6 months ago', time: "Today, 12:30 PM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "1h 20m", estimatedAmount: 16.99  },
+        { id: 3, postcode: "W10AR", cleanerEmail:'ogbonnasundaycy@gmail.com', cleaner: 'Jane Dia',  customer: "Emma Wilson", address: "7 Chelsea Bridge Rd", date:'9 months ago', time: "Today, 2:00 PM", nature: 'Medium', plan: "Subscription", status: "pending", duration: "45m", estimatedAmount: 62.00  },
+        { id: 4, postcode: "G10AS", cleanerEmail:'ogbonnasundaycy@gmail.com', cleaner: 'Samantha Bay',  customer: "David Smith", address: "33 Baker Street", date:'1 year ago', time: "Tomorrow, 9:00 AM", nature: 'Medium', plan: "One-off", status: "confirmed", duration: "3h 55m", estimatedAmount: 95.12  },
         { id: 5, postcode: "B10AS", cleanerEmail:'hjj@gmail.com', cleaner: 'June Far', customer: "Lisa Taylor", address: "18 Oxford Street", date:'3 weeks ago', time: "Tomorrow, 11:00 AM", nature: 'Heavy', plan: "One-off", status: "cancelled", duration: "4h 05m", estimatedAmount: 25.06  }
     ];
 
@@ -392,23 +392,23 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <p>{booking.cleaner}</p>
-                                                {bookingIdForReview !== booking.id && <FaPen style={{width:'30px', marginBottom:'15px'}} onClick={bookingIdForReview === -1 ? () => {setBookingIdForReview(booking.id); setCleanerEmail(booking.cleanerEmail); setCustomer(booking.customer)}: null} />}
+                                                {bookingIdForReview !== booking.id && <FaPen style={{width:'30px', marginBottom:'18px'}} onClick={bookingIdForReview === -1 ? () => {setBookingIdForReview(booking.id); setCleanerEmail(booking.cleanerEmail); setCustomer(booking.customer)}: null} />}
                                                 {bookingIdForReview === booking.id && <FaTimes style={{width:'30px'}} onClick={() => {setBookingIdForReview(-1); setReview(''); setRating(1)}} />}
                                                 <FaUserTie onClick={() => goToCleanerProfile(booking.cleanerEmail, booking.customer)} size={30} style={{width:'30px', color:'dodgerblue', marginLeft: '10%'}} />
                                             </div>
                                             {booking.id === bookingIdForReview && <div>
                                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom:'10px'}}>
                                                     <p>Rating: {rating}</p>
-                                                    <FaArrowCircleLeft size={20} style={{width:'30px', color:'blue'}} onClick={rating > 1 ? () => setRating(rating - 1) : null}/>
+                                                    <FaArrowCircleLeft size={20} style={{width:'30px', color:'blue', marginRight:'15px'}} onClick={rating > 1 ? () => setRating(rating - 1) : null}/>
                                                     <FaArrowCircleRight size={20} style={{width:'30px', color:'blue'}} onClick={rating < 5 ? () => setRating(rating + 1) : null} />
                                                 </div>
-                                                <textarea style={{backgroundColor:'linen', color:'black'}} rows={5} value={review} onChange={(e) => setReview(e.target.value)}  name={'review'}/>
+                                                <textarea placeholder={'write review'} style={{backgroundColor:'linen', color:'black', padding:'12px'}} rows={5} value={review} onChange={(e) => setReview(e.target.value)}  name={'review'}/>
                                                 <button onClick={writeReview}
                                                         style={{borderRadius:'30px', marginTop:'6px'}}
                                                         className={'submit-button'}
                                                         disabled={(booking.id !== bookingIdForReview || booking.status === 'pending'
                                                             || booking.status === 'cancelled' || loading || review === '')}>
-                                                    Write review
+                                                    Save review
                                                 </button>
                                             </div>}
 

@@ -16,6 +16,7 @@ import TimePicker from 'react-time-picker';
 import { useForm } from 'react-hook-form';
 import ProfilePage from './CleanerProfilePage.jsx';
 
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const CleanerProfile = () => {
@@ -173,6 +174,7 @@ const CleanerProfile = () => {
     const [message, setMessage] = useState('No new orders yet.');
     const [email, setEmail] = useState(null);
     const [cleanerName, setCleanerName] = useState("");
+    const [bio, setBio] = useState('Professional Cleaner');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [myOrders, setMyOrders] = useState([myOrderData]);
     const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
@@ -329,11 +331,17 @@ const CleanerProfile = () => {
         );
     }
 
-
-
     useEffect(() => {
         window.scroll({top: 0, behavior: 'smooth'});
     }, [activeMenu])
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
+            setBio(`Professional ${user.roles.charAt(0).toUpperCase()+user.roles.slice(1)}`);
+        }
+    })
 
     const Finance = () => {
 
@@ -749,27 +757,69 @@ const CleanerProfile = () => {
             }));
         };
 
+        function CustomDatePicker() {
+            const [year, setYear] = useState('');
+            const [month, setMonth] = useState('');
+            const [day, setDay] = useState('');
+
+            const years = Array.from({length: 100}, (_, i) => new Date().getFullYear() - i);
+            const months = Array.from({length: 12}, (_, i) => i + 1);
+            const days = Array.from({length: 31}, (_, i) => i + 1);
+            const months1 = [
+                {id:1, name: 'Jan'},
+                {id:2, name: 'Feb'},
+                {id:3, name: 'Mar'},
+                {id:4, name: 'Apr'},
+                {id:5, name: 'May'},
+                {id:6, name: 'Jun'},
+                {id:7, name: 'Jul'},
+                {id:8, name: 'Aug'},
+                {id:9, name: 'Sep'},
+                {id:10, name: 'Oct'},
+                {id: 11, name: 'Nov'},
+                {id: 12, name: 'Dec'}
+            ]
+
+            return (
+                <div style={{display: 'flex', flexDirection:'row', margin:'10px', gap:'5px', zIndex:'100'}}>
+                    <select value={year} onChange={(e) => setYear(e.target.value)}
+                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                        <option value="">Year</option>
+                        {years.map(y => <option key={y} value={y}>{y}</option>)}
+                    </select>
+
+                    <select value={month} onChange={(e) => setMonth(e.target.value)}
+                     style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                        <option value="">Month</option>
+                        {months1.map(m => <option key={m.id} value={m.name}>{m.name}</option>)}
+                    </select>
+                    <select value={day} onChange={(e) => setDay(e.target.value)}
+                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', 'flex':'1'}}>
+                        <option value="">Day</option>
+                        {days.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                </div>
+            );
+        }
+
         return (
             <div className="finance-dashboard">
                 <header className="dashboard-header">
                     <div className="user-info">
-                        <h1>{userData.name}</h1>
-                        <p>{userData.role}</p>
+                        <h1 className={'experience-text'}>{cleanerName}</h1>
+                        <p>{bio}</p>
                     </div>
                     <div className="quick-stats">
                         <div className="stat-card">
-                            <h3>Earnings</h3>
-                            <p>£{stats.netIncome.toFixed(2)}</p>
+                            <h3 style={{color:'darkgreen'}}>Earnings</h3>
+                            <p style={{color:'darkgreen'}}>£{stats.netIncome.toFixed(2)}</p>
                         </div>
                         <div className="stat-card">
-                            <h3>Pending</h3>
-                            <p>£{stats.pendingIncome.toFixed(2)}</p>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Rate</h3>
-                            <p>£{userData.hourlyRate}/hr</p>
+                            <h3 style={{color:'darkred'}}>Pending</h3>
+                            <p style={{color:'darkred'}}>£{stats.pendingIncome.toFixed(2)}</p>
                         </div>
                     </div>
+                    <CustomDatePicker />
                 </header>
 
                 <nav className="dashboard-nav">
@@ -790,12 +840,6 @@ const CleanerProfile = () => {
                         onClick={() => setActiveTab('expenses')}
                     >
                         Expenses
-                    </button>
-                    <button
-                        className={activeTab === 'tax' ? 'active' : ''}
-                        onClick={() => setActiveTab('tax')}
-                    >
-                        Tax
                     </button>
                 </nav>
 
@@ -1576,6 +1620,7 @@ const CleanerProfile = () => {
 
     const [dataForUpdate, setDataForUpdate] = useState('');
     const [runCounter, setRunCounter] = useState(0);
+
     const SettingsPage = () => {
 
         const handlePreferredAreaChange = (area) => {

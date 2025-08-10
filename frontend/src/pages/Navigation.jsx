@@ -119,6 +119,13 @@ const Navigation = () => {
         if (location.pathname === '/') {
             setActiveTab('/overview');
             document.title = "Overview";
+            function replaceLastSegment(newSegment) {
+                const path = window.location.pathname;
+                const segments = path.split('/');
+                segments[segments.length - 1] = newSegment;
+                return segments.join('/').replace(/[ ,]+/g, '-');
+            }
+            window.history.replaceState(null, '', replaceLastSegment('overview'));
         }
         else {
             for (let i = 0; i < navLinks.length; i++) {

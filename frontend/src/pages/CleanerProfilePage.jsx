@@ -180,6 +180,12 @@ const ProfilePage = ({emailFromProile}) => {
     const [specialties, setSpecialties] = useState(["Eco-friendly cleaning", "Pet-friendly products", "Stain removal"]);
     const [languages, setLanguages] = useState(["English"]);
     const [services, setServices] = useState(["House Cleaning", "Office Cleaning", "Deep Cleaning", "Carpet Cleaning"]);
+    const [five, setFive] = useState(0);
+    const [four, setFour] = useState(0);
+    const [three, setThree] = useState(0);
+    const [two, setTwo] = useState(0);
+    const [one, setOne] = useState(0);
+    const [loadingReviews, setLoadingReviews] = useState(false);
 
     const renderStars = (rating) => {
         const stars = [];
@@ -217,68 +223,109 @@ const ProfilePage = ({emailFromProile}) => {
     }, [firstName]);
 
     useEffect(() => {
-        const fetchCleanerData = () => {
-            if (email === null || email === undefined) {
-                return;
-            }
-            setIsLoading(true);
-            api.post('/api/reviews/record', {email: email})
-                .then(response => {
-                    const { allReviews } = response.data;
-                    if (allReviews) {
-
-                    }
-                    else {
-                        setSuccessMessage('Error occured while retrieving reviews');
-                        setBgColor('red');
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                    setSuccessMessage('Error while fetching reviews');
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                })
-        };
-        fetchCleanerData()
-    }, [email]);
-
-    useEffect(() => {
         if (emailFromProile !== null && emailFromProile !== undefined) {
             setEmail(emailFromProile);
         }
     }, [emailFromProile]);
 
+    function timeAgo(date) {
+        const now = new Date();
+        const prevDate = new Date(date);
+        const seconds = Math.floor((now - prevDate) / 1000);
+
+        let interval = Math.floor(seconds / 31536000);
+        if (interval >= 1) {
+            return interval === 1 ? '1 year ago' : `${interval} years ago`;
+        }
+
+        interval = Math.floor(seconds / 2592000);
+        if (interval >= 1) {
+            return interval === 1 ? '1 month ago' : `${interval} months ago`;
+        }
+
+        interval = Math.floor(seconds / 86400);
+        if (interval >= 1) {
+            return interval === 1 ? '1 day ago' : `${interval} days ago`;
+        }
+
+        interval = Math.floor(seconds / 3600);
+        if (interval >= 1) {
+            return interval === 1 ? '1 hour ago' : `${interval} hours ago`;
+        }
+
+        interval = Math.floor(seconds / 60);
+        if (interval >= 1) {
+            return interval === 1 ? '1 minute ago' : `${interval} minutes ago`;
+        }
+
+        return 'just now';
+    }
+
+    const reviewPercentage = (ratingCount, ratingTotalCount) => {
+        const perc = (Number(ratingCount) / Number(ratingTotalCount)) * 100;
+        return Math.round(perc)
+    }
+
+
     useEffect(() => {
-         const fetchCleanerData = () => {
+        if (reviews.length > 0) {
+            setLoadingReviews(true);
+            const occurence = reviews.reduce((acc, review) => {
+                const rating = review.rating;
+                acc[rating] = (acc[rating] || 0) + 1;
+                return acc;
+            }, {1: 0, 2: 0, 3: 0, 4: 0, 5: 0});
+
+            setFive(reviewPercentage(occurence[5], reviews.length));
+            setFour(reviewPercentage(occurence[4], reviews.length));
+            setThree(reviewPercentage(occurence[3], reviews.length));
+            setTwo(reviewPercentage(occurence[2], reviews.length));
+            setOne(reviewPercentage(occurence[1], reviews.length));
+            setLoadingReviews(false);
+        }
+
+    }, [reviews])
+
+
+    useEffect(() => {
+         const fetchCleanerData =  async () => {
              setIsLoading(true);
-             api.post('/api/users/record', {email: email})
-                 .then(response => {
-                     const { user } = response.data;
-                     if (user) {
-                         setFirstName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
-                         setLastName(user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1));
-                         setAddress(user.address);
-                         setPhone(user.phone);
-                         setBio(user.bio);
-                         setProfilePhoto(user.photo_path);
-                         setAvailability(user.available);
-                         setServices(user.workExperience.services);
-                         setSpecialties(user.workExperience.specialities)
-                     }
-                     else {
-                         setSuccessMessage('Error updating user');
-                         setBgColor('red');
-                     }
-                 })
-                 .catch(error => {
-                     console.log(error);
-                     setSuccessMessage('Error fetching profile data')
-                 })
-                 .finally(() => {
-                     setIsLoading(false);
-                 })
+             try {
+                 let response = await api.post('/api/users/record', {email: email});
+                 const { user } = response.data;
+                 if (user) {
+                     setFirstName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
+                     setLastName(user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1));
+                     setAddress(user.address);
+                     setPhone(user.phone);
+                     setBio(user.bio);
+                     setProfilePhoto(user.photo_path);
+                     setAvailability(user.available);
+                     setServices(user.workExperience.services);
+                     setSpecialties(user.workExperience.specialities)
+                 }
+                 else {
+                     setSuccessMessage('Error updating user');
+                     setBgColor('red');
+                 }
+
+                 response = await api.post('/api/reviews/record', {cleanerEmail: email});
+                 const { reviews } = response.data;
+                 if (reviews) {
+                     setReviews(reviews.reviews);
+                     setRating(reviews.value);
+                     setReviewCount(reviews.count);
+                 }
+                 else {
+                     setSuccessMessage('No review record was found');
+                     setBgColor('red');
+                 }
+             } catch(error) {
+                 console.log(error);
+                 setSuccessMessage('Error fetching some profile data')
+             } finally {
+                 setIsLoading(false);
+             }
          };
         if (email !== null || email !== undefined) {
             fetchCleanerData();
@@ -421,8 +468,7 @@ const ProfilePage = ({emailFromProile}) => {
                         </div>
                     )}
 
-                    {activeTab2 === 'services' && (
-                        <div className="services-section">
+                    {activeTab2 === 'services' && (<div className="services-section">
                             <h1 className={'experience-text'}>Services Offered</h1>
                             <div className="services-grid">
                                 {services.map((service, index) => (
@@ -446,108 +492,106 @@ const ProfilePage = ({emailFromProile}) => {
                         </div>
                     )}
 
-                    {activeTab2 === 'reviews' && (
-                        <div>
-                            {reviews.length > 0 &&
-                                <div className="reviews-section">
-                                    <h2>Customer Reviews</h2>
-                                    <div className="review-summary">
-                                        <div className="overall-rating">
-                                            <p className="stars">{renderStars(cleaner.rating)}</p>
-                                            <p className="big-rating">{cleaner.rating}</p>
-                                            <p style={{textAlign:'end'}} className="review-count">{cleaner.reviewCount} reviews</p>
-                                        </div>
+                    {activeTab2 === 'reviews' &&  <div>{!loadingReviews ? <div>
+                        {reviews.length > 0 &&
+                            <div className="reviews-section">
+                                <h2>Customer Reviews</h2>
+                                <div className="review-summary">
+                                    <div className="overall-rating">
+                                        <p className="stars">{renderStars(rating)}</p>
+                                        <p className="big-rating">{rating}</p>
+                                        <p style={{textAlign:'end'}} className="review-count">{reviewCount} reviews</p>
+                                    </div>
 
-                                        <div className="rating-breakdown">
-                                            <div className="rating-bar">
-                                                <span>5 stars</span>
-                                                <div className="bar-container">
-                                                    <div className="bar" style={{ width: '85%' }}></div>
-                                                </div>
-                                                <span>85%</span>
+                                    <div className="rating-breakdown">
+                                        <div className="rating-bar">
+                                            <span>5 stars</span>
+                                            <div className="bar-container">
+                                                <div className="bar" style={{ width: `${five}%` }}></div>
                                             </div>
-                                            <div className="rating-bar">
-                                                <span>4 stars</span>
-                                                <div className="bar-container">
-                                                    <div className="bar" style={{ width: '10%' }}></div>
-                                                </div>
-                                                <span>10%</span>
+                                            <span>{five}%</span>
+                                        </div>
+                                        <div className="rating-bar">
+                                            <span>4 stars</span>
+                                            <div className="bar-container">
+                                                <div className="bar" style={{ width: `${four}%` }}></div>
                                             </div>
-                                            <div className="rating-bar">
-                                                <span>3 stars</span>
-                                                <div className="bar-container">
-                                                    <div className="bar" style={{ width: '3%' }}></div>
-                                                </div>
-                                                <span>3%</span>
+                                            <span>{four}%</span>
+                                        </div>
+                                        <div className="rating-bar">
+                                            <span>3 stars</span>
+                                            <div className="bar-container">
+                                                <div className="bar" style={{ width: `${three}%` }}></div>
                                             </div>
-                                            <div className="rating-bar">
-                                                <span>2 stars</span>
-                                                <div className="bar-container">
-                                                    <div className="bar" style={{ width: '1%' }}></div>
-                                                </div>
-                                                <span>1%</span>
+                                            <span>{three}%</span>
+                                        </div>
+                                        <div className="rating-bar">
+                                            <span>2 stars</span>
+                                            <div className="bar-container">
+                                                <div className="bar" style={{ width: `${two}%` }}></div>
                                             </div>
-                                            <div className="rating-bar">
-                                                <span>1 star</span>
-                                                <div className="bar-container">
-                                                    <div className="bar" style={{ width: '1%' }}></div>
-                                                </div>
-                                                <span>1%</span>
+                                            <span>{two}%</span>
+                                        </div>
+                                        <div className="rating-bar">
+                                            <span>1 star</span>
+                                            <div className="bar-container">
+                                                <div className="bar" style={{ width: `${one}%` }}></div>
                                             </div>
+                                            <span>{one}%</span>
                                         </div>
                                     </div>
-                                    {!showAllReviews &&
-                                        <div className={'grid-container'}>
-                                            {getValues().review.map((review, index) => (
-                                                <div key={index}>
-                                                    {index <= 2 && <div key={review.id} className="review-card">
-                                                        <div className="review-header">
-                                                            <div className="reviewer-info">
-                                                                <h4>Michael Brown</h4>
-                                                                <div className="review-rating">
-                                                                    {renderStars(review.rating)}
-                                                                    <span className="review-date">{review.time}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="review-content">
-                                                            <p>{review.review}</p>
-                                                        </div>
-                                                    </div>  }
-                                                </div>
-                                            ))}
-                                        </div>
-                                    }
-                                    {showAllReviews &&
-                                        <div className={'grid-container'}>
-                                            {getValues().review.map((review, index) => (
-                                                <div key={review.id} className="review-card">
+                                </div>
+                                {!showAllReviews &&
+                                    <div className={'grid-container'}>
+                                        {reviews.map((review, index) => (
+                                            <div key={review.id}>
+                                                {index <= 2 && <div key={review.id} className="review-card">
                                                     <div className="review-header">
                                                         <div className="reviewer-info">
-                                                            <h4>Michael Brown</h4>
+                                                            <h4>{review.customer}</h4>
                                                             <div className="review-rating">
                                                                 {renderStars(review.rating)}
-                                                                <span className="review-date">{review.time}</span>
+                                                                <span className="review-date">{timeAgo(review.time)}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="review-content">
                                                         <p>{review.review}</p>
                                                     </div>
+                                                </div>  }
+                                            </div>
+                                        ))}
+                                    </div>
+                                }
+                                {showAllReviews &&
+                                    <div className={'grid-container'}>
+                                        {reviews.map((review, index) => (
+                                            <div key={review.id} className="review-card">
+                                                <div className="review-header">
+                                                    <div className="reviewer-info">
+                                                        <h4>{review.customer}</h4>
+                                                        <div className="review-rating">
+                                                            {renderStars(review.rating)}
+                                                            <span className="review-date">{timeAgo(review.time)}</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    }
-                                    {getValues().review.length > 3 &&
-                                        <button onClick={() => setShowAllReviews(!showAllReviews)}
-                                                className="view-all-reviews">
-                                            {showAllReviews ? 'View Less Reviews' : 'View All Reviews'}
-                                        </button>
-                                    }
-                                </div>}
-                            {reviews.length <= 0 && <p>No review for {firstName} {lastName} yet </p> }
-                        </div>
-                    )}
+                                                <div className="review-content">
+                                                    <p>{review.review}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                }
+                                {reviews.length > 3 &&
+                                    <button onClick={() => setShowAllReviews(!showAllReviews)}
+                                            className="view-all-reviews">
+                                        {showAllReviews ? 'View Less Reviews' : 'View All Reviews'}
+                                    </button>
+                                }
+                            </div>}
+                        {reviews.length <= 0 && <p>No review for {firstName} {lastName} yet </p> }
+                    </div>  : <p>Loading reviews...</p>}</div>}
                 </div>
             </div>
         </div>
