@@ -763,9 +763,8 @@ const CleanerProfile = () => {
             const [day, setDay] = useState('');
 
             const years = Array.from({length: 100}, (_, i) => new Date().getFullYear() - i);
-            const months = Array.from({length: 12}, (_, i) => i + 1);
             const days = Array.from({length: 31}, (_, i) => i + 1);
-            const months1 = [
+            const months = [
                 {id:1, name: 'Jan'},
                 {id:2, name: 'Feb'},
                 {id:3, name: 'Mar'},
@@ -785,18 +784,18 @@ const CleanerProfile = () => {
                     <select value={year} onChange={(e) => setYear(e.target.value)}
                             style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
                         <option value="">Year</option>
-                        {years.map(y => <option key={y} value={y}>{y}</option>)}
+                        {years.map(y => <option style={{backgroundColor:'#f2f2f2'}} key={y} value={y}>{y}</option>)}
                     </select>
 
                     <select value={month} onChange={(e) => setMonth(e.target.value)}
                      style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
                         <option value="">Month</option>
-                        {months1.map(m => <option key={m.id} value={m.name}>{m.name}</option>)}
+                        {months.map(m => <option style={{backgroundColor:'#f2f2f2'}} key={m.id} value={m.name}>{m.name}</option>)}
                     </select>
                     <select value={day} onChange={(e) => setDay(e.target.value)}
                             style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', 'flex':'1'}}>
                         <option value="">Day</option>
-                        {days.map(d => <option key={d} value={d}>{d}</option>)}
+                        {days.map(d => <option key={d} style={{backgroundColor:'#f2f2f2'}} value={d}>{d}</option>)}
                     </select>
                 </div>
             );
