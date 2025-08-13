@@ -19,15 +19,11 @@ import { Link } from 'react-router-dom'
 const CityFooter = () => {
 
     const customerActions = [
-        { id: "pricing", name: "Pricing", path: "/pricing" },
-        { id: "whats-included", name: "What's included", path: "/what-included" },
-        { id: "blog", name: "Blog" },
         { id: "booking-policy", name: "Booking Policy", path: "/booking-policy" },
         { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation-policy" },
         { id: "terms-conditions", name: "Terms & Conditions", path: "/terms-conditions" },
         { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy-policy" },
         { id: "cookies-policy", name: "Cookies Policy", path: "/cookies-policy" },
-        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean-guarantee" },
         { id: "sitemap", name: "Sitemap", path: "/sitemap" }
     ]
 
@@ -54,31 +50,19 @@ const CityFooter = () => {
         {id:'contact', name: 'Contact us', path:'/contact'},
         {id:'reviews', name: 'Reviews', path:'/reviews'},
     ]
-
-    const cleanerLocations = [
-        { id: 3, name: "Abbey Wood" },
-        { id: 4, name: "Abingdon" },
-        { id: 5, name: "Acton Central" },
-        { id: 6, name: "Addiscombe East" },
-        { id: 16, name: "Balham" },
-        { id: 17, name: "Barking" },
-        { id: 18, name: "Barkingside" },
-        { id: 19, name: "Barnehurst" },
-        { id: 20, name: "Barnes" },
-        { id: 21, name: "Barnet" },
-        { id: 93, name: "Cannon Hill" },
-        { id: 94, name: "Canonbury" },
-        { id: 95, name: "Canons" },
-        { id: 96, name: "Cantelowes" },
-        { id: 166, name: "Dormers Wells" },
-        { id: 167, name: "Downham" },
-        { id: 168, name: "Dudden Hill" },
-        { id: 200, name: "Enfield" },
-        { id: 201, name: "Enfield Highway" },
-        { id: 202, name: "Enfield Lock" },
-        { id: 284, name: "Hatch Lane" },
-        { id: 285, name: "Havering" },
+    const special = [
+        { id: "whats-included", name: "What's included", path: "/services" },
+        { id: "blog", name: "Blog", path: "/blog" },
+        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
+        { id: "pricing", name: "Pricing", path: "/pricing" },
     ]
+
+    const currentLocation = location.pathname
+    const hide = {display:'none'};
+    const show = {display:''};
+    const hideNavbarPaths = ['/pricing', '/blog', '/reclean', '/sitemap']; // Paths where navbar should be hidden
+    const names = ['Pricing', 'Blog', 'Reclean Guarantee', 'Sitemap']
+    const pathIncluded = hideNavbarPaths.includes(location.pathname);
 
     return (
         <footer className="footer">
@@ -86,65 +70,84 @@ const CityFooter = () => {
                 <div className="footer-content">
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>Cleaner locations</h3>
-                        <ul>
-                            <li>
-                                <Link to={`/locations`} style={{color:'aqua', marginTop:'20px'}}>See other cleaner locations</Link>
-                            </li>
+                        <ul style={{color:'grey'}}>
+                            <div style={{display:'flex', alignItems:'center'}}>
+                                <div className={'footer-mark'}></div>
+                                <Link style={{padding:'10px'}} to={`/locations`}>
+                                    See other cleaner locations
+                                </Link>
+                            </div>
                         </ul>
                     </div>
+
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>Our services</h3>
-                        <ul>
+                        <ul style={{color:'grey'}} >
                             {services.map( service => (
-                                <li key={service.id}>
-                                    <Link to={`/services/${service.title}`}>
-                                        <div>
-                                            <p>{service.title}</p>
-                                        </div>
+                                <div key={service.id} style={{display:'flex', alignItems:'center'}}>
+                                    <div className={'footer-mark'}></div>
+                                    <Link style={{padding:'10px'}} to={'/services'}>
+                                        {service.title}
                                     </Link>
-                                </li>
+                                </div>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>For our customers</h3>
-                        <ul>
+                        <ul style={{color:'grey'}} >
                             {customerActions.map(action => (
-                                <li key={action.id}>
-                                    <Link to={action.path}>
-                                        <div>
-                                            <p>{action.name}</p>
-                                        </div>
+                                <div key={action.id} style={{display:'flex', alignItems:'center'}}>
+                                    <div className={'footer-mark'}></div>
+                                    <Link style={{padding:'10px'}} to={action.path}>
+                                        {action.name}
                                     </Link>
-                                </li>
+                                </div>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="footer-section">
+                        <h3 style={{color:'white'}}>Get more insight</h3>
+                        <ul style={{color:'grey'}}>
+                            {special.map(action => (
+                                <div key={action.id} style={pathIncluded && names.includes(action.name)
+                                && action.path === location.pathname ? hide : show}>
+                                    <div style={{display:'flex', alignItems:'center'}}>
+                                        <div className={'footer-mark'}></div>
+                                        <h5 style={{padding:'10px'}}>
+                                            <Link to={action.path}>{action.name}</Link>
+                                        </h5>
+                                    </div>
+                                </div>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>Who we are!</h3>
-                        <ul>
+                        <ul style={{color:'grey'}} >
                             {whoWeAre.map((who) => (
-                                <li key={who.id}>
-                                    <Link to={who.path}>
-                                        <div>
-                                            <p>{who.name}</p>
-                                        </div>
+                                <div key={who.id} style={{display:'flex', alignItems:'center'}}>
+                                    <div className={'footer-mark'}></div>
+                                    <Link style={{padding:'10px'}} to={who.path}>
+                                        {who.name}
                                     </Link>
-                                </li>
+                                </div>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>For cleaners</h3>
-                        <ul>
-                            <li>
-                                <Link to={'/become'}>
-                                    <p>Become a fly cleaner</p>
+                        <ul style={{color:'grey'}} >
+                            <div style={{display:'flex', alignItems:'center'}}>
+                                <div className={'footer-mark'}></div>
+                                <Link style={{padding:'10px'}} to={'/become'}>
+                                    Become a fly cleaner
                                 </Link>
-                            </li>
+                            </div>
                         </ul>
                     </div>
                 </div>

@@ -1856,9 +1856,6 @@ const Checkout = () => {
 
         const customerEmail = customerData.email;
 
-
-        const orderId = await getOrderId();
-
         const revenue = {
             customer: formData.customer,
             dayName: formData.dayName,
@@ -1887,10 +1884,12 @@ const Checkout = () => {
             }
             booking.push(book);
         }
+        console.log(booking);
 
          const bookDetails = {
              bookDate: `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`,
-             orderId: orderId,
+             date: formData.date,
+             today: new Date().toISOString(),
              customer: `${formData.firstName} ${formData.lastName}`,
              payment: formData.totalAmount,
              paymentIntentId: paymentIntentId,
@@ -1974,9 +1973,6 @@ const Checkout = () => {
             const createResponse = await api.post('/api/create-customer', { email: formData.email} );
             const { customerId } = createResponse.data;
 
-            const orderIdResponse = await api.get('/api/order-id')
-            const { order_id } = orderIdResponse.data;
-
             // create payement intent
             const amount = Number(formData.totalAmount) * 100; // converting to pence
             const paymentIntent = await api.post('/api/create-payment-intent', {
@@ -1987,7 +1983,6 @@ const Checkout = () => {
             setClientSecret(paymentIntent.data.clientSecret);
             setCustomerName(customerName);
             setPaymentIntentId(paymentIntent.data.paymentIntentId);
-            setOrderId(order_id);
 
             // 2. Then fetch payment methods - wait until we have customerId
             const paymentResponse = await api.get(`/api/payment-methods/${customerId}`);
@@ -2053,7 +2048,8 @@ const Checkout = () => {
             return;
         }
         setClientSecret(null);
-        fetchData()
+        updateBookingOnDatabase()
+   //     fetchData()
     }
 
     function PaymentHome() {
@@ -2102,7 +2098,7 @@ const Checkout = () => {
 
     function Steps() {
         return(
-            <div className="registration-steps" >
+            <div style={{marginTop:'10px'}} className="registration-steps" >
 
                 <div className={`step ${currentStep === 0 ? 'passive' : currentStep > 0 ? 'active' : ''}`} >
                     <span>0</span>
@@ -3102,62 +3098,63 @@ const Checkout = () => {
     }, [debouncedSave]);
 
 
-    const handleOldRecordChange = (e) => {
-        const change = e.target.checked;
-        if (change === false) {
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setPhone('');
-            setAddress('');
-        }
-        else {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user === null || user === undefined) {
-                setMissingRecord(true);
-            }
-            else {
-                if (!user.firstName || !user.lastName || !user.email || !user.phone || !user.address) {
-                    setMissingRecord(true);
-                }
-            }
-            if (missingRecord) {
-                setFirstName('');
-                setLastName('');
-                setEmail('');
-                setPhone('');
-                setAddress('');
-                setDataMessage('Required record(s) from your data are missing or incomplete. Please  fill the form to continue')
-                return;
-            }
-            setFirstName(user.firstName);
-            setLastName(user.lastName);
-            setEmail(user.email);
-            setPhone(user.phone);
-            setAddress(user.address);
-        }
-        setUseOldRecord(!useOldRecord);
-        setAcknwoledge(false);
-    }
-
     const handleAcknwoledgeChange = (e) => {
         e.preventDefault();
         setAcknwoledge(!acknwoledge);
         setMissingRecord(false);
     }
 
+    const [useOldRecord, setUseOldRecord] = useState(false);
+    const [missingRecord, setMissingRecord] = useState(false);
+    const [oldRecord, setOldRecord] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [dataErrors, setDataErrors] = useState({});
+    const [acknwoledge, setAcknwoledge] = useState(false);
+
     const Data = () => {
-        const [useOldRecord, setUseOldRecord] = useState(false);
-        const [missingRecord, setMissingRecord] = useState(false);
-        const [oldRecord, setOldRecord] = useState('');
-        const [firstName, setFirstName] = useState('');
-        const [lastName, setLastName] = useState('');
-        const [email, setEmail] = useState('');
-        const [phone, setPhone] = useState('');
-        const [address, setAddress] = useState('');
-        const [dataErrors, setDataErrors] = useState({});
-        const [acknwoledge, setAcknwoledge] = useState(false);
         const [dataMessage, setDataMessage] = useState('Required record(s) from your data are missing or incomplete. Please  fill the form to continue');
+
+        const handleOldRecordChange = (e) => {
+            const change = e.target.checked;
+            if (change === false) {
+                setFirstName('');
+                setLastName('');
+                setEmail('');
+                setPhone('');
+                setAddress('');
+            }
+            else {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user === null || user === undefined) {
+                    setMissingRecord(true);
+                }
+                else {
+                    if (!user.firstName || !user.lastName || !user.email || !user.phone || !user.address) {
+                        setMissingRecord(true);
+                    }
+                }
+                if (missingRecord === true) {
+                    setFirstName('');
+                    setLastName('');
+                    setEmail('');
+                    setPhone('');
+                    setAddress('');
+                    setDataMessage('Required record(s) from your data are missing or incomplete. Please  fill the form to continue')
+                    return;
+                }
+                setFirstName(user.firstName);
+                setLastName(user.lastName);
+                setEmail(user.email);
+                setPhone(user.phone);
+                setAddress(user.address);
+            }
+            setUseOldRecord(!useOldRecord);
+            setAcknwoledge(false);
+        }
 
         const validateData = () => {
             let newErrors = {};

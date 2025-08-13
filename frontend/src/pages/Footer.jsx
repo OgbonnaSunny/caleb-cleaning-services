@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Domestic from "../images/domestic.png";
 import Upholstery from "../images/upholstery2.png";
 import Regular from "../images/regular.png";
@@ -131,6 +131,7 @@ const Footer = () => {
     const hideNavbarPaths = ['/pricing', '/blog', '/reclean', '/sitemap']; // Paths where navbar should be hidden
     const names = ['Pricing', 'Blog', 'Reclean Guarantee', 'Sitemap']
     const pathIncluded = hideNavbarPaths.includes(location.pathname);
+
 
     return (
         <footer style={{marginTop:'30px'}} className="footer-banner">

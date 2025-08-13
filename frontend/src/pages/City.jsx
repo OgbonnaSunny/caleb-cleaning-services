@@ -282,10 +282,10 @@ const City = () => {
                     <h2 className={'experience-text'} style={{textAlign:'center', color:'brown'}}>{`Our services in ${city}`}</h2>
                     <div className="grid-container">
                         {serviceDetails.map((plan) => (
-                            <div key={service.id} className="service-card">
-                                <img src={service.src} alt="" className={'cart-image'}/>
-                                <h4 style={{color:'navy', textAlign:'center', marginBottom:'10px'}}>{service.name}</h4>
-                                <p>{service.detail}</p>
+                            <div key={plan.id} className="service-card">
+                                <img src={plan.src} alt="" className={'cart-image'}/>
+                                <h4 style={{color:'navy', textAlign:'center', marginBottom:'10px'}}>{plan.name}</h4>
+                                <p>{plan.detail}</p>
                             </div>
                         ))}
                     </div>

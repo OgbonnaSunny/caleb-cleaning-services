@@ -275,6 +275,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
     }
 
     const goToCleanerProfile = (email, cleaner) => {
+
         window.open(`/cleanerprofilepage?cleaner=${encodeURIComponent(cleaner)}&email=${encodeURIComponent(email)}`, "_blank");
     }
 

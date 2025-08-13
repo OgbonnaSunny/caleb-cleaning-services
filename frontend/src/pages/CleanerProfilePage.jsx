@@ -187,6 +187,7 @@ const ProfilePage = ({emailFromProile}) => {
     const [one, setOne] = useState(0);
     const [loadingReviews, setLoadingReviews] = useState(false);
 
+
     const renderStars = (rating) => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -266,7 +267,6 @@ const ProfilePage = ({emailFromProile}) => {
         return Math.round(perc)
     }
 
-
     useEffect(() => {
         if (reviews.length > 0) {
             setLoadingReviews(true);
@@ -285,7 +285,6 @@ const ProfilePage = ({emailFromProile}) => {
         }
 
     }, [reviews])
-
 
     useEffect(() => {
          const fetchCleanerData =  async () => {
@@ -331,7 +330,6 @@ const ProfilePage = ({emailFromProile}) => {
             fetchCleanerData();
         }
     }, [email]);
-
 
     return (
         <div style={{display:'flex', flexDirection:'column', minHeight: '100vh'}}>

@@ -5453,6 +5453,7 @@ input[type="checkbox"]:checked {
 }
 
 .quick-stats {
+  margin: 20px 0;
   display: flex;
   gap: 20px;
 }
@@ -5470,15 +5471,12 @@ input[type="checkbox"]:checked {
     padding: 3px 2px;
     border-radius: 8px;
     text-align: start;
-    font-size: small;
   }
 }
-
-.stat-card h3{
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: #7f8c8d;
+.stat-card h3 {
+  font-size: x-large;
 }
+
 .stat-card p {
   font-weight: bold;
   color: #2c3e50;

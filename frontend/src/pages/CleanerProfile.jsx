@@ -15,6 +15,7 @@ import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
 import { useForm } from 'react-hook-form';
 import ProfilePage from './CleanerProfilePage.jsx';
+import { format } from 'date-fns';
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
@@ -176,12 +177,12 @@ const CleanerProfile = () => {
     const [cleanerName, setCleanerName] = useState("");
     const [bio, setBio] = useState('Professional Cleaner');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [myOrders, setMyOrders] = useState([myOrderData]);
+    const [myOrders, setMyOrders] = useState([]);
     const [activeMenu, setActiveMenu] = useState(topNavItems[0]);
-    const [newOrders, setNewOrders] = useState([bookData]);
+    const [newOrders, setNewOrders] = useState([]);
     const [myOderCount, setMyOderCount] = useState(0);
-    const [history, setHistory] = useState([historyData]);
-    const [idForUpdate, setIdForUpdate] = useState(-1);
+    const [jobHistory, setJobHistory] = useState([]);
+    const [idForUpdate, setIdForUpdate] = useState('');
     const { register, setValue, getValues, handleSubmit, formState, watch, reset, formState: { errors }, trigger }
         = useForm({defaultValues: cleanerData, mode: 'onChange'});
     const [successMessage, setSuccessMessage] = useState('');
@@ -190,6 +191,37 @@ const CleanerProfile = () => {
     const [activeTab2, setActiveTab2] = useState('about');
     const [reviews, setReviews] = useState([])
     const [activeTab3, setActiveTab3] = useState('personal');
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [pageCount, setPageCount] = useState(0);
+    const [acceptedJobIds, setAcceptedJobIds] = useState([]);
+    const [myMesage, setMyMesage] = useState('');
+    const [page, setPage] = useState(10);
+    const [submitting, setSubmitting] = useState(false);
+    const [order, setOrder] = useState({});
+    const [color, setColor] = useState('green');
+    const [historyMessage, setHistoryMessage] = useState('');
+    const [dateToggle, setDateToggle] = useState(false);
+    const[historyIds, setHistoryIds] = useState([]);
+    const [userData, setUserData] = useState({
+        name: "Maria Sanchez",
+        role: "Professional Cleaner",
+        hourlyRate: 18.50,
+        avgHoursPerWeek: 32,
+        paymentMethod: "Direct Deposit",
+        nextPayday: "2023-11-15"
+    });
+    const [activeTab, setActiveTab] = useState('dashboard');
+    const [customer, setCustomer] = useState('');
+    const [clientEmail, setClientEmail] = useState('');
+    const [bookingIdForReview, setBookingIdForReview] = useState(-1);
+    const [rating, setRating] = useState(1);
+    const [review, setReview] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [income, setIncome] = useState({pendingIncome: 0, recents: []});
+    const [monthlyIncome, setMonthlyIncome] = useState(0);
+    const [lastMonthIncome, setLastMonthIncome] = useState(0);
+    const [yearlyIncome, setYearlyIncome] = useState(0);
+    const [expenses, setExpenses] = useState(0.00);
 
 
     const renderMenuIcon = (id) => {
@@ -237,18 +269,43 @@ const CleanerProfile = () => {
         return time;
     }
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 768) {
+                setPage(20)
+                return;
+            }
+            setPage(10);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+
+    }, []);
+
+    const renderName = (customer) => {
+        const names = customer.split(' ');
+        let name;
+        if (names.length > 1) {
+            return names[0].charAt(0).toUpperCase() + names[0].slice(1) + " " + names[1].charAt(0).toUpperCase() + names[1].slice(1);
+        }
+        return customer;
+    }
+
     const acceptOrder = async (orderId) => {
         if (acceptingOrders) {
             return
         }
         setAcceptingOrders(true);
-        const cleanerData =  { cleanerName: cleanerName, cleanerEmail: email, cleanerPhone: phoneNumber, id: orderId };
+        const cleanerData =  { cleanerName: cleanerName, cleanerEmail: email, cleanerPhone: phoneNumber, orderId: orderId };
         try {
             const acceptResponse = await api.post('/api/booking/accept-order', cleanerData)
+            const { success } =  acceptResponse.data;
+            if (success) {
+                const prevIds = acceptedJobIds;
+                prevIds.push(orderId);
+                setAcceptedJobIds(prevIds);
+            }
 
-            const newOrderResponse = await api.get('api/booking/new');
-            const orders = await newOrderResponse.data;
-            setNewOrders(orders.booking);
         }
         catch (error) {
             setMessage('Something went wrong!');
@@ -261,13 +318,23 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            setIsLoading(true)
+            if (newOrders.length > 0) {
+                setLoadingMore(true);
+            }
+            else {
+                setIsLoading(true)
+            }
             try {
-                const newOrderResponse = await api.get('api/booking/new');
+                const data = {limit: page, offset: newOrders.length + page};
+                const newOrderResponse = await api.post('api/booking/new', data);
                 const orders = await newOrderResponse.data;
-                setNewOrders(orders.booking);
-                if (orders.booking.length <= 0) {
+                if (orders.booking.length <= 0 && newOrders.length <= 0) {
                     setMessage('No new orders yet.');
+                }
+                else {
+                    const prevOrder = newOrders
+                    prevOrder.push(...orders.booking);
+                    setNewOrders(prevOrder);
                 }
             } catch (error) {
                 console.log(error);
@@ -276,12 +343,30 @@ const CleanerProfile = () => {
             }
             finally {
                 setIsLoading(false)
+                setLoadingMore(false);
             }
         }
-        if (activeMenu === topNavItems[0]) {
+        if (!loadingMore && !isLoading) {
             fetchOrders();
         }
-    }, [activeMenu])
+    }, [pageCount, activeMenu]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (!loadingMore) {
+                    setPageCount(prev => prev + 1)
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loadingMore]);
 
     const NewOrders = () => {
 
@@ -298,35 +383,37 @@ const CleanerProfile = () => {
                         </div> :
                         <div className="grid-container">
                             {newOrders.map(order => (
-                                <div key={order.id}  className={'stat-card'}>
+                                <div key={order.orderId}  className={'stat-card'}>
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
                                     <div className={'new-order-container'}>
-                                        <p style={{textAlign:'start'}}>{formatDate(order.bookDate)}</p>
+                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{formatDate(order.bookDate)}</p>
                                         <p style={{textAlign:'end',fontWeight:'900' }}>{order.plan}</p>
                                     </div>
+                                    <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
                                     <div className={'new-order-container'}>
-                                        <FaMapMarkerAlt style={{width:'20px'}} />
-                                        <p style={{textAlign:'start', width:'15%'}}>EH66JN</p>
-                                        <p className={'truncate-text'}>{order.address}</p>
-                                        <FaHome onClick={() => navigate('/sitemap', {state: {address: order.address}})} style={{width:'30%'}} />
+                                        <FaMapMarkerAlt  className={'icon-small'} />
+                                        <p style={{textAlign:'start', width:'15%', fontWeight:'bold'}}>EH66JN</p>
+                                        <p className='truncate-text'>{order.address}</p>
+                                        <FaHome className={'icon-small'} onClick={() => navigate('/sitemap', {state: {address: order.address}})}  />
                                     </div>
                                     <div className={'new-order-container'}>
-                                        <p>Estimated duration</p>
+                                        <p style={{marginLeft:'10px'}}>Estimated duration</p>
                                         <h4 style={{textAlign:'end'}}>{formatTime(order.duration)}</h4>
                                     </div>
                                     <div className={'new-order-container'}>
-                                        <p style={{flex:'1'}}>Estimated Amount</p>
+                                        <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
                                         <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
                                     </div>
-                                    <button disabled={acceptingOrders}
-                                            onClick={() => acceptOrder(order.id)}
-                                            className={acceptingOrders ? 'back-button' : 'next-button'}>
-                                        Accept this job
+                                    <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
+                                            onClick={() => acceptOrder(order.orderId)}
+                                            className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'next-button'}>
+                                        {acceptedJobIds.includes(order.orderId) ?  "Accepted" : "Accept this job"}
                                     </button>
                                 </div>
                             ))}
                         </div>
                 }
+                {loadingMore && <p>Loading...</p>}
             </div>
         );
     }
@@ -338,37 +425,50 @@ const CleanerProfile = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
-            setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
+            setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} 
+            ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
             setBio(`Professional ${user.roles.charAt(0).toUpperCase()+user.roles.slice(1)}`);
         }
     })
 
+    useEffect(() => {
+        api.post('/api/income-pending', {cleanerEmail: email})
+            .then((response) => {
+                setIncome(response.data.income);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+        api.post('/api/income-monthly', {cleanerEmail: email})
+            .then((response) => {
+                setMonthlyIncome(response.data.income);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+        api.post('/api/income-last-month', {cleanerEmail: email})
+            .then((response) => {
+                setLastMonthIncome(response.data.income);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+        api.post('/api/income-yearly', {cleanerEmail: email})
+            .then((response) => {
+                setYearlyIncome(response.data.income);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+    }, [email]);
+
     const Finance = () => {
 
-        const [userData, setUserData] = useState({
-            name: "Maria Sanchez",
-            role: "Professional Cleaner",
-            hourlyRate: 18.50,
-            avgHoursPerWeek: 32,
-            paymentMethod: "Direct Deposit",
-            nextPayday: "2023-11-15"
-        });
-        const [activeTab, setActiveTab] = useState('dashboard');
-
         const IncomeSummary = ({ income, stats }) => {
-            const thisMonthIncome = income
-                .filter(item => item.status === 'paid' && new Date(item.date).getMonth() === new Date().getMonth())
-                .reduce((sum, item) => sum + item.amount, 0);
-
-            const lastMonthIncome = income
-                .filter(item => {
-                    const date = new Date(item.date);
-                    const now = new Date();
-                    return item.status === 'paid' &&
-                        date.getMonth() === now.getMonth() - 1 &&
-                        date.getFullYear() === now.getFullYear();
-                })
-                .reduce((sum, item) => sum + item.amount, 0);
 
             return (
                 <div className="income-summary">
@@ -376,7 +476,7 @@ const CleanerProfile = () => {
                     <div className="summary-cards">
                         <div className="summary-card">
                             <h3>This Month</h3>
-                            <p>£{thisMonthIncome.toFixed(2)}</p>
+                            <p>£{monthlyIncome}</p>
                             {lastMonthIncome > 0 && (
                                 <small>
                                     {thisMonthIncome > lastMonthIncome ? '↑' : '↓'}
@@ -387,12 +487,13 @@ const CleanerProfile = () => {
                         </div>
                         <div className="summary-card">
                             <h3>Total YTD</h3>
-                            <p>£{stats.totalIncome.toFixed(2)}</p>
+                            <p>£{yearlyIncome}</p>
                         </div>
+
                         <div className="summary-card">
                             <h3>Net Income</h3>
-                            <p>£{stats.netIncome.toFixed(2)}</p>
-                            <small>After £{stats.totalExpenses.toFixed(2)} expenses</small>
+                            <p>£{yearlyIncome}</p>
+                            <small>After £{expenses} expenses</small>
                         </div>
                     </div>
                 </div>
@@ -463,40 +564,10 @@ const CleanerProfile = () => {
             );
         };
 
-        const WorkHistory = ({ income }) => {
-            // Group by client
-            const clients = income.reduce((acc, item) => {
-                if (!acc[item.client]) {
-                    acc[item.client] = {
-                        totalHours: 0,
-                        totalAmount: 0,
-                        jobs: []
-                    };
-                }
-                acc[item.client].totalHours += item.hours;
-                acc[item.client].totalAmount += item.amount;
-                acc[item.client].jobs.push(item);
-                return acc;
-            }, {});
+        const WorkHistory = () => {
 
             return (
                 <div className="work-history">
-                    <h2>Work History</h2>
-
-                    <div className="client-summary">
-                        <h3>Clients Summary</h3>
-                        <div className="client-cards">
-                            {Object.entries(clients).map(([client, data]) => (
-                                <div key={client} className="client-card">
-                                    <h4>{client}</h4>
-                                    <p>Total Hours: {data.totalHours}</p>
-                                    <p>Total Earned: £{data.totalAmount.toFixed(2)}</p>
-                                    <p>Jobs Completed: {data.jobs.length}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
                     <div className="recent-jobs">
                         <h3>Recent Jobs</h3>
                         <table>
@@ -504,20 +575,18 @@ const CleanerProfile = () => {
                             <tr>
                                 <th>Date</th>
                                 <th>Client</th>
-                                <th>Hours</th>
+                                <th>Duration</th>
                                 <th>Amount</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {income
-                                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                                .slice(0, 5)
+                            {income.recents
                                 .map(item => (
                                     <tr key={item.id}>
-                                        <td>{item.date}</td>
+                                        <td>{formatDate(item.created_at)}</td>
                                         <td>{item.client}</td>
-                                        <td>{item.hours}</td>
-                                        <td>£{item.amount.toFixed(2)}</td>
+                                        <td>{item.duration}</td>
+                                        <td>£{item.amount}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -760,8 +829,8 @@ const CleanerProfile = () => {
         const [error, setError] = useState('');
 
         function CustomDayRangePicker() {
-            const [startDay, setStartDay] = useState(3);
-            const [endDay, setEndDay] = useState(5);
+            const [startDay, setStartDay] = useState(null);
+            const [endDay, setEndDay] = useState(null);
 
             const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -861,6 +930,11 @@ const CleanerProfile = () => {
             );
         }
 
+        const formatDate = (date) => {
+            const date1 = new Date(date);
+            return  date1.toISOString().split('T')[0];
+        }
+
         return (
             <div className="finance-dashboard">
                 <header className="dashboard-header">
@@ -870,12 +944,10 @@ const CleanerProfile = () => {
                     </div>
                     <div className="quick-stats">
                         <div className="stat-card">
-                            <h3 style={{color:'darkgreen'}}>Earnings</h3>
-                            <p style={{color:'darkgreen'}}>£{stats.netIncome.toFixed(2)}</p>
+                            <h3 style={{color:'green'}}>Earnings £{yearlyIncome}</h3>
                         </div>
                         <div className="stat-card">
-                            <h3 style={{color:'darkred'}}>Pending</h3>
-                            <p style={{color:'darkred'}}>£{stats.pendingIncome.toFixed(2)}</p>
+                            <h3 style={{color:'darkred', textAlign:'end'}}>Pending £{income.pendingIncome}</h3>
                         </div>
                     </div>
                     <div className="stat-card">
@@ -897,18 +969,13 @@ const CleanerProfile = () => {
                     >
                         Income
                     </button>
-                    <button
-                        className={activeTab === 'expenses' ? 'active' : ''}
-                        onClick={() => setActiveTab('expenses')}
-                    >
-                        Expenses
-                    </button>
+
                 </nav>
 
                 <main className="dashboard-main">
                     {activeTab === 'dashboard' && (
                         <>
-                            <IncomeSummary income={financialData.income} stats={stats} />
+                            <IncomeSummary income={monthlyIncome} stats={stats} />
                             <FinancialCharts income={financialData.income} expenses={financialData.expenses} />
                             <WorkHistory income={financialData.income} />
                         </>
@@ -931,12 +998,12 @@ const CleanerProfile = () => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {financialData.income.map(item => (
+                                    {income.recents.map(item => (
                                         <tr key={item.id}>
-                                            <td>{item.date}</td>
+                                            <td>{formatDate(item.created_at)}</td>
                                             <td>{item.client}</td>
-                                            <td>{item.hours}</td>
-                                            <td>£{item.amount.toFixed(2)}</td>
+                                            <td>{item.duration}</td>
+                                            <td>£{item.amount}</td>
                                             <td className={`status-${item.status}`}>{item.status}</td>
                                         </tr>
                                     ))}
@@ -957,7 +1024,6 @@ const CleanerProfile = () => {
 
                 <footer className="dashboard-footer">
                     <p>Last updated: {new Date().toLocaleString()}</p>
-                    <p>Need help? Contact your payroll department</p>
                 </footer>
             </div>
         );
@@ -968,32 +1034,87 @@ const CleanerProfile = () => {
             if (email === null || email === undefined) {
                 return;
             }
-            setIsLoadMyOrders(true);
-            const userData = {email: email}
+            if (myOrders.length === 0) {
+                setIsLoadMyOrders(true);
+            }
+            else {
+                setLoadingMore(true);
+            }
             try {
+                const userData = {email: email, limit: page, offset: myOrders.length + page};
                 const acceptResponse = await api.post('/api/booking/my-orders', userData);
                 const jobList = acceptResponse.data.booking;
-                if (jobList.length > 0) {
-                    setMyOrders(jobList);
+                if (jobList.length <= 0 && myOrders.length <= 0) {
+                    setMessage('You do not have active job');
                 }
                 else {
-                    setMyOrders([])
-                    setMessage('You do not have active order');
+                    const allOrders = myOrders;
+                    allOrders.push(...jobList);
+                    setMyOrders(allOrders);
                 }
-                setIsLoadMyOrders(false);
-                console.log(jobList.length);
             }
             catch (error) {
-                setMessage('Error fetching my orders');
-                setIsLoadMyOrders(false)
-                setMyOrders([]);
+                setMessage('Error fetching active jobs');
                 console.log(error);
             }
+            finally {
+                setIsLoadMyOrders(false);
+                setLoadingMore(false);
+            }
         }
-        if (activeMenu === topNavItems[1]) {
+        if (!loadingMore && !isLoadMyOrders) {
             myOders()
         }
-    }, [activeMenu]);
+    }, [activeMenu, pageCount]);
+
+    const updateOrder = async (e) => {
+        e.preventDefault();
+        let data = {email: email, orderId: order.orderId};
+        setSubmitting(true);
+        setColor('green');
+        try {
+            let response = await api.post('/api/booking/my-orders/submit', data);
+            const { success } = response.data;
+            if (!success) {
+                setMyMesage('Error occured. Please try again');
+                setColor('darkred')
+            }
+            else {
+                data = {cleanerEmail: order.cleanerEmail, cleanerName: order.cleaner, client: order.customer, duration: order.duration, amount: order.estimatedAmount, orderId: order.orderId};
+                response = await api.post('/api/income', data);
+                const { success } = response.data;
+                if (!success) {
+                    setColor('darkred')
+                    setMyMesage('Error occured while creating income record. Please try again');
+                }
+                else {
+                    setMyMesage('Income record successfully created');
+                    const ids = historyIds
+                    ids.push(order.orderId);
+                    setHistoryIds(ids)
+                }
+
+            }
+
+        } catch (error) {
+            console.log(error);
+            if (error.response.status !== 500) {
+                setMyMesage(error.response.data);
+            }
+            else {
+                setMyMesage("Error occured while updating data");
+            }
+            setColor('darkred')
+        } finally {
+            const resetMessage = () => {
+                setMyMesage(null)
+                setSubmitting(false);
+                setIdForUpdate('')
+            }
+            setTimeout(() => resetMessage(), 4000);
+        }
+
+    }
 
     const MyOrders = () => {
 
@@ -1014,34 +1135,6 @@ const CleanerProfile = () => {
             return postcode.toString().toUpperCase();
         }
 
-        const updateOrder = (orderId) => {
-
-      //      setIdForUpdate(-1)
-        }
-
-        const [formData, setFormData] = useState( {
-            extraTime: 0,
-            amount: 0,
-            wages: null,
-            timeCompleted: new Date(),
-            dateCompleted: '',
-            extraCharge: 0,
-            completed: true,
-        });
-        const handleInputChange = (e) => {
-            const { name, value } = e.target;
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        };
-        const handleDateChange = (e) => {
-            const { name, value } = e.target;
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        };
 
         return (
             <div className={'support-page'}>
@@ -1056,7 +1149,7 @@ const CleanerProfile = () => {
                         </div> :
                         <div className="grid-container">
                             {myOrders.map(order => (
-                                <div key={order.id} style={{border:'dashed', padding:'10px', borderRadius:'10px'}} >
+                                <div key={order.orderId} style={{border:'dashed', padding:'10px', borderRadius:'10px'}} >
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
 
                                     <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
@@ -1065,12 +1158,11 @@ const CleanerProfile = () => {
                                             order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>{order.nature} </span>{order.plan}</p>
                                     </div>
 
-                                    {renderWithTime(order.bookDate) && <p>
-                                        <FaMapMarkerAlt style={{width:'15px'}} />
-                                        <span style={{fontWeight:'bold', marginRight:'5px'}}>{getPostcode(order.postcode)}</span>
-                                        {order.address}
-                                        <FaHome onClick={() => navigate('/sitemap', {state: {address: order.address}})} style={{width:'30px'}} />
-                                    </p>}
+                                    {renderWithTime(order.bookDate) && <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                        <FaMapMarkerAlt className={'icon-small'}  />
+                                        <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
+                                        <FaHome  style={{width:'30px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
+                                    </div>}
 
                                     {order.booking.map((book, index) => (
                                         <div key={index} className={'order-container'}>
@@ -1084,94 +1176,33 @@ const CleanerProfile = () => {
                                         <h3 style={{textAlign:'end'}}>{formatTime(order.duration)}</h3>
                                     </div>
 
-                                    {order.id === idForUpdate &&
+                                    {order.orderId === idForUpdate &&
                                         <form
-                                            onSubmit={() => updateOrder(order.id)} className={["support-form", "slide-in"].join(" ")}>
-                                            <label className={'order-container'} style={{color:'blue', textAlign:'center'}}>Job completion form
-                                            <FaTimes style={{width:'20px', marginLeft:'15px', color:'black'}} onClick={() => setIdForUpdate(-1)} />
+                                            onSubmit={updateOrder} className="support-form">
+                                            <label className={'order-container'} style={{ textAlign:'center', fontSize:'small'}}>Submit job only if you are sure it's done
+                                            <FaTimes style={{width:'20px', marginLeft:'15px', color:'black'}} onClick={() => {setIdForUpdate(''); setOrder({})}} />
                                             </label>
-                                            <div className="form-group">
-                                            <label htmlFor="name">Extra time(min)</label>
-                                            <input
-                                                type="number"
-                                                id="extraTime"
-                                                name="extraTime"
-                                                value={formData.extraTime}
-                                                onChange={handleInputChange}
-                                                required
-                                                className={'button-bg'}
-                                            />
-                                        </div>
-
-                                            <div className="form-group">
-                                            <label htmlFor="extraCharge">Extra charge</label>
-                                            <input
-                                                type="number"
-                                                id="extraCharge"
-                                                name="extraCharge"
-                                                value={formData.extraCharge}
-                                                onChange={handleInputChange}
-                                                required
-                                                className={'button-bg'}
-                                            />
-                                        </div>
-
-                                            <div className="form-group">
-                                            <label htmlFor="wages">Wages</label>
-                                            <input
-                                                type="number"
-                                                id="wages"
-                                                name="wages"
-                                                value={formData.wages}
-                                                onChange={handleInputChange}
-                                                required
-                                                className={'button-bg'}
-                                            />
-                                        </div>
-
-                                            <div className={'resource-grid'}>
-                                            <div className="form-group">
-                                                <label htmlFor="Date">Job completed date</label>
-                                                <input
-                                                    id="dateCompleted"
-                                                    name="dateCompleted"
-                                                    type="date"
-                                                    min={new Date().toISOString().split('T')[0]}
-                                                    value={formData.dateCompleted}
-                                                    onChange={handleInputChange}
-                                                    required
-                                                />
-                                            </div>
-
-                                            <div className="form-group">
-                                                <label htmlFor="Date">Job completed time</label>
-                                                <input
-                                                    id="timeCompleted"
-                                                    name="timeCompleted"
-                                                    type="time"
-                                                    value={formData.timeCompleted}
-                                                    onChange={handleInputChange}
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
+                                            {myMesage && <p style={{color: color, textAlign:'center', margin:'10px'}}>{myMesage}</p>}
                                            <div className="form-group">
-                                            <button className={'submit-button'} type="submit">Submit Job</button>
+                                            <button  disabled={submitting} className={'submit-button'} type="submit">
+                                                Finish Job
+                                            </button>
                                         </div>
                                     </form>
                                     }
-                                    {order.id !== idForUpdate &&
-                                        <button className={(idForUpdate === order.id || idForUpdate >= 0) ? 'back-button' : 'next-button'}
-                                                                  disabled={(idForUpdate === order.id || idForUpdate >= 0) ? true : false}
-                                                                  onClick={() => setIdForUpdate(order.id)}>
+                                    {order.orderId !== idForUpdate &&
+                                        <button className={(idForUpdate === order.orderId || idForUpdate !== '') ? 'back-button' : 'next-button'}
+                                                                  disabled={(idForUpdate === order.orderId || idForUpdate !== '' || historyIds.includes(order.orderId)) ? true : false}
+                                                                  onClick={() => {setIdForUpdate(order.orderId); setOrder(order)}}>
                                         Register job
-                                    </button> }
+                                    </button>
+                                    }
 
                                 </div>
                             ))}
                         </div>
                 }
+                {loadingMore && <p>Loading...</p>}
             </div>
         );
     }
@@ -1181,27 +1212,114 @@ const CleanerProfile = () => {
             if (email === null || email === undefined) {
                 return;
             }
-            setLoadingHistory(true);
+            if (jobHistory.length > 0) {
+                setLoadingMore(true);
+            }
+            else  {
+                setLoadingHistory(true);
+            }
             try {
-                const acceptResponse = await api.post('/api/booking/history', {email: email});
+                const data = {email: email, limit: page, offset: jobHistory.length + page};
+                const acceptResponse = await api.post('/api/booking/history', data);
                 const jobList = acceptResponse.data.booking;
-                setHistory(jobList);
-                if (jobList.length <= 0) {
-                    setMessage('You do not have active history');
+                if (jobList.length <= 0 && jobHistory.length <= 0) {
+                    setHistoryMessage('You do not have active history');
+                }
+                else {
+                    const prevHistory = jobHistory;
+                    prevHistory.push(...jobList);
+                    setJobHistory(prevHistory);
+
                 }
             }
             catch (error) {
-                setMessage('Error fetching my history');
-                setHistory([]);
+                setHistoryMessage('Error fetching my history');
+                setJobHistory([]);
                 console.log(error);
             } finally {
                 setLoadingHistory(false);
+                setLoadingMore(false);
             }
         }
-        if (activeMenu === topNavItems[2]) {
+        if (!loadingMore && !loadingHistory) {
             history()
         }
-    }, [activeMenu]);
+    }, [pageCount, activeMenu]);
+
+    function timeAgo(date) {
+        const now = new Date();
+        const prevDate = new Date(date);
+        const seconds = Math.floor((now - prevDate) / 1000);
+
+        let interval = Math.floor(seconds / 31536000);
+        if (interval >= 1) {
+            return interval === 1 ? '1 year ago' : `${interval} years ago`;
+        }
+
+        interval = Math.floor(seconds / 2592000);
+        if (interval >= 1) {
+            return interval === 1 ? '1 month ago' : `${interval} months ago`;
+        }
+
+        interval = Math.floor(seconds / 86400);
+        if (interval >= 1) {
+            return interval === 1 ? '1 day ago' : `${interval} days ago`;
+        }
+
+        interval = Math.floor(seconds / 3600);
+        if (interval >= 1) {
+            return interval === 1 ? '1 hour ago' : `${interval} hours ago`;
+        }
+
+        interval = Math.floor(seconds / 60);
+        if (interval >= 1) {
+            return interval === 1 ? '1 minute ago' : `${interval} minutes ago`;
+        }
+
+        return 'just now';
+    }
+
+    const writeReview = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        const reviewData = { customer: customer, cleanerEmail: cleanerEmail, review: review , rating: rating };
+        try {
+            const response = await api.post('/api/reviews', reviewData)
+            const { success} = response.data;
+            if (success) {
+                setBgColor('green');
+                setMessage("Review sent successful");
+            }
+        } catch (error) {
+            //  console.log(error);
+            setMessage("Error occured while sending review");
+        } finally {
+            setLoading(false);
+            setReview('')
+        }
+    }
+
+    const updateHistoryIds = (id) => {
+        if (historyIds.includes(id)) {
+            const filtered = historyIds.reduce((acc, num) => {
+                if (num !== id) {  // keep if not the number we want to remove
+                    acc.push(num);
+                }
+                return acc;
+            }, [])
+            setHistoryIds(filtered);
+        }
+        else {
+            const prevIds = historyIds;
+            prevIds.push(id)
+            historyIds.push(prevIds);
+        }
+    }
+
+    const goToClientProfile = (email, client) => {
+
+        window.open(`/customer?client=${encodeURIComponent(client)}&email=${encodeURIComponent(email)}`, "_blank");
+    }
 
     const History = () => {
         return (
@@ -1211,18 +1329,42 @@ const CleanerProfile = () => {
                         <div className="spinner"></div>
                         <p style={{textAlign:'center'}}>Loading data...</p>
                     </div>
-                    : (history.length <= 0 || history === null) ?
+                    : (jobHistory.length <= 0 || jobHistory === null) ?
                         <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
-                            <p style={{textAlign:'center'}}>{message}</p>
+                            <p style={{textAlign:'center'}}>{historyMessage}</p>
                         </div> :
                         <div className="grid-container">
-                            {history.map(order => (
+                            {jobHistory.map(order => (
                                 <div key={order.id} className={'price-container'} >
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
                                     <div className={'order-container'}>
-                                        <h4 style={{width:'40%'}}>Customer</h4>
-                                        <h3 style={{textAlign:'end'}}>{order.customer}</h3>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <h3 style={{width:'70%'}}>{renderName(order.customer)}</h3>
+                                            {bookingIdForReview !== order.id && <FaPen style={{width:'30px'}} onClick={bookingIdForReview === -1 ? () => {setBookingIdForReview(order.id); setClientEmail(order.clientEmail); setCustomer(order.customer)}: null} />}
+                                            {bookingIdForReview === order.id && <FaTimes style={{width:'30px'}} onClick={() => {setBookingIdForReview(-1); setReview(''); setRating(1)}} />}
+                                            <FaUserTie onClick={() => goToClientProfile(order.clientEmail, order.customer)} size={30} style={{width:'30px', color:'dodgerblue', marginRight: '3%'}} />
+                                        </div>
                                     </div>
+                                    {order.id === bookingIdForReview && <div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <p>Rating: {rating}</p>
+                                            <FaArrowCircleLeft size={20} style={{width:'30px', color:'blue', marginRight:'15px'}} onClick={rating > 1 ? () => setRating(rating - 1) : null}/>
+                                            <FaArrowCircleRight size={20} style={{width:'30px', color:'blue'}} onClick={rating < 5 ? () => setRating(rating + 1) : null} />
+                                        </div>
+                                        <textarea placeholder={'write review for this client'}
+                                                  style={{backgroundColor:'linen', color:'black', padding:'12px'}}
+                                                  rows={5}
+                                                  value={review}
+                                                  onChange={(e) => setReview(e.target.value)}
+                                                  name={'review'}/>
+                                        <button onClick={writeReview}
+                                                style={{borderRadius:'30px', marginTop:'6px'}}
+                                                className={'submit-button'}
+                                                disabled={(order.id !== bookingIdForReview || order.status === 'pending'
+                                                    || order.status === 'cancelled' || loading || review === '')}>
+                                            Save review
+                                        </button>
+                                    </div>}
 
                                     <div className={'order-container'}>
                                         <h4 style={{width:'50%'}}>Amount</h4>
@@ -1235,13 +1377,15 @@ const CleanerProfile = () => {
                                     </div>
 
                                     <div className={'order-container'}>
-                                        <h4 style={{width:'50%'}}>Date</h4>
-                                        <h3 style={{textAlign:'end'}}>{formatTime(order.completedDate)}</h3>
+                                        <FaClock onClick={() => {setDateToggle(!dateToggle); updateHistoryIds(order.id)}} style={{width:'30px'}} size={20}/>
+                                        {!historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{timeAgo(order.completedDate)}</h3>}
+                                        {historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{format(order.completedDate, 'EEEE, d MMMM yyyy')}</h3>}
                                     </div>
                                 </div>
                             ))}
                         </div>
                 }
+                {loadingMore && <p>Loading...</p>}
             </div>
         );
     }
@@ -1616,17 +1760,9 @@ const CleanerProfile = () => {
     };
 
     useEffect(() => {
-        try {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
-                setEmail(user.email);
-            }
-            else {
-                setEmail('sarah@gmail.com');
-            }
-
-        } catch (error) {
-            setEmail('sarah@gmail.com');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setEmail(user.email);
         }
     }, [])
 
