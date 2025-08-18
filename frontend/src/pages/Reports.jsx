@@ -9,29 +9,29 @@ const Reports = () => {
 
     // Sample data for charts
     const revenueData = [
-        { name: 'Jan', revenue: 12000 },
-        { name: 'Feb', revenue: 19000 },
-        { name: 'Mar', revenue: 15000 },
-        { name: 'Apr', revenue: 18000 },
-        { name: 'May', revenue: 21000 },
-        { name: 'Jun', revenue: 25000 },
-        { name: 'Jul', revenue: 22000 }
+        { category: 'Jan', revenue: 12000 },
+        { category: 'Feb', revenue: 19000 },
+        { category: 'Mar', revenue: 15000 },
+        { category: 'Apr', revenue: 18000 },
+        { category: 'May', revenue: 21000 },
+        { category: 'Jun', revenue: 25000 },
+        { category: 'Jul', revenue: 22000 }
     ];
 
     const bookingsData = [
-        { name: 'Jan', bookings: 85 },
-        { name: 'Feb', bookings: 125 },
-        { name: 'Mar', bookings: 110 },
-        { name: 'Apr', bookings: 135 },
-        { name: 'May', bookings: 155 },
-        { name: 'Jun', bookings: 180 },
-        { name: 'Jul', bookings: 165 }
+        { category: 'Jan', bookings: 85 },
+        { category: 'Feb', bookings: 125 },
+        { category: 'Mar', bookings: 110 },
+        { category: 'Apr', bookings: 135 },
+        { category: 'May', bookings: 155 },
+        { category: 'Jun', bookings: 180 },
+        { category: 'Jul', bookings: 165 }
     ];
 
     const serviceData = [
-        { name: 'Regular Clean', value: 65 },
-        { name: 'Deep Clean', value: 25 },
-        { name: 'Move Out Clean', value: 10 }
+        { category: 'Regular Clean', value: 65 },
+        { category: 'Deep Clean', value: 25 },
+        { category: 'Move Out Clean', value: 10 }
     ];
 
     const COLORS = ['#4CAF50', '#2196F3', '#FFC107'];
@@ -119,7 +119,7 @@ const Reports = () => {
                                     <ResponsiveContainer width="100%" height={400}>
                                         <BarChart data={revenueData}>
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="name" />
+                                            <XAxis dataKey="category" />
                                             <YAxis />
                                             <Tooltip formatter={(value) => [`£${value}`, 'Revenue']} />
                                             <Legend />
@@ -171,7 +171,7 @@ const Reports = () => {
                                     <ResponsiveContainer width="100%" height={400}>
                                         <LineChart data={bookingsData}>
                                             <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="name" />
+                                            <XAxis dataKey="category" />
                                             <YAxis />
                                             <Tooltip />
                                             <Legend />

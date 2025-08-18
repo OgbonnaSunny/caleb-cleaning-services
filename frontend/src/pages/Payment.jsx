@@ -117,7 +117,7 @@ const Payment = () => {
             payment_method: {
                 card: elements.getElement(CardNumberElement),
                 billing_details: {
-                    name: 'Customer Name' // Add dynamic name input if needed
+                    category: 'Customer Name' // Add dynamic name input if needed
                 }
             }
         });

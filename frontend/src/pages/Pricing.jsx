@@ -35,8 +35,8 @@ import { useNavigate } from 'react-router-dom'
 const Pricing = () => {
   const navigate = useNavigate();
 
-  const pricings = [{id:'regular', name:'Regular cleaning', price:'from £19/h', desc: 'Regular visits by a professional cleaner in West London who will vacuum, dust, and clean surfaces in all living areas, bathrooms, and kitchen. Additional services such as laundry, changing bed linen, and washing dishes can be added upon request.'},
-    {id:'one-off', name: 'One-off domestic cleaning', price: 'from £19/h', desc:'A comprehensive deep cleaning of the entire property, including thorough cleaning of bathrooms, kitchens, living areas, and bedrooms, as well as dusting and vacuuming throughout.'}]
+  const pricings = [{id:'regular', category:'Regular cleaning', price:'from £19/h', desc: 'Regular visits by a professional cleaner in West London who will vacuum, dust, and clean surfaces in all living areas, bathrooms, and kitchen. Additional services such as laundry, changing bed linen, and washing dishes can be added upon request.'},
+    {id:'one-off', category: 'One-off domestic cleaning', price: 'from £19/h', desc:'A comprehensive deep cleaning of the entire property, including thorough cleaning of bathrooms, kitchens, living areas, and bedrooms, as well as dusting and vacuuming throughout.'}]
   const miniResults = [
     {id:1, src: Result1},
     {id:2, src: Result2},
@@ -66,17 +66,17 @@ const Pricing = () => {
   const minFactors = [
     {
       id: 1,
-      name: "Size of the office",
+      category: "Size of the office",
       detail: "The size of the office has the most noticeable effect on cleaning expenses. Larger spaces necessitate more time, manpower, and cleaning materials, which inevitably drives up the overall cost. Larger offices incur higher costs because cleaning fees are often calculated based on square footage."
     },
     {
       id: 2,
-      name: "Frequency of cleaning",
+      category: "Frequency of cleaning",
       detail: "How frequently cleaning services are employed has the biggest impact on costs. Cleaning an office on a daily basis will be more expensive than doing so once or twice a week. The cleaning schedule can be modified in accordance with the requirements and cost constraints of the office."
     },
     {
       id: 3,
-      name: "Type of office",
+      category: "Type of office",
       detail: "Cleaning requirements differ depending on the type of workplace. As an illustration, a creative agency with an open floor design could require more frequent cleaning than a law firm with private offices."
     },
   ]
@@ -97,29 +97,29 @@ const Pricing = () => {
   const miniCarpetList = [
     {
       id: 1,
-      name: "The size of the carpet",
+      category: "The size of the carpet",
       detail: "The cost is directly impacted by the amount of time and materials needed to clean a bigger carpet area. Compared to cleaning an entire home or a business, washing a tiny rug or a single room's carpet will be less expensive."
     },
     {
       id: 2,
-      name: "Carpet material and condition",
+      category: "Carpet material and condition",
       detail: "Various cleaning methods and solutions are required for various carpet materials. Delicate or severely stained carpets would require specialised cleaning methods, which could raise the final cost. Older or seriously damaged carpets may require further care and cost more money."
     }
   ]
   const serviceList = [
-    {id: 1, name:'House'},
-    {id: 2, name:'Deep'},
-    {id: 4, name:'Office'},
-    {id: 5, name:'End of tenancy'},
-    {id: 6, name:'Carpet'},
-    {id: 7, name:'Upholstery'},
+    {id: 1, category:'House'},
+    {id: 2, category:'Deep'},
+    {id: 4, category:'Office'},
+    {id: 5, category:'End of tenancy'},
+    {id: 6, category:'Carpet'},
+    {id: 7, category:'Upholstery'},
   ]
   const active = {color:'red', textDecoration: 'underline', padding: '8px'};
   const notActive = {color:'navy', padding:'8px'}
   const miniBenefits = [
     {
       id: 1,
-      name: "Clear prices",
+      category: "Clear prices",
       reason: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their carpet cleaning prices, but with eMop, you know the price of the professional carpet cleaning services at the moment of booking."
     },
   ]
@@ -421,9 +421,9 @@ const Pricing = () => {
   };
 
   const stages = [
-    {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
-    {id:'pay', src: Currency, stage:'Stage 2', name: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
-    {id:'manage',src: Manage,  stage: 'Stage 3', name: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
+    {id:'submit', src: Booking, stage:'Stage 1', category:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
+    {id:'pay', src: Currency, stage:'Stage 2', category: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
+    {id:'manage',src: Manage,  stage: 'Stage 3', category: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
         ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use  our website  to keep track of your booking']}
   ]
 
@@ -469,55 +469,55 @@ const Pricing = () => {
   const pricingOptions = [
     {
       id: 1,
-      name: "Next day: £18/h"
+      category: "Next day: £18/h"
     },
     {
       id: 2,
-      name: "Same day: £25/h"
+      category: "Same day: £25/h"
     },
     {
       id: 3,
-      name: "Peak: £19/h"
+      category: "Peak: £19/h"
     },
     {
       id: 4,
-      name: "Night: £29/h"
+      category: "Night: £29/h"
     },
     {
       id: 5,
-      name: "End of tenancy: £29"
+      category: "End of tenancy: £29"
     }
   ];
 
   const cleaningFactors = [
     {
       id: 1,
-      name: "Size of the office",
+      category: "Size of the office",
       detail: "The size of the office has the most noticeable effect on cleaning expenses. Larger spaces necessitate more time, manpower, and cleaning materials, which inevitably drives up the overall cost. Larger offices incur higher costs because cleaning fees are often calculated based on square footage."
     },
     {
       id: 2,
-      name: "Frequency of cleaning",
+      category: "Frequency of cleaning",
       detail: "How frequently cleaning services are employed has the biggest impact on costs. Cleaning an office on a daily basis will be more expensive than doing so once or twice a week. The cleaning schedule can be modified in accordance with the requirements and cost constraints of the office."
     },
     {
       id: 3,
-      name: "Type of office",
+      category: "Type of office",
       detail: "Cleaning requirements differ depending on the type of workplace. As an illustration, a creative agency with an open floor design could require more frequent cleaning than a law firm with private offices."
     },
     {
       id: 4,
-      name: "Specialized equipment and correct cleaning products",
+      category: "Specialized equipment and correct cleaning products",
       detail: "It may be necessary to use specialised cleaning tools and solutions on specific office supplies and surfaces, which will raise the overall cost. For instance, expensive furniture or fragile gadgets may require extra cleaning care."
     },
     {
       id: 5,
-      name: "Location of the office",
+      category: "Location of the office",
       detail: "Location has a significant impact on office cleaning costs per hour, just like it does for other services. Office cleaning costs in Edinburgh and other major UK cities can range from £17 to £20, including a one-time cleaning fee. A difference in labour costs, transportation costs, and cost of living depending on where the office space is located can affect cleaning prices."
     },
     {
       id: 6,
-      name: "Quality of service",
+      category: "Quality of service",
       detail: "Although reputable cleaning companies may charge more, their services are of higher quality and are more dependable. A reputable cleaning business can help you achieve greater outcomes and a cleaner workplace."
     }
   ];
@@ -534,17 +534,17 @@ const Pricing = () => {
   const serviceFeatures = [
     {
       id: 1,
-      name: "Clear prices",
+      category: "Clear prices",
       detail: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their office cleaning costs, but with eMop, you know the price of the professional cleaning services at the moment of booking."
     },
     {
       id: 2,
-      name: "Pay-as-you-go approach",
+      category: "Pay-as-you-go approach",
       detail: "The estimated amount of your reservation will be deducted from your bank account. After the cleaning session is finished, you will only be billed for the time the office cleaner(s) actually worked. Only the time that was actually spent cleaning your workplace is charged."
     },
     {
       id: 3,
-      name: "Insured and accredited cleaners",
+      category: "Insured and accredited cleaners",
       detail: "A thorough background check is carried out on our commercial cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional cleaners over time and can fit into any professional cleaning company. You can be sure to get professional office cleaning services when you choose eMop. If you also need domestic cleaning services, eMop cleaners can help."
     }
   ];
@@ -656,17 +656,17 @@ const Pricing = () => {
   const tenancyServiceFeatures = [
     {
       id: 1,
-      name: "Clear prices",
+      category: "Clear prices",
       story: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Most cleaning companies may hide their service costs, but for eMop, you know the price of the professional cleaning services at the moment of booking."
     },
     {
       id: 2,
-      name: "Pay-as-you-go approach",
+      category: "Pay-as-you-go approach",
       story: "Your bank account will be put on hold to cover the projected cost of your reservation. You will only be charged for the time a tenancy cleaner actually worked after the cleaning session is over. You only pay for the actual time they spent cleaning your home."
     },
     {
       id: 3,
-      name: "Insured and accredited cleaners",
+      category: "Insured and accredited cleaners",
       story: "A thorough background check is carried out on our end of tenancy cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional cleaners over time and can fit into any professional cleaning company. You can be sure to get professional end of tenancy cleaning services when you choose eMop. If you need office cleaning also, eMop cleaners can help also."
     }
   ];
@@ -730,37 +730,37 @@ const Pricing = () => {
   const carpetCleaningFactors = [
     {
       id: 1,
-      name: "The size of the carpet",
+      category: "The size of the carpet",
       detail: "The cost is directly impacted by the amount of time and materials needed to clean a bigger carpet area. Compared to cleaning an entire home or a business, washing a tiny rug or a single room's carpet will be less expensive."
     },
     {
       id: 2,
-      name: "Carpet material and condition",
+      category: "Carpet material and condition",
       detail: "Various cleaning methods and solutions are required for various carpet materials. Delicate or severely stained carpets would require specialised cleaning methods, which could raise the final cost. Older or seriously damaged carpets may require further care and cost more money."
     },
     {
       id: 3,
-      name: "The cleaning method required",
+      category: "The cleaning method required",
       detail: "Numerous carpet cleaning methods exist, including steam cleaning, dry cleaning, bonnet cleaning, hot water extraction method, and others. Each approach has a different price tag, with steam cleaning often costing more because it is so thorough and efficient."
     },
     {
       id: 4,
-      name: "The kinds of stains and odors",
+      category: "The kinds of stains and odors",
       detail: "Strong cleaning products or multiple treatments may be required to get rid of difficult stains and lingering odours, which will raise the cost of the project."
     },
     {
       id: 5,
-      name: "Accessibility",
+      category: "Accessibility",
       detail: "Hiring professional carpet cleaners may require more money if the carpet is difficult to access or calls for unusual arrangements, such as moving furniture, due to the added work and time required."
     },
     {
       id: 6,
-      name: "The location of your property",
+      category: "The location of your property",
       detail: "Your location is important since some carpet or upholstery cleaning firms may charge more to travel to farther-flung places. The typical day fee in Edinburgh is about £140, but businesses in the nearby districts only charge about £100 per day. If you live in Edinburgh, you should prepare to spend extra."
     },
     {
       id: 7,
-      name: "Additional/extra services",
+      category: "Additional/extra services",
       detail: "A carpet cleaning company also provides further services including deodorising, spot removal, and applying carpet protection. The price will increase due to these additional services."
     }
   ];
@@ -777,17 +777,17 @@ const Pricing = () => {
   const carpetCleaningBenefits = [
     {
       id: 1,
-      name: "Clear prices",
+      category: "Clear prices",
       reason: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their carpet cleaning prices, but with eMop, you know the price of the professional carpet cleaning services at the moment of booking."
     },
     {
       id: 2,
-      name: "Pay-as-you-go approach",
+      category: "Pay-as-you-go approach",
       reason: "The estimated amount of your reservation will be deducted from your bank account. After the cleaning session is finished, you will only be billed for the time a carpet cleaner actually worked. Only the time that was actually spent cleaning your carpets is reimbursed."
     },
     {
       id: 3,
-      name: "Insured and accredited cleaners",
+      category: "Insured and accredited cleaners",
       reason: "A thorough background check is carried out on our carpet cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional carpet cleaners over time and can fit into any professional cleaning company. You can be sure to get professional carpet cleaning services when you choose eMop. If you also need end of tenancy cleaning services, eMop cleaners can help too."
     }
   ];
@@ -1006,7 +1006,7 @@ const Pricing = () => {
 
   useEffect(() => {
     switch (service) {
-      case serviceList[0].name:
+      case serviceList[0].category:
         setLayout(
             <div>
               <h3 className={'main-banner'} style={{color:'navy', textAlign:'center'}}>What is house cleaner price per hour?</h3>
@@ -1014,7 +1014,7 @@ const Pricing = () => {
                 <div className="burden-container" style={{paddingBottom:'30px', paddingTop:'30px'}}>
                   {pricings.map(pricings => (
                       <div key={pricings.id} className="service-card">
-                        <h3>{pricings.name}</h3>
+                        <h3>{pricings.category}</h3>
                         <p style={{color:'blue'}}>{pricings.price}</p>
                         <p style={{textAlign:'start'}}>{pricings.desc}</p>
                       </div>
@@ -1117,7 +1117,7 @@ const Pricing = () => {
         )
         break;
 
-      case serviceList[1].name:
+      case serviceList[1].category:
         setLayout(
             <div>
               <section className={'main-banner'} style={{marginTop:'50px'}}>
@@ -1401,7 +1401,7 @@ const Pricing = () => {
         )
         break;
 
-      case serviceList[2].name:
+      case serviceList[2].category:
         setLayout(
             <div>
               <section className={'main-banner'} >
@@ -1432,7 +1432,7 @@ const Pricing = () => {
                         </p>
                         {pricingOptions.map(option => (
                             <ul className={"dot-list"}>
-                              <li key={option.id}>{option.name}</li>
+                              <li key={option.id}>{option.category}</li>
                             </ul>
                         ))}
                       </div>
@@ -1473,7 +1473,7 @@ const Pricing = () => {
                       {factors.map(cleaningFactor => (
                           <div>
                             <ul className={"dot-list"}>
-                              <li key={cleaningFactor.id} style={{color:'red', marginTop:'18px'}}>{cleaningFactor.name}</li>
+                              <li key={cleaningFactor.id} style={{color:'red', marginTop:'18px'}}>{cleaningFactor.category}</li>
                             </ul>
                             <p>{cleaningFactor.detail}</p>
                           </div>
@@ -1493,7 +1493,7 @@ const Pricing = () => {
                       {serviceFeatures.map(feature => (
                           <div>
                             <ul className={"dot-list"}>
-                              <li key={feature.id} style={{marginTop:'18px'}}>{feature.name}</li>
+                              <li key={feature.id} style={{marginTop:'18px'}}>{feature.category}</li>
                             </ul>
                             <p>{feature.detail}</p>
                           </div>
@@ -1560,7 +1560,7 @@ const Pricing = () => {
         )
         break;
 
-      case serviceList[3].name:
+      case serviceList[3].category:
         setLayout(
             <div>
               <section className={'main-banner'}>
@@ -1587,7 +1587,7 @@ const Pricing = () => {
                         <p>On average, our end of tenancy cleaning cost starts from £17/h. All prices are given below:</p>
                         {pricingOptions.map(option => (
                             <ul className={"dot-list"}>
-                              <li key={option.id}>{option.name}</li>
+                              <li key={option.id}>{option.category}</li>
                             </ul>
                         ))}
                         <p>
@@ -1644,7 +1644,7 @@ const Pricing = () => {
                       {tenancyServiceFeatures.map(tenancy => (
                           <div key={tenancy.id}>
                             <ul className={"dot-list"}>
-                              <li key={tenancy.id}>{tenancy.name}</li>
+                              <li key={tenancy.id}>{tenancy.category}</li>
                             </ul>
                             <p style={{marginBottom:'8px'}}>{tenancy.story}</p>
                           </div>
@@ -1712,7 +1712,7 @@ const Pricing = () => {
         )
         break
 
-      case serviceList[4].name:
+      case serviceList[4].category:
         setLayout(
             <div className={'main-banner'} >
               <section className={'main-banner'}>
@@ -1759,7 +1759,7 @@ const Pricing = () => {
                       {carpetList.map(carpet => (
                           <div>
                             <ul className={"dot-list"}>
-                              <li key={carpet.id} style={{marginBottom:'8px'}}>{carpet.name}</li>
+                              <li key={carpet.id} style={{marginBottom:'8px'}}>{carpet.category}</li>
                             </ul>
                             <p>{carpet.detail}</p>
                           </div>
@@ -1780,7 +1780,7 @@ const Pricing = () => {
                       {benefits.map(benefit => (
                           <div key={benefit.id}>
                             <ul className={"dot-list"}>
-                              <li key={benefit.id}>{benefit.name}</li>
+                              <li key={benefit.id}>{benefit.category}</li>
                             </ul>
                             <p style={{marginBottom:'8px'}}>{benefit.reason}</p>
                           </div>
@@ -1847,7 +1847,7 @@ const Pricing = () => {
         )
         break;
 
-      case serviceList[5].name:
+      case serviceList[5].category:
         setLayout(
             <div>
               <section className={'main-banner'}>
@@ -2024,9 +2024,9 @@ const Pricing = () => {
               <div className="words-container" ref={scrollContainerRef}>
                 {serviceList.map( serviceItem => (
                     <div key={serviceItem.id} >
-                      <h3 style={service === serviceItem.name ? active: notActive}
-                              onClick={() => {setService(serviceItem.name)}}
-                              className="word-item">{serviceItem.name}
+                      <h3 style={service === serviceItem.category ? active: notActive}
+                              onClick={() => {setService(serviceItem.category)}}
+                              className="word-item">{serviceItem.category}
                       </h3>
                     </div>
                 ))}
@@ -2069,7 +2069,7 @@ const Pricing = () => {
                       <div key={stage.id} className="service-card">
                         <img src={stage.src} alt="" className={'cart-image'}/>
                         <h3>{stage.stage}</h3>
-                        <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.name}</p>
+                        <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.category}</p>
                         <ul style={{textAlign:'start'}} className="dot-list">
                           {stage.steps.map((item, index) => (
                               <li key={index}>{item}</li>

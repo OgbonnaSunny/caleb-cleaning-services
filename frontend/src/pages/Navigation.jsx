@@ -34,15 +34,15 @@ const Navigation = () => {
 
     const emitter = new EventEmitter();
     const navLinks = [
-        {id: 1, name: 'Overview', path: '/overview' },
-        {id: 2, name: 'Locations', path: '/locations' },
-        {id: 3, name: 'Services', path: '/services' },
-        {id: 4, name: 'Pricing', path: '/pricing' },
-        {id: 5, name: 'Blog', path: '/blog' },
-        {id: 6, name: 'Gift', path: '/gift' },
-        {id: 7, name: 'Help', path: '/help' },
-        {id: 8, name: 'Reclean', path: '/reclean' },
-        {id: 9, name: 'Cleaners', path: '/become' }
+        {id: 1, category: 'Overview', path: '/overview' },
+        {id: 2, category: 'Locations', path: '/locations' },
+        {id: 3, category: 'Services', path: '/services' },
+        {id: 4, category: 'Pricing', path: '/pricing' },
+        {id: 5, category: 'Blog', path: '/blog' },
+        {id: 6, category: 'Gift', path: '/gift' },
+        {id: 7, category: 'Help', path: '/help' },
+        {id: 8, category: 'Reclean', path: '/reclean' },
+        {id: 9, category: 'Cleaners', path: '/become' }
     ];
 
     const showAdmin = {display: ' '};
@@ -69,7 +69,7 @@ const Navigation = () => {
     const [showNav, setShowNav] = useState(true);
 
     useEffect(() => {
-        let show = false;
+        let show = true;
         const user = JSON.parse(localStorage.getItem('user'));
         switch (location.pathname) {
             case '/cleanerprofile':
@@ -109,7 +109,7 @@ const Navigation = () => {
 
         for (let i = 0; i < navLinks.length; i++) {
             if (navLinks[i].path === location.pathname) {
-                const title = navLinks[i].name.charAt(0).toUpperCase() + navLinks[i].name.slice(1);
+                const title = navLinks[i].category.charAt(0).toUpperCase() + navLinks[i].category.slice(1);
                 document.title = title;
                 setActiveTab(navLinks[i].path);
                 break;
@@ -119,6 +119,7 @@ const Navigation = () => {
         if (location.pathname === '/') {
             setActiveTab('/overview');
             document.title = "Overview";
+            setShowNav(true)
             function replaceLastSegment(newSegment) {
                 const path = window.location.pathname;
                 const segments = path.split('/');
@@ -128,13 +129,14 @@ const Navigation = () => {
             window.history.replaceState(null, '', replaceLastSegment('overview'));
         }
         else {
+            setShowNav(navLinks.includes(location.pathname))
             for (let i = 0; i < navLinks.length; i++) {
                 if (navLinks[i].path === location.pathname) {
                     show = true;
                     break;
                 }
             }
-            setShowNav(show);
+          //  setShowNav(show);
         }
 
     }, [location.pathname]);
@@ -192,18 +194,20 @@ const Navigation = () => {
         }
     }
 
+    // window.open('/cleanerprofile', '_blank')
+
     return (
         <div  style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
             {showNav &&
-                <nav className="navbar"  >
+                <nav className="navbar">
                     <div style={{display:'block'} } >
                         <div className="navbar-logo" >
                             <img src={LOGO} alt="logo" className="logo-icon" onClick={handleHomeNav} />
                             <p  className="experience-text">Fly Cleaner</p>
                             <FaUserTie className={'logo-icon2'} style={{marginBottom:'13px'}}   onClick={handleAuth}  />
-                            <MdDashboard style={{color:'navy'}} onClick={() => window.open('/cleanerprofile', '_blank')}  className={'logo-icon2'}/>
-                            <MdDashboard  style={{color:'purple'}}  onClick={() => window.open('/customer', '_blank')} className={'logo-icon2'} />
-                            <MdAdminPanelSettings  style={{color:'purple'}}  onClick={() => window.open('/admin', '_blank')} className={'logo-icon2'} />
+                            <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
+                            <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
+                            <MdAdminPanelSettings  style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon2'} />
                             {!isOpen && <FaBars
                                 style={{width:'40px', height:'30px', marginLeft:'10px'}}
                                 className={` hamburger ${isOpen ? 'open' : ''}`}
@@ -226,7 +230,7 @@ const Navigation = () => {
                                 style={activeTab === link.path ? {color:'brown', textDecoration: 'underline'} : {color:'', textDecoration: ''}}
                                 className={activeTab === link.path ? 'active' : ''}
                                 onClick={() => { isMobile && setIsOpen(false); handleNavigation(link.path)}}>
-                                {link.name}
+                                {link.category}
                             </Link>
                         </li>))}
                     </ul>

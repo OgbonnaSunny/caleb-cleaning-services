@@ -67,7 +67,7 @@ const Become = () => {
                 setPhotoPreview(e.target.result);
             }
         }
-        if (imageId === 'id') {
+        if (imageId === 'orderId') {
             setFormData({...formData, identity: file});
             if (!isValidFileSize(file)) {
                 newErrors.identity = 'file is too large';
@@ -301,27 +301,27 @@ const Become = () => {
 
     const cleanerBenefits = [
         {
-            id: 1,
+            orderId: 1,
             benefit: "Great pay",
             detail: "Make £10+/hour as a cleaner by just picking up orders online"
         },
         {
-            id: 2,
+            orderId: 2,
             benefit: "Flexible schedule",
             detail: "You decide when and how many hours you want to work"
         },
         {
-            id: 3,
+            orderId: 3,
             benefit: "Training",
             detail: "We provide mandatory training for all cleaners to guarantee high quality of service to customers"
         },
         {
-            id: 4,
+            orderId: 4,
             benefit: "Easy payments",
             detail: "We deposit your earnings directly into your bank account once a week"
         },
         {
-            id: 5,
+            orderId: 5,
             benefit: "Safety",
             detail: "Your safety at work is our priority"
         }
@@ -331,12 +331,12 @@ const Become = () => {
     const hide = {display:'none'};
 
     const becomeAcleaner = [
-        {id: 'stage 1',
+        {orderId: 'stage 1',
             src: SignUp,
             action: 'Sign up on the website',
             naration: 'Sign up by filling the forms bellow step by step'
         },
-        {id: 'stage 2',
+        {orderId: 'stage 2',
             src: Upload,
             action: 'Upload required documents',
             naration: 'Before you can start working at Fly cleaner, please, share with us the documents listed below. You can add a photo or scan each document to your profile and bring originals with you when you are invited for an interview.' +
@@ -347,17 +347,17 @@ const Become = () => {
                 'and proof of the address.' + '\n' +
                 'We do a criminal check for each potential cleaner before hiring anyone',
         },
-        {id: 'stage 3',
+        {orderId: 'stage 3',
             src: Interview,
             action: 'Have an interview',
             naration: 'After screening of your documents, we will interview you.',
         },
-        {id: 'stage 4',
+        {orderId: 'stage 4',
             src: Training,
            action: 'Receive a full-day training',
            naration: 'Go through a full day of training and find out Fly cleaner service standards and T&C, how to clean, etc. When you complete the training, you will be authorized to activate your account on our website',
         },
-        {id: 'stage 5',
+        {orderId: 'stage 5',
             src: UniformBranded,
             action: 'Receive branded uniform and materials',
             naration: 'We will provide you with branded uniform (T-shirt, an apron, and a backpack) and cleaning supplies.\n' +
@@ -366,23 +366,23 @@ const Become = () => {
     ]
 
     const links = [
-        {id: 1,
+        {orderId: 1,
             item: 'Terms and Conditions',
             path: '/terms',
         },
-        {id: 2,
+        {orderId: 2,
             item: 'Booking Policy',
             path: '/booking',
         },
-        {id: 3,
+        {orderId: 3,
             item: 'Cancellation Policy',
             path: '/cancellation',
         },
-        {id: 4,
+        {orderId: 4,
             item: 'Cookies Policy',
             path: '/cookies',
         },
-        {id: 5,
+        {orderId: 5,
             item: 'Privacy Policy',
             path: '/privacy',
         },
@@ -509,7 +509,7 @@ const Become = () => {
                     <h2 className={'experience-text'} style={{textAlign:'center', marginBottom:'30px', color:'navy', marginTop:'20px'}}>Benefits of joining Fly Cleaner</h2>
                     <div className={'grid-container'}>
                         {cleanerBenefits.map((benefit) => (
-                            <div className={'price-container'} key={benefit.id}>
+                            <div className={'price-container'} key={benefit.orderId}>
                                 <h3 style={{textAlign:'center'}}>{benefit.benefit}</h3>
                                 <p>{benefit.detail}</p>
                             </div>
@@ -524,16 +524,16 @@ const Become = () => {
                     <p style={{textAlign:'center'}}>To work with Fly cleaner you need to</p>
                     <div className={'grid-container'}>
                         {becomeAcleaner.map((cleaner) => (
-                            <div className={'price-container'} key={cleaner.id}>
-                                <h3 style={{textAlign:'center'}}>{cleaner.id}</h3>
+                            <div className={'price-container'} key={cleaner.orderId}>
+                                <h3 style={{textAlign:'center'}}>{cleaner.orderId}</h3>
                                 <img src={cleaner.src} alt="" className={'cart-image5'}/>
                                 <div style={{display:'flex', justifyContent:'center'}}>
                                     < FaArrowLeft style={{color:'black', width:'30px', marginTop:'24px', marginBottom:'30px'}}
-                                                  className={cleaner.id === stageId ? 'rotate-down': 'rotate-up'}
-                                                  onClick={() => { stageId !== cleaner.id ? setStageId(cleaner.id) : setStageId('') }}/>
+                                                  className={cleaner.orderId === stageId ? 'rotate-down': 'rotate-up'}
+                                                  onClick={() => { stageId !== cleaner.orderId ? setStageId(cleaner.orderId) : setStageId('') }}/>
                                     <div style={{display:'block', paddingLeft:'10px', paddingRight:'10px', marginTop:'20px'}}>
                                         <h4 style={{textAlign:'start'}}>{cleaner.action}</h4>
-                                        <p style={cleaner.id === stageId ? show: hide}>{cleaner.naration}</p>
+                                        <p style={cleaner.orderId === stageId ? show: hide}>{cleaner.naration}</p>
                                     </div>
                                 </div>
                             </div>
@@ -668,7 +668,7 @@ const Become = () => {
                                     <label htmlFor="firstName">First Name*</label>
                                     <input
                                         type="text"
-                                        id="firstName"
+                                        orderId="firstName"
                                         name="firstName"
                                         value={formData.firstName}
                                         onChange={handleChange}
@@ -681,7 +681,7 @@ const Become = () => {
                                     <label htmlFor="lastName">Last Name*</label>
                                     <input
                                         type="text"
-                                        id="lastName"
+                                        orderId="lastName"
                                         name="lastName"
                                         value={formData.lastName}
                                         onChange={handleChange}
@@ -694,7 +694,7 @@ const Become = () => {
                                     <label htmlFor="email">Email*</label>
                                     <input
                                         type="email"
-                                        id="email"
+                                        orderId="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
@@ -707,7 +707,7 @@ const Become = () => {
                                     <label htmlFor="phone">Phone Number*</label>
                                     <input
                                         type="tel"
-                                        id="phone"
+                                        orderId="phone"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
@@ -720,7 +720,7 @@ const Become = () => {
                                     <label htmlFor="postcode">Postcode*</label>
                                     <input
                                         type="text"
-                                        id="postcode"
+                                        orderId="postcode"
                                         name="postcode"
                                         value={formData.postcode}
                                         onChange={handleChange}
@@ -733,7 +733,7 @@ const Become = () => {
                                     <label htmlFor="NI">NI*</label>
                                     <input
                                         type="text"
-                                        id="NIN"
+                                        orderId="NIN"
                                         name="NIN"
                                         value={formData.NIN}
                                         onChange={handleChange}
@@ -745,7 +745,7 @@ const Become = () => {
                                 <div className="form-group">
                                     <label htmlFor="Address">Address*</label>
                                     <textarea
-                                        id="address"
+                                        orderId="address"
                                         name="address"
                                         value={formData.address}
                                         rows={5}
@@ -768,7 +768,7 @@ const Become = () => {
                                     <label htmlFor="password">Password*</label>
                                     <input
                                         type="password"
-                                        id="password"
+                                        orderId="password"
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
@@ -781,7 +781,7 @@ const Become = () => {
                                     <label htmlFor="confirmPassword">Confirm Password*</label>
                                     <input
                                         type="password"
-                                        id="confirmPassword"
+                                        orderId="confirmPassword"
                                         name="confirmPassword"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
@@ -796,7 +796,7 @@ const Become = () => {
                                     <div style={{marginLeft:'20px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                         <input
                                             type="checkbox"
-                                            id="termsAccepted"
+                                            orderId="termsAccepted"
                                             name="termsAccepted"
                                             checked={formData.termsAccepted}
                                             onChange={handleChange}
@@ -828,7 +828,7 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                id="photo"
+                                                orderId="photo"
                                                 ref={inputRef}
                                                 name="photo"
                                                 onClick={() => setImageId('photo')}
@@ -845,10 +845,10 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                id="id"
+                                                orderId="orderId"
                                                 name="ID"
                                                 ref={inputRef2}
-                                                onClick={() => setImageId('id')}
+                                                onClick={() => setImageId('orderId')}
                                                 onChange={handleImage}
                                                 className={errors.identity ? 'error' : ''}
                                                 style={{background:'olive', color:'white', borderRadius:'13px', border:'brown'}}
@@ -862,7 +862,7 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                id="ni"
+                                                orderId="ni"
                                                 name="ni"
                                                 ref={inputRef4}
                                                 onClick={() => setImageId('ni')}
@@ -879,7 +879,7 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                id="addressProof"
+                                                orderId="addressProof"
                                                 ref={inputRef4}
                                                 name="addressProof"
                                                 onClick={() => setImageId('addressProof')}
@@ -924,7 +924,7 @@ const Become = () => {
                 <div className="container">
                     <div className="grid-container">
                         {links.map((link, index) => (
-                            <div key={index.id}>
+                            <div key={index.orderId}>
                                 <Link to={link.path} target="_blank" rel="noopener noreferrer">{link.item}</Link>
                             </div>
                         ))}

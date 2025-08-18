@@ -23,19 +23,19 @@ const Footer = () => {
     const location = useLocation();
 
     const customerActions = [
-        { id: "booking-policy", name: "Booking Policy", path: "/booking" },
-        { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation" },
-        { id: "terms-conditions", name: "Terms & Conditions", path: "/terms" },
-        { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy" },
-        { id: "cookies-policy", name: "Cookies Policy", path: "/cookies" },
-        { id: "sitemap", name: "Sitemap", path: "/sitemap" }
+        { id: "booking-policy", category: "Booking Policy", path: "/booking" },
+        { id: "cancellation-policy", category: "Cancellation Policy", path: "/cancellation" },
+        { id: "terms-conditions", category: "Terms & Conditions", path: "/terms" },
+        { id: "privacy-policy", category: "Privacy Policy" , path: "/privacy" },
+        { id: "cookies-policy", category: "Cookies Policy", path: "/cookies" },
+        { id: "sitemap", category: "Sitemap", path: "/sitemap" }
     ]
 
     const special = [
-        { id: "whats-included", name: "What's included", path: "/services" },
-        { id: "blog", name: "Blog", path: "/blog" },
-        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
-        { id: "pricing", name: "Pricing", path: "/pricing" },
+        { id: "whats-included", category: "What's included", path: "/services" },
+        { id: "blog", category: "Blog", path: "/blog" },
+        { id: "reclean-guarantee", category: "Reclean Guarantee", path: "/reclean" },
+        { id: "pricing", category: "Pricing", path: "/pricing" },
     ]
 
     const services = [
@@ -54,74 +54,74 @@ const Footer = () => {
     ];
 
     const whoWeAre = [
-        {id:'about', name: 'About us', path:'/about'},
-        {id:'contact', name: 'Contact us', path:'/contact'},
-        {id:'reviews', name: 'Reviews', path:'/reviews'},
+        {id:'about', category: 'About us', path:'/about'},
+        {id:'contact', category: 'Contact us', path:'/contact'},
+        {id:'reviews', category: 'Reviews', path:'/reviews'},
     ]
 
     const cleanerLocations1 = [
-        { id: 3, name: "Abbey Wood" },
-        { id: 4, name: "Abingdon" },
-        { id: 5, name: "Acton Central" },
-        { id: 6, name: "Addiscombe East" },
-        { id: 16, name: "Balham" },
-        { id: 17, name: "Barking" },
-        { id: 18, name: "Barkingside" },
-        { id: 19, name: "Barnehurst" },
-        { id: 20, name: "Barnes" },
-        { id: 21, name: "Barnet" },
-        { id: 93, name: "Cannon Hill" },
+        { id: 3, category: "Abbey Wood" },
+        { id: 4, category: "Abingdon" },
+        { id: 5, category: "Acton Central" },
+        { id: 6, category: "Addiscombe East" },
+        { id: 16, category: "Balham" },
+        { id: 17, category: "Barking" },
+        { id: 18, category: "Barkingside" },
+        { id: 19, category: "Barnehurst" },
+        { id: 20, category: "Barnes" },
+        { id: 21, category: "Barnet" },
+        { id: 93, category: "Cannon Hill" },
 
     ]
 
     const cleanerLocations = [
         {
             id: 3,
-            name: "Portobello",
+            category: "Portobello",
         },
         {
             id: 4,
-            name: "Morningside",
+            category: "Morningside",
         },
         {
             id: 5,
-            name: "Cramond",
+            category: "Cramond",
         },
         {
             id: 6,
-            name: "Stockbridge",
+            category: "Stockbridge",
         },
         {
             id: 31,
-            name: "Bingham",
+            category: "Bingham",
         },
         {
             id: 32,
-            name: "Blackhall",
+            category: "Blackhall",
         },
         {
             id: 33,
-            name: "Bonaly",
+            category: "Bonaly",
         },
         {
             id: 34,
-            name: "Burghmuirhead",
+            category: "Burghmuirhead",
         },
         {
             id: 40,
-            name: "West Pilton",
+            category: "West Pilton",
         },
         {
             id: 35,
-            name: "Ratho Station",
+            category: "Ratho Station",
         },
         {
             id: 36,
-            name: "Sighthill",
+            category: "Sighthill",
         },
         {
             id: 37,
-            name: "Slateford",
+            category: "Slateford",
         },
     ];
 
@@ -145,8 +145,8 @@ const Footer = () => {
                                 <div style={{display:'flex', alignItems:'center'}} key={location.id}>
                                     <div className={'footer-mark'}></div>
                                     <h5 style={{padding:'10px'}}>
-                                        <Link to="/city" state={{ id: location.id, name: location.name }}>
-                                            {location.name}
+                                        <Link to="/city" state={{ id: location.id, category: location.category }}>
+                                            {location.category}
                                         </Link>
                                     </h5>
                                 </div>
@@ -167,7 +167,7 @@ const Footer = () => {
                                 <div style={{display:'flex', alignItems:'center'}} key={service.id}>
                                     <div className={'footer-mark'}></div>
                                     <h5 style={{padding:'10px'}}>
-                                        <Link to={'/services'} state={{ id: service.id, name: service.title }}>
+                                        <Link to={'/services'} state={{ id: service.id, category: service.title }}>
                                             {service.title}
                                         </Link>
                                     </h5>
@@ -180,12 +180,12 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>For our customers</h3>
                         <ul style={{color:'grey'}}>
                             {customerActions.map(action => (
-                                <div key={action.id} style={pathIncluded && names.includes(action.name)
+                                <div key={action.id} style={pathIncluded && names.includes(action.category)
                                 && action.path === location.pathname ? hide : show}>
                                     <div style={{display:'flex', alignItems:'center'}}>
                                         <div className={'footer-mark'}></div>
                                         <h5 style={{padding:'10px'}}>
-                                            <Link to={action.path} target="_blank" rel="noopener noreferrer">{action.name}</Link>
+                                            <Link to={action.path} target="_blank" rel="noopener noreferrer">{action.category}</Link>
                                         </h5>
                                     </div>
                                 </div>
@@ -197,12 +197,12 @@ const Footer = () => {
                         <h3 style={{color:'white'}}>Get more insight</h3>
                         <ul style={{color:'grey'}}>
                             {special.map(action => (
-                                <div key={action.id} style={pathIncluded && names.includes(action.name)
+                                <div key={action.id} style={pathIncluded && names.includes(action.category)
                                 && action.path === location.pathname ? hide : show}>
                                     <div style={{display:'flex', alignItems:'center'}}>
                                         <div className={'footer-mark'}></div>
                                         <h5 style={{padding:'10px'}}>
-                                            <Link to={action.path}>{action.name}</Link>
+                                            <Link to={action.path}>{action.category}</Link>
                                         </h5>
                                     </div>
                                 </div>
@@ -217,7 +217,7 @@ const Footer = () => {
                                 <div style={{display:'flex', alignItems:'center'}} key={who.id}>
                                     <div className={'footer-mark'}></div>
                                     <h5 style={{padding:'10px'}}>
-                                        <Link to={who.path}>{who.name}</Link>
+                                        <Link to={who.path}>{who.category}</Link>
                                     </h5>
                                 </div>
                             ))}

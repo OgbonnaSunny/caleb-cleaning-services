@@ -3686,7 +3686,7 @@ a:hover {
 }
 
 .chart-container {
-  padding: 20px;
+  padding: 10px;
   height: 400px;
 }
 
@@ -4751,6 +4751,7 @@ input[type="checkbox"]:checked {
   bottom: 0;
   padding: 1rem 0;
   z-index: 100;
+  margin: 0px;
   background-color: white;
   text-align: center;
 }
@@ -5436,7 +5437,7 @@ input[type="checkbox"]:checked {
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 10px;
     border-bottom: 1px solid #eee;
     margin-bottom: 20px;
   }
@@ -5622,12 +5623,12 @@ tr:hover {
 
 /* Chart Styles */
 .chart-container {
-  margin: 30px 0;
+  margin: 10px 0;
 }
 
 .chart-wrapper {
   height: 300px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 /* Expense Categories */
@@ -5712,8 +5713,7 @@ tr:hover {
 
 /* Footer */
 .dashboard-footer {
-  margin-top: 40px;
-  padding-top: 20px;
+  padding-top: 10px;
   border-top: 1px solid #eee;
   text-align: center;
   color: #7f8c8d;
@@ -6351,7 +6351,9 @@ tr:hover {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .summary-cards {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
   }
 
   .summary-card {
@@ -6461,8 +6463,8 @@ tr:hover {
 .financial-charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 30px;
-  margin: 30px 0;
+  gap: 10px;
+  margin: 10px 0;
 }
 
 .chart-container {
@@ -6588,4 +6590,99 @@ tr:hover {
   border-radius: 30px;
   background-color: lightpink;
   align-items: center;
+}
+.chat-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 800px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.reply {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;   /* Change to 1 if you want only one line */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 70%;
+  text-overflow: ellipsis;
+  color: grey;
+  text-align: start;
+  margin-left: 5px;
+  margin-bottom: 8px;
+  font-weight: lighter;
+}
+
+.reply2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;   /* Change to 1 if you want only one line */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  color: grey;
+  text-align: start;
+  margin-left: 5px;
+  margin-bottom: 8px;
+  font-weight: lighter;
+}
+
+/* chat */
+.chat {
+  font-family: sans-serif;
+  width: fit-content; /* Container hugs content */
+}
+
+.message {
+  position: relative;
+  display: inline-block; /* Key property */
+  margin: 15px 0;
+}
+
+.message p {
+  margin: 0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* User 1 (Left-aligned, Arrow Up) */
+.message.user1 {
+  margin-right: auto;
+}
+
+.message.user1 p {
+  background: #e3f2fd;
+}
+
+.message.user1 p::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #e3f2fd transparent;
+}
+
+/* User 2 (Right-aligned, Arrow Down) */
+.message.user2 {
+  margin-left: auto;
+}
+
+.message.user2 p {
+  background: #fce4ec;
+}
+
+.message.user2 p::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 12px;
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: #fce4ec transparent transparent transparent;
 }

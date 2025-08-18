@@ -12,12 +12,12 @@ const Sidebar = () => {
     const [showPanel, setShowPanel] = useState(false);
 
     const links = [
-        {id: 1, name: 'Dashboard', link: '/admin', icon: FaHome },
-        {id: 2, name: 'Bookings', link: '/bookings', icon: FaCalendarAlt },
-        {id: 3, name: 'Cleaners', link: '/cleaners', icon: FaUserShield },
-        {id: 4, name: 'Customers', link: '/customers', icon: FaUsers },
-        {id: 5, name: 'Reports', link: '/reports', icon: FaChartLine },
-        {id: 6, name: 'Settings', link: '/settings', icon: FaCog },
+        {id: 1, category: 'Dashboard', link: '/admin', icon: FaHome },
+        {id: 2, category: 'Bookings', link: '/bookings', icon: FaCalendarAlt },
+        {id: 3, category: 'Cleaners', link: '/cleaners', icon: FaUserShield },
+        {id: 4, category: 'Customers', link: '/customers', icon: FaUsers },
+        {id: 5, category: 'Reports', link: '/reports', icon: FaChartLine },
+        {id: 6, category: 'Settings', link: '/settings', icon: FaCog },
     ]
 
     return (
@@ -30,7 +30,7 @@ const Sidebar = () => {
                 {links.map(link => (
                     <div key={link.id} style={{display: 'flex', alignItems: 'center', justifyContent: 'start', marginTop: '20px', marginLeft: '0px'}} >
                         <link.icon  style={{width:'40px', height:'30px', marginRight: '20px'}} />
-                        <Link to={link.link} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}> {link.name}</Link>
+                        <Link to={link.link} className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}> {link.category}</Link>
                     </div>
                 ))}
 

@@ -20,16 +20,16 @@ import {Link} from 'react-router-dom'
 const LocationFooter = () => {
 
     const customerActions = [
-        { id: "pricing", name: "Pricing", path: "/pricing" },
-        { id: "whats-included", name: "What's included", path: "/what-included" },
-        { id: "blog", name: "Blog" },
-        { id: "booking-policy", name: "Booking Policy", path: "/booking" },
-        { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation" },
-        { id: "terms-conditions", name: "Terms & Conditions", path: "/terms" },
-        { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy" },
-        { id: "cookies-policy", name: "Cookies Policy", path: "/cookies" },
-        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
-        { id: "sitemap", name: "Sitemap", path: "/sitemap" }
+        { id: "pricing", category: "Pricing", path: "/pricing" },
+        { id: "whats-included", category: "What's included", path: "/what-included" },
+        { id: "blog", category: "Blog" },
+        { id: "booking-policy", category: "Booking Policy", path: "/booking" },
+        { id: "cancellation-policy", category: "Cancellation Policy", path: "/cancellation" },
+        { id: "terms-conditions", category: "Terms & Conditions", path: "/terms" },
+        { id: "privacy-policy", category: "Privacy Policy" , path: "/privacy" },
+        { id: "cookies-policy", category: "Cookies Policy", path: "/cookies" },
+        { id: "reclean-guarantee", category: "Reclean Guarantee", path: "/reclean" },
+        { id: "sitemap", category: "Sitemap", path: "/sitemap" }
     ]
 
     const services = [
@@ -48,9 +48,9 @@ const LocationFooter = () => {
     ];
 
     const whoWeAre = [
-        {id:'about', name: 'About us', path:'/about'},
-        {id:'contact', name: 'Contact us', path:'/contact'},
-        {id:'reviews', name: 'Reviews', path:'/reviews'},
+        {id:'about', category: 'About us', path:'/about'},
+        {id:'contact', category: 'Contact us', path:'/contact'},
+        {id:'reviews', category: 'Reviews', path:'/reviews'},
     ]
 
     return (
@@ -79,7 +79,7 @@ const LocationFooter = () => {
                                 <li key={action.id}>
                                     <Link to={action.path} target="_blank" rel="noopener noreferrer">
                                         <div>
-                                            <p>{action.name}</p>
+                                            <p>{action.category}</p>
                                         </div>
                                     </Link>
                                 </li>
@@ -94,7 +94,7 @@ const LocationFooter = () => {
                                 <li key={who.id}>
                                     <Link to={who.path}>
                                         <div>
-                                            <p>{who.name}</p>
+                                            <p>{who.category}</p>
                                         </div>
                                     </Link>
                                 </li>

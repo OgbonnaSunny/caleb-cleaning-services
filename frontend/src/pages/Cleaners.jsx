@@ -7,7 +7,7 @@ const Cleaners = () => {
     const allCeaners = [
         {
             id: 1,
-            name: "Emma Johnson",
+            category: "Emma Johnson",
             rating: 4.8,
             jobs: 124,
             status: "active",
@@ -18,7 +18,7 @@ const Cleaners = () => {
         },
         {
             id: 2,
-            name: "David Smith",
+            category: "David Smith",
             rating: 4.5,
             jobs: 87,
             status: "active",
@@ -29,7 +29,7 @@ const Cleaners = () => {
         },
         {
             id: 3,
-            name: "Sophia Williams",
+            category: "Sophia Williams",
             rating: 4.9,
             jobs: 156,
             status: "on leave",
@@ -40,7 +40,7 @@ const Cleaners = () => {
         },
         {
             id: 4,
-            name: "James Brown",
+            category: "James Brown",
             rating: 4.2,
             jobs: 42,
             status: "inactive",
@@ -63,7 +63,7 @@ const Cleaners = () => {
     const cleanerActions = ['Update areas', 'Activate', 'Deactivate', 'Approve leave', 'Update service', 'Update worked hours'];
 
     const filteredCleaners = cleaners.filter(cleaner => {
-        const matchesSearch = cleaner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        const matchesSearch = cleaner.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
             cleaner.email.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = activeTab === 'all' || cleaner.status === activeTab;
         return matchesSearch && matchesStatus;
@@ -100,7 +100,7 @@ const Cleaners = () => {
             <div className={['slidings', 'cleaners-tabs', showTools ? 'visible' : 'hidden'].join(' ')} style={{marginTop: '10px'}}>
                 <div className="price-container">
                     <div style={{marginBottom:'20px', display:'flex', justifyContent:'stretch',  alignItems: 'baseline'}}>
-                        <h3 style={{textAlign:'center', marginLeft:'20px'}}>{`Updating profile for ${cleanerData.name}`}</h3>
+                        <h3 style={{textAlign:'center', marginLeft:'20px'}}>{`Updating profile for ${cleanerData.category}`}</h3>
                     </div>
                     <div className="grid-container">
                         {cleanerActions.map((action, index) => (
@@ -168,7 +168,7 @@ const Cleaners = () => {
                         <div key={cleaner.id} className="service-card">
                             <div style={{display: 'block'}}>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                    <h5>{cleaner.name}</h5>
+                                    <h5>{cleaner.category}</h5>
                                     <span className="jobs-count">({cleaner.jobs} jobs)</span>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaStar style={{width:'20px', height:'12px'}} />

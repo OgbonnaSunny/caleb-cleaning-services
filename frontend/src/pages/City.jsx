@@ -32,7 +32,7 @@ const City = () => {
     const navigate = useNavigate();
     const location  = useLocation();
      const state  = location?.state;
-     const [city, setCity] = useState(state?.name)
+     const [city, setCity] = useState(state?.category)
      const [quote, setQuote] = useState("");
     const [question1, setQuestion1] = useState('');
      const [question2, setQuestion2] = useState('');
@@ -93,19 +93,19 @@ const City = () => {
     const HandQuote = () => {}
 
     const serviceDetails = [
-        {id: 1, src: Domestic, name: 'Domestcic cleaning', detail: 'Count on us for cleaning your home. Our seasoned cleaners will swiftly and effectively complete all the work using professional-grade supplies. Your home will be spotlessly clean and dust-free. Give us a call and we\'ll come at a time that\'s convenient for you.'},
-        {id: 2, src: Upholstery, name: 'Upholstery cleaning', detail: 'You can trust your furniture cleaning to our professionals. We use specialized solutions that effectively remove stains without damaging the upholstery. After cleaning, your sofa, chairs and other furniture will look like new. Book a cleaning with us today!'},
-        {id: 3, src: Regular, name: 'Regular cleaning', detail: 'Spotlessness and order in your home every day is what our company\'s regular cleaning provides. Just choose a schedule that’s convenient for you, and it can always be changed if needed. Our professionals are ready to come clean any day.'},
-        {id: 4, src: Deep, name: 'Deep cleaning', detail: 'Want your home gleaming with cleanliness? Our team will perform a thorough house cleaning for you. We will diligently wash everything, from floor to ceiling, without missing a single nook or cranny. And our rates will pleasantly surprise you.'},
-        {id: 5, src: Carpert, name: 'Carpet cleaning', detail: 'Our team of professionals ensures flawless dry cleaning for carpets. Clean carpets mean caring for the health and comfort of your home. We value quality, providing cleanliness that accentuates your style and coziness. Leave an inquiry to experience our efficient cleaning.'},
-        {id: 6, src: Office, name: 'Office cleaning', detail: 'Our service ensures comprehensive cleaning of office spaces. No detail is overlooked: desks, equipment, furniture — everything will be pristine. Regular cleaning provides a healthy environment and enhances employee well-being.'},
-        {id: 7, src: EndOfTenancy, name: 'End of tenancy cleaning', detail: 'We are your solution for meticulous end of tenancy cleaning. We\'ll restore the space to its original condition, fix any damages, and clean every corner, including rooms, kitchen, and bathroom. We guarantee the removal of all waste.'}
+        {id: 1, src: Domestic, category: 'Domestcic cleaning', detail: 'Count on us for cleaning your home. Our seasoned cleaners will swiftly and effectively complete all the work using professional-grade supplies. Your home will be spotlessly clean and dust-free. Give us a call and we\'ll come at a time that\'s convenient for you.'},
+        {id: 2, src: Upholstery, category: 'Upholstery cleaning', detail: 'You can trust your furniture cleaning to our professionals. We use specialized solutions that effectively remove stains without damaging the upholstery. After cleaning, your sofa, chairs and other furniture will look like new. Book a cleaning with us today!'},
+        {id: 3, src: Regular, category: 'Regular cleaning', detail: 'Spotlessness and order in your home every day is what our company\'s regular cleaning provides. Just choose a schedule that’s convenient for you, and it can always be changed if needed. Our professionals are ready to come clean any day.'},
+        {id: 4, src: Deep, category: 'Deep cleaning', detail: 'Want your home gleaming with cleanliness? Our team will perform a thorough house cleaning for you. We will diligently wash everything, from floor to ceiling, without missing a single nook or cranny. And our rates will pleasantly surprise you.'},
+        {id: 5, src: Carpert, category: 'Carpet cleaning', detail: 'Our team of professionals ensures flawless dry cleaning for carpets. Clean carpets mean caring for the health and comfort of your home. We value quality, providing cleanliness that accentuates your style and coziness. Leave an inquiry to experience our efficient cleaning.'},
+        {id: 6, src: Office, category: 'Office cleaning', detail: 'Our service ensures comprehensive cleaning of office spaces. No detail is overlooked: desks, equipment, furniture — everything will be pristine. Regular cleaning provides a healthy environment and enhances employee well-being.'},
+        {id: 7, src: EndOfTenancy, category: 'End of tenancy cleaning', detail: 'We are your solution for meticulous end of tenancy cleaning. We\'ll restore the space to its original condition, fix any damages, and clean every corner, including rooms, kitchen, and bathroom. We guarantee the removal of all waste.'}
     ]
 
     const stages = [
-        {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
-        {id:'pay', src: Currency, stage:'Stage 2', name: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
-        {id:'manage',src: Manage,  stage: 'Stage 3', name: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
+        {id:'submit', src: Booking, stage:'Stage 1', category:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
+        {id:'pay', src: Currency, stage:'Stage 2', category: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
+        {id:'manage',src: Manage,  stage: 'Stage 3', category: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
                 ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use MyAccount on our website or the eMop App to keep track of your booking']}
     ]
 
@@ -117,11 +117,11 @@ const City = () => {
     ]
 
     const items = [
-        {id: 1, name: 'Window cleaning', src: SketctedWindow},
-        {id: 2, name: 'Fridge and microwave cleaning', src: SketchedFridge},
-        {id: 3, name: 'Kitchen cabinets cleaning', src: Cabinets},
-        {id: 4, name: 'Cleaning bookcases', src: Shelf},
-        {id: 5, name: 'Changing linens and bed covers', src: Bed}
+        {id: 1, category: 'Window cleaning', src: SketctedWindow},
+        {id: 2, category: 'Fridge and microwave cleaning', src: SketchedFridge},
+        {id: 3, category: 'Kitchen cabinets cleaning', src: Cabinets},
+        {id: 4, category: 'Cleaning bookcases', src: Shelf},
+        {id: 5, category: 'Changing linens and bed covers', src: Bed}
     ]
 
     const arrowRightStyleOff = {
@@ -284,7 +284,7 @@ const City = () => {
                         {serviceDetails.map((plan) => (
                             <div key={plan.id} className="service-card">
                                 <img src={plan.src} alt="" className={'cart-image'}/>
-                                <h4 style={{color:'navy', textAlign:'center', marginBottom:'10px'}}>{plan.name}</h4>
+                                <h4 style={{color:'navy', textAlign:'center', marginBottom:'10px'}}>{plan.category}</h4>
                                 <p>{plan.detail}</p>
                             </div>
                         ))}
@@ -348,7 +348,7 @@ const City = () => {
                                 <div key={stage.id} className="service-card">
                                     <img src={stage.src} alt="" className={'cart-image'}/>
                                     <h3>{stage.stage}</h3>
-                                    <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.name}</p>
+                                    <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.category}</p>
                                     <ul style={{textAlign:'start'}} className="dot-list">
                                         {stage.steps.map((item, index) => (
                                             <li key={index}>{item}</li>
@@ -487,7 +487,7 @@ const City = () => {
                                 {items.map(item => (
                                     <div key={item.id} className={'grid-item'}>
                                         <img src={item.src} alt="" className={'cart-image3'}/>
-                                        <p>{item.name}</p>
+                                        <p>{item.category}</p>
                                     </div>
                                 ))}
                             </div>

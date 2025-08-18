@@ -10,15 +10,34 @@ import {
     FaMapMarkerAlt,
     FaPoundSign,
     FaQuestionCircle, FaUserCircle,
-    FaUserTie
+    FaUserTie,
+    FaEnvelope, FaCommentDots, FaPen, FaTimes,
 } from "react-icons/fa";
 import api from "./api.js";
 import { FaCalendarCheck} from 'react-icons/fa';
 import Bookings from './Bookings.jsx';
+import io from 'socket.io-client';
+import Messages from './Messages.jsx';
+import Upholstery from "../images/upholstery2.png";
+import Regular from "../images/regular.png";
+import EndOfTenancy from "../images/endOfTenancy.png";
+import LivingRoom from "../images/livingRoom.png";
+import Deep from "../images/deep.png";
+import Office from "../images/office.png";
+import Day from "../images/day.png";
+import Domestic from "../images/domestic.png";
+import Rug from "../images/rug.png";
+import Bathroom from "../images/bathroom.png";
+import Kitchen from "../images/kitchen.png";
+import Oven from "../images/oven.png";
+import {object} from "yup";
+import { FiLogOut } from "react-icons/fi";
+import { useSocket } from "../Socket.jsx";
 
 
 const Customer = () => {
     const navigate = useNavigate();
+    const socket = useSocket();
 
     const topNavItems = ['Active', 'History'];
     const [topItems, setTopItems] = useState(topNavItems);
@@ -46,68 +65,45 @@ const Customer = () => {
     const [booking, setBooking] = useState([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
-    const [history, setHistory] = useState([]);
+    const [history, setHistory] = useState(false);
     const [newOrders, setNewOrders] = useState([]);
+    const [newOrdersCopy, setNewOrdersCopy] = useState([]);
     const [newBookingLoading, setNewBookingLoading] = useState(false);
     const [historyLoading, setHistoryLoading] = useState(false);
     const [activeBottomMenu, setActiveBottomMenu] = useState('Booking');
+    const [email, setEmail] = useState('');
+    const [pageSize, setPageSize] = useState(10);
+    const [user, setUser] = useState('');
+    const [chatting, setChatting] = useState(false);
+    const [dataForUpdate, setDataForUpdate] = useState('');
+    const [billing, setBilling] = useState(0);
+    const [messageCount, setMessageCount] = useState(0);
+
 
     const bottomNavItems = [
-        {id: 1, name: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
+        {id: 1, category: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}/>},
-        {id: 2, name: 'Booking', items: ['Active', 'History'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
+        {id: 2, category: 'Booking', items: ['Active', 'History'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
-        {id: 4, name: 'Support', items: ['Live chat', 'Contact us'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
+        {id: 4, category: 'Support', items: ['Contact us'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
     ];
 
-    const NewOrders = () => {
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setEmail(user.email);
+        }
 
-        return (
-            <div className={'support-page'}>
-                {newBookingLoading ?
-                    <div className="progress-bar-container">
-                        <div className="spinner"></div>
-                        <p style={{textAlign:'center'}}>Loading data...</p>
-                    </div>
-                    : (newOrders.length <= 0 || newOrders === null) ?
-                        <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
-                            <p style={{textAlign:'center'}}>{message}</p>
-                        </div> :
-                        <div className="grid-container">
-                            {newOrders.map(order => (
-                                <div key={order.id}  className={'stat-card'}>
-                                    <p style={{textAlign:'center'}}>{order.orderId}</p>
-                                    <div className={'new-order-container'}>
-                                        <p style={{textAlign:'start'}}>{formatDate(order.bookDate)}</p>
-                                        <p style={{textAlign:'end',fontWeight:'900' }}>{order.plan}</p>
-                                    </div>
-                                    <div className={'new-order-container'}>
-                                        <FaMapMarkerAlt style={{width:'20px'}} />
-                                        <p style={{textAlign:'start', width:'15%'}}>EH66JN</p>
-                                        <p className={'truncate-text'}>{order.address}</p>
-                                        <FaHome onClick={() => navigate('/sitemap', {state: {address: order.address}})} style={{width:'30%'}} />
-                                    </div>
-                                    <div className={'new-order-container'}>
-                                        <p>Estimated duration</p>
-                                        <h4 style={{textAlign:'end'}}>{formatTime(order.duration)}</h4>
-                                    </div>
-                                    <div className={'new-order-container'}>
-                                        <p style={{flex:'1'}}>Estimated Amount</p>
-                                        <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
-                                    </div>
-                                    <button disabled={acceptingOrders}
-                                            onClick={() => acceptOrder(order.id)}
-                                            className={acceptingOrders ? 'back-button' : 'next-button'}>
-                                        Accept this job
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                }
-            </div>
-        );
-    }
+    }, []);
+
+    useEffect(() => {
+        if (window.innerWidth > 768) {
+            setPageSize(20);
+            return;
+        }
+        setPageSize(10);
+    }, [])
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -125,63 +121,6 @@ const Customer = () => {
 
     }, [])
 
-    /*useEffect(() => {
-         const fetchCleanerData = () => {
-             const user = JSON.parse(localStorage.getItem('user'));
-             if (user === null || user === undefined) {
-                 setMessage('User not signed in');
-                 return;
-             }
-             setNewBookingLoading(true);
-             api.post('/api/booking/new-booking', {email: user.email})
-                 .then(response => {
-                     const { booking } = response.data;
-                     if (booking) {
-                         setNewOrders(booking);
-                     }
-                     else {
-                         setMessage('Error updating user');
-                     }
-                 })
-                 .catch(error => {
-                     setMessage('Error fetching new ordder')
-                 })
-                 .finally(() => {
-                     setNewBookingLoading(false);
-                 })
-         };
-         fetchCleanerData()
-    }, []);
-
-    useEffect(() => {
-         const fetchCleanerData = () => {
-             const user = JSON.parse(localStorage.getItem('user'));
-             if (user === null || user === undefined) {
-                 setMessage('User not signed in');
-                 return;
-             }
-             setHistoryLoading(true);
-             api.post('/api/booking/completed', {email: user.email})
-                 .then(response => {
-                     const { booking } = response.data;
-                     if (booking) {
-                         setHistory(booking);
-                     }
-                     else {
-                         setMessage('Error updating user');
-                     }
-                 })
-                 .catch(error => {
-                     setMessage('Error fetching new ordder')
-                 })
-                 .finally(() => {
-                     setHistoryLoading(false);
-                 })
-         };
-         fetchCleanerData()
-    }, []);*/
-
-
     const handleNewOrder = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
@@ -191,65 +130,300 @@ const Customer = () => {
         setMessage('User data not found');
     }
 
-    const History = () => {
-        return (
-            <div className={'support-page'}>
-                {historyLoading ?
-                    <div className="progress-bar-container">
-                        <div className="spinner"></div>
-                        <p style={{textAlign:'center'}}>Loading data...</p>
-                    </div>
-                    : (history.length <= 0 || history === null) ?
-                        <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
-                            <p style={{textAlign:'center'}}>{message}</p>
-                        </div> :
-                        <div className="grid-container">
-                            {history.map(order => (
-                                <div key={order.id} className={'price-container'} >
-                                    <p style={{textAlign:'center'}}>{order.orderId}</p>
-                                    <div className={'order-container'}>
-                                        <h4 style={{width:'40%'}}>Customer</h4>
-                                        <h3 style={{textAlign:'end'}}>{order.customer}</h3>
-                                    </div>
-
-                                    <div className={'order-container'}>
-                                        <h4 style={{width:'50%'}}>Amount</h4>
-                                        <h3 style={{textAlign:'end'}}>£{order.estimatedAmount}</h3>
-                                    </div>
-
-                                    <div className={'order-container'}>
-                                        <h4 style={{width:'50%'}}>Duration</h4>
-                                        <h3 style={{textAlign:'end'}}>{formatTime(order.duration)}</h3>
-                                    </div>
-
-                                    <div className={'order-container'}>
-                                        <h4 style={{width:'50%'}}>Date</h4>
-                                        <h3 style={{textAlign:'end'}}>{formatTime(order.completedDate)}</h3>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                }
-            </div>
-        );
-    }
-
     useEffect(() => {
         setTimeout(() => setMessage(null), 4000);
     }, [message]);
 
     const handleTopItem = (item) => {
         setActiveTopMenu(item);
-        switch (activeBottomMenu) {
-
-        }
+        setHistory(!history);
     }
 
     const handleBottomItem = (index) => {
         const item = bottomNavItems[index];
         setTopItems(item.items)
-        setActiveBottomMenu(item.name)
+        setActiveBottomMenu(item.category)
+        setActiveTopMenu(item.items[0])
     }
+
+    const services = [
+        { id: 'Upholstery ', icon: 'fa-home', title: 'Upholstery cleaning', description: 'Upholstery cleaning for surfaces', src: Upholstery },
+        { id: 'Regulqr', icon: 'fa-home', title: 'Regular cleaning', description: 'Regular cleaning for your home', src: Regular },
+        { id: 'End of tenancy', icon: 'fa-couch', title: 'End of tenancy', description: 'Thorough cleaning to get your deposit back', src: EndOfTenancy },
+        { id: 'Carpet', icon: 'fa-rug', title: 'Carpet cleaning', description: 'Professional deep cleaning for carpets', src: LivingRoom },
+        { id: 'Deep', icon: 'fa-broom', title: 'Deep cleaning', description: 'Intensive cleaning for neglected spaces', src: Deep },
+        { id: 'Office', icon: 'fa-home', title: 'Office cleaning', description: 'Detailed cleaning for office space', src: Office },
+        { id: 'Same day', icon: 'fa-home', title: 'Same day cleaning', description: 'Quickly get your home in order as quickly as possible', src: Day},
+        { id: 'Move in', icon: 'fa-home', title: 'Move in  cleaning', description: 'We will get your new home ready for habitaion', src: Domestic},
+        { id: 'Rug', icon: 'fa-home', title: 'Rug cleaning', description: 'Professional deep cleaning for rugs', src: Rug },
+        { id: 'Bathroom', icon: 'fa-home', title: 'Bathroom cleaning', description: 'We provide deep cleaning for bathrooms', src: Bathroom },
+        { id: 'Kitchen deep', icon: 'fa-home', title: 'Kitchen deep', description: 'Professional deep kitchen cleaning', src: Kitchen },
+        { id: 'Oven', icon: 'fa-building', title: 'Oven', description: 'Oven cleaning services', src: Oven},
+    ];
+
+    const Contact = () => {
+
+        const [name, setName] = useState('');
+        const [contactEmail, setContactEmail] = useState('');
+        const [phone, setPhone] = useState('');
+        const [service, setService] = useState('');
+        const [contactMessage, setContactMessage] = useState('');
+        const [errors, setErrors] = useState({});
+
+        const sendMessage = (e) => {
+            e.preventDefault();
+            const newErrors = {}
+            if (!contactEmail) newErrors.contactemail = 'Email address required';
+            if (!phone) newErrors.phone = 'Phone number required';
+            if (!name) newErrors.name = 'Name required';
+            if (!contactMessage) newErrors.contactMessage = 'Write a message';
+            if (Object.keys(newErrors.length) > 0) {
+                setErrors(newErrors);
+                return;
+            }
+        }
+
+        return (
+            <section className="main-banner">
+                <div className="container">
+                    <div className="burden-container">
+                        <div className="contact-form">
+                            <h3>Send Us a Message</h3>
+                            <form onSubmit={sendMessage}>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="name">Full Name</label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={name}
+                                            className="button-bg"
+                                            onChange={(e) => setName(e.target.value)}
+                                            required
+                                        />
+                                        {name.errors && <label>{name.errors}</label>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email Address</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="contactEmail"
+                                            value={contactEmail}
+                                            className="button-bg"
+                                            onChange={(e) => setContactEmail(e.target.value)}
+                                            required
+                                        />
+                                        {contactEmail.errors && <label className="error-message">{contactEmail.errors}</label>}
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="phone">Phone Number</label>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            value={phone}
+                                            className="button-bg"
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="service">Service Needed</label>
+                                        <select
+                                            id="service"
+                                            name="service"
+                                            value={service}
+                                            className="button-bg"
+                                            onChange={(e) => setService(e.target.value)}>
+                                            {services.map(plan => (
+                                                <option key={plan.id} value={plan.title}>{plan.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="message">Your Message</label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={contactMessage}
+                                        className="button-bg"
+                                        onChange={(e) => setContactMessage(e.target.value)}
+                                    ></textarea>
+                                    {contactMessage.errors && <label className="error-message">{contactMessage.errors}</label>}
+                                </div>
+                                <button type="submit" className="submit-button">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    const Profile = () => {
+        const [oldPassword, setOldPassword] = useState('');
+        const [newPassword, setNewPassword] = useState('');
+        const [confirmPassword, setConfirmPassword] = useState('');
+        const [errors, setErrors] = useState({});
+        const [successMessage, setSuccessMessage] = useState(null);
+        const [loading, setLoading] = useState(false);
+
+        const changePassword = async (e) => {
+            e.preventDefault();
+            if (loading) return;
+            setLoading(true);
+            const newErrors = {};
+            if (!password) newErrors.password = 'Password address required';
+            if (!newPassword) newErrors.newPassword = 'Password required';
+            if (!confirmPassword) newErrors.confirmPassword = 'Please confirm passwords required';
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors)
+                return;
+            };
+            const data = {password: newPassword, oldPassword: oldPassword, email: email};
+
+            try {
+                const response = await api.post('/api/users/update', data)
+                const { success } = response.data;
+                if (success) {
+                    setSuccessMessage('Password changed successfully');
+                }
+                else {
+                    setSuccessMessage('Something went wrong!');
+                }
+            } catch (error) {
+                console.error(error.response.data);
+                setSuccessMessage('Profile update failed');
+            } finally {
+                setLoading(false);
+                setTimeout(() => setSuccessMessage(null), 5000);
+            }
+        }
+
+        const logout = () => {
+            if (loading) return;
+            setLoading(true);
+            api.post('/api/logout')
+                .then((response) => {
+                    if (response.data) {
+                        localStorage.removeItem('user');
+                        navigate('/overview');
+                        window.close();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    localStorage.removeItem('user');
+                    navigate('/overview');
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        };
+
+        return (
+            <>
+                <form onSubmit={changePassword} className="support-page">
+                    <label>Change password
+                        {dataForUpdate === '' ? <FaPen onClick={() => setDataForUpdate('password')} style={{width:'20px'}} />
+                            : dataForUpdate === 'password' ?
+                                <FaTimes style={{width:'20px'}} onClick={() => setDataForUpdate('')} /> : null }
+                    </label>
+                    {dataForUpdate === 'password' && <div>
+                        <div className={'form-group'}>
+                            <input
+                                type="password"
+                                name={'newPassword'}
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                placeholder="New Password"
+                                className={'button-bg'}
+                                required
+                            />
+                            {errors.newPassword && <span className="error-message">{errors.newPassword}</span>}
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="password"
+                                name={'confirmPassword'}
+                                placeholder="Confirm New Password"
+                                className={'button-bg'}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="password"
+                                name={'oldPassword'}
+                                value={oldPassword}
+                                onChange={(e) => setOldPassword(e.target.value)}
+                                placeholder="Old Password"
+                                className={'button-bg'}
+                                required
+                            />
+                            {errors.oldPassword && <span className="error-message">{errors.oldPassword}</span>}
+                        </div>
+                        {successMessage && (<p>{successMessage}</p>)}
+                        <button type={'submit'} className="submit-button">Submit</button>
+                    </div> }
+                </form>
+                <label style={{marginTop:'20%', textAlign:'center'}}  >
+                    <FiLogOut onClick={logout} size={40} />
+                    Sign Out
+                </label>
+            </>
+        )
+    }
+
+    useEffect(() => {
+        api.post('/api/revenue/billing', {email: email})
+            .then((response) => {
+                setBilling(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+    }, [email])
+
+    const Billing = () => {
+        return (
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+                <h2 style={{marginTop:'40%', textAlign:'center'}}>Total billing: £{billing}</h2>
+            </div>
+        );
+    }
+
+    useEffect(() => {
+        if (!socket) { return; }
+        socket.on('receive_message', (data) => {
+            if (data.receiver === email) {
+                setMessageCount(prev => prev + 1);
+            }
+        });
+
+        return () => {
+            socket.off("receive_message");
+        };
+
+    }, [email]);
+
+    useEffect(() => {
+        api.post('/api/messages/users', {receiver: email})
+            .then((response) => {
+                const count = response.data.messages;
+                setMessageCount(prev => prev + count);
+            })
+            .catch((error) => {})
+    }, [email]);
 
 
     return (
@@ -257,26 +431,46 @@ const Customer = () => {
             {message && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
             <nav  className='top-order-nav'>
                 <div className="nav-order-content">
-                    <img src={LOGO} className={'logo-icon'}/>
-                    {topItems.map((item, index) => (
-                        <div key={`top-${index}`} className="nav-order-item"
-                             onClick={() => handleTopItem(item)}>
-                            <h3  style={activeTopMenu === item ? {color:'goldenrod', textDecoration:'underline'}:
-                                {color:'', textDecoration:'none'} } >
-                                {item}
-                            </h3>
+                    <div style={{display:'flex', flexDirection:'row', marginLeft:'20px', marginRight:'20px', alignItems:'center'}}>
+                        <div style={{width:'80%', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                            <img src={LOGO} className={'logo-icon'}/>
+                            {topItems.map((item, index) => (
+                                <div key={`top-${index}`} className="nav-order-item"
+                                     onClick={() => handleTopItem(item)}>
+                                    <h3  style={activeTopMenu === item ? {color:'goldenrod', textDecoration:'underline'}:
+                                        {color:'', textDecoration:'none'} } >
+                                        {item}
+                                    </h3>
+                                </div>
+                            ))}
+                            {activeBottomMenu === 'Support' &&
+                                <div
+                                    onClick={() => navigate('/messages')}
+                                    style={{width:'20%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
+                                    <FaCommentDots
+                                        size={30}
+                                        style={{width: '40px', color:'black'}}
+                                    />
+                                    {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
+                                </div>
+
+                            }
                         </div>
-                    ))}
-                    <div className={'book-icon'} onClick={handleNewOrder}>
-                        <MdAdd  size={40} style={{width:'40px', marginRight:'10px'}}/>
-                        <h3>New</h3>
+                        <div style={{maxWidth:'20%'}} className={'book-icon'} onClick={handleNewOrder}>
+                            <MdAdd  size={40} style={{width:'40%', marginRight:'10px'}}/>
+                            <h3>New</h3>
+                        </div>
                     </div>
+
                 </div>
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
+                {activeBottomMenu === 'Support' && <Contact />}
+                {activeTopMenu === 'Profile' && <Profile />}
+                {activeTopMenu === 'Billing' && <Billing />}
                 {activeTopMenu === 'Active' && <Bookings cancellable={true} user={'client'}/>}
-                {activeTopMenu === 'History' && <Bookings history={history} user={'client'} />}
+                {activeTopMenu === 'History' && <Bookings history={history}  user={'client'} />}
             </main>
 
             <nav  className='bottom-order-nav'>
@@ -284,12 +478,13 @@ const Customer = () => {
                     {bottomNavItems.map((item, index) => (
                         <div key={`bottom-${item.id}`} className="nav-order-item"
                              onClick={() => handleBottomItem(index)}>
-                            <div style={activeTopMenu === item.name ?
-                                {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
+                            <div style={activeTopMenu === item.category ?
+                                {color:'blue', textDecoration:'underline'}:
+                                {color:'', textDecoration:'none'}}>
                                 {item.icon}
-                                <h3 style={activeBottomMenu === item.name ?
+                                <h3 style={activeBottomMenu === item.category ?
                                     {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
-                                    {item.name}
+                                    {item.category}
                                 </h3>
                             </div>
                         </div>

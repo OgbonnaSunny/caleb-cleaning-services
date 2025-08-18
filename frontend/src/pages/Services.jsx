@@ -200,7 +200,7 @@ const Services = () => {
   const miniIspection = [
     {
       id: 1,
-      name: "Inspection",
+      category: "Inspection",
       detail: "Fly cleaners' fully insured personnel prepare the space and make sure all surfaces are reachable before beginning the deep cleaning procedure. So they don't miss any places during the cleaning, they may gently reorganise the furniture in the agreed-upon order. This preparation guarantees that every nook and cranny, high point and low point is prepared for a comprehensive cleaning, laying the groundwork for a deep cleaning session of the highest quality."
     },
   ]
@@ -447,9 +447,9 @@ const Services = () => {
   };
 
   const stages = [
-    {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
-    {id:'pay', src: Currency, stage:'Stage 2', name: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
-    {id:'manage',src: Manage,  stage: 'Stage 3', name: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
+    {id:'submit', src: Booking, stage:'Stage 1', category:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
+    {id:'pay', src: Currency, stage:'Stage 2', category: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
+    {id:'manage',src: Manage,  stage: 'Stage 3', category: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
         ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use our website to keep track of your booking']}
   ]
 
@@ -711,17 +711,17 @@ const Services = () => {
   const cleaningInspectionList = [
     {
       id: 1,
-      name: "Inspection",
+      category: "Inspection",
       detail: "Fly cleaners' fully insured personnel prepare the space and make sure all surfaces are reachable before beginning the deep cleaning procedure. So they don't miss any places during the cleaning, they may gently reorganise the furniture in the agreed-upon order. This preparation guarantees that every nook and cranny, high point and low point is prepared for a comprehensive cleaning, laying the groundwork for a deep cleaning session of the highest quality."
     },
     {
       id: 2,
-      name: "Deep cleaning process",
+      category: "Deep cleaning process",
       detail: "Dusting, wiping, and sanitising surfaces, furniture, and fixtures are all part of the thorough cleaning that takes place in each room during the main stage. Fly cleaners' fully trained and trusted one-off cleaners will remove dirt and polish faucets, tiles, and appliances in kitchens and bathrooms, leaving these surfaces hygienically clean."
     },
     {
       id: 3,
-      name: "Final review",
+      category: "Final review",
       detail: "Our cleaners do a last inspection to make sure everything is immaculate after every cleaning serviceName in Edinburgh. To make the area appear tidy and welcoming, they can put anything that has been moved back in its original location. This concludes the amazing job they will do in giving you a clean home."
     }
   ];
@@ -738,17 +738,17 @@ const Services = () => {
   const roomCleaningServices = [
     {
       id: 1,
-      name: "Living room and bedroom",
+      category: "Living room and bedroom",
       detail: "Professional dusting of surfaces (including furniture, bed frames, bookcases, etc.), wiping the mirrors, mopping, hoovering the carpet, and wiping the picture frames. If needed, you can request changing the linens and bed covers and various other additional services."
     },
     {
       id: 2,
-      name: "Kitchen",
+      category: "Kitchen",
       detail: "Wiping and polishing all surfaces and worktops, mopping and vacuuming the floors, cleaning equipment and appliances, washing the dishes, cleaning doors and handles. You can also request cleaning inside the fridge, the oven and the microwave, arranging things inside kitchen cabinets, etc."
     },
     {
       id: 3,
-      name: "Bathroom and hallway",
+      category: "Bathroom and hallway",
       detail: "Polishing and sanitising the sink, the tiles, the toilet, the toilet seat, the bathtubs and/or the shower cubicle. Also, our cleaners hoover/sweep and mop the floors, polish the accessible surfaces and furniture, clean mirrors and glasses, remove fingerprints and marks from surfaces, wipe the skirting boards and the inside of the front door."
     }
   ];
@@ -756,46 +756,46 @@ const Services = () => {
   const priorityAreas = [
     {
       id: 1,
-      name: "Living room and bedroom - professional dusting of surfaces (including furniture, the bed frame, bookcases, etc.), wiping the mirrors, mopping, hoovering the carpet, and wiping the picture frames. If needed, you can request changing the linens and bed covers and various other additional services."
+      category: "Living room and bedroom - professional dusting of surfaces (including furniture, the bed frame, bookcases, etc.), wiping the mirrors, mopping, hoovering the carpet, and wiping the picture frames. If needed, you can request changing the linens and bed covers and various other additional services."
     },
     {
       id: 2,
-      name: "Kitchen - wiping and polishing all surfaces and worktops, mopping and vacuuming the floors, cleaning equipment and appliances, washing the dishes, cleaning doors and handles. You can also request cleaning inside the fridge, the oven and the microwave, arranging things inside kitchen cabinets, etc."
+      category: "Kitchen - wiping and polishing all surfaces and worktops, mopping and vacuuming the floors, cleaning equipment and appliances, washing the dishes, cleaning doors and handles. You can also request cleaning inside the fridge, the oven and the microwave, arranging things inside kitchen cabinets, etc."
     },
     {
       id: 3,
-      name: "Bathroom - polishing and sanitising the sink, the tiles, the toilet, the toilet seat, the bathtubs and/or the shower cubicle. Also, our cleaners hoover/sweep and mop the floors, polish the accessible surfaces and clean mirrors and glasses."
+      category: "Bathroom - polishing and sanitising the sink, the tiles, the toilet, the toilet seat, the bathtubs and/or the shower cubicle. Also, our cleaners hoover/sweep and mop the floors, polish the accessible surfaces and clean mirrors and glasses."
     },
     {
       id: 4,
-      name: "Hallway and stairs - cleaning and polishing the furniture, hoovering carpets and rugs, washing the floors, removing fingerprints and marks from surfaces, wiping the skirting boards and the inside of the front door."
+      category: "Hallway and stairs - cleaning and polishing the furniture, hoovering carpets and rugs, washing the floors, removing fingerprints and marks from surfaces, wiping the skirting boards and the inside of the front door."
     }
   ];
 
   const serviceBenefits = [
     {
       id: 1,
-      name: "We are fully insured. We guarantee that your property and possessions will stay safe."
+      category: "We are fully insured. We guarantee that your property and possessions will stay safe."
     },
     {
       id: 2,
-      name: "You can book our cleaning services any time or day of the week - regardless of weekends or bank holidays."
+      category: "You can book our cleaning services any time or day of the week - regardless of weekends or bank holidays."
     },
     {
       id: 3,
-      name: "We cover a full range of cleaning tasks, which you can also customise according to your needs."
+      category: "We cover a full range of cleaning tasks, which you can also customise according to your needs."
     },
     {
       id: 4,
-      name: "All the pricing plans are transparent and there are no hidden charges."
+      category: "All the pricing plans are transparent and there are no hidden charges."
     },
     {
       id: 5,
-      name: "We have qualified and trustworthy cleaners."
+      category: "We have qualified and trustworthy cleaners."
     },
     {
       id: 6,
-      name: "Our customer service is always ready to help you and resolve any issues."
+      category: "Our customer service is always ready to help you and resolve any issues."
     }
   ];
 
@@ -869,19 +869,19 @@ const Services = () => {
   }
 
   const carpetCleaningServices = [
-    { id: 1, name: "Hoovering the carpet" },
-    { id: 2, name: "Removing stains and dirt" },
-    { id: 3, name: "Washing the carpet with carpet washing equipment" },
-    { id: 4, name: "Deodorization to get rid of smells" },
-    { id: 5, name: "Using a hoover to get rid of loose dirt and debris" },
-    { id: 6, name: "Pre-treatment of stains and high-traffic areas" },
-    { id: 7, name: "Cleaning with steam or hot water" },
-    { id: 8, name: "Deep cleaning to get rid of allergies and ingrained grime" },
-    { id: 9, name: "Grooming carpet to bring back its texture" },
-    { id: 10, name: "Applying stain protection" },
-    { id: 11, name: "Removing contaminants, moisture, and cleaning chemicals" },
-    { id: 12, name: "Last assessment to ensure quality" },
-    { id: 13, name: "Additional options like pet stain treatments or Scotchgard protection" }
+    { id: 1, category: "Hoovering the carpet" },
+    { id: 2, category: "Removing stains and dirt" },
+    { id: 3, category: "Washing the carpet with carpet washing equipment" },
+    { id: 4, category: "Deodorization to get rid of smells" },
+    { id: 5, category: "Using a hoover to get rid of loose dirt and debris" },
+    { id: 6, category: "Pre-treatment of stains and high-traffic areas" },
+    { id: 7, category: "Cleaning with steam or hot water" },
+    { id: 8, category: "Deep cleaning to get rid of allergies and ingrained grime" },
+    { id: 9, category: "Grooming carpet to bring back its texture" },
+    { id: 10, category: "Applying stain protection" },
+    { id: 11, category: "Removing contaminants, moisture, and cleaning chemicals" },
+    { id: 12, category: "Last assessment to ensure quality" },
+    { id: 13, category: "Additional options like pet stain treatments or Scotchgard protection" }
   ];
 
   const handleRight1U = () => {
@@ -957,37 +957,37 @@ const Services = () => {
   const ovenCleaningServices = [
     {
       id: 1,
-      name: "Interior oven cleaning",
+      category: "Interior oven cleaning",
       detail: "Complete inside cleaning of the oven, including removal of grease and food particles, and cleaning of oven bulbs, also for a double oven."
     },
     {
       id: 2,
-      name: "Exterior oven cleaning",
+      category: "Exterior oven cleaning",
       detail: "Scrubbing the outside to bring back the lustre and shine, especially the glass door."
     },
     {
       id: 3,
-      name: "Oven trays and racks",
+      category: "Oven trays and racks",
       detail: "Oven trays and racks will be cleaned and degreased."
     },
     {
       id: 4,
-      name: "Cleaning of hobs",
+      category: "Cleaning of hobs",
       detail: "Cleaning stove tops and burners of dirt and burned-on stains."
     },
     {
       id: 5,
-      name: "Cleaning of extractor fans",
+      category: "Cleaning of extractor fans",
       detail: "To enhance the quality of the air, we will clean and degrease the extractor fans."
     },
     {
       id: 6,
-      name: "Cleaning the microwave",
+      category: "Cleaning the microwave",
       detail: "For a microwave that is pristine, we will clean both the inside and outside."
     },
     {
       id: 7,
-      name: "Extra service",
+      category: "Extra service",
       detail: "As an extra, we can also clean your cooker hood filters."
     }
   ];
@@ -995,48 +995,48 @@ const Services = () => {
   const ovenCleaning = [
     {
       id: 1,
-      name: "Interior oven cleaning: Complete inside cleaning of the oven, including removal of grease and food particles, and cleaning of oven bulbs, also for a double oven."
+      category: "Interior oven cleaning: Complete inside cleaning of the oven, including removal of grease and food particles, and cleaning of oven bulbs, also for a double oven."
     },
     {
       id: 2,
-      name: "Exterior oven cleaning: Scrubbing the outside to bring back the lustre and shine, especially the glass door."
+      category: "Exterior oven cleaning: Scrubbing the outside to bring back the lustre and shine, especially the glass door."
     },
     {
       id: 3,
-      name: "Oven trays and racks: Oven trays and racks will be cleaned and degreased."
+      category: "Oven trays and racks: Oven trays and racks will be cleaned and degreased."
     },
     {
       id: 4,
-      name: "Cleaning of hobs: Cleaning stove tops and burners of dirt and burned-on stains."
+      category: "Cleaning of hobs: Cleaning stove tops and burners of dirt and burned-on stains."
     },
     {
       id: 5,
-      name: "Cleaning of extractor fans: To enhance the quality of the air, we will clean and degrease the extractor fans."
+      category: "Cleaning of extractor fans: To enhance the quality of the air, we will clean and degrease the extractor fans."
     },
     {
       id: 6,
-      name: "Cleaning the microwave: For a microwave that is pristine, we will clean both the inside and outside."
+      category: "Cleaning the microwave: For a microwave that is pristine, we will clean both the inside and outside."
     },
     {
       id: 7,
-      name: "Extra service: As an extra, we can also clean your cooker hood filters."
+      category: "Extra service: As an extra, we can also clean your cooker hood filters."
     }
   ];
 
   const ovenCleaningProcess = [
     {
       id: 1,
-      name: "Evaluation and Planning",
+      category: "Evaluation and Planning",
       desc: "An extensive evaluation is the first step in our oven cleaning serviceName procedure. To find any places that need extra care, our experts will thoroughly evaluate your oven. Plus, to make sure you with the best oven cleaning in Edinburgh, we will safeguard your kitchen, guaranteeing a hygienic and secure working environment. To avoid any mess, this also involves protecting adjacent surfaces and flooring."
     },
     {
       id: 2,
-      name: "Safe and reliable cleaning supplies",
+      category: "Safe and reliable cleaning supplies",
       desc: "Our oven cleaning Edinburgh serviceName includes employing non-toxic, environmentally safe cleaning products that won't harm you or the environment. Grease, dirt, and burnt-on residues are easily removed with our proven methods. Our oven wizards take great care to completely clean and protect the surfaces of your oven."
     },
     {
       id: 3,
-      name: "Thorough Cleaning and Glazing",
+      category: "Thorough Cleaning and Glazing",
       desc: "Racks and trays are just two of the parts of the oven that our skilled cleaners carefully scrub and degrease. Carefully applied treatments guarantee total removal of stubborn stains and residues. Once the cleaning process is finished, your oven is left looking immaculate by polishing both the interior and exterior."
     }
   ];
@@ -1205,31 +1205,31 @@ const Services = () => {
   const cleaningServices = [
     {
       id: 1,
-      name: "Clean and polish windows and household items"
+      category: "Clean and polish windows and household items"
     },
     {
       id: 2,
-      name: "Provide upholstery cleaning"
+      category: "Provide upholstery cleaning"
     },
     {
       id: 3,
-      name: "Wipe lighting fixtures"
+      category: "Wipe lighting fixtures"
     },
     {
       id: 4,
-      name: "Fold clothes and tidy up"
+      category: "Fold clothes and tidy up"
     },
     {
       id: 5,
-      name: "Clean mirrors and glass surfaces"
+      category: "Clean mirrors and glass surfaces"
     },
     {
       id: 6,
-      name: "Mop and vacuum the floors"
+      category: "Mop and vacuum the floors"
     },
     {
       id: 7,
-      name: "Treat woodwork to maintain their quality"
+      category: "Treat woodwork to maintain their quality"
     }
   ];
 
@@ -1326,55 +1326,55 @@ const Services = () => {
   const carpetCheckList = [
     {
       id: 1,
-      name: "Hoovering the carpet"
+      category: "Hoovering the carpet"
     },
     {
       id: 2,
-      name: "Removing stains and dirt"
+      category: "Removing stains and dirt"
     },
     {
       id: 3,
-      name: "Washing the carpet with carpet washing equipment"
+      category: "Washing the carpet with carpet washing equipment"
     },
     {
       id: 4,
-      name: "Deodorization to get rid of smells"
+      category: "Deodorization to get rid of smells"
     },
     {
       id: 5,
-      name: "Using a hoover to get rid of loose dirt and debris"
+      category: "Using a hoover to get rid of loose dirt and debris"
     },
     {
       id: 6,
-      name: "Pre-treatment of stains and high-traffic areas"
+      category: "Pre-treatment of stains and high-traffic areas"
     },
     {
       id: 7,
-      name: "Cleaning with steam or hot water"
+      category: "Cleaning with steam or hot water"
     },
     {
       id: 8,
-      name: "Deep cleaning to get rid of allergies and ingrained grime"
+      category: "Deep cleaning to get rid of allergies and ingrained grime"
     },
     {
       id: 9,
-      name: "Grooming carpet to bring back its texture"
+      category: "Grooming carpet to bring back its texture"
     },
     {
       id: 10,
-      name: "Applying stain protection"
+      category: "Applying stain protection"
     },
     {
       id: 11,
-      name: "Removing contaminants, moisture, and cleaning chemicals"
+      category: "Removing contaminants, moisture, and cleaning chemicals"
     },
     {
       id: 12,
-      name: "Last assessment to ensure quality"
+      category: "Last assessment to ensure quality"
     },
     {
       id: 13,
-      name: "Additional options like pet stain treatments or Scotchgard protection"
+      category: "Additional options like pet stain treatments or Scotchgard protection"
     }
   ];
 
@@ -1484,17 +1484,17 @@ const Services = () => {
   const specializedCleaningServices = [
     {
       id: 1,
-      name: "Stain removal",
+      category: "Stain removal",
       task: "The work of stain removal may be carried out by cleaners offering office cleaning services utilizing expert equipment. This entails spotting and eliminating various stains on a range of office-related surfaces. The cleaners will employ specialized equipment and cleaning solutions to efficiently remove any stains, whether they be on carpets, furniture, or walls."
     },
     {
       id: 2,
-      name: "Window cleaning",
+      category: "Window cleaning",
       task: "Our cleaners will make sure that the windows are free of dust, filth, smudges, and fingerprints. To get streak-free, immaculate results on interior windows, cleaners can utilize window cleaning products, squeegees, and microfiber cloths. To securely reach upper windows when cleaning outside windows, you might need to use ladders, poles, or even specialized tools like water-fed poles."
     },
     {
       id: 3,
-      name: "Balcony cleaning",
+      category: "Balcony cleaning",
       task: "In office buildings with balconies or other outside spaces, our cleaners can handle the job of cleaning the balcony. This includes cleaning the furniture, railing, and balcony floor of any collected dirt, dust, or debris. They can sweep up debris and leaves with brooms, brushes, and vacuums, and wash the balcony's surfaces with the proper cleaning solutions."
     }
   ];
@@ -1564,17 +1564,17 @@ const Services = () => {
   const sameDayCleaningServices = [
     {
       id: 1,
-      name: "Emergency spills",
+      category: "Emergency spills",
       task: "For urgent spills like food or drink spills, pet mishaps, or water leaks, same-day cleaning may be required. To avoid stains, odors, and potential harm to carpets, upholstery, or other surfaces, prompt cleaning is required."
     },
     {
       id: 2,
-      name: "Moving out",
+      category: "Moving out",
       task: "When leaving a rental home, cleaning is frequently needed on the same day. In order to leave the property clean and attractive for the landlord or next tenants, a full cleaning of the entire space is required, including the floors, walls, appliances, and fixtures."
     },
     {
       id: 3,
-      name: "Guests and visitors",
+      category: "Guests and visitors",
       task: "Hosting visitors or guests, particularly for important occasions or events, may necessitate same-day cleaning. Cleaning and maintaining the common areas and living spaces, as well as dusting and vacuuming, is necessary to provide a welcome environment."
     }
   ];
@@ -1673,17 +1673,17 @@ const Services = () => {
   const moveInCleaningProcess = [
     {
       id: 1,
-      name: "Online Estimate and Booking",
+      category: "Online Estimate and Booking",
       desc: "Obtaining a move-in clean is a simple procedure. An online quote and reservation are the first steps. Simply go to our website and provide the essential information, including your property's dimensions, the number of rooms, and any particular cleaning services you may need. We will provide you with an exact estimate for the serviceName based on this data. If you're happy with the quote, you can book the move-in clean online whenever it's convenient for you."
     },
     {
       id: 2,
-      name: "Professional Clean",
+      category: "Professional Clean",
       desc: "Our crew of seasoned cleaners will visit your new residence on the appointed day with all the essential cleaning supplies and machinery. Your home's floors, walls, windows, kitchen, bathrooms, and other living areas will all be given a thorough cleaning by our professionals. Our seasoned cleaners pay close attention to detail and make sure that your new house is completely cleaned and sanitized, producing a fresh and pleasant environment for you and your family."
     },
     {
       id: 3,
-      name: "Finishing Up",
+      category: "Finishing Up",
       desc: "Our trained professionals will perform a final inspection once the cleaning procedure is complete to make sure that everything satisfies our stringent requirements. They will take care of any spots that need more attention right away. Our staff will leave your home spotless and prepared for your move-in once you are happy with the outcomes. Now that cleaning is no longer a chore, you can enjoy a clean and sanitary living environment."
     }
   ];
@@ -2650,7 +2650,7 @@ const Services = () => {
                       {inspectionList.map(itemTask => (
                           <div key={itemTask.id}>
                             <ul className={'dot-list'}>
-                              <li style={{color:'brown'}}>{itemTask.name}</li>
+                              <li style={{color:'brown'}}>{itemTask.category}</li>
                             </ul>
                             <p>{itemTask.detail}</p>
                           </div>
@@ -2798,7 +2798,7 @@ const Services = () => {
                     {roomCleaningServices.map(task => (
                         <div key={task.id} className={'price-container'}>
                           <ul className={'dot-list'}>
-                            <li style={{marginBottom:'10px'}}>{task.name}</li>
+                            <li style={{marginBottom:'10px'}}>{task.category}</li>
                             <p>{task.detail}</p>
                           </ul>
                         </div>
@@ -2846,7 +2846,7 @@ const Services = () => {
                       {priorityAreas.map(area => (
                           <div key={area.id}>
                             <ul className={'dot-list'}>
-                              <li>{area.name}</li>
+                              <li>{area.category}</li>
                             </ul>
                           </div>
                       ))}
@@ -2877,7 +2877,7 @@ const Services = () => {
                     {serviceBenefits.map(benefits => (
                         <div key={benefits.id}>
                           <ul className={'dot-list'}>
-                            <li>{benefits.name}</li>
+                            <li>{benefits.category}</li>
                           </ul>
                         </div>
                     ))}
@@ -2998,7 +2998,7 @@ const Services = () => {
                       {carpetCleaningServices.map(plan => (
                           <div key={service.id}>
                             <ul className={'dot-list'}>
-                              <li>{service.name}</li>
+                              <li>{service.category}</li>
                             </ul>
                           </div>
                       ))}
@@ -3206,7 +3206,7 @@ const Services = () => {
                         {ovenCleaning.map(task => (
                             <div key={task.id}>
                               <ul className={'dot-list'}>
-                                <li>{task.name}</li>
+                                <li>{task.category}</li>
                               </ul>
                             </div>
                         ))}
@@ -3233,7 +3233,7 @@ const Services = () => {
                   <div className={"grid-container"}>
                     {ovenCleaningProcess.map(task => (
                         <div key={task.id} className={'price-container'}>
-                          <h2>{task.name}</h2>
+                          <h2>{task.category}</h2>
                           <p>{task.desc}</p>
                         </div>
                     ))}
@@ -3470,7 +3470,7 @@ const Services = () => {
                     {cleaningServices.map(task => (
                         <div key={task.id}>
                           <ul className={'dot-list'}>
-                            <li>{task.name}</li>
+                            <li>{task.category}</li>
                           </ul>
                         </div>
                     ))}
@@ -3655,7 +3655,7 @@ const Services = () => {
                       {carpetCheckList.map(plan => (
                           <div key={service.id}>
                             <ul className={'dot-list'}>
-                              <li>{service.name}</li>
+                              <li>{service.category}</li>
                             </ul>
                           </div>
                       ))}
@@ -3842,7 +3842,7 @@ const Services = () => {
                   <div className="grid-container">
                     {specializedCleaningServices.map(plan => (
                         <div key={service.id} className={'price-container'}>
-                          <h3>{service.name}</h3>
+                          <h3>{service.category}</h3>
                           <ul className={'dot-list'}>
                             <li>{service.task}</li>
                           </ul>
@@ -4252,7 +4252,7 @@ const Services = () => {
                   <div className={"grid-container"}>
                     {moveInCleaningProcess.map(task => (
                         <div key={task.id} className={'price-container'}>
-                          <h2>{task.name}</h2>
+                          <h2>{task.category}</h2>
                           <p>{task.desc}</p>
                         </div>
                     ))}
@@ -5247,7 +5247,7 @@ const Services = () => {
                         <div key={stage.id} className="service-card">
                           <img src={stage.src} alt="" className={'cart-image'}/>
                           <h3>{stage.stage}</h3>
-                          <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.name}</p>
+                          <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.category}</p>
                           <ul style={{textAlign:'start'}} className="dot-list">
                             {stage.steps.map((item, index) => (
                                 <li key={index}>{item}</li>

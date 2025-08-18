@@ -1472,7 +1472,7 @@ const Checkout = () => {
     };
 
     const handlePlanChange = (e) => {
-        setFormData({...formData, plan: e.target.name});
+        setFormData({...formData, plan: e.target.category});
     }
 
     const updateAddictions = (service, totalPrice, tenancyCount = -1) => {
@@ -1823,7 +1823,7 @@ const Checkout = () => {
             payment_method: {
                 card: elements.getElement(CardNumberElement),
                 billing_details: {
-                    name: 'Customer Name' // Add dynamic name input if needed
+                    category: 'Customer Name' // Add dynamic name input if needed
                 }
             }
         });
@@ -1849,86 +1849,83 @@ const Checkout = () => {
     }
 
     const updateBookingOnDatabase =  async () => {
-        const customerData = JSON.parse(localStorage.getItem('user'));
-        if (!customerData) {
-            return;
-        }
 
-        const customerEmail = customerData.email;
+        try {
+            let response = await api.get('/api/order-id')
+            const orderId = response.data.orderId;
 
-        const revenue = {
-            customer: formData.customer,
-            dayName: formData.dayName,
-            monthName: formData.monthName,
-            yearName: formData.yearName,
-            payment: formData.totalAmount,
-            orderId: orderId,
-        }
-
-        api.post('/api/revenue', revenue)
-            .then((response) => {})
-            .catch((error) => {
-                console.log(error);
-            })
-
-
-        const booking = [];
-        for (let i = 0; i < formData.booking.length; i++) {
-            const duration = formData.booking[i].time2;
-            let book;
-            if (duration > 0) {
-                book = {room: formData.booking[i].plan,  count: formData.booking[i].count}
+            const revenue = {
+                customer: formData.customer,
+                payment: formData.totalAmount,
+                orderId: orderId,
+                customerEmail: formData.email,
             }
-            else {
-                book = {room: formData.booking[i].plan,  count: 'Needed'}
+
+            const booking = [];
+            for (let i = 0; i < formData.booking.length; i++) {
+                const duration = formData.booking[i].time2;
+                let book;
+                if (duration > 0) {
+                    book = {room: formData.booking[i].plan,  count: formData.booking[i].count}
+                }
+                else {
+                    book = {room: formData.booking[i].plan,  count: 'Needed'}
+                }
+                booking.push(book);
             }
-            booking.push(book);
+
+            const bookDetails = {
+                bookDate: `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`,
+                date: formData.date,
+                today: new Date().toISOString(),
+                customer: `${formData.firstName} ${formData.lastName}`,
+                payment: formData.totalAmount,
+                paymentIntentId: paymentIntentId,
+                clientSecret: clientSecret,
+                nature: formData.nature,
+                plan: formData.plan,
+                email: formData.email,
+                rate: formData.rate,
+                timeCompleted: '',
+                extraTime: 0,
+                extraCharge: 0,
+                mainDate: selectedDate,
+                minimumPrice: formData.minimumEstimate,
+                cleanerWage: 0,
+                address: formData.address,
+                postcode: postcode,
+                phone: formData.phone,
+            };
+
+            const orderData = {
+                orderId: orderId,
+                booking: JSON.stringify(booking),
+                details: JSON.stringify(bookDetails),
+                cleanerAssigned: false,
+                completed: false,
+                urgent: formData.urgent,
+                duration: formData.duration,
+                nature: formData.nature,
+                assignedCleanerName: '',
+                assignedCleanerEmail: '',
+                assignedCleanerPhone: '',
+                customerEmail: formData.email,
+                payment: formData.totalAmount,
+                startTime: formData.date
+            };
+
+            await api.post('/api/booking', orderData);
+
+            response = await api.post('/api/revenue', revenue);
+
+            if (response.data.success) {
+                setMessage("Booking is successful!");
+            }
+
+        } catch (error) {
+            console.log(error)
         }
-        console.log(booking);
 
-         const bookDetails = {
-             bookDate: `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`,
-             date: formData.date,
-             today: new Date().toISOString(),
-             customer: `${formData.firstName} ${formData.lastName}`,
-             payment: formData.totalAmount,
-             paymentIntentId: paymentIntentId,
-             clientSecret: clientSecret,
-             nature: formData.nature,
-             plan: formData.plan,
-             email: customerEmail,
-             rate: formData.rate,
-             timeCompleted: '',
-             extraTime: 0,
-             extraCharge: 0,
-             mainDate: selectedDate,
-             minimumPrice: formData.minimumEstimate,
-             cleanerWage: 0,
-             address: formData.address,
-             postcode: postcode,
-             phone: formData.phone,
-        };
-
-        const orderData = {
-            orderId: orderId,
-            booking: JSON.stringify(booking),
-            details: JSON.stringify(bookDetails),
-            cleanerAssigned: false,
-            completed: false,
-            urgent: formData.urgent,
-            duration: formData.duration,
-            nature: formData.nature,
-            assignedCleanerName: '',
-            assignedCleanerEmail: '',
-            assignedCleanerPhone: '',
-            customerEmail: customerEmail,
-        };
-
-        api.post('/api/booking', orderData )
-            .then((response) => {})
-            .catch((error) => {
-                console.log(error);
-            })
     }
 
     function getPaymentIntentIdFromClientSecret(clientSecret) {
@@ -3046,9 +3043,9 @@ const Checkout = () => {
 
     const handleValueChange = (e) => {
         const newErrors = errors;
-        newErrors[e.target.name] = null;
+        newErrors[e.target.category] = null;
         setErrors(newErrors);
-        setFormData({...formData,  [e.target.name]: e.target.value });
+        setFormData({...formData,  [e.target.category]: e.target.value });
     }
 
     const validationSchema = Yup.object().shape({
@@ -3107,15 +3104,16 @@ const Checkout = () => {
     const [useOldRecord, setUseOldRecord] = useState(false);
     const [missingRecord, setMissingRecord] = useState(false);
     const [oldRecord, setOldRecord] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
     const [dataErrors, setDataErrors] = useState({});
     const [acknwoledge, setAcknwoledge] = useState(false);
 
     const Data = () => {
+        const [firstName, setFirstName] = useState('');
+        const [lastName, setLastName] = useState('');
+        const [email, setEmail] = useState('');
+        const [phone, setPhone] = useState('');
+        const [address, setAddress] = useState('');
+
         const [dataMessage, setDataMessage] = useState('Required record(s) from your data are missing or incomplete. Please  fill the form to continue');
 
         const handleOldRecordChange = (e) => {

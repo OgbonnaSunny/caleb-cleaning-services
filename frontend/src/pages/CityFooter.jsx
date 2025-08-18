@@ -19,12 +19,12 @@ import { Link } from 'react-router-dom'
 const CityFooter = () => {
 
     const customerActions = [
-        { id: "booking-policy", name: "Booking Policy", path: "/booking-policy" },
-        { id: "cancellation-policy", name: "Cancellation Policy", path: "/cancellation-policy" },
-        { id: "terms-conditions", name: "Terms & Conditions", path: "/terms-conditions" },
-        { id: "privacy-policy", name: "Privacy Policy" , path: "/privacy-policy" },
-        { id: "cookies-policy", name: "Cookies Policy", path: "/cookies-policy" },
-        { id: "sitemap", name: "Sitemap", path: "/sitemap" }
+        { id: "booking-policy", category: "Booking Policy", path: "/booking-policy" },
+        { id: "cancellation-policy", category: "Cancellation Policy", path: "/cancellation-policy" },
+        { id: "terms-conditions", category: "Terms & Conditions", path: "/terms-conditions" },
+        { id: "privacy-policy", category: "Privacy Policy" , path: "/privacy-policy" },
+        { id: "cookies-policy", category: "Cookies Policy", path: "/cookies-policy" },
+        { id: "sitemap", category: "Sitemap", path: "/sitemap" }
     ]
 
     const services = [
@@ -46,15 +46,15 @@ const CityFooter = () => {
     ];
 
     const whoWeAre = [
-        {id:'about', name: 'About us', path:'/about'},
-        {id:'contact', name: 'Contact us', path:'/contact'},
-        {id:'reviews', name: 'Reviews', path:'/reviews'},
+        {id:'about', category: 'About us', path:'/about'},
+        {id:'contact', category: 'Contact us', path:'/contact'},
+        {id:'reviews', category: 'Reviews', path:'/reviews'},
     ]
     const special = [
-        { id: "whats-included", name: "What's included", path: "/services" },
-        { id: "blog", name: "Blog", path: "/blog" },
-        { id: "reclean-guarantee", name: "Reclean Guarantee", path: "/reclean" },
-        { id: "pricing", name: "Pricing", path: "/pricing" },
+        { id: "whats-included", category: "What's included", path: "/services" },
+        { id: "blog", category: "Blog", path: "/blog" },
+        { id: "reclean-guarantee", category: "Reclean Guarantee", path: "/reclean" },
+        { id: "pricing", category: "Pricing", path: "/pricing" },
     ]
 
     const currentLocation = location.pathname
@@ -101,7 +101,7 @@ const CityFooter = () => {
                                 <div key={action.id} style={{display:'flex', alignItems:'center'}}>
                                     <div className={'footer-mark'}></div>
                                     <Link style={{padding:'10px'}} to={action.path}>
-                                        {action.name}
+                                        {action.category}
                                     </Link>
                                 </div>
                             ))}
@@ -112,12 +112,12 @@ const CityFooter = () => {
                         <h3 style={{color:'white'}}>Get more insight</h3>
                         <ul style={{color:'grey'}}>
                             {special.map(action => (
-                                <div key={action.id} style={pathIncluded && names.includes(action.name)
+                                <div key={action.id} style={pathIncluded && names.includes(action.category)
                                 && action.path === location.pathname ? hide : show}>
                                     <div style={{display:'flex', alignItems:'center'}}>
                                         <div className={'footer-mark'}></div>
                                         <h5 style={{padding:'10px'}}>
-                                            <Link to={action.path}>{action.name}</Link>
+                                            <Link to={action.path}>{action.category}</Link>
                                         </h5>
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@ const CityFooter = () => {
                                 <div key={who.id} style={{display:'flex', alignItems:'center'}}>
                                     <div className={'footer-mark'}></div>
                                     <Link style={{padding:'10px'}} to={who.path}>
-                                        {who.name}
+                                        {who.category}
                                     </Link>
                                 </div>
                             ))}

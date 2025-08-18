@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef} from 'react';
 import { FaStar, FaRegStar, FaCheck, FaClock, FaMapMarkerAlt,
     FaBroom, FaShieldAlt, FaUserTie, FaCertificate,
     FaPoundSign, FaLifeRing, FaQuestionCircle,
-    FaFilePdf, FaFile, FaFileAlt, FaHome, FaTimes, FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft} from 'react-icons/fa';
+    FaFilePdf, FaFile, FaFileAlt, FaHome, FaTimes, FaSearch,
+    FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft} from 'react-icons/fa';
 import api from './api.js';
 import { useNavigate } from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
@@ -16,12 +17,15 @@ import TimePicker from 'react-time-picker';
 import { useForm } from 'react-hook-form';
 import ProfilePage from './CleanerProfilePage.jsx';
 import { format } from 'date-fns';
+import {all} from "axios";
+import globals from "globals";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const CleanerProfile = () => {
     const navigate = useNavigate();
+    const ref = useRef(null);
 
     const bookData = {
         id: 0,
@@ -66,11 +70,11 @@ const CleanerProfile = () => {
     // Navbar items
     const topNavItems = ['New', 'Jobs', 'History'];
     const bottomNavItems = [
-        {id: 1, name: 'Setting'},
-        {id: 2, name: 'Finance'},
-        {id: 3, name: 'Docs'},
-        {id: 4, name: 'Support'},
-        {id: 5, name: 'Profile'},
+        {id: 1, category: 'Setting'},
+        {id: 2, category: 'Finance'},
+        {id: 3, category: 'Docs'},
+        {id: 4, category: 'Support'},
+        {id: 5, category: 'Profile'},
     ];
 
     const cleanerData = {
@@ -87,7 +91,7 @@ const CleanerProfile = () => {
             bio: 'A good cleaner',
             email:'sarah@gmail.com',
             emergencyContact: {
-                name: 'Martha Caleb',
+                category: 'Martha Caleb',
                 relationship: 'Spouse',
                 phone: '073 6258 7018'
             }
@@ -119,25 +123,25 @@ const CleanerProfile = () => {
         },
         review: [
             {id: 1,
-                name: 'Michael Brown',
+                category: 'Michael Brown',
                 rating: 5,
                 review: 'Sarah did an excellent job cleaning my flat. She was punctual, professional, and paid attention to all the details I requested. The place has never looked better!',
                 time: '2 weeks ago'
             },
             {id: 2,
-                name: 'Emma Wilson',
+                category: 'Emma Wilson',
                 rating: 4,
                 review: 'Very thorough cleaning service. Sarah was friendly and efficient. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '1 month ago'
             },
             {id: 2,
-                name: 'John Smith',
+                category: 'John Smith',
                 rating: 5,
                 review: 'Very thorough cleaning service. Sarah was Professional, detailed and friendly. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '2 months ago'
             },
             {id: 2,
-                name: 'Dialo Becko',
+                category: 'Dialo Becko',
                 rating: 4,
                 review: 'Smart and nice cleaning service. Sarah was Professional, detailed and friendly. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '4 months ago'
@@ -193,6 +197,8 @@ const CleanerProfile = () => {
     const [activeTab3, setActiveTab3] = useState('personal');
     const [loadingMore, setLoadingMore] = useState(false);
     const [pageCount, setPageCount] = useState(0);
+    const [myPageCount, setMyPageCount] = useState(0);
+    const [historyPageCount, setHistoryPageCount] = useState(0);
     const [acceptedJobIds, setAcceptedJobIds] = useState([]);
     const [myMesage, setMyMesage] = useState('');
     const [page, setPage] = useState(10);
@@ -202,27 +208,20 @@ const CleanerProfile = () => {
     const [historyMessage, setHistoryMessage] = useState('');
     const [dateToggle, setDateToggle] = useState(false);
     const[historyIds, setHistoryIds] = useState([]);
-    const [userData, setUserData] = useState({
-        name: "Maria Sanchez",
-        role: "Professional Cleaner",
-        hourlyRate: 18.50,
-        avgHoursPerWeek: 32,
-        paymentMethod: "Direct Deposit",
-        nextPayday: "2023-11-15"
-    });
     const [activeTab, setActiveTab] = useState('dashboard');
     const [customer, setCustomer] = useState('');
     const [clientEmail, setClientEmail] = useState('');
-    const [bookingIdForReview, setBookingIdForReview] = useState(-1);
-    const [rating, setRating] = useState(1);
-    const [review, setReview] = useState('');
     const [loading, setLoading] = useState(false);
     const [income, setIncome] = useState({pendingIncome: 0, recents: []});
     const [monthlyIncome, setMonthlyIncome] = useState(0);
     const [lastMonthIncome, setLastMonthIncome] = useState(0);
     const [yearlyIncome, setYearlyIncome] = useState(0);
     const [expenses, setExpenses] = useState(0.00);
-
+    const [ytdIncome, setYtdIncome] = useState([]);
+    const [allIncome, setAllIncome] = useState([]);
+    const [financePageCount, setFinancePageCount] = useState(0);
+    const [showDateTime, setShowDateTime] = useState(false);
+    const [quarter, setQuarter] = useState([]);
 
     const renderMenuIcon = (id) => {
         if (id === null || id === undefined) return;
@@ -273,9 +272,11 @@ const CleanerProfile = () => {
         const handleResize = () => {
             if (window.innerWidth > 768) {
                 setPage(20)
+                setShowDateTime(true);
                 return;
             }
             setPage(10);
+            setShowDateTime(false)
         };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
@@ -284,7 +285,7 @@ const CleanerProfile = () => {
 
     const renderName = (customer) => {
         const names = customer.split(' ');
-        let name;
+        let category;
         if (names.length > 1) {
             return names[0].charAt(0).toUpperCase() + names[0].slice(1) + " " + names[1].charAt(0).toUpperCase() + names[1].slice(1);
         }
@@ -325,16 +326,22 @@ const CleanerProfile = () => {
                 setIsLoading(true)
             }
             try {
-                const data = {limit: page, offset: newOrders.length + page};
+                let offset = 0;
+                if (newOrders.length > 0) {
+                    offset = newOrders[newOrders.length - 1].id
+                }
+                const data = {limit: page, offset: offset};
                 const newOrderResponse = await api.post('api/booking/new', data);
                 const orders = await newOrderResponse.data;
                 if (orders.booking.length <= 0 && newOrders.length <= 0) {
                     setMessage('No new orders yet.');
                 }
                 else {
-                    const prevOrder = newOrders
-                    prevOrder.push(...orders.booking);
-                    setNewOrders(prevOrder);
+                    setNewOrders(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        orders.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
                 }
             } catch (error) {
                 console.log(error);
@@ -346,7 +353,7 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading) {
+        if (!loadingMore && !isLoading && activeMenu === 'New') {
             fetchOrders();
         }
     }, [pageCount, activeMenu]);
@@ -356,10 +363,17 @@ const CleanerProfile = () => {
             const scrollTop = window.scrollY;
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = window.innerHeight;
-
             if (scrollTop + clientHeight >= scrollHeight - 100) {
                 if (!loadingMore) {
-                    setPageCount(prev => prev + 1)
+                    if (activeMenu === 'New') {
+                        setPageCount(prev => prev + 1)
+                    }
+                    if (activeMenu === 'Jobs') {
+                        setMyPageCount(prev => prev + 1)
+                    }
+                    if (activeMenu === 'History') {
+                        setHistoryPageCount(prev => prev + 1)
+                    }
                 }
             }
         };
@@ -443,6 +457,7 @@ const CleanerProfile = () => {
         api.post('/api/income-monthly', {cleanerEmail: email})
             .then((response) => {
                 setMonthlyIncome(response.data.income);
+                setYtdIncome(response.data.ytd);
             })
             .catch((error) => {
                 console.log(error);
@@ -464,11 +479,62 @@ const CleanerProfile = () => {
                 console.log(error);
             })
 
+        api.post('/api/income/quaterly', {cleanerEmail: email})
+            .then((response) => {
+                setQuarter(response.data.quarter);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
     }, [email]);
+
+    useEffect(() => {
+        setLoadingMore(true)
+        let  offset = 0;
+        if (allIncome.length > 0) {
+            offset = allIncome[allIncome.length - 1].id;
+        }
+        const data = {cleanerEmail: email, limit: 10, offset: offset};
+        api.post('/api/income-all', data)
+            .then((response) => {
+                const incomeList = response.data.income.all;
+                if (incomeList.length > 0) {
+                    setAllIncome(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        incomeList.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+                }
+
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoadingMore(false);
+            })
+    }, [email, financePageCount])
 
     const Finance = () => {
 
-        const IncomeSummary = ({ income, stats }) => {
+        useEffect(() => {
+            const handleScroll = () => {
+                const scrollTop = window.scrollY;
+                const scrollHeight = document.documentElement.scrollHeight;
+                const clientHeight = window.innerHeight;
+                if (scrollTop + clientHeight >= scrollHeight - 100) {
+                    if (!loadingMore) {
+                        setFinancePageCount(prev => prev + 1)
+                    }
+                }
+            };
+
+            window.addEventListener("scroll", handleScroll);
+            return () => window.removeEventListener("scroll", handleScroll);
+        }, [loadingMore]);
+
+        const IncomeSummary = ({ monthly, yearly }) => {
 
             return (
                 <div className="income-summary">
@@ -476,7 +542,7 @@ const CleanerProfile = () => {
                     <div className="summary-cards">
                         <div className="summary-card">
                             <h3>This Month</h3>
-                            <p>£{monthlyIncome}</p>
+                            <p>£{monthly}</p>
                             {lastMonthIncome > 0 && (
                                 <small>
                                     {thisMonthIncome > lastMonthIncome ? '↑' : '↓'}
@@ -485,86 +551,17 @@ const CleanerProfile = () => {
                                 </small>
                             )}
                         </div>
+
                         <div className="summary-card">
                             <h3>Total YTD</h3>
-                            <p>£{yearlyIncome}</p>
-                        </div>
-
-                        <div className="summary-card">
-                            <h3>Net Income</h3>
-                            <p>£{yearlyIncome}</p>
-                            <small>After £{expenses} expenses</small>
+                            <p>£{yearly}</p>
                         </div>
                     </div>
                 </div>
             );
         };
-
-        const ExpenseTracker = ({ expenses, addExpense }) => {
-            const expenseCategories = [
-                'Supplies', 'Transport', 'Equipment', 'Uniforms', 'Training', 'Other'
-            ];
-
-            return (
-                <div className="expense-tracker">
-                    <h2>Expense Tracking</h2>
-
-                    <div className="expense-list">
-                        <h3>Recent Expenses</h3>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {expenses.map(expense => (
-                                <tr key={expense.id}>
-                                    <td>{expense.date}</td>
-                                    <td>{expense.category}</td>
-                                    <td>{expense.description}</td>
-                                    <td>£{expense.amount.toFixed(2)}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="expense-summary">
-                        <h3>Expenses by Category</h3>
-                        <div className="category-breakdown">
-                            {expenseCategories.map(category => {
-                                const total = expenses
-                                    .filter(e => e.category === category)
-                                    .reduce((sum, e) => sum + e.amount, 0);
-
-                                if (total === 0) return null;
-
-                                return (
-                                    <div key={category} className="category-item">
-                                        <div className="category-label">
-                                            <span>{category}</span>
-                                            <span>£{total.toFixed(2)}</span>
-                                        </div>
-                                        <div className="category-bar">
-                                            <div
-                                                className="bar-fill"
-                                                style={{ width: `${(total / Math.max(1, expenses.reduce((sum, e) => sum + e.amount, 0)) * 100)}%` }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const WorkHistory = () => {
+        
+        const WorkHistory = ({incomes}) => {
 
             return (
                 <div className="work-history">
@@ -573,42 +570,69 @@ const CleanerProfile = () => {
                         <table>
                             <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Client</th>
-                                <th>Duration</th>
-                                <th>Amount</th>
+                                <th style={{width:'30%'}}>Date</th>
+                                <th style={{width:'45%'}}>Client</th>
+                                <th style={{width:'25%'}}>Amount</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {income.recents
+                            {incomes
                                 .map(item => (
                                     <tr key={item.id}>
-                                        <td>{formatDate(item.created_at)}</td>
-                                        <td>{item.client}</td>
-                                        <td>{item.duration}</td>
-                                        <td>£{item.amount}</td>
+                                        <td style={{width:'30%'}}>{formatDate(item.created_at)}</td>
+                                        <td style={{width:'40%'}}>{item.client}</td>
+                                        <td style={{width:'25%'}}>£{item.amount}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                        {!incomes && <p>No recent income record was found</p>}
                     </div>
                 </div>
             );
         };
 
-        const FinancialCharts = ({ income, expenses }) => {
-            // Prepare monthly income data
-            const monthlyIncomeData = Array(12).fill(0);
-            income.forEach(item => {
-                if (item.status === 'paid') {
-                    const month = new Date(item.date).getMonth();
-                    monthlyIncomeData[month] += item.amount;
+        function getMonthlyIncomeTotals(year) {
+            // First create a map of all months with 0 as default value
+            const allMonths = Array.from({ length: 12 }, (_, i) => {
+                const month = (i + 1).toString().padStart(2, '0');
+                return `${year}-${month}`;
+            });
+
+            // Create initial object with all months set to 0
+            const monthlyTotals = Object.fromEntries(
+                allMonths.map(month => [month, 0])
+            );
+
+            // Process the daily incomes
+            ytdIncome.forEach(income => {
+                const monthKey = income.created_at.substring(0, 7);
+                if (monthKey in monthlyTotals) {
+                    monthlyTotals[monthKey] += Number(income.amount);
                 }
             });
 
+            // Convert to array of objects in chronological order
+            return allMonths.map(month => ({
+                month,
+                total: monthlyTotals[month],
+                year: parseInt(month.substring(0, 4)),
+                monthNumber: (parseInt(month.substring(5, 7)))
+            }));
+        }
+
+        const FinancialCharts = ({ income, quarterly }) => {
+            // Prepare monthly income data
+            const monthlyIncomeData = Array(12).fill(0);
+
+            income.forEach(item => {
+                const month = new Date(item.created_at).getMonth();
+                monthlyIncomeData[month] += Number(item.amount);
+            });
+
             // Prepare expense category data
-            const expenseCategories = expenses.reduce((acc, expense) => {
-                acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+            const quarterlyIncome = quarterly.reduce((acc, income) => {
+                acc[income.category] = (acc[income.category] || 0) + Number(income.amount);
                 return acc;
             }, {});
 
@@ -625,11 +649,11 @@ const CleanerProfile = () => {
                 ]
             };
 
-            const expenseChartData = {
-                labels: Object.keys(expenseCategories),
+            const quarterChartData = {
+                labels: Object.keys(quarterlyIncome),
                 datasets: [
                     {
-                        data: Object.values(expenseCategories),
+                        data: Object.values(quarterlyIncome),
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.5)',
                             'rgba(75, 192, 192, 0.5)',
@@ -669,10 +693,10 @@ const CleanerProfile = () => {
                     </div>
 
                     <div className="chart-container">
-                        <h3>Expenses by Category</h3>
+                        <h3>Income Quarterly</h3>
                         <div className="chart-wrapper">
                             <Pie
-                                data={expenseChartData}
+                                data={quarterChartData}
                                 options={{
                                     responsive: true,
                                     plugins: {
@@ -688,244 +712,168 @@ const CleanerProfile = () => {
             );
         };
 
-        const TaxEstimator = ({ income, expenses }) => {
-            const totalIncome = income
-                .filter(item => item.status === 'paid')
-                .reduce((sum, item) => sum + item.amount, 0);
-
-            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
-            const netIncome = totalIncome - totalExpenses;
-
-            // Simple tax estimation (US based)
-            const calculateTax = () => {
-                // These are simplified estimates - real tax calculations would be more complex
-                const federalTax = netIncome * 0.12; // Approximate 12% federal tax
-                const stateTax = netIncome * 0.05; // Approximate 5% state tax
-                const ficaTax = netIncome * 0.0765; // Social Security + Medicare
-
-                return {
-                    federal: federalTax,
-                    state: stateTax,
-                    fica: ficaTax,
-                    total: federalTax + stateTax + ficaTax
-                };
-            };
-
-            const tax = calculateTax();
-            const afterTaxIncome = netIncome - tax.total;
-
-            return (
-                <div className="tax-estimator">
-                    <h2>Tax Center</h2>
-
-                    <div className="tax-summary">
-                        <h3>Annual Tax Estimate</h3>
-                        <div className="tax-cards">
-                            <div className="tax-card">
-                                <h4>Gross Income</h4>
-                                <p>£{totalIncome.toFixed(2)}</p>
-                            </div>
-                            <div className="tax-card">
-                                <h4>Deductible Expenses</h4>
-                                <p>£{totalExpenses.toFixed(2)}</p>
-                            </div>
-                            <div className="tax-card">
-                                <h4>Net Income</h4>
-                                <p>£{netIncome.toFixed(2)}</p>
-                            </div>
-                        </div>
-
-                        <div className="tax-breakdown">
-                            <h4>Estimated Taxes</h4>
-                            <div className="tax-item">
-                                <span>Federal Income Tax:</span>
-                                <span>£{tax.federal.toFixed(2)}</span>
-                            </div>
-                            <div className="tax-item">
-                                <span>State Income Tax:</span>
-                                <span>£{tax.state.toFixed(2)}</span>
-                            </div>
-                            <div className="tax-item">
-                                <span>FICA (SS + Medicare):</span>
-                                <span>£{tax.fica.toFixed(2)}</span>
-                            </div>
-                            <div className="tax-item total">
-                                <span>Total Estimated Tax:</span>
-                                <span>£{tax.total.toFixed(2)}</span>
-                            </div>
-                            <div className="tax-item net">
-                                <span>After-Tax Income:</span>
-                                <span>£{afterTaxIncome.toFixed(2)}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="tax-tips">
-                        <h3 style={{marginBottom:'10px'}}>Tax Tips for Cleaning Professionals</h3>
-                        <ul className={'dot-list'}>
-                            <li>Keep receipts for all cleaning supplies and equipment purchases</li>
-                            <li>Uniform costs may be deductible if required by your employer</li>
-                        </ul>
-                        <p className="disclaimer">
-                            Note: Please note that tax evaluation is constantly changing according to regulations.
-                        </p>
-                    </div>
-                </div>
-            );
-        };
-
-        // Sample data - in a real app, this would come from an API
-        const [financialData, setFinancialData] = useState({
-            income: [
-                { id: 1, date: '2023-11-01', client: 'Office Building A', hours: 4, amount: 74.00, status: 'paid' },
-                { id: 2, date: '2023-10-30', client: 'Residential - Johnson', hours: 3.5, amount: 64.75, status: 'paid' },
-                { id: 3, date: '2023-10-28', client: 'Medical Clinic B', hours: 6, amount: 111.00, status: 'paid' },
-                { id: 4, date: '2023-10-25', client: 'Office Building A', hours: 4, amount: 74.00, status: 'paid' },
-                { id: 5, date: '2023-10-23', client: 'School District', hours: 8, amount: 148.00, status: 'pending' }
-            ],
-            expenses: [
-                { id: 1, date: '2023-11-02', category: 'Supplies', description: 'Cleaning products', amount: 28.50 },
-                { id: 2, date: '2023-10-28', category: 'Transport', description: 'Bus pass', amount: 45.00 },
-                { id: 3, date: '2023-10-15', category: 'Equipment', description: 'New mop', amount: 32.99 }
-            ]
-        });
-
-        // Calculate summary stats
-        const calculateStats = () => {
-            const totalIncome = financialData.income
-                .filter(item => item.status === 'paid')
-                .reduce((sum, item) => sum + item.amount, 0);
-
-            const pendingIncome = financialData.income
-                .filter(item => item.status === 'pending')
-                .reduce((sum, item) => sum + item.amount, 0);
-
-            const totalExpenses = financialData.expenses.reduce((sum, item) => sum + item.amount, 0);
-
-            return {
-                totalIncome,
-                pendingIncome,
-                totalExpenses: totalExpenses,
-                netIncome: totalIncome - totalExpenses
-            };
-        };
-
-        const stats = calculateStats();
-
-        const addIncome = (newIncome) => {
-            setFinancialData(prev => ({
-                ...prev,
-                income: [...prev.income, newIncome]
-            }));
-        };
-
-        const addExpense = (newExpense) => {
-            setFinancialData(prev => ({
-                ...prev,
-                expenses: [...prev.expenses, newExpense]
-            }));
-        };
 
         const [error, setError] = useState('');
 
-        function CustomDayRangePicker() {
+        function CustomDatePicker() {
+            const [year, setYear] = useState(null);
+            const [month, setMonth] = useState(null);
+            const [day, setDay] = useState(null);
+            const [thisMonth, setThisMonth] = useState(new Date().getMonth + 1);
+            const [searching, setSearching] = useState(false);
+
             const [startDay, setStartDay] = useState(null);
             const [endDay, setEndDay] = useState(null);
 
-            const days = Array.from({ length: 31 }, (_, i) => i + 1);
-
-            const handleStartChange = (e) => {
-                const newStart = Number(e.target.value);
-                if (newStart <= 0) {
-                    setStartDay(null);
-                    return;
-                }
-                setStartDay(newStart);
-                if (newStart > endDay) {
-                    setError('Start day cannot be after end day');
-                } else {
-                    setError('');
-                }
-            };
-
-            const handleEndChange = (e) => {
-                const newEnd = Number(e.target.value);
-                if (newEnd <= 0) {
-                    setEndDay(null)
-                    return;
-                }
-                setEndDay(newEnd);
-                if (newEnd < startDay) {
-                    setError('End day cannot be before start day');
-                } else {
-                    setError('');
-                }
-            };
-
-            return (
-                <div style={{display: 'flex', flexDirection: 'row', flex:'2.5', gap:'5px'}}>
-                    <label>From
-                        <select value={startDay} onChange={handleStartChange}
-                                style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
-                            <option value="">Day</option>
-                            {days.map(day => (
-                                <option key={`start-${day}`} value={day}>
-                                    {day}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <label>To
-                        <select value={endDay} onChange={handleEndChange}
-                                style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
-                            <option value="">Day</option>
-                            {days.map(day => (
-                                <option key={`end-${day}`} value={day} disabled={day < startDay}>
-                                    {day}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                </div>
-            );
-        }
-
-        function CustomDatePicker() {
-            const [year, setYear] = useState('');
-            const [month, setMonth] = useState('');
-            const [day, setDay] = useState('');
-
             const years = Array.from({length: 100}, (_, i) => new Date().getFullYear() - i);
             const days = Array.from({length: 31}, (_, i) => i + 1);
-            const months = [
-                {id:1, name: 'Jan'},
-                {id:2, name: 'Feb'},
-                {id:3, name: 'Mar'},
-                {id:4, name: 'Apr'},
-                {id:5, name: 'May'},
-                {id:6, name: 'Jun'},
-                {id:7, name: 'Jul'},
-                {id:8, name: 'Aug'},
-                {id:9, name: 'Sep'},
-                {id:10, name: 'Oct'},
-                {id: 11, name: 'Nov'},
-                {id: 12, name: 'Dec'}
-            ]
+            const months = Array.from({length: 12}, (_, i) => i + 1);
+
+            function CustomDayRangePicker() {
+
+                const handleStartChange = (e) => {
+                    const newStart = Number(e.target.value);
+                    if (newStart <= 0) {
+                        setStartDay(null);
+                        return;
+                    }
+                    setStartDay(newStart);
+                    if (newStart > endDay && endDay > 0) {
+                        setError('Start day cannot be after end day');
+                    } else {
+                        setError('');
+                    }
+                };
+
+                const handleEndChange = (e) => {
+                    const newEnd = Number(e.target.value);
+                    if (newEnd <= 0) {
+                        setEndDay(null)
+                        return;
+                    }
+                    setEndDay(newEnd);
+                    if (newEnd < startDay) {
+                        setError('End day cannot be before start day');
+                    } else {
+                        setError('');
+                    }
+                };
+
+                return (
+                    <div style={{display: 'flex', flexDirection: 'row', flex:'2.5', gap:'5px', alignItems:'center'}}>
+                        <label>From
+                            <select value={startDay} onChange={handleStartChange}
+                                    style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                                <option value=""></option>
+                                {days.map(day => (
+                                    <option key={`start-${day}`} value={day}>
+                                        {day}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>To
+                            <select value={endDay} onChange={handleEndChange}
+                                    style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
+                                <option value=""></option>
+                                {days.map(day => (
+                                    <option key={`end-${day}`} value={day} disabled={day < startDay}>
+                                        {day}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
+                );
+            }
+
+            const handleYearChange = (e) => {
+                e.preventDefault();
+                const year = Number(e.target.value);
+                setYear(year);
+            }
+
+            const handleMonthChange = (e) => {
+                e.preventDefault();
+                setMonth(Number(e.target.value));
+            }
+
+            const search = () => {
+                if (searching) {return;}
+                let newMonth = month;
+                let newYear = year;
+                let newStartDay = startDay;
+                let newEndDay = endDay;
+
+                if (newStartDay === null || newStartDay === undefined) {
+                    setError('Select day to search record for');
+                    return;
+                }
+
+                if (newYear === null || newYear === undefined) {
+                    newYear = new Date().getFullYear();
+                }
+
+                if (newEndDay === null || newEndDay === undefined) {
+                    newEndDay = newStartDay;
+                }
+
+                if (newMonth === null || newMonth === undefined) {
+                    newMonth = new Date().getMonth() + 1;
+                }
+
+                const searchData = {cleanerEmail: email, year: newYear, month: newMonth, startDay: newStartDay, endDay: newEndDay};
+
+                api.post('/api/income/search', searchData)
+                    .then((response) => {
+                        const searchRecords = response.data.income.all;
+                        if (searchRecords.length > 0) {
+                            searchRecords.sort((a, b) => b.id - a.id);
+                            setAllIncome(searchRecords);
+                        }
+                        else {
+                            setError('No record matching your request was found')
+                        }
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        setError('Error occured while searching records');
+                    })
+                    .finally(() => {
+                        setSearching(false);
+                        setStartDay(null);
+                    })
+
+            }
 
             return (
-                <div style={{display: 'flex', flexDirection:'row', margin:'10px', gap:'5px', zIndex:'100'}}>
-                    <select value={year} onChange={(e) => setYear(e.target.value)}
-                            style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
-                        <option value="">Year</option>
-                        {years.map(y => <option style={{backgroundColor:'#f2f2f2'}} key={y} value={y}>{y}</option>)}
-                    </select>
+                <div style={{display: 'flex', flexDirection:'row', margin:'10px', gap:'5px', zIndex:'100', alignItems:'center'}}>
+                    <label style={{backgroundColor:'#f2f2f2', color:'darkred', flex:'1.3'}}>
+                        Year
+                        <select value={year} onChange={handleYearChange}
+                                style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred'}}>
+                            <option value=""></option>
+                            {years.map(y => <option style={{backgroundColor:'#f2f2f2'}} key={y} value={y}>{y}</option>)}
+                        </select>
+                    </label>
+                    <label style={{backgroundColor:'#f2f2f2', color:'darkred', flex:'1.1'}}>
+                        Month
+                        <select value={month}
+                                onChange={handleMonthChange}
+                                style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred'}}>
+                            <option value=""></option>
+                            {months.map(m =>
+                                <option
+                                    style={{backgroundColor:'#f2f2f2'}}
+                                    key={m} value={m}>{m}
+                                </option>
+                            )}
+                        </select>
+                    </label>
 
-                    <select value={month} onChange={(e) => setMonth(e.target.value)}
-                     style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
-                        <option value="">Month</option>
-                        {months.map(m => <option style={{backgroundColor:'#f2f2f2'}} key={m.id} value={m.name}>{m.name}</option>)}
-                    </select>
                     <CustomDayRangePicker />
+                    <FaSearch onClick={search}  style={{width:'20px', flex:'1', marginTop:'10px'}}/>
                 </div>
             );
         }
@@ -951,7 +899,7 @@ const CleanerProfile = () => {
                         </div>
                     </div>
                     <div className="stat-card">
-                        <CustomDatePicker />
+                        {(activeTab === 'income' && allIncome.length > 0) && <CustomDatePicker /> }
                         {error && <div style={{ color: 'red' }}>{error}</div>}
                     </div>
                 </header>
@@ -975,34 +923,39 @@ const CleanerProfile = () => {
                 <main className="dashboard-main">
                     {activeTab === 'dashboard' && (
                         <>
-                            <IncomeSummary income={monthlyIncome} stats={stats} />
-                            <FinancialCharts income={financialData.income} expenses={financialData.expenses} />
-                            <WorkHistory income={financialData.income} />
+                            <IncomeSummary  monthly={monthlyIncome} yearly={yearlyIncome} />
+                            <FinancialCharts income={ytdIncome} quarterly={quarter} />
+                            <WorkHistory incomes={income.recents} />
                         </>
                     )}
 
                     {activeTab === 'income' && (
                         <div className="income-section">
-                            <h2>Income Tracking</h2>
-
                             <div className="income-list">
-                                <h3>Recent Income</h3>
+                                <div style={{display:'flex', gap:'6px', alignItems:'baseline'}}>
+                                    <h3>Income Records</h3>
+                                    <input checked={showDateTime}
+                                           name={'showDateTime'}
+                                           onChange={() => setShowDateTime(!showDateTime)}
+                                           type={'checkbox'}
+                                    />
+                                </div>
                                 <table>
                                     <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>Client</th>
-                                        <th>Hours</th>
+                                        {showDateTime && <th>Client</th> }
+                                        {showDateTime &&  <th>Time</th> }
                                         <th>Amount</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {income.recents.map(item => (
+                                    {allIncome.map(item => (
                                         <tr key={item.id}>
                                             <td>{formatDate(item.created_at)}</td>
-                                            <td>{item.client}</td>
-                                            <td>{item.duration}</td>
+                                            {showDateTime &&  <td>{item.client}</td> }
+                                            {showDateTime &&   <td>{item.duration}</td> }
                                             <td>£{item.amount}</td>
                                             <td className={`status-${item.status}`}>{item.status}</td>
                                         </tr>
@@ -1010,16 +963,11 @@ const CleanerProfile = () => {
                                     </tbody>
                                 </table>
                             </div>
+                            {!loadingMore && allIncome.length === 0 && <p>No income record found</p>}
+                            {loadingMore && <p>Loading...</p>}
                         </div>
                     )}
 
-                    {activeTab === 'expenses' && (
-                        <ExpenseTracker expenses={financialData.expenses} addExpense={addExpense} />
-                    )}
-
-                    {activeTab === 'tax' && (
-                        <TaxEstimator income={financialData.income} expenses={financialData.expenses} />
-                    )}
                 </main>
 
                 <footer className="dashboard-footer">
@@ -1041,16 +989,22 @@ const CleanerProfile = () => {
                 setLoadingMore(true);
             }
             try {
-                const userData = {email: email, limit: page, offset: myOrders.length + page};
+                let  offset = 0;
+                if (myOrders.length > 0) {
+                    offset = myOrders[myOrders.length - 1].id;
+                }
+                const userData = {email: email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/my-orders', userData);
                 const jobList = acceptResponse.data.booking;
                 if (jobList.length <= 0 && myOrders.length <= 0) {
                     setMessage('You do not have active job');
                 }
                 else {
-                    const allOrders = myOrders;
-                    allOrders.push(...jobList);
-                    setMyOrders(allOrders);
+                    setMyOrders(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        jobList.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
                 }
             }
             catch (error) {
@@ -1062,10 +1016,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoadMyOrders) {
+        if (!loadingMore && !isLoadMyOrders && activeMenu === 'Jobs') {
             myOders()
         }
-    }, [activeMenu, pageCount]);
+    }, [activeMenu, myPageCount]);
 
     const updateOrder = async (e) => {
         e.preventDefault();
@@ -1219,17 +1173,22 @@ const CleanerProfile = () => {
                 setLoadingHistory(true);
             }
             try {
-                const data = {email: email, limit: page, offset: jobHistory.length + page};
+                let offset = 0;
+                if (jobHistory.length > 0) {
+                    offset = jobHistory[jobHistory.length - 1].id;
+                }
+                const data = {email: email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/history', data);
                 const jobList = acceptResponse.data.booking;
                 if (jobList.length <= 0 && jobHistory.length <= 0) {
                     setHistoryMessage('You do not have active history');
                 }
                 else {
-                    const prevHistory = jobHistory;
-                    prevHistory.push(...jobList);
-                    setJobHistory(prevHistory);
-
+                    setJobHistory(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        jobList.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
                 }
             }
             catch (error) {
@@ -1241,10 +1200,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !loadingHistory) {
+        if (!loadingMore && !loadingHistory && activeMenu === 'History') {
             history()
         }
-    }, [pageCount, activeMenu]);
+    }, [historyPageCount, activeMenu]);
 
     function timeAgo(date) {
         const now = new Date();
@@ -1279,26 +1238,6 @@ const CleanerProfile = () => {
         return 'just now';
     }
 
-    const writeReview = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const reviewData = { customer: customer, cleanerEmail: cleanerEmail, review: review , rating: rating };
-        try {
-            const response = await api.post('/api/reviews', reviewData)
-            const { success} = response.data;
-            if (success) {
-                setBgColor('green');
-                setMessage("Review sent successful");
-            }
-        } catch (error) {
-            //  console.log(error);
-            setMessage("Error occured while sending review");
-        } finally {
-            setLoading(false);
-            setReview('')
-        }
-    }
-
     const updateHistoryIds = (id) => {
         if (historyIds.includes(id)) {
             const filtered = historyIds.reduce((acc, num) => {
@@ -1321,7 +1260,44 @@ const CleanerProfile = () => {
         window.open(`/customer?client=${encodeURIComponent(client)}&email=${encodeURIComponent(email)}`, "_blank");
     }
 
+
     const History = () => {
+        const [review, setReview] = useState('');
+        const [message, setMessage] = useState('');
+        const [rating, setRating] = useState(1);
+        const [bgColor, setBgColor] = useState('red');
+        const [bookingIdForReview, setBookingIdForReview] = useState(-1);
+
+        const handleReviewChange = (e) => {
+            e.preventDefault();
+            setReview(e.target.value);
+        }
+        const writeReview = async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            const reviewData = { customer: customer, cleanerEmail: email, review: review , rating: rating };
+            try {
+                const response = await api.post('/api/reviews', reviewData)
+                const { success } = response.data.success;
+                if (success) {
+                    setBgColor('green');
+                    setMessage("Review sent successful");
+                }
+                else {
+                    setBgColor('red');
+                    setMessage("Review not sent ")
+                }
+            } catch (error) {
+                  console.log(error);
+                setBgColor('red');
+                setMessage("Error occured while sending review");
+            } finally {
+                setLoading(false);
+                setReview('')
+                setBookingIdForReview(-1)
+            }
+        }
+
         return (
             <div className={'support-page'}>
                 {loadingHistory ?
@@ -1345,23 +1321,25 @@ const CleanerProfile = () => {
                                             <FaUserTie onClick={() => goToClientProfile(order.clientEmail, order.customer)} size={30} style={{width:'30px', color:'dodgerblue', marginRight: '3%'}} />
                                         </div>
                                     </div>
+                                    {message && <p style={{color:bgColor}}>{message}</p>}
+
                                     {order.id === bookingIdForReview && <div>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                             <p>Rating: {rating}</p>
                                             <FaArrowCircleLeft size={20} style={{width:'30px', color:'blue', marginRight:'15px'}} onClick={rating > 1 ? () => setRating(rating - 1) : null}/>
                                             <FaArrowCircleRight size={20} style={{width:'30px', color:'blue'}} onClick={rating < 5 ? () => setRating(rating + 1) : null} />
                                         </div>
-                                        <textarea placeholder={'write review for this client'}
+                                        <textarea ref={ref} placeholder={'write review for this client'}
                                                   style={{backgroundColor:'linen', color:'black', padding:'12px'}}
                                                   rows={5}
                                                   value={review}
-                                                  onChange={(e) => setReview(e.target.value)}
-                                                  name={'review'}/>
+                                                  onChange={handleReviewChange}
+                                                  name={'review'}
+                                        />
                                         <button onClick={writeReview}
                                                 style={{borderRadius:'30px', marginTop:'6px'}}
                                                 className={'submit-button'}
-                                                disabled={(order.id !== bookingIdForReview || order.status === 'pending'
-                                                    || order.status === 'cancelled' || loading || review === '')}>
+                                                disabled={(order.id !== bookingIdForReview || loading || review === '')}>
                                             Save review
                                         </button>
                                     </div>}
@@ -1393,7 +1371,7 @@ const CleanerProfile = () => {
     const SupportPage = () => {
         const [activeTab, setActiveTab] = useState('faq');
         const [formData, setFormData] = useState({
-            name: '',
+            category: '',
             employeeId: '',
             email: '',
             issueType: 'general',
@@ -1497,18 +1475,14 @@ const CleanerProfile = () => {
                     >
                         Contact Support
                     </button>
-                    <button
-                        className={activeTab === 'resources' ? 'active' : ''}
-                        onClick={() => setActiveTab('resources')}
-                    >
-                        Resources
-                    </button>
+
                     <button
                         className={activeTab === 'emergency' ? 'active' : ''}
                         onClick={() => setActiveTab('emergency')}
                     >
                         Emergency Contacts
                     </button>
+
                 </nav>
 
                 <main className="support-main">
@@ -1542,7 +1516,7 @@ const CleanerProfile = () => {
                                             type="text"
                                             id="name"
                                             name="name"
-                                            value={formData.name}
+                                            value={formData.category}
                                             onChange={handleInputChange}
                                             required
                                             className={'button-bg'}
@@ -1634,35 +1608,6 @@ const CleanerProfile = () => {
                                     </div>
                                 </form>
                             )}
-                        </section>
-                    )}
-
-                    {activeTab === 'resources' && (
-                        <section className="resources-section">
-                            <h2>Professional Resources</h2>
-                            <div className="resource-grid">
-                                {resources.map((resource, index) => (
-                                    <div key={index} className="resource-card">
-                                        <div className={`resource-icon ${resource.type}`}>
-                                            {resource.type === 'pdf' ? '📄' : '🎬'}
-                                        </div>
-                                        <h3>{resource.title}</h3>
-                                        <a href={resource.link} className="download-link">
-                                            {resource.type === 'pdf' ? 'Download PDF' : 'Watch Video'}
-                                        </a>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="uk-legal">
-                                <h3>UK Legal Resources</h3>
-                                <ul>
-                                    <li><a href="https://www.gov.uk/employment-rights" target="_blank" rel="noopener noreferrer">GOV.UK Employment Rights</a></li>
-                                    <li><a href="https://www.hse.gov.uk/cleaning/" target="_blank" rel="noopener noreferrer">HSE Cleaning Industry Guidelines</a></li>
-                                    <li><a href="https://www.acas.org.uk" target="_blank" rel="noopener noreferrer">ACAS Workplace Advice</a></li>
-                                    <li><a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener noreferrer">National Minimum Wage Rates</a></li>
-                                </ul>
-                            </div>
                         </section>
                     )}
 
@@ -2139,7 +2084,7 @@ const CleanerProfile = () => {
                                         {...register("personal.emergencyContact.name")}
                                         className={'button-bg'}
                                     />
-                                    {errors.personal?.emergencyContact?.name && <span className="error-message">{errors.personal.emergencyContact.name.message}</span>}
+                                    {errors.personal?.emergencyContact?.category && <span className="error-message">{errors.personal.emergencyContact.category.message}</span>}
                                 </div>
 
                                 <div className="form-group">
@@ -2617,11 +2562,11 @@ const CleanerProfile = () => {
                 {activeMenu === topNavItems[0] && <NewOrders /> }
                 {activeMenu === topNavItems[1] && <MyOrders /> }
                 {activeMenu === topNavItems[2] && <History /> }
-                {activeMenu === bottomNavItems[3].name && <SupportPage /> }
-                {(activeMenu === bottomNavItems[4].name && email) && <ProfilePage emailFromProile={email} /> }
-                {activeMenu === bottomNavItems[1].name && <Finance /> }
-                {activeMenu === bottomNavItems[2].name && <Docs /> }
-                {activeMenu === bottomNavItems[0].name && <SettingsPage /> }
+                {activeMenu === bottomNavItems[3].category && <SupportPage /> }
+                {(activeMenu === bottomNavItems[4].category && email) && <ProfilePage emailFromProile={email} /> }
+                {activeMenu === bottomNavItems[1].category && <Finance /> }
+                {activeMenu === bottomNavItems[2].category && <Docs /> }
+                {activeMenu === bottomNavItems[0].category && <SettingsPage /> }
 
             </main>
 
@@ -2629,10 +2574,10 @@ const CleanerProfile = () => {
                 <div className="nav-order-content">
                     {bottomNavItems.map((item, index) => (
                         <div key={`bottom-${item.id}`} className="nav-order-item"
-                             onClick={() => setActiveMenu(item.name)}>
-                            <div style={activeMenu === item.name ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
+                             onClick={() => setActiveMenu(item.category)}>
+                            <div style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
                                 {renderMenuIcon(item.id)}
-                                <h3 style={activeMenu === item.name ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>{item.name}</h3>
+                                <h3 style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>{item.category}</h3>
                             </div>
                         </div>
                     ))}

@@ -5,11 +5,11 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const ServiceAreas = () => {
     const data = [
-        { name: 'Central London', value: 35 },
-        { name: 'West London', value: 25 },
-        { name: 'East London', value: 20 },
-        { name: 'North London', value: 15 },
-        { name: 'South London', value: 5 }
+        { category: 'Central London', value: 35 },
+        { category: 'West London', value: 25 },
+        { category: 'East London', value: 20 },
+        { category: 'North London', value: 15 },
+        { category: 'South London', value: 5 }
     ];
 
     const COLORS = ['#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800'];
@@ -45,7 +45,7 @@ const ServiceAreas = () => {
                         {data.map((item, index) => (
                             <div key={index} style={{display: 'flex', alignItems: 'center'}}>
                                 <div className="area-color" style={{ backgroundColor: COLORS[index] }}></div>
-                                <span>{item.name}</span>
+                                <span>{item.category}</span>
                                 <span className="legend-percent" style={{textAlign:'end'}}>{item.value}%</span>
                             </div>
                         ))}

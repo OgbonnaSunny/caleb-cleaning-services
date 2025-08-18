@@ -51,8 +51,8 @@ const Signup = () => {
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
-        const sanitizedValue = e.target.value.replace(/<[^>]*>/g, ''); // Basic XSS prevention
-        setFormData({...formData, [e.target.name]: sanitizedValue});
+        const sanitizedValue = value.replace(/<[^>]*>/g, ''); // Basic XSS prevention
+        setFormData({...formData, [name]: sanitizedValue});
         setErrors({});
         setMessage("");
     };

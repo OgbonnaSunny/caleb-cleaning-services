@@ -24,7 +24,7 @@ const ProfilePage = ({emailFromProile}) => {
             bio: 'A good cleaner',
             email:'sarah@gmail.com',
             emergencyContact: {
-                name: 'Martha Caleb',
+                category: 'Martha Caleb',
                 relationship: 'Spouse',
                 phone: '073 6258 7018'
             }
@@ -56,25 +56,25 @@ const ProfilePage = ({emailFromProile}) => {
         },
         review: [
             {id: 1,
-                name: 'Michael Brown',
+                category: 'Michael Brown',
                 rating: 5,
                 review: 'Sarah did an excellent job cleaning my flat. She was punctual, professional, and paid attention to all the details I requested. The place has never looked better!',
                 time: '2 weeks ago'
             },
             {id: 2,
-                name: 'Emma Wilson',
+                category: 'Emma Wilson',
                 rating: 4,
                 review: 'Very thorough cleaning service. Sarah was friendly and efficient. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '1 month ago'
             },
             {id: 2,
-                name: 'John Smith',
+                category: 'John Smith',
                 rating: 5,
                 review: 'Very thorough cleaning service. Sarah was Professional, detailed and friendly. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '2 months ago'
             },
             {id: 2,
-                name: 'Dialo Becko',
+                category: 'Dialo Becko',
                 rating: 4,
                 review: 'Smart and nice cleaning service. Sarah was Professional, detailed and friendly. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '4 months ago'
@@ -124,11 +124,11 @@ const ProfilePage = ({emailFromProile}) => {
     // Navbar items
     const topNavItems = ['New', 'Jobs', 'History'];
     const bottomNavItems = [
-        {id: 1, name: 'Setting'},
-        {id: 2, name: 'Finance'},
-        {id: 3, name: 'Docs'},
-        {id: 4, name: 'Support'},
-        {id: 5, name: 'Profile'},
+        {id: 1, category: 'Setting'},
+        {id: 2, category: 'Finance'},
+        {id: 3, category: 'Docs'},
+        {id: 4, category: 'Support'},
+        {id: 5, category: 'Profile'},
     ];
 
     const [isFavorite, setIsFavorite] = useState(false);
@@ -137,7 +137,7 @@ const ProfilePage = ({emailFromProile}) => {
     const [email, setEmail] = useState(cleanerEmail);
     const [cleanerName, setCleanerName] = useState(currentCleaner);
     const [cleaner, setCleaner] = useState({
-        name: cleanerName,
+        category: cleanerName,
         profileImage: "https://randomuser.me/api/portraits/women/45.jpg",
         rating: 4.8,
         reviewCount: 127,
@@ -158,16 +158,16 @@ const ProfilePage = ({emailFromProile}) => {
     const [successMessage, setSuccessMessage] = useState('');
     const [showAllReviews, setShowAllReviews] = useState(false);
     const [activeTab2, setActiveTab2] = useState('about');
-    const [reviews, setReviews] = useState([])
-    const [profilePhoto, setProfilePhoto] = useState(cleaner.profileImage);
-    const [firstName, setFirstName] = useState(cleanerData.personal.firstName);
-    const [lastName, setLastName] = useState(cleanerData.personal.lastName);
-    const [experience, setExperience] = useState(cleanerData.work.cleaningExperience);
-    const [address, setAddress] = useState(cleaner.address);
-    const [rating, setRating] = useState(cleaner.rating);
-    const [reviewCount, setReviewCount] = useState(cleaner.reviewCount);
-    const [bio, setBio] = useState(cleaner.bio);
-    const [phone, setPhone] = useState(cleaner.phone);
+    const [reviewList, setReviewList] = useState([])
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [experience, setExperience] = useState(null);
+    const [address, setAddress] = useState('');
+    const [rating, setRating] = useState(null);
+    const [reviewCount, setReviewCount] = useState(null);
+    const [bio, setBio] = useState('');
+    const [phone, setPhone] = useState(null);
     const [availability, setAvailability] = useState({
         monday: { morning: false, afternoon: false, evening: false },
         tuesday: { morning: false, afternoon: false, evening: false },
@@ -186,6 +186,18 @@ const ProfilePage = ({emailFromProile}) => {
     const [two, setTwo] = useState(0);
     const [one, setOne] = useState(0);
     const [loadingReviews, setLoadingReviews] = useState(false);
+    const [offset, setOffset] = useState(0);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [pageCount, setPageCount] = useState(0);
+    const [page, setPage] = useState(10);
+
+    useEffect(() => {
+        if (window.innerWidth > 768) {
+            setPage(20);
+            return;
+        }
+        setPage(10);
+    }, [])
 
 
     const renderStars = (rating) => {
@@ -268,23 +280,26 @@ const ProfilePage = ({emailFromProile}) => {
     }
 
     useEffect(() => {
-        if (reviews.length > 0) {
+        if (reviewList.length > 0) {
             setLoadingReviews(true);
-            const occurence = reviews.reduce((acc, review) => {
+            const occurence = reviewList.reduce((acc, review) => {
                 const rating = review.rating;
                 acc[rating] = (acc[rating] || 0) + 1;
                 return acc;
             }, {1: 0, 2: 0, 3: 0, 4: 0, 5: 0});
 
-            setFive(reviewPercentage(occurence[5], reviews.length));
-            setFour(reviewPercentage(occurence[4], reviews.length));
-            setThree(reviewPercentage(occurence[3], reviews.length));
-            setTwo(reviewPercentage(occurence[2], reviews.length));
-            setOne(reviewPercentage(occurence[1], reviews.length));
+            setFive(reviewPercentage(occurence[5], reviewList.length));
+            setFour(reviewPercentage(occurence[4], reviewList.length));
+            setThree(reviewPercentage(occurence[3], reviewList.length));
+            setTwo(reviewPercentage(occurence[2], reviewList.length));
+            setOne(reviewPercentage(occurence[1], reviewList.length));
             setLoadingReviews(false);
+
+            setOffset(reviewList[reviewList.length - 1].id);
         }
 
-    }, [reviews])
+    }, [reviewList])
+
 
     useEffect(() => {
          const fetchCleanerData =  async () => {
@@ -308,17 +323,6 @@ const ProfilePage = ({emailFromProile}) => {
                      setBgColor('red');
                  }
 
-                 response = await api.post('/api/reviews/record', {cleanerEmail: email});
-                 const { reviews } = response.data;
-                 if (reviews) {
-                     setReviews(reviews.reviews);
-                     setRating(reviews.value);
-                     setReviewCount(reviews.count);
-                 }
-                 else {
-                     setSuccessMessage('No review record was found');
-                     setBgColor('red');
-                 }
              } catch(error) {
                  console.log(error);
                  setSuccessMessage('Error fetching some profile data')
@@ -330,6 +334,64 @@ const ProfilePage = ({emailFromProile}) => {
             fetchCleanerData();
         }
     }, [email]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (!loadingMore) {
+                    if (activeTab2 === 'reviews') {
+                        setPageCount(prev => prev + 1);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loadingMore, activeTab2]);
+
+    useEffect(() => {
+        const fetchCleanerData =  async () => {
+            if (reviewList.length > 0) {
+                setLoadingMore(true);
+            }
+            else {
+                setIsLoading(true);
+            }
+            try {
+                const response = await api.post('/api/reviews/record', {cleanerEmail: email, limit: page, offset: offset});
+                const { reviews } = response.data;
+                if (reviews.reviews.length > 0) {
+                    setRating(reviews.value);
+                    setReviewCount(reviews.count);
+
+                    setReviewList(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        reviews.reviews.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+                }
+                else {
+                    if (reviewList.length <= 0) {
+                        setSuccessMessage('No reviewList record was found');
+                        setBgColor('red');
+                    }
+                }
+            } catch(error) {
+                console.log(error);
+                setSuccessMessage('Error fetching some profile data')
+            } finally {
+                setIsLoading(false);
+                setLoadingMore(false);
+            }
+        };
+        if (email !== null || email !== undefined) {
+            fetchCleanerData();
+        }
+    }, [email, pageCount]);
 
     return (
         <div style={{display:'flex', flexDirection:'column', minHeight: '100vh'}}>
@@ -347,13 +409,10 @@ const ProfilePage = ({emailFromProile}) => {
 
                     <div className="profile-info">
                         <h3 className={'profile-name'}>{firstName} {lastName}</h3>
-                        <p className="review-count">
-                            <span className="rating-value">{rating}</span> ({reviewCount})
-                            reviews
-                        </p>
+                        {reviewList.length > 0 && <p className="review-count"><span className="rating-value">{rating}</span> ({reviewCount}) reviews </p> }
 
                         <div className="meta-info">
-                            <p className="meta-item"><FaUserTie style={{width:'20px'}} /> {experience} experience</p>
+                            {experience &&  <p className="meta-item"><FaUserTie style={{width:'20px'}} /> {experience} experience</p> }
                             <p className="meta-item"><FaMapMarkerAlt style={{width:'20px'}} />  <span style={{textAlign:'start'}}>{address}</span></p>
                             <p className="meta-item"> <FaBroom style={{width:'20px'}} /> <span style={{textAlign:'start'}}>Flymax Ltd</span></p>
                         </div>
@@ -380,8 +439,7 @@ const ProfilePage = ({emailFromProile}) => {
                 </div>
 
                 <div className="tab-content">
-                    {activeTab2 === 'about' && (
-                        <div className="about-section">
+                    {activeTab2 === 'about' && (<div className="about-section">
                             <h2 className={'experience-text'}>About {firstName} {lastName}</h2>
                             <p>{bio}</p>
                             <div className="details-section">
@@ -463,8 +521,7 @@ const ProfilePage = ({emailFromProile}) => {
                                     ))}
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        </div>)}
 
                     {activeTab2 === 'services' && (<div className="services-section">
                             <h1 className={'experience-text'}>Services Offered</h1>
@@ -487,12 +544,12 @@ const ProfilePage = ({emailFromProile}) => {
                                 <h2 className={'experience-text'}>Preferred Cleaning Materials</h2>
                                 <p>Fly cleaner primarily uses eco-friendly, non-toxic cleaning products that are safe for children and pets.</p>
                             </div>
-                        </div>
-                    )}
+                        </div>)}
 
-                    {activeTab2 === 'reviews' &&  <div>{!loadingReviews ? <div>
-                        {reviews.length > 0 &&
-                            <div className="reviews-section">
+                    {activeTab2 === 'reviews' &&
+                        <div>
+                            {!loadingReviews ? <div>
+                                {reviewList.length > 0 && <div className="reviews-section">
                                 <h2>Customer Reviews</h2>
                                 <div className="review-summary">
                                     <div className="overall-rating">
@@ -539,57 +596,30 @@ const ProfilePage = ({emailFromProile}) => {
                                         </div>
                                     </div>
                                 </div>
-                                {!showAllReviews &&
-                                    <div className={'grid-container'}>
-                                        {reviews.map((review, index) => (
-                                            <div key={review.id}>
-                                                {index <= 2 && <div key={review.id} className="review-card">
-                                                    <div className="review-header">
-                                                        <div className="reviewer-info">
-                                                            <h4>{review.customer}</h4>
-                                                            <div className="review-rating">
-                                                                {renderStars(review.rating)}
-                                                                <span className="review-date">{timeAgo(review.time)}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="review-content">
-                                                        <p>{review.review}</p>
-                                                    </div>
-                                                </div>  }
-                                            </div>
-                                        ))}
-                                    </div>
-                                }
-                                {showAllReviews &&
-                                    <div className={'grid-container'}>
-                                        {reviews.map((review, index) => (
-                                            <div key={review.id} className="review-card">
-                                                <div className="review-header">
-                                                    <div className="reviewer-info">
-                                                        <h4>{review.customer}</h4>
-                                                        <div className="review-rating">
-                                                            {renderStars(review.rating)}
-                                                            <span className="review-date">{timeAgo(review.time)}</span>
-                                                        </div>
+                                <div className={'grid-container'}>
+                                    {reviewList.map((review, index) => (
+                                        <div key={review.id} className="review-card">
+                                            <div className="review-header">
+                                                <div className="reviewer-info">
+                                                    <h4>{review.customer}</h4>
+                                                    <div className="review-rating">
+                                                        {renderStars(review.rating)}
+                                                        <span className="review-date">{timeAgo(review.time)}</span>
                                                     </div>
                                                 </div>
-                                                <div className="review-content">
-                                                    <p>{review.review}</p>
-                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                }
-                                {reviews.length > 3 &&
-                                    <button onClick={() => setShowAllReviews(!showAllReviews)}
-                                            className="view-all-reviews">
-                                        {showAllReviews ? 'View Less Reviews' : 'View All Reviews'}
-                                    </button>
-                                }
+                                            <div className="review-content">
+                                                <p>{review.review}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>}
-                        {reviews.length <= 0 && <p>No review for {firstName} {lastName} yet </p> }
-                    </div>  : <p>Loading reviews...</p>}</div>}
+                                {reviewList.length <= 0 && <p>No review for {firstName} {lastName} yet </p> }
+                            </div>  : <p>Loading reviews...</p>}
+                            {loadingMore && <p>Loading...</p>}
+                        </div>
+                    }
                 </div>
             </div>
         </div>

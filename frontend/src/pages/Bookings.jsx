@@ -18,7 +18,7 @@ import {
 import api from './api.js'
 import { useNavigate } from 'react-router-dom';
 
-const Bookings = ( {cancellable =  false, user, history }) => {
+const Bookings = ( {cancellable =  false, user, history = false }) => {
     const navigate = useNavigate();
     const bookings = [
         { id: 1, postcode: "G10AS", cleanerEmail:'ogbonnasundaycy@gmail.com', cleaner: 'Sunday Ogbonna', customer: "Sarah Johnson", address: "25 Park Lane, London", date: '3 months ago', time: "Today, 10:00 AM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "2h 45m", estimatedAmount: 45.76 },
@@ -28,10 +28,14 @@ const Bookings = ( {cancellable =  false, user, history }) => {
         { id: 5, postcode: "B10AS", cleanerEmail:'hjj@gmail.com', cleaner: 'June Far', customer: "Lisa Taylor", address: "18 Oxford Street", date:'3 weeks ago', time: "Tomorrow, 11:00 AM", nature: 'Heavy', plan: "One-off", status: "cancelled", duration: "4h 05m", estimatedAmount: 25.06  }
     ];
 
-    const [allBookingData, setAllBookingData] = useState(bookings);
+    const [allBookingData, setAllBookingData] = useState([]);
+    const [allBookingDataCopy, setAllBookingDataCopy] = useState([]);
+
     const [todayBooking, setTodayBooking] = useState(bookings);
     const [last7DaysBooking, setLast7DaysBooking] = useState([]);
-    const [clientHistory, setClientHistory] = useState(bookings);
+
+    const [clientHistory, setClientHistory] = useState([]);
+    const [clientHistoryCopy, setClientHistoryCopy] = useState([]);
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
@@ -47,48 +51,103 @@ const Bookings = ( {cancellable =  false, user, history }) => {
     const [rating, setRating] = useState(1);
     const [review, setReview] = useState('');
     const [bgColor, setBgColor] = useState('red');
-
+    const [page, setPage] = useState(10);
+    const [historyMessage, setHistoryMessage] = useState('');
+    const [cancelledIds, setCancelledIds] = useState([]);
+    const [cancelledMessage, setCancelledMessage] = useState(null);
+    const [activeIdForCancellation, setActiveIdForCancellation] = useState(null);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
-        if (user === null || user === undefined) {
+        if (user) {
+            setEmail(user.email);
+        }
+    }, [])
+
+    useEffect(() => {
+        if (window.innerWidth > 768) {
+            setPage(20);
             return;
         }
-        setEmail(user.email)
+        setPage(10);
+    }, []);
+
+
+    useEffect(() => {
+        if (email === null || email === undefined) {
+            return;
+        }
         if (user === 'client') {
             setLoading(true);
-            const data = {email: user.email, limit: 20, offset: allBookingData.length};
-            api.post('api/booking/customer-active-order', data)
+            let offset = 0;
+            if (allBookingData.length > 0) {
+                offset = allBookingData[allBookingData.length - 1].id;
+            }
+            const data = {email: email, limit: page, offset: offset};
+            api.post('/api/booking/customer-active-order', data)
                 .then((response) => {
-                    const { bookings } = response.data;
-                    if (bookings) {
-                        const allBooking = [];
-                        const newData = [];
-                        newData.push(...bookings);
-                        if (newData.length > 0) {
-                            allBooking.push(...allBookingData);
-                            allBooking.push(...newData);
-                            setAllBookingData(allBooking);
-                            setExhausted(false);
-                        }
-                        else {
-                            setExhausted(true);
-                        }
+                    const { booking } = response.data;
+                    if (booking.length > 0) {
+
+                        setAllBookingData(prev => {
+                            const map = new Map(prev.map(item => [item.id, item])); // old items
+                            booking.forEach(item => map.set(item.id, item));    // add/replace new
+                            return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                        });
                     }
                     else {
-                        setMessage("No active bookings found");
-                        setExhausted(true);
+                        if (allBookingData.length <= 0) {
+                            setMessage("No active bookings found");
+                        }
                     }
                 })
                 .catch((error) => {
-                    console.log(error.status.data);
+                    console.log(error);
                     setMessage("Error while fetching booking data.");
                 })
                 .finally(() => {
                     setLoading(false);
                 })
         }
-    }, [pageCount])
+    }, [pageCount, email])
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            if (email === null || email === undefined) return;
+
+            setLoading(true);
+            try {
+                let offset = 0;
+                if (clientHistory.length > 0) {
+                    offset = clientHistory[clientHistory.length - 1].id;
+                }
+                const data = {email: email, limit: page, offset: offset};
+                const response = await api.post('/api/booking/client-history', data);
+                const { booking } = response.data;
+                if (booking.length > 0) {
+                    setClientHistory(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        booking.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+
+                }
+                else {
+                    if (clientHistory.length <= 0) {
+                        setHistoryMessage("No history of  booking found");
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+                setHistoryMessage("Error while fetching history data.");
+            } finally {
+                setLoading(false);
+            }
+        }
+        if (user === 'client' && history) {
+            fetchHistory();
+        }
+    }, [pageCount, email])
 
     useEffect(() => {
         if (user === 'admin') {
@@ -175,10 +234,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                     }
                 }
                 if (user === 'admin') {
-                    if (!loading && !exhausted) {
-                        setPageCount(prev => prev + 1);
-                    }
-                    if (!loading && !exhausted) {
+                    if (!loading) {
                         setPageCount(prev => prev + 1);
                     }
                 }
@@ -187,7 +243,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [loading]);
+    }, [loading, user]);
 
     useEffect(() => {
         const resetMessage = () => {
@@ -199,26 +255,33 @@ const Bookings = ( {cancellable =  false, user, history }) => {
 
     }, [message]);
 
-    const handleSubmit = async (id) => {
+    const cancelBooking = async (id) => {
         if (!email) {
             return;
         }
         setLoading(true);
         setMessage(null);
+        setActiveIdForCancellation(id)
         if (cancellable) {
-            api.post('api/booking/cancel', {email: email, id: id})
+            api.post('/api/booking/cancel', {email: email, orderId: id})
                 .then((response) => {
                     const { success } = response.data;
                     if (success) {
-                        setPageCount(pageCount + 1);
+                      //  cancelledIds.push(id);
+                        setCancelledIds(prev => [...prev, id]);
+                        setCancelledMessage("Booking successfully cancelled");
+                    }
+                    else {
+                        setCancelledMessage("Booking cancellation not successfully");
                     }
                 })
                 .catch((error) => {
                     console.log(error);
-                    setMessage("Error while fetching booking data.");
+                    setCancelledMessage("Error while cancelling booking");
                 })
                 .finally(() => {
                     setLoading(false);
+                    setTimeout(() => setCancelledMessage(null), 5000);
                 })
         }
     }
@@ -279,29 +342,42 @@ const Bookings = ( {cancellable =  false, user, history }) => {
         window.open(`/cleanerprofilepage?cleaner=${encodeURIComponent(cleaner)}&email=${encodeURIComponent(email)}`, "_blank");
     }
 
+    const renderName = (name) => {
+        if (name === null || name === '' || name === undefined) {
+            return name;
+        }
+        const names = name.split(' ');
+        if (names.length <= 1) {
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+        let fullName = "";
+        for (let i = 0; i < names.length; i++) {
+            fullName += names[i].charAt(0).toUpperCase() + names[i].slice(1)+ " ";
+        }
+        return fullName;
+    }
+
     return (
         <div className={'support-page'} style={{
             display: 'flex',
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }}>
-            {message && <label style={{backgroundColor: bgColor, color:'white'}}>{message}</label>}
             {user === 'client' &&
                 <div>
                     {!history && (<div>
                         <div className="recent-bookings card">
                             <div className="card-header">
                                 <h2 className={'experience-text'} style={{color:'navy'}}>Active booking</h2>
-                                {allBookingData.length > 0 && <button className="btn-view-all" style={{color:'red'}}>View All</button>}
                             </div>
                             {allBookingData.length > 0 &&  <div className="card-body">
                                 <div className="grid-container">
                                     {allBookingData.map(booking => (
                                         <div key={booking.id} className="service-card">
-                                            <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                            <h4 style={{textAlign:'center', margin:'10px'}}>{booking.orderId}</h4>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaHome className="icon-small" />
-                                                <h3>{booking.customer}</h3>
+                                                <h3>{renderName(booking.customer)}</h3>
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaMapMarkerAlt className="icon-small"/>
@@ -336,12 +412,12 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                                     {booking.nature}
                                                 </p>
                                             </div>
-
-                                            <button onClick={() => handleSubmit(booking.id)} className="btn btn-primary"
-                                                    style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
+                                            {(cancelledMessage && activeIdForCancellation === booking.orderId) && <p>{cancelledMessage}</p>}
+                                            <button onClick={() => cancelBooking(booking.orderId)} className="btn btn-primary"
+                                                    style={(booking.status === 'confirmed' || booking.status === 'cancelled' || cancelledIds.includes(booking.orderId) || loading) ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
                                                         !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
                                                             {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
-                                                    disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading)}>
+                                                    disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading || cancelledIds.includes(booking.orderId))}>
                                                 {cancellable ? 'Cancel booking' : 'Assign cleaner'}
                                             </button>
                                         </div>
@@ -349,22 +425,21 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                 </div>
                             </div> }
                         </div>
-                        {(!loading && allBookingData.length <= 0) && <div style={{marginLeft:'30px'}}><p>No active booking data was found</p></div>}
+                        {(!loading && allBookingData.length <= 0) && <div style={{marginLeft:'30px'}}><p>{message}</p></div>}
                     </div>)}
                     {history && (<div>
                         <div className="recent-bookings card">
                             <div className="card-header">
                                 <h2 className={'experience-text'} style={{color:'navy'}}>History</h2>
-                                {clientHistory.length > 0 && <button className="btn-view-all" style={{color:'red'}}>View All</button>}
                             </div>
                             {clientHistory.length > 0 &&  <div className="card-body">
                                 <div className="grid-container">
-                                    {allBookingData.map(booking => (
+                                    {clientHistory.map(booking => (
                                         <div key={booking.id} className="service-card">
-                                            <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                            <h4 style={{textAlign:'center', margin:'10px'}}>{booking.orderId}</h4>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaHome className="icon-small" />
-                                                <h3>{booking.customer}</h3>
+                                                <h3>{renderName(booking.customer)}</h3>
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaMapMarkerAlt className="icon-small"/>
@@ -418,7 +493,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                 </div>
                             </div> }
                         </div>
-                        {(!loading && clientHistory.length <= 0) && <div style={{marginLeft:'30px'}}><p>No booking history was found</p></div>}
+                        {(!loading && clientHistory.length <= 0) && <div style={{marginLeft:'30px'}}><p>{historyMessage}</p></div>}
                     </div>)}
                 </div>
             }
@@ -426,7 +501,6 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                 <div className="recent-bookings card">
                     <div className="card-header">
                         <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Recent Bookings</h2>
-                        {todayBooking.length > 0 && <button className="btn-view-all" style={{color:'red'}}>View All</button>}
                     </div>
                     {todayBooking.length > 0 &&  <div className="card-body">
                         <div className="grid-container">
@@ -471,7 +545,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                         </p>
                                     </div>
 
-                                    <button onClick={() => handleSubmit(booking.id)} className="btn btn-primary"
+                                    <button onClick={() => cancelBooking(booking.id)} className="btn btn-primary"
                                             style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
                                                 !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
                                                     {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
@@ -482,7 +556,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                             ))}
                         </div>
                     </div>}
-                    {(!loading && todayBooking.length <= 0) && <div><p>No active booking for today was found</p></div>}
+                    {(!loading && todayBooking.length <= 0) && <div><p>{message}</p></div>}
                 </div>
                 <div className="recent-bookings card">
                     <div className="card-header">
@@ -532,7 +606,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                                         </p>
                                     </div>
 
-                                    <button onClick={() => handleSubmit(booking.id)} className="btn btn-primary"
+                                    <button onClick={() => cancelBooking(booking.id)} className="btn btn-primary"
                                             style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
                                                 !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
                                                     {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
@@ -543,7 +617,7 @@ const Bookings = ( {cancellable =  false, user, history }) => {
                             ))}
                         </div>
                     </div> }
-                    {(!loading && last7DaysBooking.length <= 0) && <div style={{marginLeft:'30px'}}><p>No record found for last 7 days</p></div>}
+                    {(!loading && last7DaysBooking.length <= 0) && <div style={{marginLeft:'30px'}}><p>{message}</p></div>}
                 </div>
             </div>}
             {loading && (<div><p>Loading data...</p></div>)}

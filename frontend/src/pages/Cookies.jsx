@@ -8,22 +8,22 @@ const Cookies = () => {
     const cookieData = [
         {
             title: 'Fly.ApplicationCookie',
-            name: 'Fly.ApplicationCookie',
+            category: 'Fly.ApplicationCookie',
             purpose: 'This cookie is necessary for user auto-login to the personal eMop account.'
         },
         {
             title: 'Referral Cookie',
-            name: 'referral',
+            category: 'referral',
             purpose: 'This cookie is necessary for applying promocode to the exact order'
         },
         {
             title: 'Special Referral',
-            name: 'Special-referral',
+            category: 'Special-referral',
             purpose: 'This cookie is necessary for making user Invites'
         },
         {
             title: 'Cookie Consent',
-            name: 'CookieConsent',
+            category: 'CookieConsent',
             purpose: 'Stores the user\'s cookie consent state for the current domain'
         }
     ];
@@ -31,181 +31,181 @@ const Cookies = () => {
     const cookieData2 = [
         {
             title: 'CheckoutHome Middleware',
-            name: '__stripe_mid',
+            category: '__stripe_mid',
             purpose: 'This cookie is necessary for making credit card transactions on the website. The service is provided by CheckoutHome.com which allows online transactions without storing any credit card information.',
             duration: '1 year'
         },
         {
             title: 'CheckoutHome Session',
-            name: '__stripe_sid',
+            category: '__stripe_sid',
             purpose: 'This cookie is necessary for making credit card transactions on the website. The service is provided by CheckoutHome.com which allows online transactions without storing any credit card information.',
             duration: '1 day'
         },
         {
             title: 'JSESSION ID',
-            name: 'JSESSIONID',
+            category: 'JSESSIONID',
             purpose: 'Preserves users states across page requests.',
             duration: 'Session'
         },
         {
             title: 'LiveChat CSRF Token',
-            name: 'LS_CSRF_TOKEN',
+            category: 'LS_CSRF_TOKEN',
             purpose: 'Identifies the visitor across devices and visits, in order to optimize the chat-box function on the website.',
             duration: 'Session'
         },
         {
             title: 'Visitor Window Tab GUID',
-            name: '__vw_tab_guid',
+            category: '__vw_tab_guid',
             purpose: 'Registers data on visitors\' website-behaviour. This is used for internal analysis and website optimisation.',
             duration: 'Session'
         },
         {
             title: 'Google Analytics',
-            name: '_ga',
+            category: '_ga',
             purpose: 'Registers a unique ID that is used to generate statistical data on how the visitor uses the website.',
             duration: '2 years'
         },
         {
             title: 'Google Analytics Throttle',
-            name: '_gat',
+            category: '_gat',
             purpose: 'Used by Google Analytics to throttle request rate.',
             duration: '1 day'
         },
         {
             title: 'Google Analytics ID',
-            name: '_gid',
+            category: '_gid',
             purpose: 'Registers a unique ID that is used to generate statistical data on how the visitor uses the website.',
             duration: '1 day'
         },
         {
             title: 'Hotjar ID',
-            name: '_hjid',
+            category: '_hjid',
             purpose: 'Sets a unique ID for the session. This allows the website to obtain data on visitor behaviour for statistical purposes.',
             duration: '1 year'
         },
         {
             title: 'Yandex Metrika First Visit',
-            name: '_ym_d',
+            category: '_ym_d',
             purpose: 'Contains the date of the visitor\'s first visit to the website.',
             duration: '1 year'
         },
         {
             title: 'Yandex Ad Blocker Detection',
-            name: '_ym_isad',
+            category: '_ym_isad',
             purpose: 'This cookie is used to determine if the visitor has any adblocker software in their browser - this information can be used to make website content inaccessible to visitors if the website is financed with third-party advertisement.',
             duration: '1 day'
         },
         {
             title: 'Yandex Metrika Retry Requests',
-            name: '_ym_retryReqs',
+            category: '_ym_retryReqs',
             purpose: 'Registers statistical data on visitors\' behaviour on the website. Used for internal analytics by the website operator.',
             duration: 'Persistent'
         },
         {
             title: 'Yandex Metrika UID',
-            name: '_ym_uid',
+            category: '_ym_uid',
             purpose: 'This cookie is used to collect non-personal information on the visitor\'s website behavior and non-personal visitor statistics.',
             duration: '1 year'
         },
         {
             title: 'Session IQ Database',
-            name: 'siqlsdb',
+            category: 'siqlsdb',
             purpose: 'Sets a unique ID for the session. This allows the website to obtain data on visitor behaviour for statistical purposes.',
             duration: 'Persistent'
         },
         {
             title: 'User Tracking Session DB',
-            name: 'utsdb',
+            category: 'utsdb',
             purpose: 'Registers data on visitors\' website-behaviour. This is used for internal analysis and website optimisation.',
             duration: 'Session'
         },
         {
             title: 'Facebook Pixel',
-            name: '_fbp',
+            category: '_fbp',
             purpose: 'Used by Facebook to deliver a series of advertisement products such as real time bidding from third-party advertisers.',
             duration: '3 months'
         },
         {
             title: 'Hotjar Included in Sample',
-            name: '_hjIncludedInSample',
+            category: '_hjIncludedInSample',
             purpose: 'Determines if the user\'s navigation should be registered in a certain statistical place holder.',
             duration: 'Session'
         },
         {
             title: 'Yandex Metrika Enabled',
-            name: '_ym_metrika_enabled',
+            category: '_ym_metrika_enabled',
             purpose: 'This cookie is used to collect data on the visitor\'s behavior on the website - this information can be used to assign the visitor to a visitor segment, based on common preferences.',
             duration: '1 day'
         },
         {
             title: 'Google Ads Audience',
-            name: 'ads/ga-audiences',
+            category: 'ads/ga-audiences',
             purpose: 'Used by Google AdWords to re-engage visitors that are likely to convert to customers based on the visitor\'s online behaviour across websites.',
             duration: 'Session'
         },
         {
             title: 'Campaign Tracking',
-            name: 'b3e783bb62',
+            category: 'b3e783bb62',
             purpose: 'Collects information on user preferences and/or interaction with web-campaign content - This is used on CRM-campaign-platform used by website owners for promoting events or products.',
             duration: 'Session'
         },
         {
             title: 'Facebook Referral',
-            name: 'fr',
+            category: 'fr',
             purpose: 'Used by Facebook to deliver a series of advertisement products such as real time bidding from third-party advertisers.',
             duration: '3 months'
         },
         {
             title: 'Google DoubleClick',
-            name: 'IDE',
+            category: 'IDE',
             purpose: 'Used by Google DoubleClick to register and report the website user\'s actions after viewing or clicking one of the advertiser\'s ads with the purpose of measuring the efficacy of an ad and to present targeted ads to the user.',
             duration: '1 year'
         },
         {
             title: 'Yandex Metrika Enabled',
-            name: 'metrika_enabled',
+            category: 'metrika_enabled',
             purpose: 'Used to track visitors on multiple websites, in order to present relevant advertisement based on the visitor\'s preferences.',
             duration: '1 day'
         },
         {
             title: 'Microsoft Unique ID',
-            name: 'MUID',
+            category: 'MUID',
             purpose: 'Used widely by Microsoft as a unique user ID. The cookie enables user tracking by synchronising the ID across many Microsoft domains.',
             duration: '1 year'
         },
         {
             title: 'Microsoft Unique ID Backup',
-            name: 'MUIDB',
+            category: 'MUIDB',
             purpose: 'Registers data of visitors from multiple visits and on multiple websites. This information is used to measure the efficiency of advertisement on websites.',
             duration: '1 year'
         },
         {
             title: 'Facebook Tracking',
-            name: 'tr',
+            category: 'tr',
             purpose: 'Used by Facebook to deliver a series of advertisement products such as real time bidding from third-party advertisers.',
             duration: 'Session'
         },
         {
             title: 'Test Cookie',
-            name: 'Test_cookie',
+            category: 'Test_cookie',
             purpose: 'Used to check if the user\'s browser supports cookies.',
             duration: '1 day'
         },
         {
             title: 'Yandex Browser Session ID',
-            name: 'yabs-sid',
+            category: 'yabs-sid',
             purpose: 'Registers data on visitors\' website-behaviour. This is used for internal analysis and website optimisation.',
             duration: 'Session'
         },
         {
             title: 'Yandex Unique ID',
-            name: 'yandexuid',
+            category: 'yandexuid',
             purpose: 'Registers data on visitors\' website-behaviour. This is used for internal analysis and website optimisation.',
             duration: '1 year'
         },
         {
             title: 'Yandex Persistent',
-            name: 'yp',
+            category: 'yp',
             purpose: 'Sets a unique ID for the session. This allows the website to obtain data on visitor behaviour for statistical purposes.',
             duration: '10 years'
         }
@@ -318,7 +318,7 @@ const Cookies = () => {
                             {cookieData.map((cookie, index) => (
                                 <tr key={index}>
                                     <td>{cookie.title}</td>
-                                    <td>{cookie.name}</td>
+                                    <td>{cookie.category}</td>
                                     <td>{cookie.purpose}</td>
                                 </tr>
                             ))}
@@ -347,7 +347,7 @@ const Cookies = () => {
                             {cookieData2.map((cookie, index) => (
                                 <tr key={index}>
                                     <td>{cookie.title}</td>
-                                    <td><code>{cookie.name}</code></td>
+                                    <td><code>{cookie.category}</code></td>
                                     <td>{cookie.purpose}</td>
                                     <td>{cookie.duration}</td>
                                 </tr>

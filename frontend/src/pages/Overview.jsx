@@ -41,7 +41,7 @@ const Overview = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [formData, setFormData] = useState({
         postcode: '',
-        name:'',
+        category:'',
         phone:'',
         email:'',
         message:'',
@@ -119,34 +119,34 @@ const Overview = () => {
         { id: 3, rating: 5, text: "They transformed my office space completely. Will use again.", author: "Priya M." }
     ];
 
-    const pricings = [{id:'regular', name:'Regular cleaning', price:'from £19/h', desc: 'Regular visits by a professional cleaner in West London who will vacuum, dust, and clean surfaces in all living areas, bathrooms, and kitchen. Additional services such as laundry, changing bed linen, and washing dishes can be added upon request.'},
-        {id:'one-off', name: 'One-off domestic cleaning', price: 'from £19/h', desc:'A comprehensive deep cleaning of the entire property, including thorough cleaning of bathrooms, kitchens, living areas, and bedrooms, as well as dusting and vacuuming throughout.'}]
+    const pricings = [{id:'regular', category:'Regular cleaning', price:'from £19/h', desc: 'Regular visits by a professional cleaner in West London who will vacuum, dust, and clean surfaces in all living areas, bathrooms, and kitchen. Additional services such as laundry, changing bed linen, and washing dishes can be added upon request.'},
+        {id:'one-off', category: 'One-off domestic cleaning', price: 'from £19/h', desc:'A comprehensive deep cleaning of the entire property, including thorough cleaning of bathrooms, kitchens, living areas, and bedrooms, as well as dusting and vacuuming throughout.'}]
 
     const stages = [
-        {id:'submit', src: Booking, stage:'Stage 1', name:'Submit your booking online', steps:['Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
-        {id:'pay', src: Currency, stage:'Stage 2', name: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
-        {id:'manage',src: Manage,  stage: 'Stage 3', name: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
+        {id:'submit', src: Booking, stage:'Stage 1', category:'Submit your booking online', steps:['Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
+        {id:'pay', src: Currency, stage:'Stage 2', category: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
+        {id:'manage',src: Manage,  stage: 'Stage 3', category: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
             ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use our website to keep track of your booking']}
     ]
 
     const pack = [
-        {id:1 ,name:'Bedroom, living, dining rooms', packs:['Dusting all accessible surfaces','Clean and wipe mirrors and glass fixtures', 'Cleaning surfaces', 'Wiping appliances', 'Folding clothes and arranging things', 'Wiping doors, door handles, and switches', 'Cleaning lighting appliances, and chandeliers', 'Vacuum cleaning of the carpets and washing the floor and skirting boards', 'Taking out rubbish', 'Hoovering and mopping floors']},
-        {id:2, name: 'Bathroom', packs: ['Cleaning surfaces such as tiles, shower cabin, bath sink, toilet and seat', 'Washing and sanitizing the toilet, the sink and the bidet', 'Cleaning and washing the shower and the tub', 'Wiping down mirrors, glass fixtures and lighting appliance', 'Dusting all accessible surfaces', 'Wiping down walls, doors, door handles and switches', 'Vacuuming and washing the floor and skirting boards', 'Taking out rubbish']},
-        {id:3, name: 'Kitchen', packs: ['Cleaning all accessible surfaces from dust and grease (sink, sink faucet, table surface, stove and kitchen equipment)', 'Cleaning the front, upper and bottom kitchen facades', 'Vacuuming and washing the floor and skirting boards', 'Wiping doors, door handles, and switches', 'Doing washing-up', 'Taking out rubbish']},
-        {id:4, name: 'Office Cleaning', packs: ['Mopping, cleaning, brooming, and vacuuming procedures', 'Dusting of desks and computer equipment', 'Vacuum cleaning carpets mopping the floor, and cleaning skirting boards', 'Wiping mirrors and glass fixtures', 'Toilet and shower washing and sanitizing', 'Kitchen cleaning: washing all used crockery and equipment as well as cleaning all the external surfaces', 'Taking out rubbish and replacing with new bin liners', 'Carpet and windows deep cleaning']},
-        {id:5, name: 'Halls and stairs', packs: ['Dusting all accessible surfaces', 'Cleaning mirrors and glass surfaces', 'Cleaning the front door (inside)', 'Vacuuming and mopping the floor and the skirting boards', 'Arranging things', 'Taking out rubbish']}
+        {id:1 ,category:'Bedroom, living, dining rooms', packs:['Dusting all accessible surfaces','Clean and wipe mirrors and glass fixtures', 'Cleaning surfaces', 'Wiping appliances', 'Folding clothes and arranging things', 'Wiping doors, door handles, and switches', 'Cleaning lighting appliances, and chandeliers', 'Vacuum cleaning of the carpets and washing the floor and skirting boards', 'Taking out rubbish', 'Hoovering and mopping floors']},
+        {id:2, category: 'Bathroom', packs: ['Cleaning surfaces such as tiles, shower cabin, bath sink, toilet and seat', 'Washing and sanitizing the toilet, the sink and the bidet', 'Cleaning and washing the shower and the tub', 'Wiping down mirrors, glass fixtures and lighting appliance', 'Dusting all accessible surfaces', 'Wiping down walls, doors, door handles and switches', 'Vacuuming and washing the floor and skirting boards', 'Taking out rubbish']},
+        {id:3, category: 'Kitchen', packs: ['Cleaning all accessible surfaces from dust and grease (sink, sink faucet, table surface, stove and kitchen equipment)', 'Cleaning the front, upper and bottom kitchen facades', 'Vacuuming and washing the floor and skirting boards', 'Wiping doors, door handles, and switches', 'Doing washing-up', 'Taking out rubbish']},
+        {id:4, category: 'Office Cleaning', packs: ['Mopping, cleaning, brooming, and vacuuming procedures', 'Dusting of desks and computer equipment', 'Vacuum cleaning carpets mopping the floor, and cleaning skirting boards', 'Wiping mirrors and glass fixtures', 'Toilet and shower washing and sanitizing', 'Kitchen cleaning: washing all used crockery and equipment as well as cleaning all the external surfaces', 'Taking out rubbish and replacing with new bin liners', 'Carpet and windows deep cleaning']},
+        {id:5, category: 'Halls and stairs', packs: ['Dusting all accessible surfaces', 'Cleaning mirrors and glass surfaces', 'Cleaning the front door (inside)', 'Vacuuming and mopping the floor and the skirting boards', 'Arranging things', 'Taking out rubbish']}
     ]
 
     const navLinks = [
-        {id:'location', name: 'Locations', path: '/locations' },
-        {id:'services', name: 'Services', path: '/services' },
-        {id:'pricing', name: 'Pricing', path: '/pricing' },
-        {id:'blog', name: 'Blog', path: '/about' },
-        {id:'gift', name: 'Gift', path: '/gift' },
-        {id:'help', name: 'Help', path: '/help' },
-        {id:'reclean', name: 'Reclean', path: '/reclean' },
-        {id:'become', name: 'Become a cleaner', path: '/become' },
-        {id:'sing', name: 'Sign up', path: '/signup' }
+        {id:'location', category: 'Locations', path: '/locations' },
+        {id:'services', category: 'Services', path: '/services' },
+        {id:'pricing', category: 'Pricing', path: '/pricing' },
+        {id:'blog', category: 'Blog', path: '/about' },
+        {id:'gift', category: 'Gift', path: '/gift' },
+        {id:'help', category: 'Help', path: '/help' },
+        {id:'reclean', category: 'Reclean', path: '/reclean' },
+        {id:'become', category: 'Become a cleaner', path: '/become' },
+        {id:'sing', category: 'Sign up', path: '/signup' }
     ];
 
     const sendMessage = message => {}
@@ -223,7 +223,7 @@ const Overview = () => {
                                         <img src={plan.src} alt="" className={'cart-image'}/>
                                         <h3>{plan.title}</h3>
                                         <p>{plan.description}</p>
-                                        <Link to={'/services'} state={{ id: plan.id, name: plan.title }} style={{width:'100%', textAlign:'center', color:'blue'}}>Learn More</Link>
+                                        <Link to={'/services'} state={{ id: plan.id, category: plan.title }} style={{width:'100%', textAlign:'center', color:'blue'}}>Learn More</Link>
                                     </div>
                                 ))}
                             </div>
@@ -232,7 +232,7 @@ const Overview = () => {
                         <div className={["services-grid", "main-banner"].join(" ")} style={{paddingBottom:'30px', paddingTop:'30px'}}>
                             {pricings.map(pricings => (
                                 <div key={pricings.id} className="service-card">
-                                    <h3>{pricings.name}</h3>
+                                    <h3>{pricings.category}</h3>
                                     <p style={{color:'blue'}}>{pricings.price}</p>
                                     <p style={{textAlign:'start'}}>{pricings.desc}</p>
                                 </div>
@@ -246,7 +246,7 @@ const Overview = () => {
                                         <div key={stage.id} className="service-card">
                                             <img src={stage.src} alt="" className={'cart-image'}/>
                                             <h3>{stage.stage}</h3>
-                                            <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.name}</p>
+                                            <p style={{fontWeight:'bold', textAlign:'start', color:'blue'}}>{stage.category}</p>
                                             <ul style={{textAlign:'start'}} className="dot-list">
                                                 {stage.steps.map((item, index) => (
                                                     <li key={index}>{item}</li>
@@ -262,7 +262,7 @@ const Overview = () => {
                             <div className="services-grid">
                                 {pack.map(pack =>(
                                     <div key={pack.id} className="service-card">
-                                        <h3>{pack.name}</h3>
+                                        <h3>{pack.category}</h3>
                                         <ul style={{textAlign:'start'}} className="dot-list">
                                             {pack.packs.map((item, index) => (
                                                 <li key={index}>{item}</li>
@@ -389,7 +389,7 @@ const Overview = () => {
                                                 type="text"
                                                 id="name"
                                                 name="name"
-                                                value={formData.name}
+                                                value={formData.category}
                                                 onChange={handleInputChange}
                                                 required
                                             />

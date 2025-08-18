@@ -3,10 +3,10 @@ import axios from 'axios'
 
 const ClientsForm = () => {
     const [tableName, setTableName] = useState('');
-    const [columns, setColumns] = useState([{name: '', type:''}])
+    const [columns, setColumns] = useState([{category: '', type:''}])
 
     const handleAddColumn = () => {
-        setColumns([...columns, {name:'', type:''}])
+        setColumns([...columns, {category:'', type:''}])
     }
 
     const handleColumnChange = (index, field, value) => {
@@ -45,9 +45,9 @@ const ClientsForm = () => {
                     <div key={index}>
                         <input
                             type='text'
-                            placeholder={column.name}
+                            placeholder={column.category}
                             onChange={(e) => handleColumnChange(index,'name', e.target.value)}
-                            value={column.name}
+                            value={column.category}
                             required
                         />
                         <input

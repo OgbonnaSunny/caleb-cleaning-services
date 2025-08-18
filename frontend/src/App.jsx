@@ -37,6 +37,7 @@ import CheckoutHome from "./pages/CheckoutHome.jsx";
 import CleanerProfile from './pages/CleanerProfile.jsx';
 import Customer from './pages/Customer.jsx';
 import CleanerProfilePage from "./pages/CleanerProfilePage.jsx";
+import Messages from './pages/Messages.jsx';
 import { Navigate } from 'react-router-dom';
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Overview />} />
+                <Route path="/messages" element={<Messages />} />
                 <Route path="/cleanerprofilepage" element={<CleanerProfilePage />} />
                 <Route path="/cleanerprofile" element={<CleanerProfile/>} />
                 <Route path="/customer" element={<Customer />} />

@@ -9,7 +9,7 @@ const Customers = () => {
     const customers = [
         {
             id: 1,
-            name: "Sarah Wilson",
+            category: "Sarah Wilson",
             email: "sarah.w@example.com",
             phone: "+44 7890 112233",
             address: "25 Park Lane, London, W1K 7AF",
@@ -18,7 +18,7 @@ const Customers = () => {
         },
         {
             id: 2,
-            name: "Michael Brown",
+            category: "Michael Brown",
             email: "michael.b@example.com",
             phone: "+44 7890 445566",
             address: "42 Kensington High St, London, W8 5HA",
@@ -27,7 +27,7 @@ const Customers = () => {
         },
         {
             id: 3,
-            name: "Emily Davis",
+            category: "Emily Davis",
             email: "emily.d@example.com",
             phone: "+44 7890 778899",
             address: "7 Chelsea Bridge Rd, London, SW1W 8RH",
@@ -36,7 +36,7 @@ const Customers = () => {
         },
         {
             id: 4,
-            name: "Robert Taylor",
+            category: "Robert Taylor",
             email: "robert.t@example.com",
             phone: "+44 7890 001122",
             address: "33 Baker Street, London, W1U 6HQ",
@@ -54,7 +54,7 @@ const Customers = () => {
     }
 
     const filteredCustomers = customers.filter(customer =>
-        customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.phone.includes(searchTerm)
     );
@@ -90,7 +90,7 @@ const Customers = () => {
                             <div key={customer.id} className="service-card">
 
                                 <div style={{display: 'flex', justifyContent: 'stretch', alignItems: 'center'}}>
-                                    <span>{customer.name}</span>
+                                    <span>{customer.category}</span>
                                     <span style={{marginLeft:'8px'}}>{customer.lastBooking}</span>
 
                                 </div>
