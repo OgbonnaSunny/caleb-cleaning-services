@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css'; // We'll create this CSS file next
-import { FaBars , FaUsers, FaUserTie, FaTimes} from 'react-icons/fa';
+import {FaBars, FaUsers, FaUserTie, FaTimes, FaCommentDots} from 'react-icons/fa';
 import LOGO from '../images/logo4.png'
 import {useLocation} from 'react-router-dom'
 import {commonjs} from "globals";
@@ -66,10 +66,10 @@ const Navigation = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [showNav, setShowNav] = useState(true);
+    const [showNav, setShowNav] = useState(false);
 
     useEffect(() => {
-        let show = true;
+        let show = false;
         const user = JSON.parse(localStorage.getItem('user'));
         switch (location.pathname) {
             case '/cleanerprofile':
@@ -107,37 +107,32 @@ const Navigation = () => {
                 break;
         }
 
-        for (let i = 0; i < navLinks.length; i++) {
-            if (navLinks[i].path === location.pathname) {
-                const title = navLinks[i].category.charAt(0).toUpperCase() + navLinks[i].category.slice(1);
-                document.title = title;
-                setActiveTab(navLinks[i].path);
-                break;
-            }
+        function replaceLastSegment(newSegment) {
+            const path = window.location.pathname;
+            const segments = path.split('/');
+            segments[segments.length - 1] = newSegment;
+            return segments.join('/').replace(/[ ,]+/g, '-');
         }
 
         if (location.pathname === '/') {
             setActiveTab('/overview');
             document.title = "Overview";
             setShowNav(true)
-            function replaceLastSegment(newSegment) {
-                const path = window.location.pathname;
-                const segments = path.split('/');
-                segments[segments.length - 1] = newSegment;
-                return segments.join('/').replace(/[ ,]+/g, '-');
-            }
             window.history.replaceState(null, '', replaceLastSegment('overview'));
         }
         else {
-            setShowNav(navLinks.includes(location.pathname))
             for (let i = 0; i < navLinks.length; i++) {
                 if (navLinks[i].path === location.pathname) {
+                    const title = navLinks[i].category.charAt(0).toUpperCase() + navLinks[i].category.slice(1);
+                    document.title = title;
+                    setActiveTab(navLinks[i].path);
                     show = true;
                     break;
                 }
             }
-          //  setShowNav(show);
+
         }
+        setShowNav(show);
 
     }, [location.pathname]);
 
@@ -150,7 +145,6 @@ const Navigation = () => {
         }
         navigate('/overview');
     }
-
 
     useEffect(() => {
 

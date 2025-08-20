@@ -230,11 +230,11 @@ export default function Messages() {
 
             <main className={["main-content", "main-banner"].join(" ")}>
                 {messagesList.map((msg, index) => (
-                    <div key={index}>
+                    <div style={{marginBottom:'10px'}} key={index}>
                         {msg.sender === sender ?
-                            <div className="message user1"  onClick={() => {setReply(msg.text); setSenderReplyName(msg.senderName)}}
+                            <div   onClick={() => {setReply(msg.text); setSenderReplyName(msg.senderName)}}
                                  style={{paddingRight:'10px', display:'flex', justifyContent:'flex-end'}}>
-                                <p className="message user1" style={{
+                                <p style={{
                                     display:'inline-block',
                                     background: '#dcf8c6',
                                     padding: '15px 10px',
@@ -252,7 +252,7 @@ export default function Messages() {
                                 </p>
                             </div>
                             :
-                            <div className="message user2"  onClick={() => {setReply(msg.text); setSenderReplyName(msg.senderName)}}
+                            <div   onClick={() => {setReply(msg.text); setSenderReplyName(msg.senderName)}}
                                  style={{paddingLeft:'10px', display: 'flex', justifyContent:'flex-start'}}>
                                 <p style={{
                                     display:'inline-block',

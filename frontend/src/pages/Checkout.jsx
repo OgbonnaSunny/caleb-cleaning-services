@@ -1855,7 +1855,7 @@ const Checkout = () => {
             const orderId = response.data.orderId;
 
             const revenue = {
-                customer: formData.customer,
+                customer: `${formData.firstName} ${formData.lastName}`,
                 payment: formData.totalAmount,
                 orderId: orderId,
                 customerEmail: formData.email,

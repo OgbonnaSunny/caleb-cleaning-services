@@ -2675,7 +2675,7 @@ a:hover {
 
 .sidebar-nav {
   flex: 1;
-  padding: 20px 0;
+  padding: 10px 0;
   display: block;
 }
 
@@ -3063,16 +3063,18 @@ a:hover {
 
 @media (max-width: 768px) {
   .sidebar {
-    width: 80%;
-    margin-left: 10px;
-    margin-right: 10px;
+    width: var(--sidebar-width);
+    background-color: rgba(255, 255, 255, 0.56);
     color: navy;
+    position: relative;
+    height: 100vh;
     display: block;
-    max-height: 100vh;
-    align-items: start;
-    overflow: hidden;
+    flex-direction: column;
     border: 3px sienna solid;
     margin-bottom: 20px;
+    transition: all 0.3s;
+    z-index: 1000;
+    max-width: 80%;
   }
 
   .logo-container h1,
@@ -6624,65 +6626,9 @@ tr:hover {
   max-width: 100%;
   text-overflow: ellipsis;
   color: grey;
+  background-color: lightcyan;
   text-align: start;
-  margin-left: 5px;
   margin-bottom: 8px;
   font-weight: lighter;
 }
 
-/* chat */
-.chat {
-  font-family: sans-serif;
-  width: fit-content; /* Container hugs content */
-}
-
-.message {
-  position: relative;
-  display: inline-block; /* Key property */
-  margin: 15px 0;
-}
-
-.message p {
-  margin: 0;
-  padding: 10px 15px;
-  border-radius: 8px;
-  position: relative;
-}
-
-/* User 1 (Left-aligned, Arrow Up) */
-.message.user1 {
-  margin-right: auto;
-}
-
-.message.user1 p {
-  background: #e3f2fd;
-}
-
-.message.user1 p::after {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: 12px;
-  border-width: 0 8px 8px 8px;
-  border-style: solid;
-  border-color: transparent transparent #e3f2fd transparent;
-}
-
-/* User 2 (Right-aligned, Arrow Down) */
-.message.user2 {
-  margin-left: auto;
-}
-
-.message.user2 p {
-  background: #fce4ec;
-}
-
-.message.user2 p::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  right: 12px;
-  border-width: 8px 8px 0 8px;
-  border-style: solid;
-  border-color: #fce4ec transparent transparent transparent;
-}
