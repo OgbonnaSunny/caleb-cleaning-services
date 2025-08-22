@@ -322,7 +322,7 @@ const Reports = () => {
             })
             .catch((error) => {
                 console.log(error);
-                setMessage('Error while fetching yearly revenue');
+                setMessage('Error while fetching yearly data');
             })
             .finally(() => {
                 setLoading(false);
@@ -418,7 +418,7 @@ const Reports = () => {
         function CustomDayRangePicker() {
 
             return (
-                <div style={{display: 'flex', flexDirection: 'row', flex:'2', gap:'5px', alignItems:'center'}}>
+                <div style={{display: 'flex', flexDirection: 'row', flex:'1.5', gap:'5px', alignItems:'center'}}>
                     <label>From
                         <select value={startDay} onChange={handleStartChange}
                                 style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
@@ -470,7 +470,7 @@ const Reports = () => {
                         {years.map(y => <option style={{backgroundColor:'#f2f2f2'}} key={y} value={y}>{y}</option>)}
                     </select>
                 </label>
-                <FaSearch onClick={search}  style={{width:'20px', flex:'1', marginTop:'10px'}}/>
+                <FaSearch onClick={search}  style={{width:'20px', marginLeft:'10px', marginTop:'10px'}}/>
             </div>
         );
     }
