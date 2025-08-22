@@ -32,6 +32,445 @@ const Admin = () => {
         {id: 8, category: 'Messages', link: '/expense', icon: FaCommentDots },
     ]
 
+    const edinburghDistricts = [
+        {
+            id: 1,
+            postcode: "EH1",
+            category: "Edinburgh City Centre",
+            addresses: [
+                "1 Princes Street, Edinburgh, EH1 2EQ",
+                "The Balmoral Hotel, 1 Princes Street, Edinburgh, EH1 2EQ",
+                "Edinburgh Waverley Station, Edinburgh, EH1 1BQ"
+            ]
+        },
+        {
+            id: 2,
+            postcode: "EH2",
+            category: "New Town / City Centre",
+            addresses: [
+                "The Scotch Whisky Experience, 354 Castlehill, Edinburgh, EH2 4AE",
+                "Assembly Rooms, 54 George Street, Edinburgh, EH2 2LR",
+                "Harvey Nichols, 30-34 St Andrew Square, Edinburgh, EH2 2AD"
+            ]
+        },
+        {
+            id: 3,
+            postcode: "EH3",
+            category: "West End / Bruntsfield",
+            addresses: [
+                "The Royal College of Physicians, 9 Queen Street, Edinburgh, EH2 1JQ",
+                "The Dome, 14 George Street, Edinburgh, EH2 2PF",
+                "Tynecastle Park (Hearts FC), Gorgie Road, Edinburgh, EH11 2NL"
+            ]
+        },
+        {
+            id: 4,
+            postcode: "EH4",
+            category: "West Edinburgh (Murrayfield, Cramond, Davidson Mains)",
+            addresses: [
+                "Murrayfield Stadium, Roseburn Street, Edinburgh, EH12 5PJ",
+                "Cramond Kirk, Cramond Glebe Road, Edinburgh, EH4 6NS",
+                "Davidson Mains Park, 5 Quality Street, Edinburgh, EH4 5BP"
+            ]
+        },
+        {
+            id: 5,
+            postcode: "EH5",
+            category: "Trinity, Granton, Newhaven",
+            addresses: [
+                "Ocean Terminal, Ocean Drive, Edinburgh, EH6 6JJ",
+                "Newhaven Harbour, 24 Pier Place, Edinburgh, EH6 4LP",
+                "The Trinity Academy, Craighall Road, Edinburgh, EH6 4RT"
+            ]
+        },
+        {
+            id: 6,
+            postcode: "EH6",
+            category: "Leith",
+            addresses: [
+                "The Royal Yacht Britannia, Ocean Drive, Edinburgh, EH6 6JJ",
+                "Leith Theatre, 28-30 Ferry Road, Edinburgh, EH6 4AE",
+                "The Shore (Leith’s dining area), 1-3 Shore, Edinburgh, EH6 6QW"
+            ]
+        },
+        {
+            id: 7,
+            postcode: "EH7",
+            category: "Leith Walk, Easter Road, Calton Hill",
+            addresses: [
+                "Meadowbank Stadium, 200 London Road, Edinburgh, EH7 6AE",
+                "Prestonfield House Hotel, Priestfield Road, Edinburgh, EH16 5UT",
+                "The Edinburgh Playhouse, 18-22 Greenside Place, Edinburgh, EH1 3AA"
+            ]
+        },
+        {
+            id: 8,
+            postcode: "EH8",
+            category: "Holyrood, Old Town, University of Edinburgh",
+            addresses: [
+                "The Scottish Parliament, Holyrood, Edinburgh, EH99 1SP",
+                "Dynamic Earth, Holyrood Road, Edinburgh, EH8 8AS",
+                "University of Edinburgh Old College, South Bridge, Edinburgh, EH8 9YL"
+            ]
+        },
+        {
+            id: 9,
+            postcode: "EH9",
+            category: "Marchmont, Newington, Grange",
+            addresses: [
+                "The King’s Buildings (University of Edinburgh), Mayfield Road, Edinburgh, EH9 3JL",
+                "Royal Commonwealth Pool, 21 Dalkeith Road, Edinburgh, EH16 5BB",
+                "Prestonfield Golf Club, Priestfield Road, Edinburgh, EH16 5UT"
+            ]
+        },
+        {
+            id: 10,
+            postcode: "EH10",
+            category: "Morningside, Fairmilehead",
+            addresses: [
+                "Morningside Library, 184-192 Morningside Road, Edinburgh, EH10 4PD",
+                "The Braid Hills Hotel, 134 Braid Road, Edinburgh, EH10 6JD",
+                "Fairmilehead Parish Church, 1 Frogston Road West, Edinburgh, EH10 7AA"
+            ]
+        },
+        {
+            id: 11,
+            postcode: "EH11",
+            category: "Gorgie, Dalry, Shandon",
+            addresses: [
+                "Tynecastle Park (Heart of Midlothian FC), McLeod Street, Edinburgh, EH11 2NL",
+                "Gorgie City Farm, 51 Gorgie Road, Edinburgh, EH11 2LA",
+                "Dalry Swim Centre, 46 Dalry Road, Edinburgh, EH11 2AW"
+            ]
+        },
+        {
+            id: 12,
+            postcode: "EH12",
+            category: "Corstorphine, Murrayfield, West Coates",
+            addresses: [
+                "Edinburgh Zoo, 134 Corstorphine Road, Edinburgh, EH12 6TS",
+                "Murrayfield Ice Rink, Riverside Crescent, Edinburgh, EH12 5XN",
+                "Gyle Shopping Centre, 125 The Gyle Centre, Edinburgh, EH12 9JY"
+            ]
+        },
+        {
+            id: 13,
+            postcode: "EH13",
+            category: "Colinton, Juniper Green, Currie",
+            addresses: [
+                "Colinton Parish Church, 9 Bridge Road, Edinburgh, EH13 0LQ",
+                "Currie Rugby Club, 32 Lanark Road West, Edinburgh, EH13 0PQ",
+                "Juniper Green Bowling Club, 170 Lanark Road, Edinburgh, EH13 0DQ"
+            ]
+        },
+        {
+            id: 14,
+            postcode: "EH14",
+            category: "Balerno, Baberton, Wester Hailes",
+            addresses: [
+                "Balerno Parish Church, 2 Main Street, Balerno, Edinburgh, EH14 7EH",
+                "Baberton Golf Club, 50 Baberton Avenue, Edinburgh, EH14 3DR",
+                "Wester Hailes Library, 5 Westside Plaza, Edinburgh, EH14 2ST"
+            ]
+        },
+        {
+            id: 15,
+            postcode: "EH15",
+            category: "Portobello, Craigmillar, Joppa",
+            addresses: [
+                "Portobello Beach Promenade, Edinburgh, EH15 1DB",
+                "Portobello Swim Centre, 57 The Promenade, Edinburgh, EH15 1DX",
+                "Craigmillar Castle, Craigmillar Castle Road, Edinburgh, EH16 4SY"
+            ]
+        },
+        {
+            id: 16,
+            postcode: "EH16",
+            category: "Liberton, Gilmerton, Craigmillar",
+            addresses: [
+                "Liberton Kirk, 1 Kirkgate, Edinburgh, EH16 6RR",
+                "Royal Infirmary of Edinburgh, 51 Little France Crescent, Edinburgh, EH16 4SA",
+                "Gilmerton Community Centre, 4-6 Drum Street, Edinburgh, EH17 8QG"
+            ]
+        },
+        {
+            id: 17,
+            postcode: "EH17",
+            category: "Danderhall, Newcraighall, Edgefield",
+            addresses: [
+                "Danderhall Medical Centre, 1 Oak Lane, Danderhall, Edinburgh, EH16 4EX",
+                "Newcraighall Parish Church, 1 Newcraighall Road, Edinburgh, EH21 8SF",
+                "Edinburgh College (Milton Road Campus), 24 Milton Road East, Edinburgh, EH15 2PP"
+            ]
+        },
+        {
+            id: 18,
+            postcode: "EH28",
+            category: "Kirkliston, Newbridge, Ratho",
+            addresses: [
+                "Kirkliston Leisure Centre, 37 Station Road, Kirkliston, EH29 9AQ",
+                "Ratho Park Golf Club, 7 Baird Road, Ratho, EH28 8RA",
+                "Newbridge Industrial Estate, 1 Newbridge Industrial Estate, EH28 8PJ"
+            ]
+        },
+        {
+            id: 19,
+            postcode: "EH29",
+            category: "Kirkliston, Winchburgh",
+            addresses: [
+                "Kirkliston Primary School, The Loan, Kirkliston, EH29 9EB",
+                "Winchburgh Community Centre, 6-8 High Street, Winchburgh, EH52 6HW",
+                "Drumshoreland Garden Centre, 5 Drumshoreland Road, Kirkliston, EH29 9DU"
+            ]
+        },
+        {
+            id: 20,
+            postcode: "EH30",
+            category: "South Queensferry, Dalmeny",
+            addresses: [
+                "Forth Bridge, South Queensferry, EH30 9SF",
+                "Dalmeny House, South Queensferry, EH30 9TQ",
+                "Hopetoun Farm Shop, South Queensferry, EH30 9SL"
+            ]
+        },
+
+        {
+            id: 21,
+            category: "Duddingston",
+        },
+        {
+            id: 22,
+            category: "East Craigs",
+        },
+        {
+            id: 23,
+            category: "Ferniehill",
+        },
+        {
+            id: 24,
+            category: "Gogar",
+        },
+        {
+            id: 25,
+            category: "Ingliston",
+        },
+        {
+            id: 26,
+            category: "Kaimes",
+        },
+        {
+            id: 27,
+            category: "Liberton (Greater)",
+        },
+        {
+            id: 28,
+            category: "Little France",
+        },
+        {
+            id: 29,
+            category: "Mayfield",
+        },
+        {
+            id: 30,
+            category: "Moredun",
+        },
+        {
+            id: 31,
+            category: "King's Knowe",
+        },
+        {
+            id: 32,
+            category: "Muirhouse",
+        },
+        {
+            id: 33,
+            category: "Oxgangs",
+        },
+        {
+            id: 34,
+            category: "Pentland Hills",
+        },
+        {
+            id: 35,
+            category: "Ratho Station",
+        },
+        {
+            id: 36,
+            category: "Sighthill",
+        },
+        {
+            id: 37,
+            category: "Slateford",
+        },
+        {
+            id: 38,
+            category: "Swanston",
+        },
+        {
+            id: 39,
+            category: "The Inch",
+        },
+
+        {
+            id: 40,
+            postcode: "EH18",
+            category: "Lasswade",
+            addresses: [
+                "Lasswade High School, Eskdale Drive, Lasswade, EH18 1PB",
+                "Danderhall Medical Centre, 1 Oak Lane, Danderhall, EH18 1BU",
+                "Polton Mill, Lasswade Road, EH18 1PP"
+            ]
+        },
+        {
+            id: 41,
+            postcode: "EH19",
+            category: "Bonnyrigg",
+            addresses: [
+                "Bonnyrigg Town Hall, High Street, Bonnyrigg, EH19 2AE",
+                "Lochrin Kennels, 22 Broomieknowe, Bonnyrigg, EH19 2JG",
+                "Newbattle Abbey College, Newbattle Road, EH19 3JA"
+            ]
+        },
+        {
+            id: 42,
+            postcode: "EH20",
+            category: "Loanhead",
+            addresses: [
+                "Loanhead Leisure Centre, Clerk Street, Loanhead, EH20 9DR",
+                "IKEA Edinburgh, Straiton Retail Park, EH20 9PW",
+                "Pentland Hills Regional Park, EH20 9QZ"
+            ]
+        },
+        {
+            id: 43,
+            postcode: "EH21",
+            category: "Musselburgh",
+            addresses: [
+                "Musselburgh Racecourse, Linkfield Road, EH21 7RG",
+                "The Brunton Theatre, Ladywell Way, EH21 6AA",
+                "Musselburgh Golf Club, Monktonhall, EH21 6SW"
+            ]
+        },
+        {
+            id: 44,
+            postcode: "EH22",
+            category: "Dalkeith",
+            addresses: [
+                "Dalkeith Country Park, EH22 2NA",
+                "St David's RC High School, Cousland Road, EH22 2PS",
+                "Eskmills Railway Station, EH22 1AG"
+            ]
+        },
+        {
+            id: 45,
+            postcode: "EH23",
+            category: "Gorebridge",
+            addresses: [
+                "Gorebridge Leisure Centre, Hunterfield Road, EH23 4TT",
+                "Arniston House, Gorebridge, EH23 4RY",
+                "Newtongrange Railway Station, EH23 4LF"
+            ]
+        },
+        {
+            id: 46,
+            postcode: "EH24",
+            category: "Roslin",
+            addresses: [
+                "Rosslyn Chapel, Chapel Loan, EH25 9PU",
+                "Roslin Institute, EH25 9RG",
+                "Bilston Glen Industrial Estate, EH25 9SP"
+            ]
+        },
+        {
+            id: 47,
+            postcode: "EH25",
+            category: "Roslin",
+            addresses: [
+                "Roslyn Glen Country Park, EH25 9LX",
+                "Eskview Medical Centre, 1 Eskview Terrace, EH25 9JA",
+                "Roslin War Memorial, EH25 9PX"
+            ]
+        },
+        {
+            id: 48,
+            postcode: "EH26",
+            category: "Easter Bush",
+            addresses: [
+                "The Royal (Dick) School of Veterinary Studies, EH25 9RG",
+                "Bush House, Easter Bush Campus, EH25 9RG",
+                "Pentland Hills Walking Routes, EH26 0PJ"
+            ]
+        },
+        {
+            id: 49,
+            postcode: "EH27",
+            category: "Kirknewton",
+            addresses: [
+                "Kirknewton War Memorial, EH27 8DA",
+                "East Calder Library, Langton Road, EH27 8DQ",
+                "Harperrig Reservoir, EH27 8DN"
+            ]
+        },
+        // council
+        { id: 50, category: "Midlothian", type: "Council Area", notable: "Local government region south of Edinburgh" },
+        { id: 53, category: "Penicuik", type: "Town", notable: "Former paper-mill town near Pentland Hills" },
+        { id: 54, category: "Loanhead", type: "Town", notable: "Home to Straiton Retail Park" },
+        { id: 56, category: "Newtongrange", type: "Village", notable: "National Mining Museum Scotland" },
+        { id: 58, category: "Bilston", type: "Village", notable: "Bilston Glen Viaduct" },
+        { id: 59, category: "Lasswade", type: "Village", notable: "Polton Mill and scenic river walks" },
+
+        // Villages (IDs 60-79)
+        { id: 60, category: "Mayfield", type: "Village", notable: "Post-war residential development" },
+        { id: 61, category: "Eskbank", type: "Village", notable: "Eskbank Railway Station (heritage line)" },
+        { id: 62, category: "Auchendinny", type: "Village", notable: "18th-century paper mill ruins" },
+        { id: 63, category: "Temple", type: "Village", notable: "Knights Templar connections" },
+        { id: 64, category: "Carrington", type: "Village", notable: "Rural farmland and Carrington Church" },
+        { id: 65, category: "Rosewell", type: "Village", notable: "Roslin Glen Country Park access" },
+        { id: 66, category: "Pathhead", type: "Village", notable: "Pathhead Sands and Prestonhall Estate" },
+        { id: 67, category: "Fushiebridge", type: "Hamlet", notable: "Fushiebridge Inn and Fala Flow" },
+        { id: 68, category: "North Middleton", type: "Village", notable: "Middleton Limeworks" },
+        { id: 69, category: "Glencreg", type: "Hamlet", notable: "Glencreg House" },
+        { id: 70, category: "Howgate", type: "Hamlet", notable: "Howgate Inn (historic coaching stop)" },
+        { id: 71, category: "Edinburgh Airport", type: "Area", notable: "Technically in West Lothian but serves Midlothian" },
+        { id: 72, category: "Borthwick", type: "Village", notable: "Borthwick Castle (15th-century fortress)" },
+        { id: 73, category: "Crichton", type: "Village", notable: "Crichton Collegiate Church" },
+        { id: 74, category: "Vogrie", type: "Hamlet", notable: "Vogrie Country Park" },
+        { id: 75, category: "Tynewater", type: "Village", notable: "Tyneholm Farm" },
+        { id: 76, category: "Newlandrig", type: "Hamlet", notable: "Small farming community" },
+        { id: 77, category: "Edgehead", type: "Village", notable: "Near A68 scenic route" },
+        { id: 78, category: "Tynedale", type: "Area", notable: "Tyne Valley walks" },
+        { id: 79, category: "Fala", type: "Village", notable: "Fala Flow moorland" },
+
+        // Historical/Outlying Areas (IDs 80-99)
+        { id: 80, category: "Arniston", type: "Estate", notable: "Arniston House (historic mansion)" },
+        { id: 81, category: "Prestonhall", type: "Estate", notable: "Prestonhall House" },
+        { id: 82, category: "Polton", type: "Village", notable: "Polton Mill and River North Esk" },
+        { id: 83, category: "Temple Kirk", type: "Ruins", notable: "Medieval church ruins" },
+        { id: 84, category: "Birkenside", type: "Hamlet", notable: "Birkenside House" },
+        { id: 85, category: "Sheriffhall", type: "Junction", notable: "Major road interchange" },
+        { id: 86, category: "Smeaton", type: "Hamlet", notable: "Smeaton House" },
+        { id: 87, category: "Easter Howgate", type: "Hamlet", notable: "Near Howgate Inn" },
+        { id: 88, category: "Oatslie", type: "Area", notable: "Residential part of Penicuik" },
+        { id: 89, category: "Hillend", type: "Area", notable: "Hillend Ski Centre (Pentlands)" },
+        { id: 90, category: "Nine Mile Burn", type: "Hamlet", notable: "Scenic stop on A702" },
+        { id: 91, category: "Silverburn", type: "Park", notable: "Silverburn Park in Penicuik" },
+        { id: 92, category: "Glencorse", type: "Area", notable: "Glencorse Barracks" },
+        { id: 93, category: "Mortonhall", type: "Estate", notable: "Mortonhall Caravan Park" },
+        { id: 94, category: "Gowkley Moss", type: "Landmark", notable: "Peatland area" },
+        { id: 95, category: "Cauldcoats", type: "Hamlet", notable: "Near Gorebridge" },
+        { id: 96, category: "Ford", type: "Hamlet", notable: "Fordel Hill" },
+        { id: 97, category: "Salters Road", type: "Area", notable: "Industrial zone in Dalkeith" },
+        { id: 98, category: "Eldindean", type: "Farm", notable: "Rural farmland" },
+        { id: 99, category: "Glenholm", type: "Valley", notable: "Remote glen in Pentlands"}
+
+    ];
+
+    const show = {display:'', marginTop: '40px', marginBottom: '40px'};
+    const hide = {display:'none' , marginTop: '40px', marginBottom: '40px' }
+
+    const active = {color:'green', width:'40px', height:'30px', marginRight: '20px'};
+    const notActive = {color:' ', width:'40px', height:'30px', marginRight: '20px'};
+
     const [showPanel, setShowPanel] = useState(false);
     const [activeLink, setActiveLink] = useState(links[0].link);
     const [messageCount, setMessageCount] = useState(0);
@@ -64,24 +503,22 @@ const Admin = () => {
     const [activeCleanersTrend, setActiveCleanersTrend] = useState('neutral');
     const [activeCleanerChange, setActiveCleanerChange] = useState('+0%');
 
+    const [areaCovered, setAreaCovered] = useState(0);
+
     const [email, setEmail] = useState(null);
 
+
     const statsData = [
-        { title: "Today's Revenue", value: `£${revenueToday}`, change: `${revenueTodayChange}`, icon: <FaPoundSign />, trend: `${revenueTodayTrend}` },
-        { title: "Today's Expenses", value: `£${expense}`, change: `${expenseChange}`, icon: <FaPoundSign />, trend: `${expenseTrend}` },
-        { title: "This Month's Revenue", value: `£${revenueMonth}`, change: `${revenueMonthChange}`, icon: <FaPoundSign />, trend: `${revenueMonthTrend}` },
-        { title: "This Month's Expenses", value: `£${monthExpense}`, change: `${monthExpenseChange}`, icon: <FaPoundSign />, trend: `${monthExpenseTrend}` },
         { title: "Today's Booking", value: `${bookingToday}`, change: `${bookingChange}`, icon: <FaCalendarCheck />, trend: `${bookingTrend}` },
+        { title: "Today's Revenue", value: `£${revenueToday}`, change: `${revenueTodayChange}`, icon: <FaPoundSign />, trend: `${revenueTodayTrend}` },
         { title: "This Month's Booking ", value: `${monthBooking}`, change: `${monthBookingChange}`, icon: <FaCalendarCheck />, trend: `${monthBookingTrend}` },
+        { title: "This Month's Revenue", value: `£${revenueMonth}`, change: `${revenueMonthChange}`, icon: <FaPoundSign />, trend: `${revenueMonthTrend}` },
+        { title: "Today's Expenses", value: `£${expense}`, change: `${expenseChange}`, icon: <FaPoundSign />, trend: `${expenseTrend}` },
+        { title: "This Month's Expenses", value: `£${monthExpense}`, change: `${monthExpenseChange}`, icon: <FaPoundSign />, trend: `${monthExpenseTrend}` },
         { title: "Active Cleaners", value: `${activeCleaners}`, change: `${activeCleanerChange}`, icon: <FaUserTie />, trend: `${activeCleanersTrend}` },
-        { title: "Areas Covered", value: "12", change: "+0%", icon: <FaMapMarkerAlt />, trend: 'neutral' }
+        { title: "Areas Covered", value: `${areaCovered}`, change: "+0%", icon: <FaMapMarkerAlt />, trend: 'neutral' }
     ];
 
-    const show = {display:'', marginTop: '40px', marginBottom: '40px'};
-    const hide = {display:'none' , marginTop: '40px', marginBottom: '40px' }
-
-    const active = {color:'green', width:'40px', height:'30px', marginRight: '20px'};
-    const notActive = {color:' ', width:'40px', height:'30px', marginRight: '20px'};
 
     useEffect(() => {
         document.title = 'Admin';
@@ -128,13 +565,16 @@ const Admin = () => {
                 response = await api.get('/api/revenue/month');
                 const incomeMonth = response.data.incomes[0].this_month;
                 const lastMonth = response.data.incomes[0].last_month;
+
                 const this_month_booking = response.data.incomes[0].this_month_booking;
                 const last_month_booking = response.data.incomes[0].last_month_booking;
 
                 setRevenueMonth(incomeMonth);
                 setMonthBooking(this_month_booking);
+
                 setRevenueMonthTrend(trendLevel(lastMonth, incomeMonth));
-                setRevenueMonthChange(changeLevel(lastMonth, incomeToady));
+                setRevenueMonthChange(changeLevel(lastMonth, incomeMonth));
+
                 setMonthBookingTrend(trendLevel(last_month_booking, this_month_booking));
                 setMonthBookingChange(changeLevel(last_month_booking, this_month_booking));
 
@@ -154,6 +594,9 @@ const Admin = () => {
 
                 response = await api.get('/api/booking/active-cleaners')
                 setActiveCleaners(response.data.cleaners[0].active_cleaners);
+
+                response = await api.get('/api/users/areas-covered')
+                setAreaCovered(response.data.areas[0].area_covered);
 
             } catch (error) {
                 console.log(error)
@@ -254,8 +697,8 @@ const Admin = () => {
                                 />
                             </div>
                             <div className="content-right">
-                                <CleaningSchedule />
                                 <ServiceAreas />
+                                <CleaningSchedule />
                             </div>
                         </div>
                     </div>

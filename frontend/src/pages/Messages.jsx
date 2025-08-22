@@ -206,7 +206,7 @@ export default function Messages() {
             });
         }
 
-        if (diff == 1) {
+        if (diff === 1) {
             return '2 days ago'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'

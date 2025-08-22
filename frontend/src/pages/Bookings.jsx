@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fa';
 import api from './api.js'
 import { useNavigate } from 'react-router-dom';
+import {differenceInDays, format, isToday} from 'date-fns';
 
 const Bookings = ( {cancellable =  false, user, history = false }) => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [allBookingData, setAllBookingData] = useState([]);
     const [allBookingDataCopy, setAllBookingDataCopy] = useState([]);
 
-    const [todayBooking, setTodayBooking] = useState(bookings);
+    const [todayBooking, setTodayBooking] = useState([]);
     const [last7DaysBooking, setLast7DaysBooking] = useState([]);
 
     const [clientHistory, setClientHistory] = useState([]);
@@ -55,6 +56,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [historyMessage, setHistoryMessage] = useState('');
     const [cancelledIds, setCancelledIds] = useState([]);
     const [cancelledMessage, setCancelledMessage] = useState(null);
+    const [todayMessage, setTodayMessage] = useState(null);
     const [activeIdForCancellation, setActiveIdForCancellation] = useState(null);
 
     useEffect(() => {
@@ -152,74 +154,61 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     useEffect(() => {
         if (user === 'admin') {
             setLoading(true);
-            const data = {limit: 20, offset: todayBooking.length};
-            api.post('api/booking/today', data)
+            const data = {limit: page, offset: 0};
+            api.post('/api/booking/today', data)
                 .then((res) => {
-                    const { bookings } = res.data;
-                    if (bookings) {
-                        const allBooking = [];
-                        const newData = [];
-                        newData.push(...bookings);
-                        if (newData.length > 0) {
-                            allBooking.push(...allBookingData);
-                            allBooking.push(...newData);
-                            setTodayBooking(allBooking);
-                            setExhaustedToday(false);
-                        }
-                        else {
-                            setExhaustedToday(true);
-                        }
+                    const { booking } = res.data;
+                    if (booking.length > 0) {
+                        setTodayBooking(prev => {
+                            const map = new Map(prev.map(item => [item.id, item])); // old items
+                            booking.forEach(item => map.set(item.id, item));    // add/replace new
+                            return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                        });
                     }
                     else {
-                        setMessage("No active bookings found for today");
-                        setExhaustedToday(true);
+                        if (todayBooking.length <= 0) {
+                            setTodayMessage("No booking found for today");
+                        }
+
                     }
                 })
                 .catch((error) => {
-                    console.log(error.status.data);
-                    setMessage("Error while fetching booking data.");
+                    console.log(error);
+                    setTodayMessage("Error while fetching booking data.");
                 })
                 .finally(() => {
                     setLoading(false);
                 })
         }
-    }, [pageCount])
+    }, [])
 
     useEffect(() => {
         if (user === 'admin') {
             setLoading(true);
-            const data = {limit: 20, offset: last7DaysBooking.length};
-            api.post('api/booking/last-seven-days', data)
+            const data = {limit: page, offset: 0};
+            api.post('/api/booking/last-seven-days', data)
                 .then((res) => {
-                    const { bookings } = res.data;
-                    if (bookings) {
-                        const allBooking = [];
-                        const newData = [];
-                        newData.push(...bookings);
-                        if (newData.length > 0) {
-                            allBooking.push(...allBookingData);
-                            allBooking.push(...newData);
-                            setLast7DaysBooking(allBooking);
-                            setExhausted7Days(false);
-                        }
-                        else {
-                            setExhausted7Days(true);
-                        }
+                    const { booking } = res.data;
+                    if (booking.length > 0) {
+                        setLast7DaysBooking(prev => {
+                            const map = new Map(prev.map(item => [item.id, item])); // old items
+                            booking.forEach(item => map.set(item.id, item));    // add/replace new
+                            return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                        });
                     }
                     else {
                         setMessage("No active bookings found for today");
-                        setExhausted7Days(true);
                     }
                 })
                 .catch((error) => {
-                    console.log(error.status.data);
+                    console.log(error);
                     setMessage("Error while fetching booking data.");
                 })
                 .finally(() => {
                     setLoading(false);
                 })
         }
-    }, [pageCount])
+    }, [])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -228,8 +217,8 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             const clientHeight = window.innerHeight;
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (user === 'client') {
-                    if (!loading && !exhausted) {
+                /*if (user === 'client') {
+                    if (!loading) {
                         setPageCount(prev => prev + 1);
                     }
                 }
@@ -237,6 +226,10 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     if (!loading) {
                         setPageCount(prev => prev + 1);
                     }
+                }*/
+
+                if (!loading) {
+                    setPageCount(prev => prev + 1);
                 }
             }
         };
@@ -355,6 +348,42 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             fullName += names[i].charAt(0).toUpperCase() + names[i].slice(1)+ " ";
         }
         return fullName;
+    }
+
+    const getTime = (date) => {
+        const invalidDate = isNaN(new Date(date).getTime());
+        if (invalidDate) {
+            return new Date().toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        const now = isToday(new Date(date));
+        if (now) {
+            return 'Today'+ " "+ new Date(date).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        const diff = differenceInDays(new Date(), new Date(date));
+        if (diff <= 0) {
+            return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        if (diff === 1) {
+            return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        return format(new Date(date), 'yyyy-mm-dd') + " "+ new Date(date).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     }
 
     return (
@@ -500,16 +529,17 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             {user === 'admin' && <div>
                 <div className="recent-bookings card">
                     <div className="card-header">
-                        <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Recent Bookings</h2>
+                        <h2 className={'experience-text'} style={{color:'navy', width:'60%', textAlign:'start'}}>Today's Bookings</h2>
+                        {todayBooking.length > 0 &&  <button className="btn-view-all" style={{color:'red'}}>View All</button> }
                     </div>
                     {todayBooking.length > 0 &&  <div className="card-body">
                         <div className="grid-container">
                             {todayBooking.map(booking => (
                                 <div key={booking.id} className="service-card">
-                                    <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                    <h3 style={{textAlign:'center', marginBottom:'10px'}}>{booking.orderId}</h3>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaHome className="icon-small" />
-                                        <h3>{booking.customer}</h3>
+                                        <h3>{renderName(booking.customer)}</h3>
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaMapMarkerAlt className="icon-small"/>
@@ -517,7 +547,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaClock className="icon-small" />
-                                        <p> {booking.time}</p>
+                                        <p> {getTime(booking.startTime)}</p>
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
@@ -556,21 +586,21 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                             ))}
                         </div>
                     </div>}
-                    {(!loading && todayBooking.length <= 0) && <div><p>{message}</p></div>}
+                    {(!loading && todayBooking.length <= 0) && <div><p>{todayMessage}</p></div>}
                 </div>
                 <div className="recent-bookings card">
                     <div className="card-header">
-                        <h2 className={'experience-text'} style={{color:'navy'}}>Last 7 days Bookings</h2>
+                        <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Last 7 days Bookings</h2>
                         {last7DaysBooking.length > 0 &&  <button className="btn-view-all" style={{color:'red'}}>View All</button> }
                     </div>
                     {last7DaysBooking.length > 0 && <div className="card-body">
                         <div className="grid-container">
                             {last7DaysBooking.map(booking => (
                                 <div key={booking.id} className="service-card">
-                                    <h4 style={{textAlign:'end'}}>{renderNunber(booking.id)}</h4>
+                                    <h3 style={{textAlign:'center', marginBottom:'10px'}}>{booking.orderId}</h3>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaHome className="icon-small" />
-                                        <h3>{booking.customer}</h3>
+                                        <h3>{renderName(booking.customer)}</h3>
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaMapMarkerAlt className="icon-small"/>
@@ -578,7 +608,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaClock className="icon-small" />
-                                        <p> {booking.time}</p>
+                                        <p> {getTime(booking.startTime)}</p>
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
@@ -597,7 +627,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                         <p>Duration</p>
                                         <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
                                     </div>
-
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <h4>{booking.plan}</h4>
                                         <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :

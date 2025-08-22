@@ -31,6 +31,7 @@ import { IoPersonCircleSharp } from 'react-icons/io5'; // Ionicons (user-focused
 
 const Navigation = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const emitter = new EventEmitter();
     const navLinks = [
@@ -58,7 +59,6 @@ const Navigation = () => {
         setIsOpen(!isOpen);
     };
 
-    const location = useLocation();
     const hideNavbarPaths = ['/cashback','/checkout', '/bookings', '/reports', '/settings']; // Paths where navbar should be hidden
     let shouldShowNavbar =  navLinks.includes(location.pathname);
 
@@ -66,11 +66,12 @@ const Navigation = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [showNav, setShowNav] = useState(false);
+    const [showNav, setShowNav] = useState(true);
 
     useEffect(() => {
         let show = false;
         const user = JSON.parse(localStorage.getItem('user'));
+
         switch (location.pathname) {
             case '/cleanerprofile':
                 if (user != null && user !== undefined) {
@@ -114,24 +115,23 @@ const Navigation = () => {
             return segments.join('/').replace(/[ ,]+/g, '-');
         }
 
+        for (let i = 0; i < navLinks.length; i++) {
+            if (navLinks[i].path === location.pathname) {
+                const title = navLinks[i].category.charAt(0).toUpperCase() + navLinks[i].category.slice(1);
+                document.title = title;
+                setActiveTab(navLinks[i].path);
+                show = true;
+                break;
+            }
+        }
+
         if (location.pathname === '/') {
             setActiveTab('/overview');
             document.title = "Overview";
-            setShowNav(true)
+            show = true;
             window.history.replaceState(null, '', replaceLastSegment('overview'));
         }
-        else {
-            for (let i = 0; i < navLinks.length; i++) {
-                if (navLinks[i].path === location.pathname) {
-                    const title = navLinks[i].category.charAt(0).toUpperCase() + navLinks[i].category.slice(1);
-                    document.title = title;
-                    setActiveTab(navLinks[i].path);
-                    show = true;
-                    break;
-                }
-            }
 
-        }
         setShowNav(show);
 
     }, [location.pathname]);

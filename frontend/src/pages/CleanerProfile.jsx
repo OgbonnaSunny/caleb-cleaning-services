@@ -400,7 +400,7 @@ const CleanerProfile = () => {
                                 <div key={order.orderId}  className={'stat-card'}>
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
                                     <div className={'new-order-container'}>
-                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{formatDate(order.bookDate)}</p>
+                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{formatDate(order.startTime)}</p>
                                         <p style={{textAlign:'end',fontWeight:'900' }}>{order.plan}</p>
                                     </div>
                                     <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>

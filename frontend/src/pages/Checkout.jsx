@@ -530,6 +530,7 @@ const Checkout = () => {
         hourText: '09',
         minuteText: '00',
         minute: 0,
+        startTime: '',
         nature: 'Light',
         natureActive: [false, false, false],
         room: [],
@@ -783,11 +784,13 @@ const Checkout = () => {
                 hourText = newHour.toString();
             }
             const date =  format(selectedDate, 'EEEE, d MMMM yyyy');
+
             setFormData({...formData, hour: newHour, hourText: hourText, date: date, minimumEstimate: 97, time: time });
             setSelectedDate(selectedDate);
             newErrors['time'] = null;
         }
         else {
+
             const date =  format(selectedDate, 'EEEE, d MMMM yyyy');
             const time = `${formData.hourText}:${formData.minuteText}`;
             setFormData({...formData, date: date, minimumEstimate: 67, time: time });
@@ -1859,6 +1862,7 @@ const Checkout = () => {
                 payment: formData.totalAmount,
                 orderId: orderId,
                 customerEmail: formData.email,
+                plan: formData.plan
             }
 
             const booking = [];
@@ -1897,6 +1901,9 @@ const Checkout = () => {
                 phone: formData.phone,
             };
 
+            const startDate = new Date(formData.date).setHours(formData.hour, formData.minute, 0, 0);
+            const time = new Date(startDate);
+
             const orderData = {
                 orderId: orderId,
                 booking: JSON.stringify(booking),
@@ -1911,7 +1918,9 @@ const Checkout = () => {
                 assignedCleanerPhone: '',
                 customerEmail: formData.email,
                 payment: formData.totalAmount,
-                startTime: formData.date
+                startTime: `${format(time, 'yyyy-MM-dd hh:mm')}`,
+                startHour: formData.hour,
+                startMinute: formData.minute,
             };
 
             await api.post('/api/booking', orderData);
@@ -2095,7 +2104,7 @@ const Checkout = () => {
 
     function Steps() {
         return(
-            <div style={{marginTop:'10px'}} className="registration-steps" >
+            <div style={{marginTop:'20px'}} className="registration-steps" >
 
                 <div className={`step ${currentStep === 0 ? 'passive' : currentStep > 0 ? 'active' : ''}`} >
                     <span>0</span>
@@ -2319,7 +2328,7 @@ const Checkout = () => {
                                         placeholderText="Select a date"
                                         minDate={minDate}
                                         inline
-                                        filterDate={formData.disableThisDay ? disableThisday: enableThisday}
+                                        filterDate={formData.disableThisDay ? disableThisday : enableThisday}
                                         dayClassName={(date) => {
                                             const selected = selectedDate && date.toDateString() === selectedDate.toDateString();
                                             return selected ? 'selected-day' : undefined;
