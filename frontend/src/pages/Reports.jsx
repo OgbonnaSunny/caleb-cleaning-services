@@ -470,7 +470,7 @@ const Reports = () => {
                         {years.map(y => <option style={{backgroundColor:'#f2f2f2'}} key={y} value={y}>{y}</option>)}
                     </select>
                 </label>
-                <FaSearch onClick={search}  style={{width:'20px', marginLeft:'10px', marginTop:'10px'}}/>
+
             </div>
         );
     }
@@ -578,9 +578,13 @@ const Reports = () => {
                         />
                         <label style={{width:'90%'}} className={'experience-text'}>Get record in months</label>
                     </div>
-                    <div onClick={reset} className={'experience-text'}
-                         style={{background:'none', marginRight:'10px', color:'red', width:'80px', alignSelf:'end', textAlign:'end'}}>
-                        Reset
+                    <div style={{display:'flex', alignItems:'center', alignSelf: 'end'}}>
+                        <div onClick={reset} className={'experience-text'}
+                             style={{background:'none', marginRight:'10px',
+                                 color:'red', textAlign:'end'}}>
+                            Reset
+                        </div>
+                        <FaSearch onClick={search}  style={{width:'20px', marginLeft:'10px'}}/>
                     </div>
                 </div>
 
