@@ -571,11 +571,10 @@ const Reports = () => {
                     {error && <p className={'error-message'}>{error}</p>}
                 </div>
                 <div style={{display:'flex', alignItems:'center'}}>
-                    <div style={{display:'flex', alignItems:'center', gap:'10px'}}>
+                    <div onClick={() => setYearSearch(!yearSearch)} style={{display:'flex', alignItems:'center', gap:'10px'}}>
                         <input
                             type="checkbox"
                             checked={yearSearch}
-                            onChange={handleYearSearch}
                         />
                         <label style={{width:'90%'}} className={'experience-text'}>Get record in months</label>
                     </div>
