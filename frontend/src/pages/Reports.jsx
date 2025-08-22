@@ -63,6 +63,8 @@ const Reports = () => {
     const [yearSearch, setYearSearch] = useState(false);
     const [resetCount, setResetCount] = useState(0);
     const [dayLabel, setDayLabel] = useState('Today\'s Revenue');
+    const [bookingLabel, setBookingLabel] = useState('This Month\'s Booking');
+    const [dayBookLabel, setDayBookLabel] = useState('Today\'s Bookings');
 
     // Sample data for charts
     const revenueData = [
@@ -183,7 +185,17 @@ const Reports = () => {
 
                     setMonthBookingChange(changeLevel(last_month_booking, this_month_booking));
 
-                    setLabel(labelHolder)
+                    if (activeReport === 'revenue') {
+                        setLabel(labelHolder)
+                    }
+                    if (activeReport === 'bookings') {
+                        if (year === null || year === undefined || year === new Date().getFullYear()) {
+                            setBookingLabel('This Month\'s Bookings');
+                        }
+                        else {
+                            setBookingLabel(`${labels[month -1]} ${year} Bookings`);
+                        }
+                    }
 
                     const mostFrequentPlan = Object.entries(plans.reduce((a, b) =>
                         (a[b.plan] = (a[b.plan] || 0) + 1, a), {})).sort((a, b) => b[1] - a[1])[0][0];
@@ -205,7 +217,7 @@ const Reports = () => {
                 })
             return;
         }
-        if (month === null || month === undefined) {
+        if (startDay === null || startDay === undefined) {
             setError('Select day to search record for');
             return;
         }
@@ -216,25 +228,37 @@ const Reports = () => {
                 const plans = res.data.plans;
                 setRevenueToday(incomes.selected_day_income);
                 let label;
+                let name;
+                if (activeReport === 'revenue') {
+                    name = 'Revenue';
+                }
+                if (activeReport === 'bookings') {
+                    name = 'Bookings';
+                }
                 if (startDay === endDay) {
                     if (year === new Date().getFullYear()) {
-                        label = `${startDay} ${labels[month -1]} Revenue`;
+                        label = `${startDay} ${labels[month -1]} ${name}`;
                     }
                     else {
-                        label = `${startDay} ${labels[month -1]}, ${year} Revenue`;
+                        label = `${startDay} ${labels[month -1]}, ${year} ${name}`;
                     }
 
                 }
                 else {
                     if (year === new Date().getFullYear()) {
-                        label = `From ${startDay} to ${endDay} ${labels[month -1]} Revenue`;
+                        label = `From ${startDay} to ${endDay} ${labels[month -1]} ${name}`;
                     }
                     else {
-                        label = `From ${startDay} to ${endDay} ${labels[month -1]}, ${year} Revenue`;
+                        label = `From ${startDay} to ${endDay} ${labels[month -1]}, ${year} ${name}`;
                     }
 
                 }
-                setDayLabel(label);
+                if (activeReport === 'revenue') {
+                    setDayLabel(label);
+                }
+                if (activeReport === 'bookings') {
+                    setDayBookLabel(label);
+                }
 
                 const mostFrequentPlan = Object.entries(plans.reduce((a, b) =>
                     (a[b.plan] = (a[b.plan] || 0) + 1, a), {})).sort((a, b) => b[1] - a[1])[0][0];
@@ -304,7 +328,7 @@ const Reports = () => {
                 setLoading(false);
             })
 
-    }, [year])
+    }, [year, resetCount])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -458,6 +482,13 @@ const Reports = () => {
         return `${labels[month -1]}, ${year} Revenue`;
     };
 
+    const bookLabel = (year, month) => {
+        if (year === new Date().getFullYear() || year === null || year === undefined) {
+            return "This Month\'s Bookings";
+        }
+        return `${labels[month -1]}, ${year} Bookings`;
+    };
+
     useEffect(() => {
         setLabelHolder(dateLabel(year, month));
     }, [year, month]);
@@ -471,14 +502,14 @@ const Reports = () => {
     const handleYearSearch = (e) => {
         e.preventDefault()
         const check = e.currentTarget.checked
-        if (check) {
+        /*if (check) {
             if (year === null || year === undefined) {
                 setError("choose year to search record for")
             }
             if (year === new Date().getFullYear()) {
                 setError("choose previous year to search record for")
             }
-        }
+        }*/
         setYearSearch(check);
     }
 
@@ -489,7 +520,15 @@ const Reports = () => {
         setYear(new Date().getFullYear());
         setYearSearch(false)
         setResetCount(prevState => prevState + 1);
-        setLabel(dateLabel(null, null));
+        if (activeReport === 'revenue') {
+            setLabel(dateLabel(null, null));
+            setDayLabel('Today\'s Revenue');
+        }
+        if (activeReport === 'bookings') {
+            setBookingLabel(bookLabel(null, null));
+            setDayBookLabel('Today\'s Bookings');
+        }
+
     }
 
 
@@ -538,7 +577,7 @@ const Reports = () => {
                             checked={yearSearch}
                             onChange={handleYearSearch}
                         />
-                        <label style={{width:'90%'}} className={'experience-text'}>Get record in months during search</label>
+                        <label style={{width:'90%'}} className={'experience-text'}>Get record in months</label>
                     </div>
                     <div onClick={reset} className={'experience-text'}
                          style={{background:'none', marginRight:'10px', color:'red', width:'80px', alignSelf:'end', textAlign:'end'}}>
@@ -641,14 +680,14 @@ const Reports = () => {
 
                                 <div className="stats-grid">
                                     <div className="stat-card">
-                                        <h3 className={'experience-text'}>This Month's Booking</h3>
+                                        <h3 className={'experience-text'}>{bookingLabel}</h3>
                                         <h2>{monthBooking}</h2>
                                         <div className="change up">
                                             {monthBookingChange} from last month
                                         </div>
                                     </div>
                                     <div className="stat-card">
-                                        <h3 className={'experience-text'}>Today's Booking</h3>
+                                        <h3 className={'experience-text'}>{dayBookLabel}</h3>
                                         <h2>{bookingToday}</h2>
                                         <div className="change up">
                                             {bookingChange} from previous day
