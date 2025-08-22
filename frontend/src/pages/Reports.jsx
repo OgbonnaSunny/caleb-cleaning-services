@@ -13,6 +13,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import api from "./api.js";
 import {date} from "yup";
+import LOGO from "../images/logo4.png";
 
 const Reports = () => {
     const [activeReport, setActiveReport] = useState('revenue');
@@ -56,6 +57,7 @@ const Reports = () => {
     const [message, setMessage] = useState('');
     const [incomeData, setIncomeData] = useState([]);
     const [bookingData, setBookingData] = useState([]);
+    const [servicesData, setServicesData] = useState([]);
     const [label, setLabel] = useState('This Month\'s Revenue');
     const [labelHolder, setLabelHolder] = useState('');
     const [profitable, setProfitable] = useState('');
@@ -88,12 +90,12 @@ const Reports = () => {
     ];
 
     const serviceData = [
-        { category: 'Regular Clean', value: 65 },
-        { category: 'Deep Clean', value: 25 },
-        { category: 'Move Out Clean', value: 10 }
+        { category: 'One-Off', value: 65 },
+        { category: 'Weekly Sub', value: 25 },
+        { category: 'Monthly Sub', value: 10 }
     ];
 
-    const COLORS = ['#4CAF50', '#2196F3', '#FFC107'];
+    const COLORS = ['#4CAF50', '#2196F3', '#FFC107', '#97353F'];
 
     const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -152,7 +154,7 @@ const Reports = () => {
 
         if (yearSearch) {
             if (year === null || year === undefined) {
-                setError('Select previous year to search record for');
+                setError('Select year to search record for');
                 return;
             }
             setSearching(true);
@@ -328,6 +330,23 @@ const Reports = () => {
                 setLoading(false);
             })
 
+        api.post('/api/revenue/service', {year: year})
+            .then((response) => {
+                const serviceData = response.data.service;
+                if (serviceData.length <= 0) {
+                    setMessage(`No record found for ${year}`);
+                }
+                setServicesData(serviceData);
+
+            })
+            .catch((error) => {
+                console.log(error);
+                setMessage('Error while fetching yearly data');
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+
     }, [year, resetCount])
 
     useEffect(() => {
@@ -421,6 +440,7 @@ const Reports = () => {
                 <div style={{display: 'flex', flexDirection: 'row', flex:'2', gap:'5px', alignItems:'center'}}>
                     <label>From
                         <select value={startDay} onChange={handleStartChange}
+                                disabled={activeReport === 'services'}
                                 style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
                             <option value=""></option>
                             {days.map(day => (
@@ -432,6 +452,7 @@ const Reports = () => {
                     </label>
                     <label>To
                         <select value={endDay} onChange={handleEndChange}
+                                disabled={activeReport === 'services'}
                                 style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
                             <option value=""></option>
                             {days.map(day => (
@@ -452,6 +473,7 @@ const Reports = () => {
                     Month
                     <select value={month}
                             onChange={handleMonthChange}
+                            disabled={activeReport === 'services'}
                             style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred'}}>
                         <option value=""></option>
                         {months.map(m =>
@@ -531,6 +553,17 @@ const Reports = () => {
 
     }
 
+    const percentage = (value) => {
+        let total = 0;
+        servicesData.forEach((item) => {
+            total += item.value;
+        })
+        if (isNaN(total) || total <= 0) {
+            return `${0}% of ${0} booking`;
+        }
+        return `${Math.round((Number(value ) / Number(total)) * 100)}% of ${total} bookings`;
+    }
+
 
     return (
         <div style={{
@@ -538,8 +571,10 @@ const Reports = () => {
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }} className="reports-page">
-            <h1 className="page-title">Reports & Analytics</h1>
-
+            <div style={{display:'flex', alignItems:'center', justifyContent:'flex-start', gap:'5px'}}>
+                <img src={LOGO} className={'logo-icon'}/>
+                <h1 className="page-title">Reports & Analytics</h1>
+            </div>
             <div className="reports-header">
                 <div className="report-tabs">
                     <div
@@ -712,64 +747,53 @@ const Reports = () => {
                     <div className="services-report">
                         <div className="report-card">
                             <div className="card-header">
-                                <h2>Services Distribution</h2>
-                                <button className="filter-btn">
-                                    <FaFilter />
-                                    <span>Filter</span>
-                                </button>
+                                <h2 style={{textAlign:'center'}}>Services Distribution for {year}</h2>
                             </div>
-                            <div className="card-body">
-                                <div className="chart-container">
-                                    <div className="pie-chart">
-                                        <ResponsiveContainer width="100%" height={300}>
-                                            <PieChart>
-                                                <Pie
-                                                    data={serviceData}
-                                                    cx="50%"
-                                                    cy="50%"
-                                                    labelLine={false}
-                                                    outerRadius={120}
-                                                    fill="#8884d8"
-                                                    dataKey="value"
-                                                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                                                >
-                                                    {serviceData.map((entry, index) => (
-                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                    ))}
-                                                </Pie>
-                                                <Tooltip formatter={(value) => [`${value} bookings`, 'Count']} />
-                                            </PieChart>
-                                        </ResponsiveContainer>
-                                    </div>
-                                </div>
+                            {loading ? <p>Loading yearly services...</p> :
+                                servicesData.length <= 0 ? <p>{message}</p> :
+                                    <div className="card-body">
+                                        <div className="chart-container">
+                                            <div className="pie-chart">
+                                                <ResponsiveContainer width="100%" height={300}>
+                                                    <PieChart>
+                                                        <Pie
+                                                            data={servicesData}
+                                                            cx="50%"
+                                                            cy="50%"
+                                                            labelLine={false}
+                                                            outerRadius={120}
+                                                            fill="#8884d8"
+                                                            dataKey="value"
+                                                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                                        >
+                                                            {servicesData.map((entry, index) => (
+                                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                            ))}
+                                                        </Pie>
+                                                        <Tooltip formatter={(value) => [`${value} bookings`, 'Count']} />
+                                                    </PieChart>
+                                                </ResponsiveContainer>
 
-                                <div className="services-stats">
-                                    <div className="service-stat">
-                                        <div className="color-dot" style={{ backgroundColor: COLORS[0] }}></div>
-                                        <div className="service-info">
-                                            <h3>Regular Clean</h3>
-                                            <p>65% of total bookings</p>
+                                            </div>
                                         </div>
-                                        <div className="service-value">£89,250</div>
-                                    </div>
-                                    <div className="service-stat">
-                                        <div className="color-dot" style={{ backgroundColor: COLORS[1] }}></div>
-                                        <div className="service-info">
-                                            <h3>Deep Clean</h3>
-                                            <p>25% of total bookings</p>
+                                        <div className="grid-container">
+                                            {servicesData.map((service, index) => (
+                                                <div style={{display:'flex', flexDirection:'column', gap:'10px'}}>
+                                                    <div style={{display:'flex', alignItems: 'center'}}>
+                                                        <div className="color-dot" style={{ backgroundColor: COLORS[index] }}></div>
+                                                        <h3>{service.category}</h3>
+                                                    </div>
+                                                    <p style={{marginLeft:'7%'}}>{percentage(service.value)}</p>
+                                                    <p style={{marginLeft:'7%'}} className="service-value">
+                                                        Contributing £{Number(service.payment).toFixed(2)}
+                                                    </p>
+                                                </div>
+
+                                            ))}
                                         </div>
-                                        <div className="service-value">£34,500</div>
                                     </div>
-                                    <div className="service-stat">
-                                        <div className="color-dot" style={{ backgroundColor: COLORS[2] }}></div>
-                                        <div className="service-info">
-                                            <h3>Move Out Clean</h3>
-                                            <p>10% of total bookings</p>
-                                        </div>
-                                        <div className="service-value">£18,750</div>
-                                    </div>
-                                </div>
-                            </div>
+                            }
+
                         </div>
                     </div>
                 )}
