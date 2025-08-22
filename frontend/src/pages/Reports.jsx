@@ -578,13 +578,12 @@ const Reports = () => {
                         />
                         <label style={{width:'90%'}} className={'experience-text'}>Get record in months</label>
                     </div>
-                    <div style={{display:'flex', alignItems:'center', alignSelf: 'end'}}>
+                    <div style={{display:'flex', alignItems:'center', alignSelf: 'end', width:'40%'}}>
                         <div onClick={reset} className={'experience-text'}
-                             style={{background:'none', marginRight:'10px',
-                                 color:'red', textAlign:'end'}}>
+                             style={{background:'none', color:'red', textAlign:'start', marginRight:'10px'}}>
                             Reset
                         </div>
-                        <FaSearch onClick={search}  style={{width:'20px', marginLeft:'10px'}}/>
+                        <FaSearch onClick={search}  style={{width:'20px'}}/>
                     </div>
                 </div>
 
