@@ -418,7 +418,7 @@ const Reports = () => {
         function CustomDayRangePicker() {
 
             return (
-                <div style={{display: 'flex', flexDirection: 'row', flex:'2.5', gap:'5px', alignItems:'center'}}>
+                <div style={{display: 'flex', flexDirection: 'row', flex:'2', gap:'5px', alignItems:'center'}}>
                     <label>From
                         <select value={startDay} onChange={handleStartChange}
                                 style={{padding:'10px',backgroundColor:'#f2f2f2', color:'darkred', flex:'1'}}>
