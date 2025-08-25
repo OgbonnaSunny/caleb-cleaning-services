@@ -11,6 +11,8 @@ export default function Messages() {
     const socket = useSocket();
     const scrollerRef = useRef(null);
 
+    const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
+
     const [messagesList, setMessagesList] = useState([]);
     const [pList, setPList] = useState([]);
     const [chatMessage, setChatMessage] = useState('');
@@ -22,37 +24,24 @@ export default function Messages() {
     const [loading, setLoading] = useState(false);
     const [senderReplyName, setSenderReplyName] = useState(null);
     const [replies, setReplies] = useState(false);
-    const [adminEmail, setAdminEmail] = useState("");
+    const [adminEmail, setAdminEmail] = useState(companyEmail);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) { return; }
-            try {
-                const response = await api.get('/api/company-email')
-                const { email } = response.data;
-                const userEmail = user.email;
-                if (email === userEmail) {
-                    setSender(email);
-                    setSenderName("Fly Cleaner");
-                    setAdminEmail(null);
-                }
-                else {
-                    setSender(userEmail);
-                    setSenderName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
-                    setReceiver(email);
-                    setReceiverName("Fly Cleaner")
-                    setAdminEmail(email);
-
-                }
-
-            }catch(err) {
-                console.log(err);
-            }
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) { return; }
+        const userEmail = user.email;
+        if (userEmail === adminEmail) {
+            setSender(adminEmail);
+            setSenderName("Fly Cleaner");
         }
-       fetchData();
+        else {
+            setSender(userEmail);
+            setSenderName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
+            setReceiver(adminEmail);
+            setReceiverName("Fly Cleaner")
+        }
 
-    }, []);
+    }, [adminEmail]);
 
     const updateMessage =  (newMessages) => {
         const groupedMesages =  [...messagesList];
@@ -198,15 +187,15 @@ export default function Messages() {
                 minute: '2-digit'
             });
         }
-        const diff = differenceInDays(new Date(date), new Date());
-        if (diff <= 0) {
+        const diff = differenceInDays(new Date(), new Date(date));
+        if (diff === 1) {
             return 'yesterday'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
             });
         }
 
-        if (diff === 1) {
+        if (diff === 2) {
             return '2 days ago'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
@@ -224,7 +213,7 @@ export default function Messages() {
             <div className='top-order-nav'>
                 <div style={{marginLeft:'10px', marginTop:'20px'}} className="nav-order-content">
                     <img src={LOGO} className={'logo-icon'}/>
-                    <h3 style={{marginBottom:'8px', textAlign:'start'}}>{receiverName}</h3>
+                    <h3 className={'experience-text'} style={{marginBottom:'8px', textAlign:'start'}}>{receiverName}</h3>
                 </div>
             </div>
 

@@ -1,9 +1,13 @@
 // components/Cleaners.js
 import React, { useState, useEffect } from 'react';
-import { FaSearch, FaUserPlus, FaFilter, FaStar, FaPhone, FaEnvelope, FaUserEdit, FaUserTimes, FaTimes, FaArrowRight } from 'react-icons/fa';
+import { FaSearch, FaUserPlus, FaFilter, FaStar, FaPhone, FaEnvelope, FaUserEdit, FaUserTimes, FaTimes, FaArrowRight, FaUserTie, FaMapMarkerAlt } from 'react-icons/fa';
 import axios from 'axios'
+import LOGO from "../images/logo4.png";
+import api from './api.js'
+import { useNavigate } from "react-router-dom";
 
 const Cleaners = () => {
+    const navigate = useNavigate();
     const allCeaners = [
         {
             id: 1,
@@ -32,7 +36,7 @@ const Cleaners = () => {
             category: "Sophia Williams",
             rating: 4.9,
             jobs: 156,
-            status: "on leave",
+            status: "inactive",
             phone: "+44 7890 987654",
             email: "sophia.w@cleanpro.co.uk",
             areas: ["South London"],
@@ -52,42 +56,171 @@ const Cleaners = () => {
     ];
 
     const [activeTab, setActiveTab] = useState('all');
+    const [tabValue, setTabValue] = useState(-1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchDatabase, setSearchDatabase] = useState('');
     const [cleanerData, setCleanerData] = useState({});
     const [activeServiceName, setActiveServiceName] = useState('');
     const [showTools, setShowTools] = useState(false);
     const [cleaners, setCleaners] = useState(allCeaners);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [page, setPage] = useState(10);
+    const [allCleaners, setAllCleaners] = useState([]);
+    const [pageCount, setPageCount] = useState(0);
+    const [messages, setMessages] = useState('');
+    const [email, setEmail] = useState('');
+    const [deleteEmail, setDeleteEmail] = useState(null);
+    const [ids, setIds] = useState([]);
 
     const cleanerActions = ['Update areas', 'Activate', 'Deactivate', 'Approve leave', 'Update service', 'Update worked hours'];
 
-    const filteredCleaners = cleaners.filter(cleaner => {
-        const matchesSearch = cleaner.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            cleaner.email.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesStatus = activeTab === 'all' || cleaner.status === activeTab;
+    const filteredCleaners = allCleaners.filter(cleaner => {
+        const matchesSearch = cleaner.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            cleaner.email.toLowerCase().includes(searchTerm.toLowerCase()) || cleaner.lastName.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = tabValue === -1 || cleaner.isActive === tabValue;
         return matchesSearch && matchesStatus;
     });
 
+    const renderName = (name) => {
+        const names = name.split(' ');
+        if (names.length > 1) {
+            let nameHolder = ''
+            for (let i = 0; i < names.length; i++) {
+                nameHolder =+ names[i].toString().charAt(0).toUpperCase() + names[i].slice(1) + " ";
+            }
+            return nameHolder;
+        }
+        return name.toString().charAt(0).toUpperCase() + name.slice(1);
+    }
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('/cleaners');
-                if (response.data !== null && response.data.length > 0) {
-                 //   setCleaners(response.data);
-                }
-            } catch (err) {
-                setError(err.message);
-            } finally {
+        if (window.innerWidth > 768) {
+            setPage(20);
+            return;
+        }
+        setPage(10);
+    }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        let offset = 0;
+        if (allCleaners.length > 0) {
+            offset = allCleaners[allCleaners.length - 1].id;
+        }
+        api.post('/api/users/all-cleaners', {limit: page, offset: offset })
+            .then(response => {
+                const cleaners = response.data.cleaners;
+                setAllCleaners(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    cleaners.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
                 setLoading(false);
+            })
+    }, [pageCount])
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (!loading) {
+                    setPageCount(prev => prev + 1);
+                }
             }
         };
 
-        fetchData();
-    }, [])
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loading]);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    const openProfile = (email) => {
+        window.open(`/cleanerprofilepage?email=${encodeURIComponent(email)}`, '_blank');
+    }
+
+    const activateOrDeactivate = (email, status) => {
+        if (loading) {
+            return;
+        }
+        setLoading(true);
+        api.post('/api/users/cleaners/status', {email: email, status: status})
+            .then(response => {
+                const message = response.data.message;
+                setMessages(message);
+            })
+            .catch(error => {
+                console.log(error);
+                setMessages("Error occured");
+            })
+            .finally(() =>{
+                setLoading(false);
+                setEmail(email)
+            })
+    }
+
+    const deleteCleaner = (email) => {
+        if (loading) {
+            return;
+        }
+        setLoading(true);
+        api.post('/api/users/cleaners/delete', {email: email})
+            .then(response => {
+                const message = response.data.message;
+                const success = response.data.success;
+                if (success) {
+                    setIds(prev => [...prev, email]);
+                    setDeleteEmail(null)
+                }
+                setMessages(message);
+            })
+            .catch(error => {
+                console.log(error);
+                setMessages("Error occured");
+            })
+            .finally(() =>{
+                setLoading(false);
+                setEmail(email)
+            })
+    }
+
+    useEffect(() => {
+        setTimeout(() => setMessages(null), 5000);
+    }, [messages]);
+
+    const searchCleaner = () => {
+        if (loading) {return;}
+        if (!searchDatabase) {
+            return;
+        }
+        setLoading(true);
+        api.post('/api/users/cleaner-search', {search: searchDatabase })
+            .then(response => {
+                const cleaners = response.data.cleaners;
+                setAllCleaners(cleaners);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    }
+
+    useEffect(() => {
+        if (searchDatabase.length <= 0) {
+            setPageCount(prev => prev + 1);
+        }
+    }, [searchDatabase]);
+
 
     return (
         <div style={{
@@ -95,71 +228,55 @@ const Cleaners = () => {
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }} className="cleaners-page">
-            <h1 className="page-title">Cleaners Management</h1>
-
-            <div className={['slidings', 'cleaners-tabs', showTools ? 'visible' : 'hidden'].join(' ')} style={{marginTop: '10px'}}>
-                <div className="price-container">
-                    <div style={{marginBottom:'20px', display:'flex', justifyContent:'stretch',  alignItems: 'baseline'}}>
-                        <h3 style={{textAlign:'center', marginLeft:'20px'}}>{`Updating profile for ${cleanerData.category}`}</h3>
-                    </div>
-                    <div className="grid-container">
-                        {cleanerActions.map((action, index) => (
-                            <div key={index} className="actions">
-                                <button className="service-card" style={{color:'green', textAlign:'center'}}
-                                        onClick={() => setActiveServiceName(action)}>{action}</button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            <div style={{display:'flex', flexDirection: 'row',alignItems: 'center', justifyContent:'flex-start', gap:'10px'}}>
+                <img src={LOGO} className={'logo-icon'}/>
+                <h1 className="page-title">Cleaners Management</h1>
             </div>
 
             <div className="cleaners-header">
-                <div className="search-filter">
-                    <div className="search-bar">
-                        <FaSearch className="search-icon" />
-                        <input
-                            type="text"
-                            placeholder="Search cleaners..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <button className="filter-btn">
-                        <FaFilter />
-                        <span>Filters</span>
-                    </button>
+                <div style={{flexFlow:'1', maxWidth:'900px'}}  className="search-bar" >
+                    <FaSearch style={{ width:'10px'}} className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search current list..."
+                        value={searchTerm}
+                        className={'button-bg'}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
-                <button className="add-cleaner-btn">
-                    <FaUserPlus />
-                    <span>Add New Cleaner</span>
-                </button>
+                <div style={{flexFlow:'1', maxWidth:'900px', display:'flex', alignItems:'center'}} className="search-bar" >
+                    <input
+                        type="text"
+                        placeholder="Search database..."
+                        value={searchDatabase}
+                        className={'button-bg'}
+                        style={{width:'90%'}}
+                        onChange={(e) => setSearchDatabase(e.target.value)}
+                    />
+                    <FaSearch onClick={searchCleaner} style={{width:'40px'}}  />
+
+                </div>
             </div>
 
             <div className="cleaners-tabs">
-                <button
+                <div
+                    style={{textAlign:'center'}}
                     className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('all')}
-                >
-                    All Cleaners
-                </button>
-                <button
+                    onClick={() => {setActiveTab('all'); setTabValue(-1)}}>
+                    All
+                </div>
+                <div
+                    style={{textAlign:'center'}}
                     className={`tab-btn ${activeTab === 'active' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('active')}
-                >
+                    onClick={() => {setActiveTab('active'); setTabValue(1)}}>
                     Active
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === 'on leave' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('on leave')}
-                >
-                    On Leave
-                </button>
-                <button
+                </div>
+                <div
+                    style={{textAlign:'center'}}
                     className={`tab-btn ${activeTab === 'inactive' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('inactive')}
-                >
+                    onClick={() => {setActiveTab('inactive'); setTabValue(0)}}>
                     Inactive
-                </button>
+                </div>
             </div>
 
             <div className="grid-container">
@@ -167,26 +284,31 @@ const Cleaners = () => {
                     filteredCleaners.map(cleaner => (
                         <div key={cleaner.id} className="service-card">
                             <div style={{display: 'block'}}>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                    <h5>{cleaner.category}</h5>
-                                    <span className="jobs-count">({cleaner.jobs} jobs)</span>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <FaStar style={{width:'20px', height:'12px'}} />
-                                        <span>{cleaner.rating}</span>
-                                    </div>
-                                </div>
+                                <h3>{renderName(cleaner.firstName)} {renderName(cleaner.lastName)}</h3>
 
                                 <div style={{display:'flex', alignItems:'baseline', justifyContent: 'space-between'}}>
-                                    <FaPhone style={{width:'20px', height:'12px'}} />
+                                    <FaPhone className={'icon-small'} />
                                     <p>{cleaner.phone}</p>
-                                    <span
-                                          style={{color: cleaner.status === 'active' ? 'green' : cleaner.status === 'inactive' ? 'red' : cleaner.status === 'on leave' ? 'yellow' : 'black'}}>{cleaner.status}
-                                    </span>
                                 </div>
 
                                 <div style={{display:'flex', alignItems:'baseline', justifyItems:'space-between'}}>
-                                    <FaEnvelope style={{width:'20px', height:'12px'}} />
+                                    <FaEnvelope className={'icon-small'} />
                                     <p>{cleaner.email}</p>
+                                </div>
+
+                                <div style={{display:'flex', alignItems:'baseline', justifyItems:'space-between'}}>
+                                    <FaMapMarkerAlt className={'icon-small'} />
+                                    <p>{cleaner.postcode}</p>
+                                </div>
+
+                                <div style={{display:'flex', alignItems:'baseline', justifyContent: 'space-between'}}>
+                                    <p>Status</p>
+                                    <span
+                                        style={cleaner.isActive === 1 ?
+                                            { color: 'green', textAlign:'end', width:'20%'} :
+                                            { color: 'red', textAlign:'end', width:'20%'} }>
+                                        {cleaner.isActive === 1 ? "Active" : "Inactive"}
+                                    </span>
                                 </div>
 
                             </div>
@@ -194,34 +316,50 @@ const Cleaners = () => {
                             <div className="cleaner-meta">
                                 <div className="cleaner-areas">
                                     <h4>Areas Covered:</h4>
-                                    <div className="areas-tags">
+                                    {cleaner.areas && <div className="areas-tags">
                                         {cleaner.areas.map((area, index) => (
                                             <span key={index} className="area-tag">{area}</span>
                                         ))}
-                                    </div>
+                                    </div> }
+
                                 </div>
-                                <div className="cleaner-services">
-                                    <h4>Services:</h4>
-                                    <div className="services-tags">
-                                        {cleaner.services.map((plan, index) => (
-                                            <span key={index} className="service-tag">{service}</span>
-                                        ))}
-                                    </div>
-                                </div>
+
                             </div>
+                            {(messages && cleaner.email === email) && <p>{messages}</p>}
 
-                            <div className="cleaner-actions">
+                            {deleteEmail === cleaner.email &&
+                                <div style={{display: 'flex', alignItems: 'center', flexDirection:'column', border:'dashed', padding:'10px'}}>
+                                    <p>
+                                        Are you sure you want to delele <span style={{fontWeight:'bold', color:'darkred'}}>{cleaner.firstName} {cleaner.lastName}</span>'s records? This cannot be undone.
+                                    </p>
+                                    <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between'}}>
+                                        <button onClick={() => deleteCleaner(cleaner.email)} style={{color:'red'}}>YES</button>
+                                        <button onClick={() => setDeleteEmail(null)} style={{color:'green'}}>NO</button>
+                                    </div>
 
-                                <div className="action-buttons">
-                                    <button className="edit-btn">
-                                        <FaUserEdit onClick={() => { setCleanerData(cleaner); setShowTools(true) }} />
-                                    </button>
-                                    <button className="delete-btn">
-                                        <FaUserTimes
-                                            style={(cleanerData.id === cleaner.id && showTools) ? {color:'red'} : {color:''}}
-                                            onClick={cleaner.id === cleanerData.id ? () => { setShowTools(false) } : null } />
-                                    </button>
                                 </div>
+                            }
+
+                            <div style={{display: 'flex', alignItems: 'center', gap:'7px'}}>
+                                {cleaner.isActive === 1 ?
+                                    <button onClick={() => activateOrDeactivate(cleaner.email, false)}
+                                            style={{color:'red', textAlign:'start', width:'40%'}}>
+                                        DISABLE
+                                    </button> :
+                                    <button onClick={() => activateOrDeactivate(cleaner.email, true)}
+                                            style={{color:'black', textAlign:'start', width:'40%'}}>
+                                        ENABLE
+                                    </button>
+                                }
+                                <button onClick={() => setDeleteEmail(cleaner.email)}
+                                        style={{color:'darkred', textAlign:'start', width:'40%'}}
+                                        disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null)}>
+                                    DELETE
+                                </button>
+                                <FaUserTie
+                                    size={20} style={{width:'20%', alignSelf:'end', marginBottom:'14px'}}
+                                    onClick={() => openProfile(cleaner.email)}
+                                />
                             </div>
                         </div>
                     ))
@@ -231,7 +369,7 @@ const Cleaners = () => {
                     </div>
                 )}
             </div>
-
+            {loading && <div>Loading...</div>}
         </div>
     );
 };

@@ -8,6 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import axios from 'axios';
+import api from './api.js'
 
 const Sitemap = () => {
     const location = useLocation();
@@ -35,7 +36,7 @@ const Sitemap = () => {
         const geocodeAddress = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(
+                const response = await api.get(
                     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
                 );
 

@@ -1,12 +1,13 @@
 import axios from 'axios';
-//import { getRefreshToken, clearRefreshToken } from './auth.js';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL_DEV;
 
 const api = axios.create({
-    origin: 'http://localhost:5173', // Your Vite/React frontend
+    origin: BASE_URL,
     withCredentials: true,
     credentials: 'include',
 });
+
 
 // Add CSRF token to requests
 api.interceptors.request.use(config => {

@@ -1,11 +1,14 @@
 import React, { useState, useEffect} from "react";
 import {FaBroom, FaCheck, FaClock, FaMapMarkerAlt, FaRegStar, FaStar, FaUserTie} from "react-icons/fa";
 import { useForm } from 'react-hook-form';
+import { useNavigate, useLocation } from "react-router-dom";
 import api from './api.js'
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 
 const ProfilePage = ({emailFromProile}) => {
+    const location = useLocation();
+
     const params = new URLSearchParams(window.location.search);
     const cleanerEmail = params.get("email");
     const currentCleaner = params.get("cleaner");
@@ -444,7 +447,7 @@ const ProfilePage = ({emailFromProile}) => {
                             <p>{bio}</p>
                             <div className="details-section">
                                 <h3 className={'experience-text'}><FaClock style={{width:'40px'}} /> Availability</h3>
-                                <div className="availability-grid">
+                                {availability && <div className="availability-grid">
                                     {(availability.monday.morning || availability.monday.afternoon || availability.monday.evening) &&
                                         <div className="availability-day">
                                             <h3>Monday</h3>
@@ -502,7 +505,7 @@ const ProfilePage = ({emailFromProile}) => {
                                         </div>
                                     }
 
-                                </div>
+                                </div> }
 
                                 <h3 className={'experience-text'}>Languages Spoken</h3>
                                 <div className="grid-container">

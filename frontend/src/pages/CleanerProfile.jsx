@@ -222,6 +222,7 @@ const CleanerProfile = () => {
     const [financePageCount, setFinancePageCount] = useState(0);
     const [showDateTime, setShowDateTime] = useState(false);
     const [quarter, setQuarter] = useState([]);
+    const [isActive, setIsActive] = useState(false);
 
     const renderMenuIcon = (id) => {
         if (id === null || id === undefined) return;
@@ -319,6 +320,10 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
+            if (isActive === false) {
+                setMessage('You do not have the clearance to access booking at this moment');
+                return;
+            }
             if (newOrders.length > 0) {
                 setLoadingMore(true);
             }
@@ -339,7 +344,7 @@ const CleanerProfile = () => {
                 else {
                     setNewOrders(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
-                        orders.forEach(item => map.set(item.id, item));    // add/replace new
+                        orders.booking.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
                 }
@@ -356,7 +361,7 @@ const CleanerProfile = () => {
         if (!loadingMore && !isLoading && activeMenu === 'New') {
             fetchOrders();
         }
-    }, [pageCount, activeMenu]);
+    }, [pageCount, activeMenu, isActive]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -442,6 +447,12 @@ const CleanerProfile = () => {
             setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} 
             ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
             setBio(`Professional ${user.roles.charAt(0).toUpperCase()+user.roles.slice(1)}`);
+            const isActive = user.isActive;
+            if (isActive === 1 || isActive === true || isActive === 'true') {
+                setIsActive(true);
+                return;
+            }
+            setIsActive(false);
         }
     })
 

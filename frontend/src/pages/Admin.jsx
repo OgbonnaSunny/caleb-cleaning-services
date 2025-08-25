@@ -26,10 +26,8 @@ const Admin = () => {
         {id: 4, category: 'Customers', link: '/customers', icon: FaUsers },
         {id: 5, category: 'View reports', link: '/reports', icon: FaChartLine },
         {id: 6, category: 'Settings', link: '/settings', icon: FaCog },
-        {id: 7, category: 'Add postcode', link: '/postcode', icon: FaMapMarkerAlt },
-        {id: 8, category: 'Add reports', link: '/report', icon: FaChartLine },
         {id: 8, category: 'Add expenses', link: '/expense', icon: FaPoundSign },
-        {id: 8, category: 'Messages', link: '/expense', icon: FaCommentDots },
+        {id: 8, category: 'Messages', link: '/messagelist', icon: FaCommentDots },
     ]
 
     const edinburghDistricts = [

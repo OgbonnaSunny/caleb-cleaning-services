@@ -2759,7 +2759,6 @@ a:hover {
 
 .search-bar {
   position: relative;
-  width: 300px;
 }
 
 .search-bar input {
@@ -3123,18 +3122,29 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+  .cleaners-header {
+    display: inline-grid;
+    grid-template-columns: 1fr;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 }
 
 .search-filter {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 .search-bar {
   position: relative;
-  width: 300px;
+
 }
 
 .search-bar input {
@@ -6630,6 +6640,18 @@ tr:hover {
   background-color: lightcyan;
   text-align: start;
   margin-bottom: 8px;
+  font-weight: lighter;
+}
+
+.reply3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;   /* Change to 1 if you want only one line */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  margin-left: 6px;
+  text-align: start;
   font-weight: lighter;
 }
 

@@ -158,7 +158,7 @@ const Become = () => {
 
         if (!formData.NIN.trim()) newErrors.NIN = 'NI is required';
 
-      //  if (!isValidNINumber(formData.NIN)) newErrors.NIN = 'NI is invalid';
+        if (!isValidNINumber(formData.NIN)) newErrors.NIN = 'NI is invalid';
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -429,12 +429,12 @@ const Become = () => {
         if (formData.addressProof) data.append('addressProof', formData.addressProof);
         else {newErrors.addressProof = 'Address proof is required';}
 
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             setLoading(false);
             return;
         };
-
 
 
         api.post('/api/users', data)

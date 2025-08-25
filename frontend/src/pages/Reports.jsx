@@ -564,6 +564,14 @@ const Reports = () => {
         return `${Math.round((Number(value ) / Number(total)) * 100)}% of ${total} bookings`;
     }
 
+    const isEmpty = (list) => {
+        let total = 0;
+        list.forEach((item) => {
+            total += item.value;
+        })
+        return total;
+    }
+
 
     return (
         <div style={{
@@ -595,7 +603,7 @@ const Reports = () => {
                     <div
                         style={{textAlign:'center', padding:'12px'}}
                         className={activeReport === 'services' ? 'next-button' : 'back-button'}
-                        onClick={() => setActiveReport('services')}
+                        onClick={() => {setActiveReport('services'); setStartDay(null); setEndDay(null); setMonth(null); setYear(new Date().getFullYear())}}
                     >
                         <FaChartPie />
                         <span>Services</span>
@@ -750,7 +758,7 @@ const Reports = () => {
                                 <h2 style={{textAlign:'center'}}>Services Distribution for {year}</h2>
                             </div>
                             {loading ? <p>Loading yearly services...</p> :
-                                servicesData.length <= 0 ? <p>{message}</p> :
+                                isEmpty(servicesData) <= 0 ? <p>{message}</p> :
                                     <div className="card-body">
                                         <div className="chart-container">
                                             <div className="pie-chart">
@@ -764,7 +772,7 @@ const Reports = () => {
                                                             outerRadius={120}
                                                             fill="#8884d8"
                                                             dataKey="value"
-                                                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                                            label={({ name, percent }) => `${name}: ${Math.round(percent * 100)}%`}
                                                         >
                                                             {servicesData.map((entry, index) => (
                                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

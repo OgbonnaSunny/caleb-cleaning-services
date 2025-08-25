@@ -57,7 +57,9 @@ import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
 
 const Checkout = () => {
-    const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
+    const STRIPE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
+   // const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
+    const stripePromise = loadStripe(STRIPE_KEY);
     const location = useLocation();
     const { postcode } = location.state || {};
     const [isVisible, setIsVisible] = useState(false);
@@ -2335,6 +2337,7 @@ const Checkout = () => {
                                         }}
                                     />
                                     {errors.date && <span className="error-message">{errors.date}</span>}
+                                    {formData.date && <p>{formData.date}</p>}
                                     <ErrorMessage name="date" component="span" className="error-message" />
                                 </div>
 

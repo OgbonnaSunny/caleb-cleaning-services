@@ -169,17 +169,28 @@ const Customer = () => {
         const [service, setService] = useState('');
         const [contactMessage, setContactMessage] = useState('');
         const [errors, setErrors] = useState({});
+        const [response, setResponse] = useState('');
 
-        const sendMessage = (e) => {
+        const sendMessage  = async (e) => {
             e.preventDefault();
             const newErrors = {}
             if (!contactEmail) newErrors.contactemail = 'Email address required';
             if (!phone) newErrors.phone = 'Phone number required';
             if (!name) newErrors.name = 'Name required';
             if (!contactMessage) newErrors.contactMessage = 'Write a message';
-            if (Object.keys(newErrors.length) > 0) {
+            if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
                 return;
+            }
+
+            const data = { email: contactEmail, customer: name, service: service, phone: phone, message: contactMessage}
+            try {
+                const response = await api.post('/api/send-email-to-fly-cleaner', data);
+                const message = response.data.message;
+                setResponse(message);
+            } catch (error) {
+                setErrors(errors);
+                setResponse('Error occured');
             }
         }
 
@@ -256,6 +267,7 @@ const Customer = () => {
                                     ></textarea>
                                     {contactMessage.errors && <label className="error-message">{contactMessage.errors}</label>}
                                 </div>
+                                {response && <p>{response}</p>}
                                 <button type="submit" className="submit-button">Send Message</button>
                             </form>
                         </div>

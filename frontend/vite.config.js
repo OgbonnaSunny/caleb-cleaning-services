@@ -1,6 +1,9 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv  } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr';
+
+const mode = process.env.NODE_ENV || 'development';
+const env = loadEnv(mode, process.cwd(), '');
 
 export default defineConfig({
   plugins: [
@@ -12,7 +15,6 @@ export default defineConfig({
   resolve: {
     alias: {
       events: 'events',
-      // Add other aliases if needed
     }
   },
   optimizeDeps: {
@@ -26,7 +28,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8081',
+        target: env.VITE_API_SERVER_URL_DEV,
         changeOrigin: true,
         secure: false,
       }

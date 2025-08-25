@@ -28,6 +28,7 @@ import Oven from '../images/oven.png'
 import Footer from '../pages/Footer.jsx'
 import { useNavigate } from 'react-router-dom';
 import { isValidUKPostcodeFormat, checkPostcodeExists } from './Postcode.jsx'
+import api from './api.js'
 
 const Overview = () => {
     const navigate = useNavigate();
@@ -58,6 +59,26 @@ const Overview = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            const role = user.roles;
+            if (role === 'cleaner') {
+                api.post('/api/users/cleaners/check', {email: user.email})
+                    .then((response) => {
+                        if (!response.data.email) {
+                            localStorage.removeItem('user');
+                        }
+                    })
+                    .catch((err) => {
+                    console.log(err);
+                })
+
+            }
+        }
+
+    })
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
