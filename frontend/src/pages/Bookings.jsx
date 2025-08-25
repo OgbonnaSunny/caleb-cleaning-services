@@ -586,7 +586,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                             ))}
                         </div>
                     </div>}
-                    {(!loading && todayBooking.length <= 0) && <div><p>{todayMessage}</p></div>}
+                    {(!loading && todayBooking.length <= 0) && <p>{todayMessage}</p>}
                 </div>
                 <div className="recent-bookings card">
                     <div className="card-header">
@@ -646,7 +646,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                             ))}
                         </div>
                     </div> }
-                    {(!loading && last7DaysBooking.length <= 0) && <div style={{marginLeft:'30px'}}><p>{message}</p></div>}
+                    {(!loading && last7DaysBooking.length <= 0) && <p>{message}</p>}
                 </div>
             </div>}
             {loading && (<div><p>Loading data...</p></div>)}

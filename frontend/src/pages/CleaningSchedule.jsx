@@ -128,7 +128,7 @@ const CleaningSchedule = () => {
             <div className="cleaning-schedule card">
                 <div className="card-header">
                     <h2 className={'experience-text'} style={{color:'brown', width:'60%'}}>Today's Schedule</h2>
-                    <button className="btn-view-all">View Calendar</button>
+                    <button style={{color:'black'}} className="experience-text">View Calendar</button>
                 </div>
                 {todaySchedule.length > 0 &&  <div className="card-body">
                     <div className="grid-container">

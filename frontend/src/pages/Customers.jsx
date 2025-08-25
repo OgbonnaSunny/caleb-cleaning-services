@@ -216,9 +216,9 @@ const Customers = () => {
                                         <p>{customer.email}</p>
                                     </div>
                                 </div>
-                                <div style={{display: 'flex', alignItems: 'baseline'}} className="table-cell address">
+                                <div style={{display: 'flex', alignItems: 'baseline'}}>
                                     <FaHome style={{width:'20px'}} className="icon-small" />
-                                    <p className="address-text">{customer.address}</p>
+                                    <p className="reply3">{customer.address}</p>
                                 </div>
                                 <div style={{display: 'flex', alignItems: 'baseline'}} >
                                     <button className="action-btn history-btn">

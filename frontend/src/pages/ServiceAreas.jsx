@@ -381,8 +381,8 @@ const ServiceAreas = () => {
                     </div>
                     <div  className="areas-legend">
                         <div style={{marginBottom:'10px', display:'flex', alignItems:'center'}} >
-                            <h3 style={{textAlign:'start'}}>Areas</h3>
-                            <h3 style={{textAlign:'end'}}>Coverage</h3>
+                            <h3 className={'experience-text'} style={{textAlign:'start'}}>Areas</h3>
+                            <h3 className={'experience-text'} style={{textAlign:'end'}}>Coverage</h3>
                         </div>
                         {data.map((item, index) => (
                             <div key={index} style={{display: 'flex', alignItems: 'center'}}>

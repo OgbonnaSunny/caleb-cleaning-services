@@ -669,7 +669,8 @@ const Admin = () => {
                                 <FaBars size={25} onClick={() => setShowPanel(!showPanel)} style={{width:'30px'}}/>
                                 <h1 className="page-title" style={{width:'20%'}}>Dashboard</h1>
                             </div>
-                            <label style={{color:'red', display:'flex', alignItems:'center', fontSize:'large', justifyContent:'flex-end', marginRight:'5%'}}>
+                            <label style={{color:'red', display:'flex', alignItems:'center',
+                                fontSize:'large', justifyContent:'flex-end', marginRight:'5%'}}>
                                 <FaEnvelope size={40} style={{width:'30px', color:'black'}} />
                                 {messageCount}
                             </label>
