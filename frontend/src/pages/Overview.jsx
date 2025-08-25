@@ -61,7 +61,7 @@ const Overview = () => {
     }, []);
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
+       /* const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             const role = user.roles;
             if (role === 'cleaner') {
@@ -76,7 +76,7 @@ const Overview = () => {
                 })
 
             }
-        }
+        }*/
 
     })
 
