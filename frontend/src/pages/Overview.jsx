@@ -61,8 +61,8 @@ const Overview = () => {
     }, []);
 
     useEffect(() => {
-       /* const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
             const role = user.roles;
             if (role === 'cleaner') {
                 api.post('/api/users/cleaners/check', {email: user.email})
@@ -76,7 +76,7 @@ const Overview = () => {
                 })
 
             }
-        }*/
+        }
 
     })
 
