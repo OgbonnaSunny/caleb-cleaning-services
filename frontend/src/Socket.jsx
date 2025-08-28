@@ -5,11 +5,12 @@ import { io } from "socket.io-client";
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
+    const URL = import.meta.env.VITE_API_SERVER_URL_DEV;
     const socketRef = useRef(null);
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        const s = io("http://localhost:8081", {
+        const s = io(URL, {
             transports: ["websocket", "polling"], // force fallback if needed
         });
         setSocket(s);

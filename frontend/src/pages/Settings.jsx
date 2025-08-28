@@ -1,14 +1,31 @@
 // components/Settings.js
-import React, { useState } from 'react';
-import { FaSave, FaCog, FaUserCog, FaShieldAlt, FaBell, FaCreditCard, FaInfoCircle } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import {
+    FaSave,
+    FaCog,
+    FaUserCog,
+    FaShieldAlt,
+    FaBell,
+    FaCreditCard,
+    FaInfoCircle,
+    FaBars,
+    FaUserTie,
+    FaUser,
+    FaTimes,
+    FaPen, FaPencilAlt, FaPlus
+} from 'react-icons/fa';
+import api from './api.js'
+import LOGO from "../images/logo4.png";
 
 const Settings = () => {
+    const mainAdmin = import.meta.env.VITE_COMPANY_EMAIL
+
     const [activeTab, setActiveTab] = useState('general');
     const [formData, setFormData] = useState({
         companyName: 'Fly Cleaner',
-        contactEmail: 'flyclean@gmail.com',
-        contactPhone: '+44 20 7946 0958',
-        address: '123 Cleaning Street, London, EC1A 1AA',
+        contactEmail: 'flyclean02@gmail.com',
+        contactPhone: '+44 73 6258 7018',
+        address: 'Edinburgh',
         workingHours: 'Mon-Fri: 8:00 AM - 6:00 PM',
         notificationEnabled: true,
         notificationEmail: true,
@@ -18,6 +35,17 @@ const Settings = () => {
         taxRate: 20,
         cancellationPolicy: '24 hours notice required for cancellations'
     });
+    const [admin, setAdmin] = useState([]);
+    const [ceo, setCeo] = useState('CEO');
+    const [superAdmin, setSuperAdmin] = useState(mainAdmin);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [role, setRole] = useState('Support');
+    const [addAdmin, setAddAdmin] = useState(false);
+    const [id, setId] = useState(null);
+    const [readOnly, setReadOnly] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
+    const [changes, setChanges] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -25,23 +53,357 @@ const Settings = () => {
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
+        if (role === 'CEO') {
+            setChanges(true);
+        }
     };
+
+    const renderName = (name) => {
+        const names = name.split(' ');
+        if (names.length > 1) {
+            let nameHolder = ''
+            for (let i = 0; i < names.length; i++) {
+                const newName =  names[i].charAt(0).toUpperCase() + names[i].slice(1) + " ";
+                nameHolder += newName + "";
+            }
+            return nameHolder;
+        }
+        return name.toString().charAt(0).toUpperCase() + name.slice(1);
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Save settings logic would go here
+        setLoading(true);
+        api.post('/api/info', {info: JSON.stringify(formData)})
+            .then(res => {
+                setMessage(res.data.message);
+            })
+            .catch(err => {
+                console.log(err);
+                setMessage("Error occured");
+            })
+            .finally(() => {
+            setLoading(false);
+            setChanges(false);
+        })
+
     };
 
+    useEffect(() => {
+        if (currentUser === null || currentUser === undefined) return;
+        api.post('/api/users/admin', {email: currentUser})
+        .then((res) => {
+            const admin = res.data.admin;
+            const role = res.data.role;
+            setAdmin(admin);
+            setRole(role)
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }, [currentUser])
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            const userEmail = user.email;
+            setCurrentUser(userEmail);
+        }
+    }, []);
+
+    useEffect(() => {
+        api.get('/api/admin/ceo').then((res) => {
+            const ceo = res.data.ceo;
+            if (ceo) {
+                const name = renderName(ceo[0].firstName) + " " + renderName(ceo[0].lastName);
+                setCeo(name);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    })
+
+    useEffect(() => {
+        document.title = "Setting";
+    }, []);
+
+    useEffect(() => {
+        api.get('/api/info/record')
+            .then((res) => {
+                const info = res.data.info;
+               if (info.length > 0) {
+                   setFormData(info[0].info);
+               }
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }, []);
+
+    const EditAdmin = ({ admin }) => {
+        const formData = {password: '', email: admin.email, role: admin.roles};
+        const [data, setData] = useState(formData);
+        const [loading, setLoading] = useState(false);
+        const [errors, setErrors] = useState({});
+        const [message, setMessage] = useState('');
+        const [adminRole, setAdminRole] = useState(null);
+        const [deleteUser, setDeleteUser] = useState(false);
+        const roles = ['Manager', 'Support'];
+
+        const editAdmin = async (e) => {
+            e.preventDefault();
+            const newErrors = {};
+            if (data.role === admin.roles) {
+                newErrors.role = 'Select different role';
+            }
+            if (!data.password) {
+                newErrors.password = 'Please enter password for verification';
+            }
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors);
+                return;
+            }
+            setLoading(true);
+            try {
+                const response = await api.post('/api/admin/edit', data)
+                const message = response.data.message;
+                const success = response.data.success;
+                if (success) {
+                    setData({...data, password: ''});
+                }
+                setMessage(message);
+            }
+            catch (error) {
+                console.log(error);
+                setMessage('Error occured');
+            }finally {
+                setLoading(false);
+            }
+        }
+
+        const deleteAdmin = async (e) => {
+            e.preventDefault();
+            const newErrors = {};
+            if (!data.password) {
+                newErrors.password = 'Please enter password for verification';
+            }
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors);
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const response = await api.post('/api/admin/delete', data)
+                const message = response.data.message;
+                const success = response.data.message.success;
+                setMessage(message);
+                if (success) {
+                    setData({});
+                }
+            }
+            catch (error) {
+                console.log(error);
+                setMessage('Error occured');
+            }finally {
+                setLoading(false);
+            }
+        }
+
+        const handleInputChange = (e) => {
+            e.preventDefault();
+            setData({...data, [e.target.name]: e.target.value});
+            setErrors({});
+        }
+
+        useEffect(() => {
+            setTimeout(() => setErrors({}), 4000);
+        }, [data.role, data.password, deleteUser]);
+
+        return (
+            <form>
+                {!deleteUser && <div>
+                        <div style={{marginBottom: '10px'}}>
+                        <div style={{display:'flex', alignItems:'center', justifyContent:'space-evenly', marginBottom:'15px'}}>
+                            {roles.map((role, index) => (
+                                <div style={{display:'flex', alignItems:'center', gap:'5px'}}
+                                     key={index}>
+                                    <input
+                                        checked={role === data.role}
+                                        type={'checkbox'}
+                                        name={'role'}
+                                        onChange={() => setData({...data, role: role})}
+                                        className={'button-bg'}
+                                    />
+                                    <label>{role}</label>
+                                </div>
+                            ))}
+                        </div>
+                        {errors.role && <label className={'error-message'}>{errors.role}</label>}
+                    </div>
+                        <div className={'form-group'}>
+                        <input
+                            placeholder='user email to be added as admin'
+                            value={data.email}
+                            readOnly={true}
+                            type={'text'} name={'email'}
+                            onChange={handleInputChange}
+                            className={'button-bg'}
+                            style={{backgroundColor:'lightgray'}}
+                        />
+                    </div>
+                    </div>}
+                <div className={'form-group'}>
+                    <input
+                        placeholder='ceo password'
+                        value={data.password}
+                        type={'password'}
+                        name={'password'}
+                        onChange={handleInputChange}
+                        className={'button-bg'}
+                        required
+                    />
+                    {errors.password && <label style={{color:'red'}} className={'error-message'}>{errors.password}</label>}
+                </div>
+                {loading && <p style={{marginBottom:'10px'}}>Loading...</p>}
+                {message && <p style={{marginBottom:'10px'}}>{message}</p>}
+
+                {deleteUser &&
+                    <div style={{border: '1px solid red', display:'flex',
+                        justifyContent:'center', flexDirection:'column', margin:'10px'}}>
+                        <p style={{padding:'10px'}}>Delete user from admin. This cannot be undone. Continue?</p>
+                        <div style={{display:'flex', alignItems:'center', padding:'10px', gap:'10px', justifyContent:'space-evenly'}}>
+                            <button style={{background:'none', color:'red'}} onClick={deleteAdmin}>Yes</button>
+                            <button className={'submit-button'} onClick={() => setDeleteUser(false)}>No</button>
+                        </div>
+                    </div>
+                }
+
+                <div className="user-actions">
+                    <button
+                        onClick={editAdmin}
+                        type={'button'}
+                        style={{color:'black', background:'none'}}
+                        className="submit-button">
+                        Edit
+                    </button>
+                    <button
+                        disabled={deleteUser}
+                        onClick={() => setDeleteUser(true)}
+                        type={'button'} style={{color:'red', background:'none'}}
+                        className="submit-button">
+                        Delete
+                    </button>
+                    <FaTimes size={20} style={{width:'20px'}} onClick={() => setId(null)} />
+                </div>
+            </form>
+        )
+    }
+
+    const Form = () => {
+        const formData = {password: '', email: '', role: 'Manager'};
+        const [data, setData] = useState(formData);
+        const [loading, setLoading] = useState(false);
+        const [errors, setErrors] = useState({});
+        const [message, setMessage] = useState('');
+        const roles = ['Manager', 'Support'];
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            try {
+                const response = await api.post('/api/admin/add', data)
+                const message = response.data.message;
+                setMessage(message);
+            }
+            catch (error) {
+                console.log(error);
+                setMessage('Error occured');
+            }finally {
+                setLoading(false);
+            }
+        }
+       const handleInputChange = (e) => {
+            e.preventDefault();
+            setData({...data, [e.target.name]: e.target.value})
+       }
+
+        return (
+            <form onSubmit={handleSubmit}>
+                <div className={'form-group'}>
+                    <input
+                        placeholder='user email to be added as admin'
+                        value={data.email}
+                        type={'text'} name={'email'}
+                        onChange={handleInputChange}
+                        className={'button-bg'}
+                        required
+                    />
+                    {errors.email && <label className={'error-message'}>{errors.email}</label>}
+                </div>
+
+                <div className={'form-group'}>
+                    <input
+                        placeholder='ceo password'
+                        value={data.password}
+                        type={'password'}
+                        name={'password'}
+                        onChange={handleInputChange}
+                        className={'button-bg'}
+                        required
+                    />
+                    {errors.password && <label className={'error-message'}>{errors.password}</label>}
+                </div>
+
+                <div className={'form-group'}>
+                   <select
+                       value={data.role}
+                       name={'role'}
+                       onChange={handleInputChange}
+                       required>
+                       {roles.map((role, index) => (
+                           <option key={index} value={role}>{role}</option>
+                       ))}
+                   </select>
+
+                </div>
+                {loading && <p>Loading...</p>}
+                {message && <p>{message}</p>}
+                <div className="user-actions">
+                    <button type={'submit'} className="submit-button">Add</button>
+                    <button onClick={() => setAddAdmin(false)} type={'button'} className="back-button">Close</button>
+                </div>
+            </form>
+        )
+    }
+
+    useEffect(() => {
+        if (role === 'CEO') {
+            setReadOnly(false);
+        }
+    }, [role]);
+
+    useEffect(() => {
+        if (message !== null) {
+            setTimeout(() => setMessage(''), 5000);
+        }
+    }, [message]);
+
     return (
-        <div className="settings-page" style={{
+        <div className="support-page" style={{
             display: 'flex',
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }}>
-            <h1 className="page-title">Settings</h1>
 
+            <div style={{display: 'flex', justifyContent:'flex-start', alignItems: 'center'}}>
+                <img src={LOGO} className={'logo-icon'}/>
+                <h1 className="page-title">Settings</h1>
+            </div>
             <div className="settings-container">
-                <div className="settings-sidebar">
+                <div className="grid-container">
                     <button
                         className={`settings-tab ${activeTab === 'general' ? 'active' : ''}`}
                         onClick={() => setActiveTab('general')}
@@ -82,73 +444,90 @@ const Settings = () => {
                 <div className="settings-content">
                     {activeTab === 'general' && (
                         <form onSubmit={handleSubmit} className="settings-form">
-                            <div className="form-section">
-                                <h2 className="section-title">Company Information</h2>
-                                <div className="form-group">
-                                    <label>Company Name</label>
-                                    <input
-                                        type="text"
-                                        name="companyName"
-                                        value={formData.companyName}
-                                        onChange={handleInputChange}
-                                    />
+                            <h2 className="section-title">Company Information</h2>
+                            <div className="settings-form">
+                                <div className="form-section">
+                                    <div className="form-group">
+                                        <label>Company Name</label>
+                                        <input
+                                            type="text"
+                                            name="companyName"
+                                            readOnly={readOnly}
+                                            className={'button-bg'}
+                                            value={formData.companyName}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Contact Email</label>
+                                        <input
+                                            type="email"
+                                            name="contactEmail"
+                                            readOnly={readOnly}
+                                            className={'button-bg'}
+                                            value={formData.contactEmail}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Contact Phone</label>
+                                        <input
+                                            type="tel"
+                                            name="contactPhone"
+                                            readOnly={readOnly}
+                                            className={'button-bg'}
+                                            value={formData.contactPhone}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Address</label>
+                                        <textarea
+                                            name="address"
+                                            className={'button-bg'}
+                                            readOnly={readOnly}
+                                            value={formData.address}
+                                            onChange={handleInputChange}
+                                            rows="3"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Working Hours</label>
+                                        <input
+                                            type="text"
+                                            name="workingHours"
+                                            readOnly={readOnly}
+                                            className={'button-bg'}
+                                            value={formData.workingHours}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Contact Email</label>
-                                    <input
-                                        type="email"
-                                        name="contactEmail"
-                                        value={formData.contactEmail}
-                                        onChange={handleInputChange}
-                                    />
+                                <div className="form-section">
+                                    <h2 className="section-title">Business Policies</h2>
+                                    <div className="form-group">
+                                        <label>Cancellation Policy</label>
+                                        <textarea
+                                            name="cancellationPolicy"
+                                            readOnly={readOnly}
+                                            value={formData.cancellationPolicy}
+                                            onChange={handleInputChange}
+                                            className={'button-bg'}
+                                            rows="4"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Contact Phone</label>
-                                    <input
-                                        type="tel"
-                                        name="contactPhone"
-                                        value={formData.contactPhone}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Address</label>
-                                    <textarea
-                                        name="address"
-                                        value={formData.address}
-                                        onChange={handleInputChange}
-                                        rows="3"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Working Hours</label>
-                                    <input
-                                        type="text"
-                                        name="workingHours"
-                                        value={formData.workingHours}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="form-section">
-                                <h2 className="section-title">Business Policies</h2>
-                                <div className="form-group">
-                                    <label>Cancellation Policy</label>
-                                    <textarea
-                                        name="cancellationPolicy"
-                                        value={formData.cancellationPolicy}
-                                        onChange={handleInputChange}
-                                        rows="4"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="form-actions">
-                                <button type="submit" className="save-btn">
-                                    <FaSave />
-                                    <span>Save Changes</span>
-                                </button>
+                                {loading && <p style={{marginBottom:'10px'}}>Loading...</p>}
+                                {message && <p style={{marginBottom:'10px'}}>{message}</p>}
+                                {!readOnly && <div className="form-actions">
+                                        <button
+                                            disabled={(loading || !changes)}
+                                            style={{display:'flex', justifyContent:'center'}}
+                                            type="submit" className={(loading || !changes) ? "back-button" : "submit-button"}>
+                                        <FaSave style={{color: 'white', width: '20px'}} />
+                                        <span>Save Changes</span>
+                                    </button>
+                                    </div>}
                             </div>
                         </form>
                     )}
@@ -158,51 +537,54 @@ const Settings = () => {
                             <div className="form-section">
                                 <h2 className="section-title">Notification Settings</h2>
                                 <div className="form-group checkbox-group">
-                                    <label>
+                                    <label style={{display:'flex', alignItems: 'center'}}>
                                         <input
                                             type="checkbox"
                                             name="notificationEnabled"
                                             checked={formData.notificationEnabled}
-                                            onChange={handleInputChange}
+                                            onChange={readOnly ? null : handleInputChange}
                                         />
                                         <span>Enable Notifications</span>
                                     </label>
                                 </div>
-
-                                {formData.notificationEnabled && (
-                                    <>
+                                {formData.notificationEnabled && (<>
                                         <div className="form-group checkbox-group">
-                                            <label>
+                                            <label style={{display:'flex', alignItems: 'center'}}>
                                                 <input
                                                     type="checkbox"
                                                     name="notificationEmail"
                                                     checked={formData.notificationEmail}
-                                                    onChange={handleInputChange}
+                                                    onChange={readOnly ? null : handleInputChange}
                                                 />
                                                 <span>Email Notifications</span>
                                             </label>
                                         </div>
                                         <div className="form-group checkbox-group">
-                                            <label>
+                                            <label style={{display:'flex', alignItems: 'center'}}>
                                                 <input
                                                     type="checkbox"
                                                     name="notificationSMS"
                                                     checked={formData.notificationSMS}
-                                                    onChange={handleInputChange}
+                                                    onChange={readOnly ? null : handleInputChange}
                                                 />
                                                 <span>SMS Notifications</span>
                                             </label>
                                         </div>
-                                    </>
-                                )}
+                                    </>)}
                             </div>
 
-                            <div className="form-actions">
-                                <button type="submit" className="save-btn">
-                                    <FaSave />
+                            {loading && <p style={{marginBottom:'10px'}}>Loading...</p>}
+                            {message && <p style={{marginBottom:'10px'}}>{message}</p>}
+                            {!readOnly && <div className="form-actions">
+                                <button
+                                    disabled={(loading || !changes)}
+                                    style={{display:'flex', justifyContent:'center'}}
+                                    type="submit" className={(loading || !changes) ? "back-button" : "submit-button"}>
+                                    <FaSave style={{color: 'white', width: '20px'}} />
                                     <span>Save Changes</span>
                                 </button>
-                            </div>
+                            </div>}
+
                         </form>
                     )}
 
@@ -211,29 +593,30 @@ const Settings = () => {
                             <div className="form-section">
                                 <h2 className="section-title">Payment Settings</h2>
                                 <div className="form-group checkbox-group">
-                                    <label>
+                                    <label style={{display:'flex', alignItems: 'center'}}>
                                         <input
                                             type="checkbox"
                                             name="paymentEnabled"
                                             checked={formData.paymentEnabled}
-                                            onChange={handleInputChange}
+                                            onChange={readOnly ? null : handleInputChange}
                                         />
                                         <span>Enable Online Payments</span>
                                     </label>
                                 </div>
 
-                                {formData.paymentEnabled && (
-                                    <>
+                                {formData.paymentEnabled && (<>
                                         <div className="form-group">
-                                            <label>Accepted Payment Methods</label>
+                                            <h3 style={{marginBottom:'10px'}}>Accepted Payment Methods</h3>
                                             <div className="checkbox-group">
-                                                <label>
+                                                <label style={{display:'flex', alignItems: 'center'}}>
                                                     <input
                                                         type="checkbox"
                                                         name="paymentMethods"
                                                         value="card"
                                                         checked={formData.paymentMethods.includes('card')}
                                                         onChange={(e) => {
+                                                            if (readOnly) return;
+                                                            setChanges(true);
                                                             const { value, checked } = e.target;
                                                             setFormData(prev => ({
                                                                 ...prev,
@@ -245,13 +628,15 @@ const Settings = () => {
                                                     />
                                                     <span>Credit/Debit Cards</span>
                                                 </label>
-                                                <label>
+                                                <label style={{display:'flex', alignItems: 'center'}}>
                                                     <input
                                                         type="checkbox"
                                                         name="paymentMethods"
                                                         value="bank"
                                                         checked={formData.paymentMethods.includes('bank')}
                                                         onChange={(e) => {
+                                                            if (readOnly) return;
+                                                            setChanges(true);
                                                             const { value, checked } = e.target;
                                                             setFormData(prev => ({
                                                                 ...prev,
@@ -271,22 +656,27 @@ const Settings = () => {
                                             <input
                                                 type="number"
                                                 name="taxRate"
+                                                readOnly={readOnly}
                                                 value={formData.taxRate}
                                                 onChange={handleInputChange}
+                                                className={'button-bg'}
                                                 min="0"
                                                 max="100"
                                             />
                                         </div>
-                                    </>
-                                )}
+                                    </>)}
                             </div>
-
-                            <div className="form-actions">
-                                <button type="submit" className="save-btn">
-                                    <FaSave />
+                            {loading && <p style={{marginBottom:'10px'}}>Loading...</p>}
+                            {message && <p style={{marginBottom:'10px'}}>{message}</p>}
+                            {!readOnly && <div className="form-actions">
+                                <button
+                                    disabled={(loading || !changes)}
+                                    style={{display:'flex', justifyContent:'center'}}
+                                    type="submit" className={(loading || !changes) ? "back-button" : "submit-button"}>
+                                    <FaSave style={{color: 'white', width: '20px'}} />
                                     <span>Save Changes</span>
                                 </button>
-                            </div>
+                            </div>}
                         </form>
                     )}
 
@@ -337,44 +727,50 @@ const Settings = () => {
                     )}
 
                     {activeTab === 'admin' && (
-                        <div className="admin-settings">
+                        <div className="idea-container">
                             <div className="admin-users-list">
-                                <h2 className="section-title">Admin Users</h2>
+                                <h2 style={{textAlign:'center'}} className="section-title">Admin Users</h2>
                                 <div className="admin-user-card">
-                                    <div className="user-avatar">AD</div>
                                     <div className="user-info">
-                                        <h3>Admin User</h3>
-                                        <p>admin@cleanpro.co.uk</p>
-                                        <span className="user-role">Super Admin</span>
+                                        <FaUserTie size={100} style={{ width:'100%'}} />
+                                        <h2 style={{textAlign:'center'}}>{ceo}</h2>
+                                        <p style={{textAlign:'center'}}>@{superAdmin}</p>
+                                        <span style={{textAlign:'center'}} className="user-role">CEO</span>
                                     </div>
-                                    <div className="user-actions">
-                                        <button className="edit-btn">Edit</button>
-                                        <button className="delete-btn" disabled>Delete</button>
-                                    </div>
+                                    {addAdmin && <Form />}
+                                    {(role === 'CEO'  && !addAdmin) && (<div className="user-actions">
+                                            <label
+                                                disabled={(role !== 'CEO' || addAdmin)}
+                                                onClick={() => setAddAdmin(true)}
+                                                style={{display:"flex", justifyContent:"center", alignItems:'baseline', gap:'4px'}}>
+                                                <FaPlus size={15} style={{width:'20px', color:'black'}} />
+                                                Add new Admin
+                                            </label>
+                                        </div>)}
                                 </div>
-
-                                <div className="admin-user-card">
-                                    <div className="user-avatar">SM</div>
-                                    <div className="user-info">
-                                        <h3>Sarah Manager</h3>
-                                        <p>sarah.m@cleanpro.co.uk</p>
-                                        <span className="user-role">Manager</span>
-                                    </div>
-                                    <div className="user-actions">
-                                        <button className="edit-btn">Edit</button>
-                                        <button className="delete-btn">Delete</button>
-                                    </div>
+                                <div className={'grid-container'}>
+                                    {admin.map(manager => (
+                                        <div key={manager.id} className="admin-user-card">
+                                            <div className="user-info">
+                                                <FaUser size={50} style={{ width:'100%'}} />
+                                                <h3 style={{textAlign:'center'}}>{renderName(manager.firstName)} {renderName(manager.lastName)}</h3>
+                                                <p style={{textAlign:'center'}}>@{manager.email}</p>
+                                                <span style={{textAlign:'center'}} className="user-role">{manager.roles}</span>
+                                            </div>
+                                            {manager.id === id && <EditAdmin admin={manager} /> }
+                                            {(role === 'CEO' && id === null) && <label style={{display:'flex', justifyContent:'center', alignItems:'baseline', gap:'4px'}}>
+                                                    Edit
+                                                    <FaPen size={20} onClick={() => setId(manager.id)} style={{ width:'20px'}} />
+                                                </label>}
+                                        </div>
+                                    ))}
                                 </div>
-
-                                <button className="add-admin-btn">
-                                    + Add New Admin
-                                </button>
                             </div>
 
                             <div className="admin-permissions">
                                 <h2 className="section-title">Permission Levels</h2>
                                 <div className="permission-level">
-                                    <h3>Super Admin</h3>
+                                    <h3>CEO</h3>
                                     <p>Full access to all settings and features</p>
                                 </div>
                                 <div className="permission-level">

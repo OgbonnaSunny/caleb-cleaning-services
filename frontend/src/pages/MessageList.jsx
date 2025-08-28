@@ -14,6 +14,7 @@ const MessageList = () => {
     const [page, setPage] = useState(10);
     const [email, setEmail] = useState('');
     const  [count, setCount] = useState(0);
+    const [role, setRole] = useState('Support');
 
     useEffect(() => {
         if (window.innerWidth > 768) {
@@ -93,6 +94,20 @@ const MessageList = () => {
         }
         fetchData();
     }, [email]);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            api.post('/api/users/admin', {email: user.email})
+                .then((res) => {
+                    const role = res.data.role;
+                    setRole(role)
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+    }, [])
 
     return (
         <div style={{

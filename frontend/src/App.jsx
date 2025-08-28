@@ -40,6 +40,7 @@ import CleanerProfilePage from "./pages/CleanerProfilePage.jsx";
 import Messages from './pages/Messages.jsx';
 import { Navigate } from 'react-router-dom';
 import MessageList from "./pages/MessageList.jsx";
+import BookingList from "./pages/BookingList.jsx";
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Overview />} />
+                <Route path="/bookinglist" element={<BookingList />} />
                 <Route path="/messagelist" element={<MessageList />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/cleanerprofilepage" element={<CleanerProfilePage />} />

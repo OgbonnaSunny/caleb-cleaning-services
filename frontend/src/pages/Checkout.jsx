@@ -705,6 +705,7 @@ const Checkout = () => {
     const [subscriptionCount, setSubscriptionCount] = useState(0);
     const [minDate, setMinDate] = useState(new Date());
     const [loggedIn, setLoggedIn] = useState(true);
+    const [time, setTime] = useState('');
 
     const cleaningSubscriptions = [
         {
@@ -771,6 +772,7 @@ const Checkout = () => {
         const now = isToday(selectedDate)
         let time;
         let hourText = '';
+        const date =  format(selectedDate, 'yyyy-MM-dd');
         if (now) {
             const hour = new Date().getHours();
             let newHour = hour + 4;
@@ -785,7 +787,6 @@ const Checkout = () => {
                 time = `${newHour}:${formData.minuteText}`;
                 hourText = newHour.toString();
             }
-            const date =  format(selectedDate, 'EEEE, d MMMM yyyy');
 
             setFormData({...formData, hour: newHour, hourText: hourText, date: date, minimumEstimate: 97, time: time });
             setSelectedDate(selectedDate);
@@ -793,7 +794,6 @@ const Checkout = () => {
         }
         else {
 
-            const date =  format(selectedDate, 'EEEE, d MMMM yyyy');
             const time = `${formData.hourText}:${formData.minuteText}`;
             setFormData({...formData, date: date, minimumEstimate: 67, time: time });
             newErrors['time'] = null;
@@ -1659,6 +1659,15 @@ const Checkout = () => {
         setFormData({...formData, minuteText: minute, minute: minutes, time: time });
     }
 
+    useEffect(() => {
+        const time = new Date(selectedDate).setHours(formData.hour, formData.minute, 0, 0);
+        const date = new Date(time).toLocaleTimeString([],{
+            hour: '2-digit',
+            minute: '2-digit'
+        } );
+        setTime(date);
+    }, [formData.hour, formData.minute, selectedDate, formData.date])
+
     const paymentFAQs = [
         {
             id: 1,
@@ -1903,8 +1912,6 @@ const Checkout = () => {
                 phone: formData.phone,
             };
 
-            const startDate = new Date(formData.date).setHours(formData.hour, formData.minute, 0, 0);
-            const time = new Date(startDate);
 
             const orderData = {
                 orderId: orderId,
@@ -1920,7 +1927,7 @@ const Checkout = () => {
                 assignedCleanerPhone: '',
                 customerEmail: formData.email,
                 payment: formData.totalAmount,
-                startTime: `${format(time, 'yyyy-MM-dd hh:mm')}`,
+                startTime: `${formData.date} ${formData.hourText}:${formData.minuteText}:00`,
                 startHour: formData.hour,
                 startMinute: formData.minute,
             };
@@ -2326,7 +2333,7 @@ const Checkout = () => {
                                         type={'date'}
                                         name={'date'}
                                         onChange={(date) => handleDateChange(date)}
-                                        dateFormat="EEEE, dd/MM/yy"
+                                        dateFormat="yyyy-MM-dd"
                                         placeholderText="Select a date"
                                         minDate={minDate}
                                         inline
@@ -2337,7 +2344,7 @@ const Checkout = () => {
                                         }}
                                     />
                                     {errors.date && <span className="error-message">{errors.date}</span>}
-                                    {formData.date && <p>{formData.date}</p>}
+                                    {formData.date && <p>{format(formData.date, 'EE, yyyy-MM-dd')}</p>}
                                     <ErrorMessage name="date" component="span" className="error-message" />
                                 </div>
 
@@ -2368,6 +2375,7 @@ const Checkout = () => {
                                         />
                                     </div>
                                     <p>24-hour format</p>
+                                    {time && <p>{time}</p>}
                                     {errors.time && <span className="error-message">{errors.time}</span>}
                                 </div>
                             </div>

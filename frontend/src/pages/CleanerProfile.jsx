@@ -8,7 +8,7 @@ import api from './api.js';
 import { useNavigate } from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
-import { isToday, differenceInDays } from 'date-fns';
+import { isToday, differenceInDays, differenceInHours  } from 'date-fns';
 import { Link } from 'react-router-dom';
 import LOGO from "../images/logo4.png";
 import { Helmet } from 'react-helmet';
@@ -260,7 +260,43 @@ const CleanerProfile = () => {
         return date;
     }
 
-    const formatTime = (time) => {
+    const getTime = (date) => {
+        const invalidDate = isNaN(new Date(date).getTime());
+        if (invalidDate) {
+            return new Date().toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        const now = isToday(new Date(date));
+        if (now) {
+            return 'Today'+ " "+ new Date(date).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        const diff = differenceInDays(new Date(date), new Date());
+        if (diff === 1) {
+            return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        if (diff === 2) {
+            return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        return format(new Date(date), 'EE, yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    const formatDuration = (time) => {
         if (time === null || time === undefined || time.toString().length <= 0) {return }
         const times = time.split(':');
         if (times.length > 1) {
@@ -285,12 +321,18 @@ const CleanerProfile = () => {
     }, []);
 
     const renderName = (customer) => {
-        const names = customer.split(' ');
-        let category;
-        if (names.length > 1) {
-            return names[0].charAt(0).toUpperCase() + names[0].slice(1) + " " + names[1].charAt(0).toUpperCase() + names[1].slice(1);
+        if (name === null || name === '' || name === undefined) {
+            return name;
         }
-        return customer;
+        const names = name.split(' ');
+        if (names.length <= 1) {
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+        let fullName = "";
+        for (let i = 0; i < names.length; i++) {
+            fullName += names[i].charAt(0).toUpperCase() + names[i].slice(1)+ " ";
+        }
+        return fullName;
     }
 
     const acceptOrder = async (orderId) => {
@@ -405,7 +447,7 @@ const CleanerProfile = () => {
                                 <div key={order.orderId}  className={'stat-card'}>
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
                                     <div className={'new-order-container'}>
-                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{formatDate(order.startTime)}</p>
+                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
                                         <p style={{textAlign:'end',fontWeight:'900' }}>{order.plan}</p>
                                     </div>
                                     <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
@@ -417,7 +459,7 @@ const CleanerProfile = () => {
                                     </div>
                                     <div className={'new-order-container'}>
                                         <p style={{marginLeft:'10px'}}>Estimated duration</p>
-                                        <h4 style={{textAlign:'end'}}>{formatTime(order.duration)}</h4>
+                                        <h4 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h4>
                                     </div>
                                     <div className={'new-order-container'}>
                                         <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
@@ -444,9 +486,11 @@ const CleanerProfile = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
-            setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} 
-            ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
+            setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
             setBio(`Professional ${user.roles.charAt(0).toUpperCase()+user.roles.slice(1)}`);
+            setEmail(user.email);
+            setPhoneNumber(user.phone);
+
             const isActive = user.isActive;
             if (isActive === 1 || isActive === true || isActive === 'true') {
                 setIsActive(true);
@@ -1084,9 +1128,7 @@ const CleanerProfile = () => {
     const MyOrders = () => {
 
         const renderWithTime = (date) => {
-            const date1 = new Date(date);
-            const date2 = new Date();
-            const diff = differenceInDays(date2, date1);
+            const diff = differenceInHours(new Date(date), new Date());
             if (diff <= 3) {
                 return true;
             }
@@ -1118,12 +1160,12 @@ const CleanerProfile = () => {
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
 
                                     <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-                                        <p style={{fontSize:'smaller', width:'70%'}} >{formatDate(order.bookDate)}</p>
+                                        <p style={{fontSize:'smaller', width:'70%'}} >{getTime(order.startTime)}</p>
                                         <p style={{textAlign:'end'}}><span style={order.nature === 'Light'? {color:'Green', fontWeight:'bold'}:
                                             order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>{order.nature} </span>{order.plan}</p>
                                     </div>
 
-                                    {renderWithTime(order.bookDate) && <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                    {renderWithTime(order.startTime) && <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                                         <FaMapMarkerAlt className={'icon-small'}  />
                                         <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
                                         <FaHome  style={{width:'30px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
@@ -1138,7 +1180,7 @@ const CleanerProfile = () => {
 
                                     <div className={'order-container'}>
                                         <p style={{width:'70%'}}>Estimated time</p>
-                                        <h3 style={{textAlign:'end'}}>{formatTime(order.duration)}</h3>
+                                        <h3 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h3>
                                     </div>
 
                                     {order.orderId === idForUpdate &&
@@ -1271,7 +1313,6 @@ const CleanerProfile = () => {
         window.open(`/customer?client=${encodeURIComponent(client)}&email=${encodeURIComponent(email)}`, "_blank");
     }
 
-
     const History = () => {
         const [review, setReview] = useState('');
         const [message, setMessage] = useState('');
@@ -1362,13 +1403,13 @@ const CleanerProfile = () => {
 
                                     <div className={'order-container'}>
                                         <h4 style={{width:'50%'}}>Duration</h4>
-                                        <h3 style={{textAlign:'end'}}>{formatTime(order.duration)}</h3>
+                                        <h3 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h3>
                                     </div>
 
                                     <div className={'order-container'}>
                                         <FaClock onClick={() => {setDateToggle(!dateToggle); updateHistoryIds(order.id)}} style={{width:'30px'}} size={20}/>
                                         {!historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{timeAgo(order.completedDate)}</h3>}
-                                        {historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{format(order.completedDate, 'EEEE, d MMMM yyyy')}</h3>}
+                                        {historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{getTime(order.completedDate)}</h3>}
                                     </div>
                                 </div>
                             ))}
@@ -1714,13 +1755,6 @@ const CleanerProfile = () => {
             </div>
         );
     };
-
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
-            setEmail(user.email);
-        }
-    }, [])
 
     useEffect(() => {
         const fetchCleanerData = () => {

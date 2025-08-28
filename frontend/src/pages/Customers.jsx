@@ -1,8 +1,10 @@
 // components/Customers.js
-import React, {useEffect, useState} from 'react';
-import { FaSearch, FaUserPlus, FaPhone, FaEnvelope, FaHome, FaHistory, FaEdit } from 'react-icons/fa';
+import React, {use, useEffect, useState} from 'react';
+import { FaSearch, FaUserPlus, FaPhone, FaEnvelope, FaHome, FaHistory, FaEdit, FaUserTie } from 'react-icons/fa';
 import api from './api.js';
 import LOGO from "../images/logo4.png";
+import { format } from 'date-fns';
+import {number} from "yup";
 
 const Customers = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,7 +13,13 @@ const Customers = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(10);
     const [pageCount, setPageCount] = useState(0);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('No customers found');
+    const [id, setId] = useState(-1);
+    const [emailMessage, setEmailMessage] = useState('');
+    const [emailTitle, setEmailTitle] = useState('');
+    const [emailSuccess, setEmailSuccess] = useState('');
+    const [loadingEmail, setLoadingEmail] = useState(false);
+    const [role, setRole] = useState('Support');
 
     const customers = [
         {
@@ -60,8 +68,8 @@ const Customers = () => {
             .catch(error => console.error('Error:', error));
     }
 
-    const filteredCustomers = customers.filter(customer =>
-        customer.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const filteredCustomers = allCustomers.filter(customer =>
+        customer.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.phone.includes(searchTerm)
     );
@@ -73,6 +81,13 @@ const Customers = () => {
         }
         setPage(10)
     }, [])
+
+    useEffect(() => {
+        if (searchDatabase.length <= 0 || searchTerm.length <= 0) {
+            setPageCount(pre => pre + 1);
+        }
+
+    }, [searchDatabase, searchTerm])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -100,7 +115,8 @@ const Customers = () => {
         if (names.length > 1) {
             let nameHolder = ''
             for (let i = 0; i < names.length; i++) {
-                nameHolder =+ names[i].toString().charAt(0).toUpperCase() + names[i].slice(1) + " ";
+                const newName =  names[i].charAt(0).toUpperCase() + names[i].slice(1) + " ";
+                nameHolder += newName + "";
             }
             return nameHolder;
         }
@@ -109,22 +125,22 @@ const Customers = () => {
 
     useEffect(() => {
         setLoading(true);
-        let offset = 0;
-        if (allCustomers.length > 0) {
-            offset = allCustomers[allCustomers.length - 1].id;
-        }
-        api.post('/api/users/all-customers', {limit: page, offset: offset })
+        api.get('/api/users/all-customer-booking')
             .then(response => {
-                const customers = response.data.customers;
+                const customers = response.data.booking;
                 setAllCustomers(prev => {
                     const map = new Map(prev.map(item => [item.id, item])); // old items
                     customers.forEach(item => map.set(item.id, item));    // add/replace new
                     return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                 });
+                if (customers.length <= 0) {
+                    setMessage('No customers found.');
+                }
 
             })
             .catch(error => {
                 console.log(error);
+                setMessage('Error fetching booking data');
             })
             .finally(() => {
                 setLoading(false);
@@ -139,24 +155,89 @@ const Customers = () => {
         setLoading(true);
         api.post('/api/users/customer-search', {search: searchDatabase })
             .then(response => {
-                const cleaners = response.data.users;
-                setAllCustomers(cleaners);
+                const customers = response.data.booking;
+                setAllCustomers(customers);
+                if (customers.length <= 0) {
+                    setMessage('No customer found.');
+                }
             })
             .catch(error => {
                 console.log(error);
+                setMessage('Error fetching customers data');
             })
             .finally(() => {
                 setLoading(false);
             })
     }
 
-    const sendEmail = (email) => {}
+    const sendEmail = (email) => {
+        if (role === 'Support') {
+            setEmailSuccess('You are not authorized to perform this action');
+            return;
+        }
+        if (!email || loadingEmail) return;
+        if (!emailMessage || !emailTitle) {
+            setEmailSuccess('Please fill all the required fields');
+            return;
+        }
+        setLoadingEmail(true);
+        api.post('/api/send-email-to-customer', {to: email, text: emailMessage, subject: emailTitle})
+        .then(response => {
+            setEmailSuccess(response.data.message);
+            if (response.data.success) {
+                setEmailMessage('');
+                setEmailTitle('')
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        .finally(() => {
+            setLoadingEmail(false);
+        })
+    }
 
     const copyNumber = (number) => {
         navigator.clipboard.writeText(number).then(text => {
             alert("Copied!");
         })
     }
+
+    function CallButton({ phoneNumber, name }) {
+        if (role === 'Support') {
+            return null;
+        }
+        return (
+            <div style={{width:'50%'}}>
+                <p>
+                    <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
+                        <FaPhone style={{width:'100%'}} size={20}/>
+                    </a>
+                </p>
+            </div>
+        );
+    }
+
+    useEffect(() => {
+        if (emailSuccess !== null) {
+            setTimeout(() => setEmailSuccess(null), 5000);
+        }
+    }, [emailSuccess]);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            api.post('/api/users/admin', {email: user.email})
+                .then((res) => {
+                    const role = res.data.role;
+                     setRole(role)
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+    }, [])
+
 
     return (
         <div style={{
@@ -183,7 +264,7 @@ const Customers = () => {
                 <div style={{flexFlow:'1', maxWidth:'900px', display:'flex', alignItems:'center'}} className="search-bar" >
                     <input
                         type="text"
-                        placeholder="Search database..."
+                        placeholder="Search database with email..."
                         value={searchDatabase}
                         className={'button-bg'}
                         style={{width:'90%'}}
@@ -201,15 +282,15 @@ const Customers = () => {
                             <div key={customer.id} className="service-card">
 
                                 <div style={{display: 'flex', justifyContent: 'stretch', alignItems: 'baseline'}}>
-                                    <h3>{customer.category}</h3>
-                                    <p style={{ alignSelf:'end', textAlign:'end'}}>{customer.lastBooking}</p>
+                                    <h3>{renderName(customer.customer)}</h3>
+                                    <p style={{ alignSelf:'end', textAlign:'end'}}>{format(new Date(customer.lastDate), 'yyyy-MM-dd')}</p>
 
                                 </div>
                                 <div className="table-cell contact">
                                     <div style={{display: 'flex', alignItems: 'baseline'}}>
                                         <FaPhone style={{width:'20px'}} className="icon-small" />
-                                        <p onClick={() => copyNumber(customer.phone)}>{customer.phone}</p>
-                                        <small style={{textAlign:'end'}}>All Booking: {customer.bookings}</small>
+                                        <p>{customer.phone}</p>
+                                        <small style={{textAlign:'end'}}>All Booking: {customer.booking}</small>
                                     </div>
                                     <div style={{display: 'flex', alignItems: 'baseline'}} >
                                         <FaEnvelope style={{width:'20px'}} className="icon-small" />
@@ -218,22 +299,42 @@ const Customers = () => {
                                 </div>
                                 <div style={{display: 'flex', alignItems: 'baseline'}}>
                                     <FaHome style={{width:'20px'}} className="icon-small" />
-                                    <p className="reply3">{customer.address}</p>
+                                    <p className="address-box">{customer.address}</p>
                                 </div>
-                                <div style={{display: 'flex', alignItems: 'baseline'}} >
-                                    <button className="action-btn history-btn">
-                                        <FaHistory style={{width:'10px'}} />
-                                        <span>History</span>
-                                    </button>
-                                    <button className="action-btn edit-btn">
-                                        <FaEdit style={{width:'10px'}} />
-                                    </button>
-                                </div>
+                                {id === customer.id &&
+                                    <div style={{display: 'flex', flexDirection:'column', padding:'10px', alignItems:
+                                            'center', gap:'10px', marginBottom:'20px', border:'dashed'}}>
+                                        <input
+                                        type="text"
+                                        value={emailTitle}
+                                        onChange={(e) => setEmailTitle(e.target.value)}
+                                        placeholder="title..."
+                                        style={{padding:'10px', backgroundColor:'white', color:'black'}}
+                                        />
+                                        <textarea
+                                            rows={5}
+                                            placeholder='type a message...'
+                                            value={emailMessage}
+                                            style={{padding:'10px', backgroundColor:'white', color:'black'}}
+                                            onChange={(e) => setEmailMessage(e.target.value)}
+                                        />
+                                        {loadingEmail && <p>Sending email...</p>}
+                                        {(!loadingEmail && emailSuccess) && <p>{emailSuccess}</p>}
+                                        <div style={{display:'flex', alignItems:'center', justifyContent:'space-evenly', gap:'10px'}}>
+                                            <button disabled={loadingEmail} onClick={() => sendEmail(customer.email)} className={'submit-button'}>Send</button>
+                                            <button disabled={loadingEmail} onClick={() => {setId(-1); setEmailMessage(''); setEmailTitle('')}} className={'back-button'}>Cancel</button>
+                                        </div>
+                                    </div>
+                                }
+                                {role !== 'Support' && <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'space-evenly'}} >
+                                    <FaEnvelope onClick={(id === -1 || id === null) ? () => setId(customer.id) : null} size={20} style={{width:'50%'}} />
+                                    <CallButton phoneNumber={customer.phone}   />
+                                </div>}
                             </div>
                         ))
                     ) : (
                         <div className="no-results-row">
-                            <div className="no-results-cell">No customers found</div>
+                            <div className="no-results-cell">{message}</div>
                         </div>
                     )}
                 </div>

@@ -87,7 +87,8 @@ const Cleaners = () => {
         if (names.length > 1) {
             let nameHolder = ''
             for (let i = 0; i < names.length; i++) {
-                nameHolder =+ names[i].toString().charAt(0).toUpperCase() + names[i].slice(1) + " ";
+                const newName =  names[i].charAt(0).toUpperCase() + names[i].slice(1) + " ";
+                nameHolder += newName + "";
             }
             return nameHolder;
         }

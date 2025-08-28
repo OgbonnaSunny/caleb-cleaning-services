@@ -171,7 +171,6 @@ export default function Messages() {
         setChatMessage(e.target.value);
     }
 
-
     const getTime = (date) => {
         const invalidDate = isNaN(new Date(date).getTime());
         if (invalidDate) {
@@ -207,7 +206,7 @@ export default function Messages() {
             minute: '2-digit'
         });
     }
-
+    
     return (
         <div className="sticky-nav-container">
             <div className='top-order-nav'>

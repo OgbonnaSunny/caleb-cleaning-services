@@ -42,22 +42,22 @@ const CleaningSchedule = () => {
                 minute: '2-digit'
             });
         }
-        const diff = differenceInDays(new Date(), new Date(date));
-        if (diff <= 0) {
+        const diff = differenceInDays(new Date(date), new Date());
+        if (diff === 1) {
             return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
             });
         }
 
-        if (diff === 1) {
+        if (diff === 2) {
             return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
             });
         }
 
-        return format(new Date(date), 'yyyy-mm-dd') + " "+ new Date(date).toLocaleTimeString([], {
+        return format(new Date(date), 'EE, yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit'
         });
@@ -100,7 +100,7 @@ const CleaningSchedule = () => {
         if (todaySchedule.length > 0) {
             offset = todaySchedule[setTodaySchedule.length - 1].id;
         }
-        const data = {limit: page, offset: offset};
+        const data = {limit: page, offset: 0};
         api.post('/api/booking/today-schedule', data)
             .then(res => {
                 const { booking } = res.data;
@@ -121,20 +121,20 @@ const CleaningSchedule = () => {
             .finally(() => {
                 setLoading(false);
             })
-    }, [pageCount])
+    }, [])
 
     return (
         <div >
             <div className="cleaning-schedule card">
                 <div className="card-header">
                     <h2 className={'experience-text'} style={{color:'brown', width:'60%'}}>Today's Schedule</h2>
-                    <button style={{color:'black'}} className="experience-text">View Calendar</button>
+                    <button style={{color:'black', border:'none'}} className="experience-text">View All</button>
                 </div>
                 {todaySchedule.length > 0 &&  <div className="card-body">
-                    <div className="grid-container">
+                    <div className="schedule-container">
                         {todaySchedule.map((item, index) => (
-                            <div key={index} className="schedule-item">
-                                <h3>{renderName(item.customer)}</h3>
+                            <div key={index} className="stats-card">
+                                <h3 style={{marginLeft:'5%'}}>{renderName(item.customer)}</h3>
                                 <div className="schedule-time">
                                     <FaClock className="icon-small" />
                                     <span>{getTime(item.startTime)}</span>
@@ -144,9 +144,8 @@ const CleaningSchedule = () => {
                                         <FaMapMarkerAlt className="icon-small" />
                                         <span>{item.address}</span>
                                     </div>
-                                    <p>{item.plan}</p>
+                                    <p style={{marginLeft:'15px'}}>{item.plan}</p>
                                 </div>
-                                <button style={{background:'cadetblue', color:'white', textAlign:'center'}} className="service-card">Assign</button>
                             </div>
                         ))}
                     </div>

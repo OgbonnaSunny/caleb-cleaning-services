@@ -9,11 +9,12 @@ import { FaPoundSign, FaCalendarCheck, FaUserTie, FaMapMarkerAlt, FaBars, FaTime
 import { useNavigate } from 'react-router-dom'
 
 import { NavLink, Link } from 'react-router-dom';
-import { FaHome, FaCalendarAlt, FaUsers, FaUserShield, FaChartLine, FaCog, FaEnvelope } from 'react-icons/fa';
+import { FaHome, FaCalendarAlt, FaUsers, FaUserShield, FaChartLine, FaCog, FaEnvelope, FaFileSignature } from 'react-icons/fa';
 import LOGO from '../images/logo4.png';
 import api from './api.js'
 import { useSocket } from "../Socket.jsx";
 import Messages from "./Messages.jsx";
+//import { FaFileCheck } from 'react-icons/fa6';
 
 const Admin = () => {
     const socket = useSocket();
@@ -21,7 +22,7 @@ const Admin = () => {
 
     const links = [
         {id: 1, category: 'Dashboard', link: '/admin', icon: FaHome },
-        {id: 2, category: 'Bookings', link: '/bookings', icon: FaCalendarAlt },
+        {id: 2, category: 'Bookings', link: '/bookinglist', icon: FaCalendarAlt },
         {id: 3, category: 'Cleaners', link: '/cleaners', icon: FaUserShield },
         {id: 4, category: 'Customers', link: '/customers', icon: FaUsers },
         {id: 5, category: 'View reports', link: '/reports', icon: FaChartLine },
@@ -502,9 +503,9 @@ const Admin = () => {
     const [activeCleanerChange, setActiveCleanerChange] = useState('+0%');
 
     const [areaCovered, setAreaCovered] = useState(0);
+    const [jobCount, setJobCount] = useState(0);
 
     const [email, setEmail] = useState(null);
-
 
     const statsData = [
         { title: "Today's Booking", value: `${bookingToday}`, change: `${bookingChange}`, icon: <FaCalendarCheck />, trend: `${bookingTrend}` },
@@ -596,6 +597,9 @@ const Admin = () => {
                 response = await api.get('/api/users/areas-covered')
                 setAreaCovered(response.data.areas[0].area_covered);
 
+                response = await api.get('/api/booking/get-approval-count')
+                setJobCount(response.data.bookingApproval[0].approvals)
+
             } catch (error) {
                 console.log(error)
             }
@@ -669,11 +673,17 @@ const Admin = () => {
                                 <FaBars size={25} onClick={() => setShowPanel(!showPanel)} style={{width:'30px'}}/>
                                 <h1 className="page-title" style={{width:'20%'}}>Dashboard</h1>
                             </div>
-                            <label style={{color:'red', display:'flex', alignItems:'center',
-                                fontSize:'large', justifyContent:'flex-end', marginRight:'5%'}}>
-                                <FaEnvelope size={40} style={{width:'30px', color:'black'}} />
-                                {messageCount}
-                            </label>
+                            <div style={{display:'flex', alignItems:'center', justifyContent:"space-evenly", maxWidth:'40%'}}>
+                                <label style={{color:'red', display:'flex', alignItems:'center', fontSize:'large'}}>
+                                    <FaEnvelope onClick={() => navigate('/messagelist')} size={40} style={{width:'30px', color:'black'}} />
+                                    {messageCount}
+                                </label>
+
+                                <label style={{color:'red', display:'flex', alignItems:'center', fontSize:'large'}}>
+                                    <FaFileSignature onClick={() => navigate('/bookinglist')} size={40} style={{width:'30px', color:'black'}} />
+                                    {jobCount}
+                                </label>
+                            </div>
                         </div>
                         <div style={{padding:'10px'}} className="grid-container">
                             {statsData.map((stat, index) => (

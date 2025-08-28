@@ -13,7 +13,7 @@ import {
     FaArrowAltCircleRight,
     FaArrowRight,
     FaArrowLeft,
-    FaStar, FaRegStar, FaUserTie
+    FaStar, FaRegStar, FaUserTie, FaUser
 } from 'react-icons/fa';
 import api from './api.js'
 import { useNavigate } from 'react-router-dom';
@@ -73,7 +73,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         }
         setPage(10);
     }, []);
-
 
     useEffect(() => {
         if (email === null || email === undefined) {
@@ -217,16 +216,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             const clientHeight = window.innerHeight;
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                /*if (user === 'client') {
-                    if (!loading) {
-                        setPageCount(prev => prev + 1);
-                    }
-                }
-                if (user === 'admin') {
-                    if (!loading) {
-                        setPageCount(prev => prev + 1);
-                    }
-                }*/
 
                 if (!loading) {
                     setPageCount(prev => prev + 1);
@@ -365,22 +354,22 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 minute: '2-digit'
             });
         }
-        const diff = differenceInDays(new Date(), new Date(date));
-        if (diff <= 0) {
+        const diff = differenceInDays(new Date(date), new Date());
+        if (diff === 1) {
             return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
             });
         }
 
-        if (diff === 1) {
+        if (diff === 2) {
             return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
             });
         }
 
-        return format(new Date(date), 'yyyy-mm-dd') + " "+ new Date(date).toLocaleTimeString([], {
+        return format(new Date(date), 'EE, yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit'
         });
@@ -536,10 +525,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         <div className="grid-container">
                             {todayBooking.map(booking => (
                                 <div key={booking.id} className="service-card">
-                                    <h3 style={{textAlign:'center', marginBottom:'10px'}}>{booking.orderId}</h3>
+                                    <div style={{display:'flex', alignItems:'center', marginBottom:'5px'}}>
+                                        <h4 style={{textAlign:'start', width:'60%'}}>Stats: {booking.duration}</h4>
+                                        <h4 style={{textAlign:'end', width:'40%', color:'blue'}}>£{booking.estimatedAmount}</h4>
+                                    </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <FaHome className="icon-small" />
-                                        <h3>{renderName(booking.customer)}</h3>
+                                        <FaUser className="icon-small" />
+                                        <p>{renderName(booking.customer)}</p>
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaMapMarkerAlt className="icon-small"/>
@@ -549,39 +541,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                         <FaClock className="icon-small" />
                                         <p> {getTime(booking.startTime)}</p>
                                     </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
-                                            {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
-                                            {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'lightpink'}} />}
-                                            {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
-                                            <p>Status</p>
-                                        </div>
-                                        <p style={{textAlign:'end'}}>{booking.status}</p>
-                                    </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <p>Amount</p>
-                                        <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
-                                    </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <p>Duration</p>
-                                        <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
-                                    </div>
-
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <h4>{booking.plan}</h4>
-                                        <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :
-                                            booking.nature === 'Medium' ? {color:'lightpink', textAlign:'end'}: {color:'red', textAlign:'end'}}>
-                                            {booking.nature}
-                                        </p>
-                                    </div>
-
-                                    <button onClick={() => cancelBooking(booking.id)} className="btn btn-primary"
-                                            style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
-                                                !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
-                                                    {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
-                                            disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading)}>
-                                        {cancellable ? 'Cancel booking' : 'Assign cleaner'}
-                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -590,17 +549,20 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 </div>
                 <div className="recent-bookings card">
                     <div className="card-header">
-                        <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Last 7 days Bookings</h2>
+                        <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Recent Bookings</h2>
                         {last7DaysBooking.length > 0 &&  <button className="btn-view-all" style={{color:'red'}}>View All</button> }
                     </div>
                     {last7DaysBooking.length > 0 && <div className="card-body">
                         <div className="grid-container">
                             {last7DaysBooking.map(booking => (
                                 <div key={booking.id} className="service-card">
-                                    <h3 style={{textAlign:'center', marginBottom:'10px'}}>{booking.orderId}</h3>
+                                    <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                        <h4 style={{textAlign:'start', width:'60%'}}>Stats: {booking.duration}</h4>
+                                        <h4 style={{textAlign:'end', width:'40%', color:'blue'}}>£{booking.estimatedAmount}</h4>
+                                    </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <FaHome className="icon-small" />
-                                        <h3>{renderName(booking.customer)}</h3>
+                                        <FaUser className="icon-small" />
+                                        <p>{renderName(booking.customer)}</p>
                                     </div>
                                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                         <FaMapMarkerAlt className="icon-small"/>
@@ -610,38 +572,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                         <FaClock className="icon-small" />
                                         <p> {getTime(booking.startTime)}</p>
                                     </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
-                                            {booking.status === 'confirmed' && <FaCheckCircle className="icon-small" style={{color:'green'}}/>}
-                                            {booking.status === 'pending' && <FaClock className="icon-small" style={{color:'lightpink'}} />}
-                                            {booking.status === 'cancelled' &&  <FaTimesCircle className="icon-small" style={{color:'red'}} />}
-                                            <p>Status</p>
-                                        </div>
-                                        <p style={{textAlign:'end'}}>{booking.status}</p>
-                                    </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <p>Amount</p>
-                                        <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
-                                    </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <p>Duration</p>
-                                        <h4 style={{textAlign:'end'}}>{booking.duration}</h4>
-                                    </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
-                                        <h4>{booking.plan}</h4>
-                                        <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :
-                                            booking.nature === 'Medium' ? {color:'lightpink', textAlign:'end'}: {color:'red', textAlign:'end'}}>
-                                            {booking.nature}
-                                        </p>
-                                    </div>
-
-                                    <button onClick={() => cancelBooking(booking.id)} className="btn btn-primary"
-                                            style={(booking.status === 'confirmed' || booking.status === 'cancelled') ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
-                                                !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
-                                                    {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
-                                            disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading)}>
-                                        {cancellable ? 'Cancel booking' : 'Assign cleaner'}
-                                    </button>
                                 </div>
                             ))}
                         </div>

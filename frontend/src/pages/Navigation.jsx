@@ -188,8 +188,6 @@ const Navigation = () => {
         }
     }
 
-    // window.open('/cleanerprofile', '_blank')
-
     return (
         <div  style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
             {showNav &&
