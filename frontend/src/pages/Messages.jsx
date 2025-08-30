@@ -1,47 +1,47 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import api from './api.js'
 import io from "socket.io-client";
 import LOGO from "../images/logo4.png";
-import { useSocket } from '../Socket.jsx'
+import { useSocket } from '../Socket.jsx';
 import { isToday, differenceInDays, format } from 'date-fns';
 import { FaTimes } from 'react-icons/fa';
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 export default function Messages() {
-    const socket = useSocket();
-    const scrollerRef = useRef(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const currentReceiver = location.state.receiver;
+    const currentReceiverName = location.state.receiverName;
+    const currentSender = location.state.sender;
+    const currentSenderName = location.state.senderName;
+
+   // console.log(currentReceiver, currentReceiverName, currentSender, currentSenderName);
 
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
+    const [replyText, setReplyText] = useState("Hello there! Thank you for been here. Our representative will be with you shortly.");
+
+    const socket1 = useSocket();
+    const scrollerRef = useRef(null);
 
     const [messagesList, setMessagesList] = useState([]);
     const [pList, setPList] = useState([]);
     const [chatMessage, setChatMessage] = useState('');
-    const [sender, setSender] = useState(null);
-    const [receiver, setReceiver] = useState(null);
-    const [receiverName, setReceiverName] = useState("");
+    const [sender, setSender] = useState(currentSender);
+    const [senderName, setSenderName] = useState(currentSenderName);
+    const [receiver, setReceiver] = useState(currentReceiver);
+    const [receiverName, setReceiverName] = useState(currentReceiverName);
     const [reply, setReply] = useState(null);
-    const [senderName, setSenderName] = useState("");
     const [loading, setLoading] = useState(false);
     const [senderReplyName, setSenderReplyName] = useState(null);
-    const [replies, setReplies] = useState(false);
+  //  const [replies, setReplies] = useState(false);
     const [adminEmail, setAdminEmail] = useState(companyEmail);
+    const [statuses, setStatuses] = useState({});
+    const [socket, setSocket] = useState(socket1);
 
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) { return; }
-        const userEmail = user.email;
-        if (userEmail === adminEmail) {
-            setSender(adminEmail);
-            setSenderName("Fly Cleaner");
-        }
-        else {
-            setSender(userEmail);
-            setSenderName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
-            setReceiver(adminEmail);
-            setReceiverName("Fly Cleaner")
-        }
-
-    }, [adminEmail]);
+    const [prevSender, setPrevSender] = useState(currentReceiver);
+    const [prevReceiver, setPrevReceiver] = useState(currentSender);
 
     const updateMessage =  (newMessages) => {
         const groupedMesages =  [...messagesList];
@@ -84,23 +84,22 @@ export default function Messages() {
 
     }
 
-
     const autoReply = () => {
-        if (socket === null || adminEmail === null || receiver === null) return;
+        if (socket === null || !adminEmail || !sender || !senderName) return;
+        if (adminEmail === sender) return;
         setLoading(true);
-        api.post('/api/messages/reply', {sender: adminEmail, receiver: sender})
+        api.post('/api/messages/reply', {receiver: sender})
             .then(res => {
                 const { messages } = res.data;   // backend sends { messages: rows }
-                if (!messages || messages.length <= 0) {
+                if (messages.length <= 0) {
                     socket.emit('send_message', {
                         sender: adminEmail,
                         receiver: sender,
-                        text: "Hello there! Thank you for been here. Our representative will be with you shortly.",
+                        text: replyText,
                         reply: null,
                         senderName: "Fly Cleaner",
                         receiverName: senderName,
                     });
-                    setReplies(true)
                 }
             })
             .catch(err => {
@@ -111,59 +110,134 @@ export default function Messages() {
     }
 
     useEffect(() => {
-        autoReply();
         scrollerRef.current?.scrollIntoView();
-    }, [messagesList]);
+        if (messagesList.length > 2 || sender === adminEmail) return;
+        let reply = false;
+        let customerSend = false;
+        for (let i = 0; i < messagesList.length; i++) {
+            if (messagesList[i].text === replyText) {
+                reply = true;
+            }
+            if (messagesList[i].sender === sender) {
+                customerSend = true;
+            }
+        }
+        if (!reply && customerSend) {
+            autoReply();
+        }
+    }, [messagesList, sender, receiver, adminEmail]);
 
 
     // Load previous messages from DB
     useEffect(() => {
-        if (!sender || !receiver) { return; }
-        api.post('/api/messages', {sender: sender, receiver: receiver})
-            .then(res => {
-                const { messages } = res.data;   // backend sends { messages: rows }
-                if (messages && messages.length > 0) {
-                    setMessagesList(messages);
-                }
-            })
-            .catch(err => {
+        const fetchData = async () => {
+            if (!sender || !receiver) { return; }
+            try {
+                const res = await api.post('/api/messages', {sender: sender, receiver: receiver});
+                const { messages } = res.data;
+                if (!messages || messages.length <= 0) return;
+                setMessagesList(messages);
+
+            } catch (err) {
                 console.log(err);
-            });
+            }
+        }
+        fetchData();
     }, [sender, receiver]);
 
     // Listen for incoming messages
     useEffect(() => {
-        if (!socket) { return; }
+        if (!socket || !sender) { return; }
         socket.on('receive_message', (data) => {
             if ((data.sender === sender && data.receiver === receiver) ||
                 (data.sender === receiver && data.receiver === sender)) {
                 setMessagesList(prev => [...prev, data]);
+                socket.emit("message_delivered", { receiver: receiver });
             }
-        });
+        }, [sender, receiver]);
 
         return () => {
             socket.off("receive_message");
         };
 
-    }, [sender, receiver]);
+    }, [sender, receiver, socket]);
 
+    useEffect(() => {
+        if (!socket || !sender) return;
+
+        const handleConnect = () => {
+
+            socket.emit("register_user", { email: sender });
+
+            socket.emit("message_delivered", { receiver: sender });
+
+        };
+
+        socket.on("connect", handleConnect);
+
+        // cleanup when component unmounts or sender changes
+        return () => {
+            socket.off("connect", handleConnect);
+        };
+    }, [socket, sender]);
+
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleStatusUpdate = ({ email, status }) => {
+            setStatuses((prev) => ({
+                ...prev,
+                [email]: status,
+            }));
+        };
+
+        socket.on("status_update", handleStatusUpdate);
+
+        return () => {
+            socket.off("status_update", handleStatusUpdate);
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        if (!socket || !prevReceiver || !prevSender) return;
+        socket.emit("mark_conversation_read", {
+            sender: prevSender,
+            receiver: prevReceiver,
+        });
+    }, [prevReceiver, prevSender, messagesList]);
+
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("conversation_read", ({ sender, receiver}) => {
+            // Update all messages in state
+            setMessagesList((prev) =>
+                prev.map((msg) =>
+                    msg.sender === prevSender && msg.receiver === prevReceiver
+                        ? { ...msg, status: 'read'} : msg
+                )
+            );
+        });
+
+        return () => {
+            socket.off("conversation_read");
+        };
+    }, [socket, prevReceiver, prevSender]);
 
     const sendMessage = () => {
         if (!socket) { return; }
-        if (chatMessage.trim()) {
-            socket.emit('send_message', {
-                sender: sender,
-                senderName: senderName,
-                text: chatMessage,
-                reply: reply,
-                receiver: receiver,
-                receiverName: receiverName,
-                senderReplyName: senderReplyName
-            });
-            setChatMessage('');
-            setReply(null);
-
-        }
+        if (!sender || !receiver || !senderName || !receiverName || !chatMessage) { return; }
+        socket.emit('send_message', {
+            sender: sender,
+            senderName: senderName,
+            text: chatMessage,
+            reply: reply,
+            receiver: receiver,
+            receiverName: receiverName,
+            senderReplyName: senderReplyName
+        });
+        setChatMessage('');
+        setReply(null);
     };
 
     const handleChatMessage = (e) => {
@@ -172,13 +246,7 @@ export default function Messages() {
     }
 
     const getTime = (date) => {
-        const invalidDate = isNaN(new Date(date).getTime());
-        if (invalidDate) {
-            return new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
+
         const now = isToday(new Date(date));
         if (now) {
             return new Date(date).toLocaleTimeString([], {
@@ -201,12 +269,43 @@ export default function Messages() {
             });
         }
 
-        return format(new Date(date), 'yyyy-mm-dd') + " "+ new Date(date).toLocaleTimeString([], {
+        return format(new Date(date), 'yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit'
         });
     }
-    
+
+    function useLongPress(callback = () => {}, ms = 500) {
+        const timeoutRef = useRef(null);
+
+        const start = useCallback((event, data) => {
+            timeoutRef.current = setTimeout(() => {
+                callback(data, event); // Pass data + event
+            }, ms);
+        }, [callback, ms]);
+
+        const clear = useCallback(() => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        }, []);
+
+        return (data) => ({
+            onMouseDown: (e) => start(e, data),
+            onTouchStart: (e) => start(e, data),
+            onMouseUp: clear,
+            onMouseLeave: clear,
+            onTouchEnd: clear,
+        });
+    }
+
+    const handleLongPress = (msg) => {
+        setReply(msg.text);
+        setSenderReplyName(msg.senderName);
+    };
+
+    const longPress = useLongPress(handleLongPress, 700); // 700ms hold
+
     return (
         <div className="sticky-nav-container">
             <div className='top-order-nav'>
@@ -220,9 +319,10 @@ export default function Messages() {
                 {messagesList.map((msg, index) => (
                     <div style={{marginBottom:'10px'}} key={index}>
                         {msg.sender === sender ?
-                            <div   onClick={() => {setReply(msg.text); setSenderReplyName(msg.senderName)}}
-                                 style={{paddingRight:'10px', display:'flex', justifyContent:'flex-end'}}>
-                                <p style={{
+                            <div
+                                   style={{
+                                       paddingRight:'10px', display:'flex', justifyContent:'flex-end'}}>
+                                <p {...longPress(msg)}  style={{
                                     display:'inline-block',
                                     background: '#dcf8c6',
                                     padding: '15px 10px',
@@ -233,16 +333,23 @@ export default function Messages() {
                                     width: 'fit-content',
                                     whiteSpace: 'wrap',
                                 }}>
-                                    {(msg.reply && msg.senderReplyName) && <p className={'reply2'}>{msg.senderReplyName === msg.senderName ? 'You' : msg.senderReplyName} <br/> {msg.reply}</p>}
+                                    {(msg.reply && msg.senderReplyName) &&
+                                        <span className={'reply2'}>{msg.senderReplyName === msg.senderName ? 'You'
+                                            : msg.senderReplyName} <br/> {msg.reply}</span>}
                                     {msg.text}
                                     <br/>
                                     <small style={{color:'darkred'}}>{getTime(msg.created_at)}</small>
+                                    {(msg.status && msg.status === 'read') ?
+                                        <small style={{marginLeft:'3px'}}>seen</small> :
+                                        <small style={{marginLeft:'3px'}}>
+                                            {(msg.delivered && msg.delivered === 1) ? 'delivered' : 'pending'}
+                                        </small>}
                                 </p>
                             </div>
                             :
-                            <div   onClick={() => {setReply(msg.text); setSenderReplyName(msg.senderName)}}
+                            <div
                                  style={{paddingLeft:'10px', display: 'flex', justifyContent:'flex-start'}}>
-                                <p style={{
+                                <p {...longPress(msg)}  style={{
                                     display:'inline-block',
                                     background: '#fbbfcf',
                                     padding: '15px 10px',
@@ -253,7 +360,10 @@ export default function Messages() {
                                     width: 'fit-content',
                                     whiteSpace: 'wrap',
                                 }}>
-                                    {msg.reply && <p className={'reply2'}>{msg.reply}</p>}
+
+                                    {(msg.reply && msg.senderReplyName) &&
+                                        <span className={'reply2'}>{msg.senderReplyName === msg.senderName ? 'You'
+                                            : msg.senderReplyName} <br/> {msg.reply}</span>}
                                     {msg.text}
                                     <br/>
                                     <small style={{color:'black'}}>{getTime(msg.created_at)}</small>

@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { FaCalendarAlt, FaMapMarkedAlt, FaClock, FaMapMarked, FaMapMarkerAlt } from 'react-icons/fa';
 import api from './api.js'
 import {differenceInDays, format, isToday} from "date-fns";
+import {useNavigate} from "react-router-dom";
 
 const CleaningSchedule = () => {
+    const navigate = useNavigate();
     const schedule = [
         { time: "09:00 AM", customer: "James Wilson", plan: "Regular Clean" },
         { time: "11:30 AM", customer: "Olivia Smith", plan: "Deep Clean" },
@@ -128,7 +130,12 @@ const CleaningSchedule = () => {
             <div className="cleaning-schedule card">
                 <div className="card-header">
                     <h2 className={'experience-text'} style={{color:'brown', width:'60%'}}>Today's Schedule</h2>
-                    <button style={{color:'black', border:'none'}} className="experience-text">View All</button>
+                    <button
+                        onClick={() => navigate('/bookinglist')}
+                        style={{color:'black', border:'none'}}
+                        className="experience-text">
+                        View All
+                    </button>
                 </div>
                 {todaySchedule.length > 0 &&  <div className="card-body">
                     <div className="schedule-container">

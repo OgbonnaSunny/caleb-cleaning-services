@@ -465,6 +465,7 @@ const CleanerProfile = () => {
                                         <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
                                         <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
                                     </div>
+                                    {(acceptingOrders && acceptedJobIds.includes(order.orderId)) && <p>Load...</p>}
                                     <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
                                             onClick={() => acceptOrder(order.orderId)}
                                             className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'next-button'}>
@@ -1165,11 +1166,11 @@ const CleanerProfile = () => {
                                             order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>{order.nature} </span>{order.plan}</p>
                                     </div>
 
-                                    {renderWithTime(order.startTime) && <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                                         <FaMapMarkerAlt className={'icon-small'}  />
                                         <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
                                         <FaHome  style={{width:'30px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
-                                    </div>}
+                                    </div>
 
                                     {order.booking.map((book, index) => (
                                         <div key={index} className={'order-container'}>

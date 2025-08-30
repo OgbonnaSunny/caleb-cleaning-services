@@ -519,7 +519,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 <div className="recent-bookings card">
                     <div className="card-header">
                         <h2 className={'experience-text'} style={{color:'navy', width:'60%', textAlign:'start'}}>Today's Bookings</h2>
-                        {todayBooking.length > 0 &&  <button className="btn-view-all" style={{color:'red'}}>View All</button> }
+                        {todayBooking.length > 0 &&
+                            <button
+                                onClick={() => navigate('/bookinglist')}
+                                className="btn-view-all" style={{color:'red'}}>
+                                View All
+                            </button>
+                        }
                     </div>
                     {todayBooking.length > 0 &&  <div className="card-body">
                         <div className="grid-container">
@@ -550,7 +556,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 <div className="recent-bookings card">
                     <div className="card-header">
                         <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Recent Bookings</h2>
-                        {last7DaysBooking.length > 0 &&  <button className="btn-view-all" style={{color:'red'}}>View All</button> }
+                        {last7DaysBooking.length > 0 &&
+                            <button
+                                onClick={() => navigate('/bookinglist')}
+                                className="btn-view-all" style={{color:'red'}}>
+                                View All
+                            </button>
+                        }
                     </div>
                     {last7DaysBooking.length > 0 && <div className="card-body">
                         <div className="grid-container">

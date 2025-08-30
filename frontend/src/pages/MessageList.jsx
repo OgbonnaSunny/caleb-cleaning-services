@@ -3,17 +3,19 @@ import api from './api.js'
 import LOGO from "../images/logo4.png";
 import {FaBars} from "react-icons/fa";
 import {differenceInDays, format, isToday} from "date-fns";
+import { useNavigate} from "react-router-dom";
+import { useSocket } from '../Socket.jsx'
 
 
 const MessageList = () => {
-
+    const navigate = useNavigate();
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
 
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(10);
-    const [email, setEmail] = useState('');
-    const  [count, setCount] = useState(0);
+    const [email, setEmail] = useState(companyEmail);
+    const [count, setCount] = useState(0);
     const [role, setRole] = useState('Support');
 
     useEffect(() => {
@@ -24,12 +26,6 @@ const MessageList = () => {
         setPage(10)
     } );
 
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
-            setEmail(user.email);
-        }
-    }, []);
 
     useEffect(() => {
         document.title = "Messages";
@@ -80,7 +76,6 @@ const MessageList = () => {
             api.post('/api/messages/all', {receiver: email })
                 .then((res) => {
                     setMessages(res.data.messages);
-               //     console.log(res.data.messages);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -121,7 +116,8 @@ const MessageList = () => {
                 </div>
                 {messages.length > 0 && <div>
                     {messages.map((msg, i) => (
-                        <div style={{marginBottom:'20px'}} key={i}>
+                        <div onClick={() => navigate('/messages', {state: {receiver: msg.sender_email, receiverName: msg.sender_name, sender: companyEmail, senderName: 'Fly Cleaner'}})}
+                             style={{marginBottom:'20px'}} key={i}>
                             <div style={{display:'flex', alignItems:'center'}}>
                                 <h3 style={{textAlign:'start'}}>{msg.sender_name}</h3>
                                 <p style={{textAlign:'end'}}>{getTime(msg.last_message_time)}</p>

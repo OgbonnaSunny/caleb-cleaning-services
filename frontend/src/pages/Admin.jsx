@@ -14,11 +14,11 @@ import LOGO from '../images/logo4.png';
 import api from './api.js'
 import { useSocket } from "../Socket.jsx";
 import Messages from "./Messages.jsx";
-//import { FaFileCheck } from 'react-icons/fa6';
 
 const Admin = () => {
-    const socket = useSocket();
     const navigate = useNavigate();
+    const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
+    const socket1 = useSocket();
 
     const links = [
         {id: 1, category: 'Dashboard', link: '/admin', icon: FaHome },
@@ -505,7 +505,8 @@ const Admin = () => {
     const [areaCovered, setAreaCovered] = useState(0);
     const [jobCount, setJobCount] = useState(0);
 
-    const [email, setEmail] = useState(null);
+    const [email, setEmail] = useState(companyEmail);
+    const [socket, setSocket] = useState(socket1);
 
     const statsData = [
         { title: "Today's Booking", value: `${bookingToday}`, change: `${bookingChange}`, icon: <FaCalendarCheck />, trend: `${bookingTrend}` },
@@ -608,18 +609,6 @@ const Admin = () => {
     })
 
     useEffect(() => {
-        const fetchEmail = async () => {
-            try {
-                const response = await api.get('/api/company-email')
-                setEmail(response.data.email)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchEmail();
-    }, [])
-
-    useEffect(() => {
         if (!socket) { return; }
         socket.on('receive_message', (data) => {
             if (data.receiver === email) {
@@ -632,6 +621,25 @@ const Admin = () => {
         };
 
     }, []);
+
+    useEffect(() => {
+        if (!socket || !email) return;
+
+        const handleConnect = () => {
+
+            socket.emit("register_user", { email: email });
+
+            socket.emit("message_delivered", { receiver: email });
+
+        };
+
+        socket.on("connect", handleConnect);
+
+        // cleanup when component unmounts or sender changes
+        return () => {
+            socket.off("connect", handleConnect);
+        };
+    }, [socket, email]);
 
     return (
         <div style={{

@@ -39,6 +39,9 @@ const Customer = () => {
     const navigate = useNavigate();
     const socket = useSocket();
 
+    const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
+    const companyName =  "Fly Cleaner";
+
     const topNavItems = ['Active', 'History'];
     const [topItems, setTopItems] = useState(topNavItems);
     const [activeTopMenu, setActiveTopMenu] = useState(topItems[0]);
@@ -72,6 +75,7 @@ const Customer = () => {
     const [historyLoading, setHistoryLoading] = useState(false);
     const [activeBottomMenu, setActiveBottomMenu] = useState('Booking');
     const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const [pageSize, setPageSize] = useState(10);
     const [user, setUser] = useState('');
     const [chatting, setChatting] = useState(false);
@@ -93,6 +97,7 @@ const Customer = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             setEmail(user.email);
+            setName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
         }
 
     }, []);
@@ -147,6 +152,7 @@ const Customer = () => {
     }
 
     const services = [
+        { id: 'select', icon: 'fa-home', title: 'Select service', description: 'Upholstery cleaning for surfaces', src: Upholstery },
         { id: 'Upholstery ', icon: 'fa-home', title: 'Upholstery cleaning', description: 'Upholstery cleaning for surfaces', src: Upholstery },
         { id: 'Regulqr', icon: 'fa-home', title: 'Regular cleaning', description: 'Regular cleaning for your home', src: Regular },
         { id: 'End of tenancy', icon: 'fa-couch', title: 'End of tenancy', description: 'Thorough cleaning to get your deposit back', src: EndOfTenancy },
@@ -170,6 +176,28 @@ const Customer = () => {
         const [contactMessage, setContactMessage] = useState('');
         const [errors, setErrors] = useState({});
         const [response, setResponse] = useState('');
+        const [loading, setLoading] = useState(false);
+
+        useEffect(() => {
+            if (response !== null) {
+                setTimeout(() => {setResponse(null)}, 4000)
+            }
+        }, [response]);
+
+        const handleServiceChange = (e) => {
+            const value = e.target.value;
+            const newErrors = {};
+            if (value === 'Select service') {
+                newErrors.service = "select service";
+                setService('');
+                setErrors(newErrors);
+                alert(value)
+                return;
+
+            }
+            setService(value);
+
+        }
 
         const sendMessage  = async (e) => {
             e.preventDefault();
@@ -177,20 +205,33 @@ const Customer = () => {
             if (!contactEmail) newErrors.contactemail = 'Email address required';
             if (!phone) newErrors.phone = 'Phone number required';
             if (!name) newErrors.name = 'Name required';
+            if (!service || service === 'Select service') newErrors.service = 'Select service required';
             if (!contactMessage) newErrors.contactMessage = 'Write a message';
             if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
                 return;
             }
+            setLoading(true);
 
             const data = { email: contactEmail, customer: name, service: service, phone: phone, message: contactMessage}
             try {
                 const response = await api.post('/api/send-email-to-fly-cleaner', data);
                 const message = response.data.message;
+                const success = response.data.success;
                 setResponse(message);
+                if (success) {
+                    setContactEmail('');
+                    setPhone('');
+                    setService('');
+                    setContactMessage('');
+                    setName('');
+                    setErrors(null);
+                }
             } catch (error) {
                 setErrors(errors);
                 setResponse('Error occured');
+            }finally {
+                setLoading(false);
             }
         }
 
@@ -249,11 +290,12 @@ const Customer = () => {
                                             name="service"
                                             value={service}
                                             className="button-bg"
-                                            onChange={(e) => setService(e.target.value)}>
+                                            onChange={handleServiceChange}>
                                             {services.map(plan => (
                                                 <option key={plan.id} value={plan.title}>{plan.title}</option>
                                             ))}
                                         </select>
+                                        {service.errors && <label>{service.errors}</label>}
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -267,8 +309,9 @@ const Customer = () => {
                                     ></textarea>
                                     {contactMessage.errors && <label className="error-message">{contactMessage.errors}</label>}
                                 </div>
-                                {response && <p>{response}</p>}
-                                <button type="submit" className="submit-button">Send Message</button>
+                                {response && <p style={{margin:'10px'}}>{response}</p>}
+                                {loading && <p style={{margin:'10px'}}>sending email...</p>}
+                                <button type="submit" className="submit-button">Send Email</button>
                             </form>
                         </div>
                     </div>
@@ -396,14 +439,23 @@ const Customer = () => {
     }
 
     useEffect(() => {
-        api.post('/api/revenue/billing', {email: email})
-            .then((response) => {
+        const fetchData = async () => {
+            const data = {email: email};
+            try {
+                let response = await api.post('/api/revenue/billing', data)
                 setBilling(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
 
+                response = await api.post('/api/messages/users', data)
+                const count = response.data.messages;
+                setMessageCount(prev => prev + count);
+
+            }catch (error) {
+                console.log(error);
+            }
+        }
+        if (email) {
+            fetchData()
+        }
     }, [email])
 
     const Billing = () => {
@@ -428,16 +480,6 @@ const Customer = () => {
 
     }, [email]);
 
-    useEffect(() => {
-        api.post('/api/messages/users', {receiver: email})
-            .then((response) => {
-                const count = response.data.messages;
-                setMessageCount(prev => prev + count);
-            })
-            .catch((error) => {})
-    }, [email]);
-
-
     return (
         <div className="sticky-nav-container">
             {message && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
@@ -457,7 +499,7 @@ const Customer = () => {
                             ))}
                             {activeBottomMenu === 'Support' &&
                                 <div
-                                    onClick={() => navigate('/messages')}
+                                    onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
                                     style={{width:'20%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
                                     <FaCommentDots
                                         size={30}
