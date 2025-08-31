@@ -4,3 +4,4 @@ frontend/.env
 build/
 dist/
 *.log
+api/.env

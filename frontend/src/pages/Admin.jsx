@@ -27,7 +27,7 @@ const Admin = () => {
         {id: 4, category: 'Customers', link: '/customers', icon: FaUsers },
         {id: 5, category: 'View reports', link: '/reports', icon: FaChartLine },
         {id: 6, category: 'Settings', link: '/settings', icon: FaCog },
-        {id: 7, category: 'Add expenses', link: '/expense', icon: FaPoundSign },
+        {id: 7, category: 'Expense', link: '/expense', icon: FaPoundSign },
         {id: 8, category: 'Messages', link: '/messagelist', icon: FaCommentDots },
         {id: 9, category: 'Send news letters', link: '/newsletters', icon: FaEnvelope },
     ]

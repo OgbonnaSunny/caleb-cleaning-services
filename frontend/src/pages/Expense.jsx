@@ -19,7 +19,7 @@ const Expense = () => {
     const [remove, setRemove] = useState(false);
     const [amount, setAmount] = useState(0);
     const [expenses, setExpenses] = useState([]);
-    const [page, setPage] = useState(20);
+    const [page, setPage] = useState(30);
     const [pageCount, setPageCount] = useState(0);
     const [expense, setExpense] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,10 +27,10 @@ const Expense = () => {
 
     useEffect(() => {
         if (window.innerWidth > 768) {
-            setPage(40);
+            setPage(50);
             return;
         }
-        setPage(20)
+        setPage(30)
     }, []);
 
     useEffect(() => {
@@ -251,23 +251,23 @@ const Expense = () => {
                 <div>
                     <div style={{display: 'flex', justifyContent:'flex-start', alignItems: 'center'}}>
                         <img  src={LOGO} className={'logo-icon'}/>
-                        <h1 className="page-title" style={{marginLeft:'10px', width:'15%'}}>Expense</h1>
-                        <div style={{display: 'flex', justifyContent:'space-evenly', flexDirection: 'column', flexGrow: "1"}}>
-                            <div style={{flexFlow:'1', maxWidth:'900px', display:'flex', alignItems:'center', marginTop:'15px'}}
-                                 className="search-bar" >
-                                <input
-                                    type="text"
-                                    placeholder="date, amount, category..."
-                                    value={searchTerm}
-                                    className={'button-bg'}
-                                    style={{width:'90%'}}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <FaSearch onClick={searchExpenses} style={{width:'20px'}}  />
+                        <h1 className="page-title" style={{marginLeft:'10px'}}>Expense</h1>
+                    </div>
+                    <div style={{display: 'flex', justifyContent:'space-evenly', flexDirection: 'column'}}>
+                        <div style={{flexFlow:'1', maxWidth:'900px', display:'flex', alignItems:'center', marginTop:'15px'}}
+                             className="search-bar" >
+                            <input
+                                type="text"
+                                placeholder=" search using date, amount or category..."
+                                value={searchTerm}
+                                className={'button-bg'}
+                                style={{width:'90%'}}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <FaSearch onClick={searchExpenses} style={{width:'40px'}}  />
 
-                            </div>
-                            {message && <p style={{margin:'10px'}}>{message}</p>}
                         </div>
+                        {message && <p style={{margin:'10px'}}>{message}</p>}
                     </div>
                     {(add || edit) && <form onSubmit={submitExpenses}>
                         <div className="contact-form">

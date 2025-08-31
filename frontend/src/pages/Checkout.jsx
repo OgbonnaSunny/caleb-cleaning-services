@@ -3115,18 +3115,6 @@ const Checkout = () => {
     }, [debouncedSave]);
 
 
-    const handleAcknwoledgeChange = (e) => {
-        e.preventDefault();
-        setAcknwoledge(!acknwoledge);
-        setMissingRecord(false);
-    }
-
-    const [useOldRecord, setUseOldRecord] = useState(false);
-    const [missingRecord, setMissingRecord] = useState(false);
-    const [oldRecord, setOldRecord] = useState('');
-    const [dataErrors, setDataErrors] = useState({});
-    const [acknwoledge, setAcknwoledge] = useState(false);
-
     const Data = () => {
         const [firstName, setFirstName] = useState('');
         const [lastName, setLastName] = useState('');
@@ -3134,11 +3122,23 @@ const Checkout = () => {
         const [phone, setPhone] = useState('');
         const [address, setAddress] = useState('');
 
+        const [useOldRecord, setUseOldRecord] = useState(false);
+        const [missingRecord, setMissingRecord] = useState(false);
+
+        const handleAcknwoledgeChange = (e) => {
+            e.preventDefault();
+            setAcknwoledge(e.target.checked);
+            setMissingRecord(false);
+        }
+
+        const [oldRecord, setOldRecord] = useState('');
+        const [dataErrors, setDataErrors] = useState({});
+        const [acknwoledge, setAcknwoledge] = useState(false);
+
         const [dataMessage, setDataMessage] = useState('Required record(s) from your data are missing or incomplete. Please  fill the form to continue');
 
-        const handleOldRecordChange = (e) => {
-            const change = e.target.checked;
-            if (change === false) {
+        useEffect(() => {
+            if (!useOldRecord) {
                 setFirstName('');
                 setLastName('');
                 setEmail('');
@@ -3147,22 +3147,10 @@ const Checkout = () => {
             }
             else {
                 const user = JSON.parse(localStorage.getItem('user'));
-                if (user === null || user === undefined) {
-                    setMissingRecord(true);
-                }
-                else {
-                    if (!user.firstName || !user.lastName || !user.email || !user.phone || !user.address) {
-                        setMissingRecord(true);
-                    }
-                }
-                if (missingRecord === true) {
-                    setFirstName('');
-                    setLastName('');
-                    setEmail('');
-                    setPhone('');
-                    setAddress('');
+                if (!user) {
                     setDataMessage('Required record(s) from your data are missing or incomplete. Please  fill the form to continue')
-                    return;
+                    setMissingRecord(true);
+                    return
                 }
                 setFirstName(user.firstName);
                 setLastName(user.lastName);
@@ -3170,8 +3158,13 @@ const Checkout = () => {
                 setPhone(user.phone);
                 setAddress(user.address);
             }
-            setUseOldRecord(!useOldRecord);
             setAcknwoledge(false);
+        }, [useOldRecord]);
+
+        const handleOldRecordChange = (e) => {
+            e.preventDefault();
+            setUseOldRecord(e.target.checked);
+
         }
 
         const validateData = () => {
@@ -3224,7 +3217,7 @@ const Checkout = () => {
                         <p style={{ marginLeft: '20px', marginBottom: '30px' }}>
                             Please note that contact details are necessary to manage your orders
                         </p>
-                        <div  style={{display:'flex', alignItems:'center', gap: '5px'}}>
+                        <div   style={{display:'flex', alignItems:'center', gap: '5px'}}>
                             <input
                                 type="checkbox"
                                 checked={useOldRecord}
@@ -3316,11 +3309,11 @@ const Checkout = () => {
                         </div>
 
                         {useOldRecord &&
-                            <div  style={{display:'flex', alignItems:'center', gap: '5px'}}>
+                            <div style={{display:'flex', alignItems:'center', gap: '5px'}}>
                                 <input
                                     type="checkbox"
                                     checked={acknwoledge}
-                                    onChange={handleAcknwoledgeChange}
+                                    onChange={() => setAcknwoledge(!acknwoledge)}
                                     name="acknowledge"
                                 />
                                 <label htmlFor="acknowledge">I acknowledge that the records from my data are correct</label>
@@ -3494,7 +3487,7 @@ const Checkout = () => {
                                                         id="policy"
                                                         name={'policy'}
                                                         type='checkbox'
-                                                        onChange={() => setFormData({...formData, policy: !formData.policy})}
+                                                        onChange={(e) => setFormData({...formData, policy: e.target.checked})}
                                                     />
                                                     <label style={{marginTop:'10px', marginLeft:'10px', maxWidth:'900px'}}>Fly cleaners require personal data to process your booking.
                                                         For more information please see our <Link to={'/privacy'} style={{color:'blue'}}>Privacy </Link>policy.
@@ -3509,7 +3502,7 @@ const Checkout = () => {
                                                         id="authorization"
                                                         name={'authorization'}
                                                         type='checkbox'
-                                                        onChange={() => setFormData({...formData, authorization: !formData.authorization})}
+                                                        onChange={(e) => setFormData({...formData, authorization: e.target.checked})}
                                                     />
                                                     <label style={{marginTop:'10px', marginLeft:'10px', maxWidth:'900px'}}>
                                                         In accordance with the Strong Customer Authentication Regulation (SCA), I authorise you, Fly cleaners,
