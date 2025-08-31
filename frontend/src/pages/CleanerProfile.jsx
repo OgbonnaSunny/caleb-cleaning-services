@@ -642,7 +642,7 @@ const CleanerProfile = () => {
                                 ))}
                             </tbody>
                         </table>
-                        {!incomes && <p>No recent income record was found</p>}
+                        {(!incomes || incomes.length <= 0 )&& <p>No recent income record was found</p>}
                     </div>
                 </div>
             );

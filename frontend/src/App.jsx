@@ -41,6 +41,8 @@ import Messages from './pages/Messages.jsx';
 import { Navigate } from 'react-router-dom';
 import MessageList from "./pages/MessageList.jsx";
 import BookingList from "./pages/BookingList.jsx";
+import NewsLetters from "./pages/NewsLettters.jsx";
+import Expense from './pages/Expense.jsx';
 
 function App() {
 
@@ -49,6 +51,8 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Overview />} />
+                <Route path="/expense" element={<Expense />} />
+                <Route path="/newsletters" element={<NewsLetters />} />
                 <Route path="/bookinglist" element={<BookingList />} />
                 <Route path="/messagelist" element={<MessageList />} />
                 <Route path="/messages" element={<Messages />} />

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import Domestic from "../images/domestic.png";
 import Upholstery from "../images/upholstery2.png";
 import Regular from "../images/regular.png";
@@ -18,6 +18,7 @@ import {Link} from 'react-router-dom'
 import Kitchen from "../images/kitchen.png";
 import Oven from "../images/oven.png";
 import { useLocation } from "react-router-dom";
+import api from "./api.js";
 
 const Footer = () => {
     const location = useLocation();
@@ -131,6 +132,37 @@ const Footer = () => {
     const hideNavbarPaths = ['/pricing', '/blog', '/reclean', '/sitemap']; // Paths where navbar should be hidden
     const names = ['Pricing', 'Blog', 'Reclean Guarantee', 'Sitemap']
     const pathIncluded = hideNavbarPaths.includes(location.pathname);
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (message !== null) {
+            setTimeout(() => setMessage(''), 4000);
+        }
+    }, [message]);
+
+    const subscribe = async (e) => {
+        e.preventDefault();
+        if (!email) {
+            setMessage("Enter a valid email");
+            return;
+        }
+        if (loading) return;
+        try {
+            const response = await api.post(`/api/subscribe`, {email: email});
+            const {message, success} = response.data;
+            setMessage(message);
+            if (success) {
+                setEmail('');
+            }
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
 
     return (
@@ -236,15 +268,23 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div className="footer-section">
+                    <form onSubmit={subscribe} className="footer-section">
                         <h3 style={{color:'white'}}>Subscribe to our news letter</h3>
-                        <input type={'email'} name='email' placeholder='Email'  style={{border:'medium', padding:'10px', borderRadius:'10px', background:'white', color:'white'}} />
-                        <button style={{color:'black', width:'150px', background:'white', marginTop:'10px'}}>Subscribe</button>
-                    </div>
+                        {message && <p style={{margin:'10px', color:'white'}}>{message}</p>}
+                        {loading && <p style={{margin:'10px', color:'white'}}>Loading...</p>}
+                        <input required={true}
+                               type={'email'}
+                               name='email'
+                               value={email}
+                               placeholder='Email'
+                               onChange={(e) => setEmail(e.target.value)}
+                               style={{border:'medium', padding:'10px', borderRadius:'10px', background:'white', color:'black'}} />
+                        <button type={"submit"} style={{color:'black', width:'150px', background:'white', marginTop:'10px'}}>Subscribe</button>
+                    </form>
                 </div>
 
                 <div className="footer-bottom">
-                    <p>{new Date().getFullYear()} Flymax. All rights reserved.</p>
+                    <p>{new Date().getFullYear()} Fly Cleaner. All rights reserved.</p>
                     <div className="legal-links">
                         <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
                         <Link to="/terms" target="_blank" rel="noopener noreferrer">Terms & Conditions</Link>

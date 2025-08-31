@@ -130,12 +130,12 @@ const CleaningSchedule = () => {
             <div className="cleaning-schedule card">
                 <div className="card-header">
                     <h2 className={'experience-text'} style={{color:'brown', width:'60%'}}>Today's Schedule</h2>
-                    <button
+                    {todaySchedule.length > 0 &&  <button
                         onClick={() => navigate('/bookinglist')}
                         style={{color:'black', border:'none'}}
                         className="experience-text">
                         View All
-                    </button>
+                    </button> }
                 </div>
                 {todaySchedule.length > 0 &&  <div className="card-body">
                     <div className="schedule-container">

@@ -2,6 +2,19 @@ import React,  {useState, useEffect, useRef} from 'react'
 import Footer from "./Footer.jsx";
 import Representative from "../images/representative.png";
 import { FaArrowLeft, FaArrowRight  } from 'react-icons/fa';
+import Upholstery from "../images/upholstery2.png";
+import Regular from "../images/regular.png";
+import EndOfTenancy from "../images/endOfTenancy.png";
+import LivingRoom from "../images/livingRoom.png";
+import Deep from "../images/deep.png";
+import Office from "../images/office.png";
+import Day from "../images/day.png";
+import Domestic from "../images/domestic.png";
+import Rug from "../images/rug.png";
+import Bathroom from "../images/bathroom.png";
+import Kitchen from "../images/kitchen.png";
+import Oven from "../images/oven.png";
+import api from "./api.js";
 
 const Help = () => {
   const faqCategoriesClients = [
@@ -493,6 +506,7 @@ const Help = () => {
   const [activeCleanerCategory, setActiveCleanerCategory] = useState('All');
   const [allClientCategories, setAllClientCategories] = useState(clientCategoryList);
   const [allCleanerCategories, setAllCleanerCategories] = useState(cleanerCategoryList);
+  const [showContact, setShowContact] = useState(false);
 
   const showQs = {display:'', textAlign:'start'};
   const hideQs = {display:'none', textAlign:'start'};
@@ -571,6 +585,175 @@ const Help = () => {
     setCleanerIds(ids);
   }
 
+  const services1 = [
+    { id: 'select', icon: 'fa-home', title: 'Select service', description: 'Upholstery cleaning for surfaces', src: Upholstery },
+    { id: 'Upholstery ', icon: 'fa-home', title: 'Upholstery cleaning', description: 'Upholstery cleaning for surfaces', src: Upholstery },
+    { id: 'Regulqr', icon: 'fa-home', title: 'Regular cleaning', description: 'Regular cleaning for your home', src: Regular },
+    { id: 'End of tenancy', icon: 'fa-couch', title: 'End of tenancy', description: 'Thorough cleaning to get your deposit back', src: EndOfTenancy },
+    { id: 'Carpet', icon: 'fa-rug', title: 'Carpet cleaning', description: 'Professional deep cleaning for carpets', src: LivingRoom },
+    { id: 'Deep', icon: 'fa-broom', title: 'Deep cleaning', description: 'Intensive cleaning for neglected spaces', src: Deep },
+    { id: 'Office', icon: 'fa-home', title: 'Office cleaning', description: 'Detailed cleaning for office space', src: Office },
+    { id: 'Same day', icon: 'fa-home', title: 'Same day cleaning', description: 'Quickly get your home in order as quickly as possible', src: Day},
+    { id: 'Move in', icon: 'fa-home', title: 'Move in  cleaning', description: 'We will get your new home ready for habitaion', src: Domestic},
+    { id: 'Rug', icon: 'fa-home', title: 'Rug cleaning', description: 'Professional deep cleaning for rugs', src: Rug },
+    { id: 'Bathroom', icon: 'fa-home', title: 'Bathroom cleaning', description: 'We provide deep cleaning for bathrooms', src: Bathroom },
+    { id: 'Kitchen deep', icon: 'fa-home', title: 'Kitchen deep', description: 'Professional deep kitchen cleaning', src: Kitchen },
+    { id: 'Oven', icon: 'fa-building', title: 'Oven', description: 'Oven cleaning services', src: Oven},
+  ];
+
+  const Contact = () => {
+
+    const [name, setName] = useState('');
+    const [contactEmail, setContactEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [service, setService] = useState('');
+    const [contactMessage, setContactMessage] = useState('');
+    const [errors, setErrors] = useState({});
+    const [response, setResponse] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+      if (response !== null) {
+        setTimeout(() => {setResponse(null)}, 4000)
+      }
+    }, [response]);
+
+    const handleServiceChange = (e) => {
+      const value = e.target.value;
+      const newErrors = {};
+      if (value === 'Select service') {
+        newErrors.service = "select service";
+        setService('');
+        setErrors(newErrors);
+        alert(value)
+        return;
+
+      }
+      setService(value);
+
+    }
+
+    const sendMessage  = async (e) => {
+      e.preventDefault();
+      const newErrors = {}
+      if (!contactEmail) newErrors.contactemail = 'Email address required';
+      if (!phone) newErrors.phone = 'Phone number required';
+      if (!name) newErrors.name = 'Name required';
+      if (!service || service === 'Select service') newErrors.service = 'Select service required';
+      if (!contactMessage) newErrors.contactMessage = 'Write a message';
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+      setLoading(true);
+
+      const data = { email: contactEmail, customer: name, service: service, phone: phone, message: contactMessage}
+      try {
+        const response = await api.post('/api/send-email-to-fly-cleaner', data);
+        const message = response.data.message;
+        const success = response.data.success;
+        setResponse(message);
+        if (success) {
+          setContactEmail('');
+          setPhone('');
+          setService('');
+          setContactMessage('');
+          setName('');
+          setErrors(null);
+        }
+      } catch (error) {
+        setErrors(errors);
+        setResponse('Error occured');
+      }finally {
+        setLoading(false);
+      }
+    }
+
+    return (
+        <section style={{margin:'15px'}} className="main-banner">
+          <div className="container">
+            <div className="burden-container">
+              <div className="contact-form">
+                <h3>Send Us a Message</h3>
+                <form onSubmit={sendMessage}>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="name">Full Name</label>
+                      <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={name}
+                          className="button-bg"
+                          onChange={(e) => setName(e.target.value)}
+                          required
+                      />
+                      {name.errors && <label>{name.errors}</label>}
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="email">Email Address</label>
+                      <input
+                          type="email"
+                          id="email"
+                          name="contactEmail"
+                          value={contactEmail}
+                          className="button-bg"
+                          onChange={(e) => setContactEmail(e.target.value)}
+                          required
+                      />
+                      {contactEmail.errors && <label className="error-message">{contactEmail.errors}</label>}
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="phone">Phone Number</label>
+                      <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          value={phone}
+                          className="button-bg"
+                          onChange={(e) => setPhone(e.target.value)}
+                          required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="service">Service Needed</label>
+                      <select
+                          id="service"
+                          name="service"
+                          value={service}
+                          className="button-bg"
+                          onChange={handleServiceChange}>
+                        {services1.map(plan => (
+                            <option key={plan.id} value={plan.title}>{plan.title}</option>
+                        ))}
+                      </select>
+                      {service.errors && <label>{service.errors}</label>}
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message">Your Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        value={contactMessage}
+                        className="button-bg"
+                        onChange={(e) => setContactMessage(e.target.value)}
+                    ></textarea>
+                    {contactMessage.errors && <label className="error-message">{contactMessage.errors}</label>}
+                  </div>
+                  {response && <p style={{margin:'10px'}}>{response}</p>}
+                  {loading && <p style={{margin:'10px'}}>sending email...</p>}
+                  <button type="submit" className="submit-button">Send Email</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+    )
+  }
+
 
   return (
       <div style={{
@@ -583,10 +766,11 @@ const Help = () => {
             <h1 className={'experience-text'} style={{ color:'darkred', padding:'8px', textAlign:'start'}}>Frequently Asked Questions</h1>
             <p className={'header-text'} style={{textAlign:'start', color:'black', padding:'10px' }}>
               There are answers for everyone whether you’re a client and having trouble ordering a cleaning or a cleaner and want to be sure that you’re following the procedure.<br/>
-              Need help? <span style={{color:'navy'}}>Click here to email us</span> —
+              Need help? <span style={{color:'blue'}} onClick={() => setShowContact(!showContact)}>{showContact ? 'Close email form': 'Click here to email us'}</span> —
               For urgent issues, we aim to respond within minutes. Apart from that please navigate yourself through our FAQ pages
             </p>
-            <div className={'burden-container'}>
+            {showContact && <Contact />}
+            <div style={{marginTop:'20px'}} className={'burden-container'}>
               <label style={{color:'blue'}} className="custom-checkbox">
                 <input
                     type="checkbox"

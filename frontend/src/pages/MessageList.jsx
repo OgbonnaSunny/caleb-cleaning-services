@@ -116,7 +116,8 @@ const MessageList = () => {
                 </div>
                 {messages.length > 0 && <div>
                     {messages.map((msg, i) => (
-                        <div onClick={() => navigate('/messages', {state: {receiver: msg.sender_email, receiverName: msg.sender_name, sender: companyEmail, senderName: 'Fly Cleaner'}})}
+                        <div onClick={() => navigate('/messages',
+                            {state: {receiver: msg.sender_email, receiverName: msg.sender_name, sender: companyEmail, senderName: 'Fly Cleaner'}})}
                              style={{marginBottom:'20px'}} key={i}>
                             <div style={{display:'flex', alignItems:'center'}}>
                                 <h3 style={{textAlign:'start'}}>{msg.sender_name}</h3>
