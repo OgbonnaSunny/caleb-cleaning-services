@@ -379,7 +379,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         <div className={'support-page'} style={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '100vh' // Ensures it takes at least full viewport height
         }}>
             {user === 'client' &&
                 <div>
