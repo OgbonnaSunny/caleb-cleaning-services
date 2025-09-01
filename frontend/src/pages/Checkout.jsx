@@ -922,13 +922,13 @@ const Checkout = () => {
         const { name, value } = e.target;
         setFormData(data)
         setSelectedDate(null);
-        /*if (user) {
+        if (user) {
             setCurrentStep(0);
             setStarter(value);
         }
         else {
             setLoggedIn(false);
-        }*/
+        }
         setCurrentStep(0);
         setStarter(value);
 
