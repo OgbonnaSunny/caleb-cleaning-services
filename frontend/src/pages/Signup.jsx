@@ -135,6 +135,7 @@ const Signup = () => {
                 const { success, message } = res.data;
                 if (success) {
                     navigate('/login');
+                    window.close();
                 }
                 else {
                     setMessage(message);

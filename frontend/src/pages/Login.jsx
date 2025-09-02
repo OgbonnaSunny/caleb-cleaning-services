@@ -45,26 +45,28 @@ const Login = () => {
             const { success, user } = response.data;
             if (success === true) {
                 localStorage.setItem("user", JSON.stringify(user));
-                console.log(user);
                 const role = user.roles;
                 if (role === 'admin') {
                     navigate('/admin');
+                    window.close();
                     return;
                 }
                 if (role === 'user') {
                     navigate('/checkout');
+                    window.close();
                     return;
                 }
                 if (role === 'cleaner') {
                     navigate('/cleanerprofile');
+                    window.close();
                     return;
                 }
                 navigate('/overview');
+                window.close();
             }
             else {
                 setMessage("Invalid email or password");
             }
-            window.close();
         } catch (error) {
             const errorMessage = error.response?.data?.error || error.message;
             setMessage(errorMessage);
