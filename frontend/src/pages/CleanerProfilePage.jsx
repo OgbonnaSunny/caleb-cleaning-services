@@ -221,7 +221,7 @@ const ProfilePage = ({emailFromProile}) => {
     };
 
     useEffect(() => {
-        if (firstName === null || firstName === undefined) {}
+        if (firstName === null || firstName === undefined || firstName.toString().length <= 0) return;
         document.title = firstName;
         if (cleanerName === null || cleanerName === undefined) {
             return;
@@ -233,7 +233,7 @@ const ProfilePage = ({emailFromProile}) => {
             return segments.join('/').replace(/[ ,]+/g, '-');
         }
         window.history.replaceState(null, '', replaceLastSegment(cleanerName));
-        document.title = firstName?.charAt(0).toUpperCase() + firstName?.slice(1);
+        document.title = firstName?.charAt(0)?.toUpperCase() + firstName?.slice(1);
 
         const names = cleanerName?.split(' ');
 
