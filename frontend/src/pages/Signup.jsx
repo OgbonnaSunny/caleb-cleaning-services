@@ -195,7 +195,6 @@ const Signup = () => {
                else {
                    setMessage(message);
                }
-               alert(message);
            })
            .catch((error) => {
                setMessage('Error occurred while sending email');
