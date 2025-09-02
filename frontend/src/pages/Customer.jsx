@@ -97,7 +97,10 @@ const Customer = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             setEmail(user.email);
-            setName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
+            if (user?.firstName?.toString()?.length > 0) {
+                setName(user.firstName?.charAt(0)?.toUpperCase() + user?.firstName?.slice(1));
+            }
+
         }
 
     }, []);
