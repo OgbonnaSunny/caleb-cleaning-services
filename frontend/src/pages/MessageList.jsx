@@ -71,7 +71,7 @@ const MessageList = () => {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchMessages = async () => {
             setLoading(true);
             api.post('/api/messages/all', {receiver: email })
                 .then((res) => {
@@ -84,10 +84,9 @@ const MessageList = () => {
                     setLoading(false);
                 })
         }
-        if (email !== null || email === undefined) {
-            fetchData();
+        if (email !== null && email !== undefined) {
+            fetchMessages();
         }
-        fetchData();
     }, [email]);
 
     useEffect(() => {
