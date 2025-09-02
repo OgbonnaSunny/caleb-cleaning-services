@@ -76,8 +76,8 @@ const Navigation = () => {
 
         switch (location.pathname) {
             case '/cleanerprofile':
-                if (user != null && user !== undefined) {
-                    document.title = user.firstName.charAt(0) + user.firstName.slice(1);
+                if (user) {
+                    document.title = user?.firstName.charAt(0) + user?.firstName.slice(1);
                 }
                 else {
                     document.title = "My App";
@@ -85,8 +85,8 @@ const Navigation = () => {
                 break;
 
             case '/customer':
-                if (user != null && user !== undefined) {
-                    document.title = user.firstName.charAt(0) + user.firstName.slice(1);
+                if (user) {
+                    document.title = user?.firstName.charAt(0) + user?.firstName.slice(1);
                 }
                 else {
                     document.title = "My App";

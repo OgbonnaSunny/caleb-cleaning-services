@@ -221,6 +221,7 @@ const ProfilePage = ({emailFromProile}) => {
     };
 
     useEffect(() => {
+        if (firstName === null || firstName === undefined) {}
         document.title = firstName;
         if (cleanerName === null || cleanerName === undefined) {
             return;
@@ -228,13 +229,13 @@ const ProfilePage = ({emailFromProile}) => {
         function replaceLastSegment(newSegment) {
             const path = window.location.pathname;
             const segments = path.split('/');
-            segments[segments.length - 1] = newSegment;
+            segments[segments?.length - 1] = newSegment;
             return segments.join('/').replace(/[ ,]+/g, '-');
         }
         window.history.replaceState(null, '', replaceLastSegment(cleanerName));
-        document.title = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+        document.title = firstName?.charAt(0).toUpperCase() + firstName?.slice(1);
 
-        const names = cleanerName.split(' ');
+        const names = cleanerName?.split(' ');
 
     }, [firstName]);
 

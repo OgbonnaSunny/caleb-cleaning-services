@@ -453,7 +453,7 @@ const Customer = () => {
                 console.log(error);
             }
         }
-        if (email !== null && email !== undefined) {
+        if (email !== null && email !== undefined && email !== '') {
             fetchData()
         }
     }, [email])
