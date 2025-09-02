@@ -138,7 +138,6 @@ const Signup = () => {
                 }
                 else {
                     setMessage(message);
-                //    setMessage('Something went wrong. Please try again.');
                 }
 
             })
@@ -180,11 +179,11 @@ const Signup = () => {
 
         setCode(sixDigitNumber);
 
-        const emailData = {to: formData.email, subject:'Verification code', message: sixDigitNumber};
+        const emailData = {to: formData.email, text: sixDigitNumber};
 
-       api.post('/api/send-email', emailData)
+       api.post('/api/send-custom-email', emailData)
            .then((res) => {
-               const { success } = res.data;
+               const { success, message } = res.data.result;
                if (success) {
                    if (!resend) {
                        setStage(stage + 1);
@@ -194,8 +193,9 @@ const Signup = () => {
                    setMessageForCode(`Verification code has beent sent to ${formData.email}. Please enter the code to continue`);
                }
                else {
-                   setMessage('Error occurred while sending email');
+                   setMessage(message);
                }
+               alert(message);
            })
            .catch((error) => {
                setMessage('Error occurred while sending email');
