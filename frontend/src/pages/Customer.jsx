@@ -74,10 +74,10 @@ const Customer = () => {
     const [newBookingLoading, setNewBookingLoading] = useState(false);
     const [historyLoading, setHistoryLoading] = useState(false);
     const [activeBottomMenu, setActiveBottomMenu] = useState('Booking');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(null);
     const [name, setName] = useState('');
     const [pageSize, setPageSize] = useState(10);
-    const [user, setUser] = useState('');
+    const [user, setUser] = useState(null);
     const [chatting, setChatting] = useState(false);
     const [dataForUpdate, setDataForUpdate] = useState('');
     const [billing, setBilling] = useState(0);
@@ -453,7 +453,7 @@ const Customer = () => {
                 console.log(error);
             }
         }
-        if (email) {
+        if (email !== null && email !== undefined) {
             fetchData()
         }
     }, [email])
@@ -467,7 +467,7 @@ const Customer = () => {
     }
 
     useEffect(() => {
-        if (!socket) { return; }
+        if (!socket || !email) { return; }
         socket.on('receive_message', (data) => {
             if (data.receiver === email) {
                 setMessageCount(prev => prev + 1);

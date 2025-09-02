@@ -40,7 +40,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(null);
     const [pageCount, setPageCount] = useState(0);
     const [currentBookings, setCurrentBookings] = useState(allBookingData.length);
     const [exhausted , setExhausted] = useState(false);
@@ -225,7 +225,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [loading, user]);
+    }, [loading]);
 
     useEffect(() => {
         const resetMessage = () => {
