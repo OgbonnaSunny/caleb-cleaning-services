@@ -77,16 +77,10 @@ const Navigation = () => {
         switch (location.pathname) {
             case '/cleanerprofile':
                 document.title = "My App";
-                if (user) {
-                    document.title = user?.firstName?.charAt(0) + user?.firstName?.slice(1);
-                }
                 break;
 
             case '/customer':
                 document.title = "My App";
-                if (user) {
-                    document.title = user?.firstName?.charAt(0) + user?.firstName?.slice(1);
-                }
                 break;
 
            case '/checkout':
