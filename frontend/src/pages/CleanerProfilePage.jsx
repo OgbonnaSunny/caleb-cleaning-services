@@ -308,15 +308,19 @@ const ProfilePage = ({emailFromProile}) => {
                  let response = await api.post('/api/users/record', {email: email});
                  const { user } = response.data;
                  if (user) {
-                     setFirstName(user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1));
-                     setLastName(user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1));
-                     setAddress(user.address);
-                     setPhone(user.phone);
-                     setBio(user.bio);
-                     setProfilePhoto(user.photo_path);
-                     setAvailability(user.available);
-                     setServices(user.workExperience.services);
-                     setSpecialties(user.workExperience.specialities)
+                     if (user?.firstName?.toString()?.length > 0) {
+                         setFirstName(user?.firstName?.charAt(0)?.toUpperCase() + user?.firstName?.slice(1));
+                     }
+                     if (user?.lastName?.toString()?.length > 0) {
+                         setLastName(user?.lastName?.charAt(0)?.toUpperCase() + user?.lastName?.slice(1));
+                     }
+                     setAddress(user?.address);
+                     setPhone(user?.phone);
+                     setBio(user?.bio);
+                     setProfilePhoto(user?.photo_path);
+                     setAvailability(user?.available);
+                     setServices(user?.workExperience?.services);
+                     setSpecialties(user?.workExperience?.specialities)
                  }
                  else {
                      setSuccessMessage('Error updating user');
