@@ -89,7 +89,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 .then((response) => {
                     const { booking } = response.data;
                     if ( booking && booking.length > 0) {
-
                         setAllBookingData(prev => {
                             const map = new Map(prev.map(item => [item.id, item])); // old items
                             booking.forEach(item => map.set(item.id, item));    // add/replace new
@@ -124,7 +123,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 const data = {email: email, limit: page, offset: offset};
                 const response = await api.post('/api/booking/client-history', data);
                 const { booking } = response.data;
-                if (booking.length > 0) {
+                if ( booking && booking.length > 0) {
                     setClientHistory(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
                         booking.forEach(item => map.set(item.id, item));    // add/replace new
