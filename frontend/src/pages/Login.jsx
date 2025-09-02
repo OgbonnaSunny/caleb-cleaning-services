@@ -44,7 +44,6 @@ const Login = () => {
             const response = await api.post('/api/login', formData);
             const { success, user } = response.data;
             if (success === true) {
-                console.log(success);
                 localStorage.setItem("user", JSON.stringify(user));
                 console.log(user);
                 const role = user.roles;

@@ -190,7 +190,7 @@ const Signup = () => {
                    }
                    setTime(new Date())
                    setMessage(null)
-                   setMessageForCode(`Verification code has beent sent to ${formData.email}. Please enter the code to continue`);
+                   setMessageForCode(`Verification number has beent sent to ${formData.email}. Please enter the number to continue`);
                }
                else {
                    setMessage(message);
