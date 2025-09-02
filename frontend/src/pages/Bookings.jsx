@@ -115,7 +115,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     useEffect(() => {
         const fetchHistory = async () => {
             if (email === null || email === undefined) return;
-
             setLoading(true);
             try {
                 let offset = 0;

@@ -502,9 +502,16 @@ const CleanerProfile = () => {
     })
 
     useEffect(() => {
+        if (email === null || email === undefined) {
+            return;
+        }
+
         api.post('/api/income-pending', {cleanerEmail: email})
             .then((response) => {
-                setIncome(response.data.income);
+                if (response.data) {
+                    setIncome(response.data);
+                }
+
             })
             .catch((error) => {
                 console.log(error);
@@ -512,8 +519,14 @@ const CleanerProfile = () => {
 
         api.post('/api/income-monthly', {cleanerEmail: email})
             .then((response) => {
-                setMonthlyIncome(response.data.income);
-                setYtdIncome(response.data.ytd);
+                const {income, ytd} = response.data;
+                if (income) {
+                    setMonthlyIncome(income);
+                }
+                if (ytd) {
+                    setYtdIncome(ytd);
+                }
+
             })
             .catch((error) => {
                 console.log(error);
@@ -521,7 +534,11 @@ const CleanerProfile = () => {
 
         api.post('/api/income-last-month', {cleanerEmail: email})
             .then((response) => {
-                setLastMonthIncome(response.data.income);
+                const {income } = response.data;
+                if (income) {
+                    setLastMonthIncome(income);
+                }
+
             })
             .catch((error) => {
                 console.log(error);
@@ -529,7 +546,11 @@ const CleanerProfile = () => {
 
         api.post('/api/income-yearly', {cleanerEmail: email})
             .then((response) => {
-                setYearlyIncome(response.data.income);
+                const { income } = response.data;
+                if (income) {
+                    setYearlyIncome(income);
+                }
+
             })
             .catch((error) => {
                 console.log(error);
@@ -538,6 +559,7 @@ const CleanerProfile = () => {
         api.post('/api/income/quaterly', {cleanerEmail: email})
             .then((response) => {
                 setQuarter(response.data.quarter);
+
             })
             .catch((error) => {
                 console.log(error);
@@ -554,11 +576,11 @@ const CleanerProfile = () => {
         const data = {cleanerEmail: email, limit: 10, offset: offset};
         api.post('/api/income-all', data)
             .then((response) => {
-                const incomeList = response.data.income.all;
-                if (incomeList.length > 0) {
+                const { income } = response.data;
+                if (income && income.length > 0) {
                     setAllIncome(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
-                        incomeList.forEach(item => map.set(item.id, item));    // add/replace new
+                        income.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
                 }

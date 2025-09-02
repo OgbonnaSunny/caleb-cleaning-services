@@ -546,61 +546,84 @@ const Admin = () => {
         const fetchData = async () => {
             try {
                 let response = await api.get('/api/messages/admin');
-                const messages = await response.data.messages;
-                setMessageCount(messages);
+                const { messages }= await response.data;
+                if (messages) {
+                    setMessageCount(messages);
+                }
 
                 response = await api.get('/api/revenue/today');
-                const incomeToady = response.data.incomes[0].today_income;
-                const booking = response.data.incomes[0].today_booking;
-                const yesterday_booking = response.data.incomes[0].yesterday_booking;
-                const yesterdayIcome = response.data.incomes[0].yesterday_income;
+                const { incomes } = response.data;
+                if (incomes && incomes.length > 0) {
+                    const incomeToady = incomes[0].today_income;
+                    const booking = incomes[0].today_booking;
+                    const yesterday_booking = incomes[0].yesterday_booking;
+                    const yesterdayIcome = incomes[0].yesterday_income;
 
-                setRevenueToday(incomeToady);
-                setBookingToday(booking);
-                setBookingTrend(trendLevel(yesterday_booking, booking));
-                setBookingChange(changeLevel(yesterday_booking, booking));
+                    setRevenueToday(incomeToady);
+                    setBookingToday(booking);
+                    setBookingTrend(trendLevel(yesterday_booking, booking));
+                    setBookingChange(changeLevel(yesterday_booking, booking));
 
-                setRevenueTodayTrend(trendLevel(yesterdayIcome, incomeToady));
-                setRevenueTodayChange(changeLevel(yesterdayIcome, incomeToady))
+                    setRevenueTodayTrend(trendLevel(yesterdayIcome, incomeToady));
+                    setRevenueTodayChange(changeLevel(yesterdayIcome, incomeToady))
+                }
 
                 response = await api.get('/api/revenue/month');
-                const incomeMonth = response.data.incomes[0].this_month;
-                const lastMonth = response.data.incomes[0].last_month;
+                const { income } = response.data;
+                if (income && income.length > 0) {
+                    const incomeMonth = income[0].this_month;
+                    const lastMonth = income[0].last_month;
 
-                const this_month_booking = response.data.incomes[0].this_month_booking;
-                const last_month_booking = response.data.incomes[0].last_month_booking;
+                    const this_month_booking = income[0].this_month_booking;
+                    const last_month_booking = income[0].last_month_booking;
 
-                setRevenueMonth(incomeMonth);
-                setMonthBooking(this_month_booking);
+                    setRevenueMonth(incomeMonth);
+                    setMonthBooking(this_month_booking);
 
-                setRevenueMonthTrend(trendLevel(lastMonth, incomeMonth));
-                setRevenueMonthChange(changeLevel(lastMonth, incomeMonth));
+                    setRevenueMonthTrend(trendLevel(lastMonth, incomeMonth));
+                    setRevenueMonthChange(changeLevel(lastMonth, incomeMonth));
 
-                setMonthBookingTrend(trendLevel(last_month_booking, this_month_booking));
-                setMonthBookingChange(changeLevel(last_month_booking, this_month_booking));
+                    setMonthBookingTrend(trendLevel(last_month_booking, this_month_booking));
+                    setMonthBookingChange(changeLevel(last_month_booking, this_month_booking));
+                }
 
                 response = await api.get('/api/expenses/today')
-                const expenseToday = response.data.expenses[0].today_expenses;
-                const expenseYesterday = response.data.expenses[0].yesterday_expenses;
-                setExpense(expenseToday);
-                setExpenseTrend(trendLevel(expenseYesterday, expenseToday));
-                setExpenseChange(changeLevel(expenseYesterday, expenseToday));
+                const { expenses } = response.data;
+                if (expenses && expenses.length > 0) {
+                    const expenseToday = expenses[0].today_expenses;
+                    const expenseYesterday = expenses[0].yesterday_expenses;
+                    setExpense(expenseToday);
+                    setExpenseTrend(trendLevel(expenseYesterday, expenseToday));
+                    setExpenseChange(changeLevel(expenseYesterday, expenseToday));
+                }
 
                 response = await api.get('/api/expenses/month')
-                const thisMonth = response.data.expenses[0].this_month;
-                const lastMonthExp = response.data.expenses[0].last_month;
-                setMonthExpense(thisMonth)
-                setExpenseChange(changeLevel(lastMonthExp, thisMonth));
-                setMonthExpenseTrend(trendLevel(lastMonthExp, thisMonth));
+                const { expense  } = response.data;
+                if (expense && expense.length > 0) {
+                    const thisMonth = expense[0].this_month;
+                    const lastMonthExp = expense[0].last_month;
+                    setMonthExpense(thisMonth)
+                    setExpenseChange(changeLevel(lastMonthExp, thisMonth));
+                    setMonthExpenseTrend(trendLevel(lastMonthExp, thisMonth));
+                }
 
                 response = await api.get('/api/booking/active-cleaners')
-                setActiveCleaners(response.data.cleaners[0].active_cleaners);
+                const { cleaners } =  response.data;
+                if (cleaners && cleaners.length > 0) {
+                    setActiveCleaners(cleaners[0].active_cleaners);
+                }
 
                 response = await api.get('/api/users/areas-covered')
-                setAreaCovered(response.data.areas[0].area_covered);
+                const { areas } = response.data;
+                if (areas && areas.length > 0) {
+                    setAreaCovered(areas[0].area_covered);
+                }
 
                 response = await api.get('/api/booking/get-approval-count')
-                setJobCount(response.data.bookingApproval[0].approvals)
+                const { bookingApproval } = response.data;
+                if (bookingApproval && bookingApproval.length > 0) {
+                    setJobCount(bookingApproval[0].approvals)
+                }
 
             } catch (error) {
                 console.log(error)

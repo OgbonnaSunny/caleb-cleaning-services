@@ -75,7 +75,10 @@ const MessageList = () => {
             setLoading(true);
             api.post('/api/messages/all', {receiver: email })
                 .then((res) => {
-                    setMessages(res.data.messages);
+                    const { messages }= res.data;
+                    if (messages) {
+                        setMessages(messages);
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -128,8 +131,8 @@ const MessageList = () => {
                             </div>
                         </div>
                     ))}
-                </div>
-                }
+                </div>}
+                {messages.length === 0 && <p>No message found</p>}
             </div>
 
         </div>
