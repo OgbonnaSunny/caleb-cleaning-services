@@ -88,7 +88,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             api.post('/api/booking/customer-active-order', data)
                 .then((response) => {
                     const { booking } = response.data;
-                    if (booking.length > 0) {
+                    if ( booking && booking.length > 0) {
 
                         setAllBookingData(prev => {
                             const map = new Map(prev.map(item => [item.id, item])); // old items
