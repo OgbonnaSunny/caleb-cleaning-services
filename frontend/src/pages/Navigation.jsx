@@ -33,6 +33,9 @@ const Navigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const BASE_URL = import.meta.env.VITE_API_URL;
+    console.log('baseUrl', BASE_URL);
+
     const emitter = new EventEmitter();
     const navLinks = [
         {id: 1, category: 'Overview', path: '/overview' },
