@@ -371,10 +371,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             });
         }
 
-        return format(new Date(date), 'EE, yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        return format(new Date(date), "EEE do MMM, yyyy h:mm a");
     }
 
     return (
@@ -401,7 +398,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaClock className="icon-small" />
-                                                <p>{format(new Date(booking.time), "EEE do MMM, yyyy h:mm a")}</p>
+                                                <p>{getTime(booking.time)}</p>
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>

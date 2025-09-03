@@ -297,10 +297,7 @@ const CleanerProfile = () => {
             });
         }
 
-        return format(new Date(date), 'EE, yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        return format(new Date(date), "EEE do MMM, yyyy h:mm a");
     }
 
     const formatDuration = (time) => {
