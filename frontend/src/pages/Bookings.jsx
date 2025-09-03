@@ -457,7 +457,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaClock className="icon-small" />
-                                                <p> {booking.date}</p>
+                                                <p> {booking.completedDate === 'on-going job' ? 'on-going job' : getTime(booking.completedDate)}</p>
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
