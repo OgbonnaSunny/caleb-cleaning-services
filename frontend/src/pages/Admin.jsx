@@ -553,7 +553,7 @@ const Admin = () => {
 
                 response = await api.get('/api/revenue/today');
                 const { incomes } = response.data;
-                if (incomes && incomes.length > 0) {
+                if (incomes && incomes?.length > 0) {
                     const incomeToady = incomes[0].today_income;
                     const booking = incomes[0].today_booking;
                     const yesterday_booking = incomes[0].yesterday_booking;
@@ -589,7 +589,7 @@ const Admin = () => {
 
                 response = await api.get('/api/expenses/today')
                 const { expenses } = response.data;
-                if (expenses && expenses.length > 0) {
+                if (expenses && expenses?.length > 0) {
                     const expenseToday = expenses[0].today_expenses;
                     const expenseYesterday = expenses[0].yesterday_expenses;
                     setExpense(expenseToday);
@@ -599,7 +599,7 @@ const Admin = () => {
 
                 response = await api.get('/api/expenses/month')
                 const { expense  } = response.data;
-                if (expense && expense.length > 0) {
+                if (expense && expense?.length > 0) {
                     const thisMonth = expense[0].this_month;
                     const lastMonthExp = expense[0].last_month;
                     setMonthExpense(thisMonth)
@@ -609,19 +609,19 @@ const Admin = () => {
 
                 response = await api.get('/api/booking/active-cleaners')
                 const { cleaners } =  response.data;
-                if (cleaners && cleaners.length > 0) {
+                if (cleaners && cleaners?.length > 0) {
                     setActiveCleaners(cleaners[0].active_cleaners);
                 }
 
                 response = await api.get('/api/users/areas-covered')
                 const { areas } = response.data;
-                if (areas && areas.length > 0) {
+                if (areas && areas?.length > 0) {
                     setAreaCovered(areas[0].area_covered);
                 }
 
                 response = await api.get('/api/booking/get-approval-count')
                 const { bookingApproval } = response.data;
-                if (bookingApproval && bookingApproval.length > 0) {
+                if (bookingApproval && bookingApproval?.length > 0) {
                     setJobCount(bookingApproval[0].approvals)
                 }
 

@@ -140,7 +140,7 @@ const Customers = () => {
             })
             .catch(error => {
                 console.log(error);
-                setMessage('Error fetching booking data');
+                setMessage('Error fetching customers data');
             })
             .finally(() => {
                 setLoading(false);

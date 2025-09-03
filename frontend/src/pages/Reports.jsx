@@ -352,71 +352,86 @@ const Reports = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+
                 let response = await api.get('/api/revenue/today');
-                const incomeToady = response.data.incomes[0].today_income;
-                const booking = response.data.incomes[0].today_booking;
-                const yesterday_booking = response.data.incomes[0].yesterday_booking;
-                const yesterdayIcome = response.data.incomes[0].yesterday_income;
+                const { incomes } = response.data;
+                if (incomes && incomes?.length > 0) {
+                    const incomeToady = incomes[0].today_income;
+                    const booking = incomes[0].today_booking;
+                    const yesterday_booking = incomes[0].yesterday_booking;
+                    const yesterdayIcome = incomes[0].yesterday_income;
 
-                setRevenueToday(incomeToady);
-                setBookingToday(booking);
-                setBookingChange(changeLevel(yesterday_booking, booking));
-
-                setRevenueTodayChange(changeLevel(yesterdayIcome, incomeToady))
+                    setRevenueToday(incomeToady);
+                    setBookingToday(booking);
+                    setBookingChange(changeLevel(yesterday_booking, booking));
+                    setRevenueTodayChange(changeLevel(yesterdayIcome, incomeToady))
+                }
 
                 response = await api.get('/api/revenue/month');
-                const incomeMonth = response.data.incomes[0].this_month;
-                const lastMonth = response.data.incomes[0].last_month;
+                const { income } = response.data;
+                if (income && income?.length > 0) {
+                    const incomeMonth = income[0].this_month;
+                    const lastMonth = income[0].last_month;
 
-                const this_month_booking = response.data.incomes[0].this_month_booking;
-                const last_month_booking = response.data.incomes[0].last_month_booking;
+                    const this_month_booking = income[0].this_month_booking;
+                    const last_month_booking = income[0].last_month_booking;
 
-                let av1 = (Number(incomeMonth) / Number(this_month_booking)).toFixed(2);
-                if (isNaN(av1)) {
-                    av1 = 0;
+
+                    let av1 = (Number(incomeMonth) / Number(this_month_booking)).toFixed(2);
+                    if (isNaN(av1)) {
+                        av1 = 0;
+                    }
+                    let av2 = (Number(lastMonth) / Number(last_month_booking)).toFixed(2);
+                    if (isNaN(av2)) {
+                        av2 = 0;
+                    }
+                    setAverageRevenueChange(changeLevel(av2, av1))
+
+                    setAverageRevenue(av1)
+
+                    setRevenueMonth(incomeMonth);
+                    setMonthBooking(this_month_booking);
+
+                    setRevenueMonthChange(changeLevel(lastMonth, incomeMonth));
+
+                    setMonthBookingChange(changeLevel(last_month_booking, this_month_booking));
                 }
-                let av2 = (Number(lastMonth) / Number(last_month_booking)).toFixed(2);
-                if (isNaN(av2)) {
-                    av2 = 0;
-                }
-                setAverageRevenueChange(changeLevel(av2, av1))
-
-                setAverageRevenue(av1)
-
-                setRevenueMonth(incomeMonth);
-                setMonthBooking(this_month_booking);
-
-                setRevenueMonthChange(changeLevel(lastMonth, incomeMonth));
-
-                setMonthBookingChange(changeLevel(last_month_booking, this_month_booking));
 
                 response = await api.get('/api/expenses/today')
-                const expenseToday = response.data.expenses[0].today_expenses;
-                const expenseYesterday = response.data.expenses[0].yesterday_expenses;
-                setExpense(expenseToday);
+                const { expenses } = response.data;
+                if (expenses && expenses?.length > 0) {
+                    const expenseToday = expenses[0].today_expenses;
+                    const expenseYesterday = expenses[0].yesterday_expenses;
 
-                setExpenseChange(changeLevel(expenseYesterday, expenseToday));
+                    setExpense(expenseToday);
+                    setExpenseChange(changeLevel(expenseYesterday, expenseToday));
+                }
 
                 response = await api.get('/api/expenses/month')
-                const thisMonth = response.data.expenses[0].this_month;
-                const lastMonthExp = response.data.expenses[0].last_month;
-                setMonthExpense(thisMonth)
-                setExpenseChange(changeLevel(lastMonthExp, thisMonth));
+                const { expense  } = response.data;
+                if (expense && expense?.length > 0) {
+                    const thisMonth = expense[0].this_month;
+                    const lastMonthExp = expense[0].last_month;
+                    setMonthExpense(thisMonth)
+                    setExpenseChange(changeLevel(lastMonthExp, thisMonth));
+                }
 
                 response = await api.get('/api/revenue/month/profitable')
                 const plans = response.data.plans;
-                const mostFrequentPlan = Object.entries(plans.reduce((a, b) =>
-                    (a[b.plan] = (a[b.plan] || 0) + 1, a), {})).sort((a, b) => b[1] - a[1])[0][0];
+                if (plans && plans?.length > 0) {
+                    const mostFrequentPlan = Object.entries(plans.reduce((a, b) =>
+                        (a[b.plan] = (a[b.plan] || 0) + 1, a), {})).sort((a, b) => b[1] - a[1])[0][0];
 
-                let freuentPlanValue = 0;
-                for (let i = 0; i < plans.length; i++) {
-                    if (plans[i].plan === mostFrequentPlan) {
-                        freuentPlanValue += Number(plans[i].payment);
+                    let freuentPlanValue = 0;
+                    for (let i = 0; i < plans?.length; i++) {
+                        if (plans[i].plan === mostFrequentPlan) {
+                            freuentPlanValue += Number(plans[i].payment);
+                        }
                     }
+                    const av = (freuentPlanValue / plans.length).toFixed(2);
+                    setProfitable(mostFrequentPlan);
+                    setProfitableValue(av)
                 }
-                const av = (freuentPlanValue / plans.length).toFixed(2);
-                setProfitable(mostFrequentPlan);
-                setProfitableValue(av)
 
             } catch (error) {
                 console.log(error)
@@ -424,6 +439,7 @@ const Reports = () => {
         }
         fetchData();
     }, [resetCount])
+
 
     useEffect(() => {
         document.title = 'Reports';
