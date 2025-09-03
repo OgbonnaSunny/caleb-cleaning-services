@@ -66,7 +66,7 @@ const BookingList = () => {
                 }
             }
 
-            if (scrollTop <= scrollHeight / 2) {
+            if (scrollTop <= scrollHeight / 4) {
                 setFinishJobs(false);
                 setFinishTodayJobs(false);
                 setFinishRecentJobs(false);

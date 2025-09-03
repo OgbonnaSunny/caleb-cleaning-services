@@ -226,7 +226,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 }
             }
 
-            if (scrollTop <= scrollHeight / 2) {
+            if (scrollTop <= scrollHeight / 4) {
                 setFinishedHistory(false)
                 setFinishedActive(false)
             }
