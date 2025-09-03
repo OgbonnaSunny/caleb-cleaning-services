@@ -43,6 +43,7 @@ export default function Messages() {
     const [prevSender, setPrevSender] = useState(currentReceiver);
     const [prevReceiver, setPrevReceiver] = useState(currentSender);
     const [message, setMessage] = useState(null);
+    const [scrolling, setScrolling] = useState(false);
 
     const updateMessage =  (newMessages) => {
         const groupedMesages =  [...messagesList];
@@ -127,22 +128,26 @@ export default function Messages() {
         }
     }, [messagesList, sender, receiver, adminEmail]);
 
-    useEffect(() => {
-        const container = messagesContainerRef.current;
-        if (!container) return;
-        // Check if user is already near the bottom
-        const isNearBottom = () => {
-            const threshold = 100; // px — how far from bottom is "near"
-            const position = container.scrollHeight - container.scrollTop - container.clientHeight;
-            return position <= threshold;
-        };
+    let lastScrollTop = 0;
 
-        if (isNearBottom()) {
-            const timeoutId = setTimeout(() => {
-                scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-            return () => clearTimeout(timeoutId);
+    window.addEventListener("scroll", () => {
+        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if ((currentScrollTop < lastScrollTop) || (currentScrollTop > lastScrollTop) ) {
+           setScrolling(true);
         }
+
+        // Update for next comparison
+        lastScrollTop = currentScrollTop;
+    });
+
+    useEffect(() => {
+        if (scrolling) return;
+        const timeoutId = setTimeout(() => {
+            scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
+            setScrolling(false);
+        }, 100);
+        return () => clearTimeout(timeoutId);
 
     }, [messagesList]);
 
@@ -330,7 +335,7 @@ export default function Messages() {
     const longPress = useLongPress(handleLongPress, 700); // 700ms hold
 
     return (
-        <div ref={messagesContainerRef} style={{overflowY:'scroll'}} className="sticky-nav-container">
+        <div className="sticky-nav-container">
             <div className='top-order-nav'>
                 <div style={{marginLeft:'10px', marginTop:'20px'}} className="nav-order-content">
                     <img src={LOGO} className={'logo-icon'}/>
