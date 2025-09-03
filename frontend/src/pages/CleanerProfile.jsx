@@ -224,6 +224,16 @@ const CleanerProfile = () => {
     const [quarter, setQuarter] = useState([]);
     const [isActive, setIsActive] = useState(false);
 
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setEmail(user?.email);
+            setBio(user?.bio);
+            setPhoneNumber(user?.phoneNumber);
+            setIsActive(user?.isActive);
+        }
+    }, []);
+
     const renderMenuIcon = (id) => {
         if (id === null || id === undefined) return;
         if (id === 1) {
@@ -1783,12 +1793,11 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchCleanerData = () => {
-            const user1 = JSON.parse(localStorage.getItem('user'));
-            if (user1 === null || user1 === undefined) {
+            if (email === null || email === undefined || email === '') {
                 return;
             }
             setIsLoading(true);
-            api.post('/api/users/record', {email: user1.email})
+            api.post('/api/users/record', {email: email})
                 .then(response => {
                     const { user } = response.data;
                     if (user) {
@@ -1825,7 +1834,7 @@ const CleanerProfile = () => {
                 })
         };
         fetchCleanerData();
-    }, []);
+    }, [email]);
 
     useEffect(() => {
         setTimeout(() => setSuccessMessage(null), 5000);
