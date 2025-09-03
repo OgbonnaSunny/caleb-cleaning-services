@@ -59,7 +59,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [cancelledMessage, setCancelledMessage] = useState(null);
     const [todayMessage, setTodayMessage] = useState(null);
     const [activeIdForCancellation, setActiveIdForCancellation] = useState(null);
-    const [finishedActive, setFinishedActive] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -77,7 +76,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     }, []);
 
     useEffect(() => {
-        if (email === null || email === undefined || finishedActive) {
+        if (email === null || email === undefined || loading) {
             return;
         }
         if (user === 'client') {
@@ -101,7 +100,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         if (allBookingData.length <= 0) {
                             setMessage("No active bookings found");
                         }
-                        setFinishedActive(true);
                     }
                 })
                 .catch((error) => {
@@ -116,7 +114,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
     useEffect(() => {
         const fetchHistory = async () => {
-            if (email === null || email === undefined) return;
+            if (email === null || email === undefined || loading) return;
             setLoading(true);
             try {
                 let offset = 0;
