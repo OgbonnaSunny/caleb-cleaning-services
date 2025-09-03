@@ -59,6 +59,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [cancelledMessage, setCancelledMessage] = useState(null);
     const [todayMessage, setTodayMessage] = useState(null);
     const [activeIdForCancellation, setActiveIdForCancellation] = useState(null);
+    const [finishedActive, setFinishedActive] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -76,7 +77,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     }, []);
 
     useEffect(() => {
-        if (email === null || email === undefined) {
+        if (email === null || email === undefined || finishedActive) {
             return;
         }
         if (user === 'client') {
@@ -100,6 +101,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         if (allBookingData.length <= 0) {
                             setMessage("No active bookings found");
                         }
+                        setFinishedActive(true);
                     }
                 })
                 .catch((error) => {
@@ -217,7 +219,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             const clientHeight = window.innerHeight;
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-
                 if (!loading) {
                     setPageCount(prev => prev + 1);
                 }

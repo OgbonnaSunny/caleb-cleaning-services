@@ -443,8 +443,9 @@ const Customer = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let data = {email: email};
+
             try {
+                let data = {email: email};
                 let response = await api.post('/api/revenue/billing', data)
                 setBilling(response.data);
 
