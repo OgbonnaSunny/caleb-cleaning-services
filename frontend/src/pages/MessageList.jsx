@@ -12,6 +12,7 @@ const MessageList = () => {
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
 
     const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(10);
     const [email, setEmail] = useState(companyEmail);
@@ -76,12 +77,13 @@ const MessageList = () => {
             api.post('/api/messages/all', {receiver: email })
                 .then((res) => {
                     const { messages } = res.data;
-                    console.log(messages);
                     if (messages && messages?.length > 0) {
                         setMessages(messages);
                     }
+                    setMessage('No messages found.');
                 })
                 .catch((err) => {
+                    setMessage('Error fetching messages');
                     console.log(err);
                 })
                 .finally(() => {
@@ -133,7 +135,7 @@ const MessageList = () => {
                         </div>
                     ))}
                 </div>}
-                {messages?.length === 0 && <p>No message found</p>}
+                {message && <p>{message}</p>}
             </div>
 
         </div>
