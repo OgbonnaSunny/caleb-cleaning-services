@@ -127,8 +127,13 @@ export default function Messages() {
     }, [messagesList, sender, receiver, adminEmail]);
 
     useEffect(() => {
-        scrollerRef.current?.scrollIntoView();
-    }, [messagesList, chatMessage]);
+        // Scroll to bottom whenever messages change
+        const timeoutId = setTimeout(() => {
+            scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+        return () => clearTimeout(timeoutId);
+    }, [messagesList]);
+
 
 
     // Load previous messages from DB
@@ -249,7 +254,6 @@ export default function Messages() {
     const handleChatMessage = (e) => {
         e.preventDefault();
         setChatMessage(e.target.value);
-        scrollerRef.current?.scrollIntoView()
     }
 
     const getTime = (date) => {
@@ -385,9 +389,7 @@ export default function Messages() {
                     </div>)}
                 {loading && <p>Loading messages...</p>}
                 {message && <p style={{margin:'20px', textAlign:'center'}}>{message}</p>}
-                <div ref={scrollerRef}>
-
-                </div>
+                <div ref={scrollerRef} aria-hidden="true" style={{ height: 0 }}></div>
             </main>
 
             <nav  className='bottom-order-nav'>
