@@ -128,7 +128,7 @@ export default function Messages() {
 
     useEffect(() => {
         scrollerRef.current?.scrollIntoView();
-    }, [messagesList]);
+    }, [messagesList, chatMessage]);
 
 
     // Load previous messages from DB
