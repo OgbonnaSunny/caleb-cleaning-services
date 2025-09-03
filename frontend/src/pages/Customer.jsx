@@ -443,11 +443,12 @@ const Customer = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = {email: email};
+            let data = {email: email};
             try {
                 let response = await api.post('/api/revenue/billing', data)
                 setBilling(response.data);
 
+                data = {receiver: email};
                 response = await api.post('/api/messages/users', data)
                 const count = response.data.messages;
                 setMessageCount(prev => prev + count);
