@@ -323,7 +323,7 @@ const ServiceAreas = () => {
             })
             .finally(() => {
                 setLoading(false);
-                setTimeout(() => setMessage(null), 5000);
+             //   setTimeout(() => setMessage(null), 5000);
             })
     }, [postcode]);
 
