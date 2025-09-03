@@ -530,7 +530,7 @@ const ProfilePage = ({ emailFromProile }) => {
                     {activeTab2 === 'services' && (<div className="services-section">
                             <h1 className={'experience-text'}>Services Offered</h1>
                             <div className="services-grid">
-                                {services.map((service, index) => (
+                                {services?.map((service, index) => (
                                     <div key={index} className="stats-card">
                                         <h3 style={{textAlign:'center'}}>{service}</h3>
                                     </div>
