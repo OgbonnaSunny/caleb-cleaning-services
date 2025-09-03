@@ -110,7 +110,6 @@ export default function Messages() {
     }
 
     useEffect(() => {
-     //   scrollerRef.current?.scrollIntoView();
         if (messagesList.length > 2 || sender === adminEmail) return;
         let reply = false;
         let customerSend = false;
@@ -126,6 +125,10 @@ export default function Messages() {
             autoReply();
         }
     }, [messagesList, sender, receiver, adminEmail]);
+
+    useEffect(() => {
+        scrollerRef.current?.scrollIntoView();
+    }, [messagesList]);
 
 
     // Load previous messages from DB
