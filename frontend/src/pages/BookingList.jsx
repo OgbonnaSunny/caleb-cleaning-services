@@ -55,8 +55,7 @@ const BookingList = () => {
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = window.innerHeight;
 
-            if (scrollTop + clientHeight >= scrollHeight - 200) {
-
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
                 if (!loading) {
                     setPageCount(prev => prev + 1);
                 }

@@ -225,6 +225,10 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     setPageCount(prev => prev + 1);
                 }
             }
+            else {
+                setFinishedHistory(false)
+                setFinishedActive(false)
+            }
         };
 
         window.addEventListener("scroll", handleScroll);
