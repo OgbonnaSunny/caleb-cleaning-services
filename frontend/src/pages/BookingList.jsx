@@ -34,6 +34,11 @@ const BookingList = () => {
     const [manageIds, setManageIds] = useState(-1);
     const [assignedIds, setAssignedIds] = useState([]);
 
+    const [finishJobs, setFinishJobs] = useState(false);
+    const [finishTodayJobs, setFinishTodayJobs] = useState(false);
+    const [finishRecentJobs, setFinishRecentJobs] = useState(false);
+    const [finishScheduleJobs, setFinishScheduleJobs] = useState(false);
+
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
         {id: 2, category: 'Today', title: ['Today\' Booking']},
@@ -59,6 +64,13 @@ const BookingList = () => {
                 if (!loading) {
                     setPageCount(prev => prev + 1);
                 }
+            }
+
+            if (scrollTop <= scrollHeight / 2) {
+                setFinishJobs(false);
+                setFinishTodayJobs(false);
+                setFinishRecentJobs(false);
+                setFinishScheduleJobs(false);
             }
         };
 
@@ -135,7 +147,7 @@ const BookingList = () => {
     }, []);
 
     useEffect(() => {
-        if (activeBottomMenu === 'Today' && !loading) {
+        if (activeBottomMenu === 'Today' && !loading && !finishTodayJobs) {
             setLoading(true);
             let offset = 0;
             if (todayBooking.length > 0) {
@@ -156,6 +168,7 @@ const BookingList = () => {
                         if (todayBooking.length <= 0) {
                             setMessage("No booking found for today");
                         }
+                        setFinishTodayJobs(true)
 
                     }
 
@@ -172,7 +185,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
-        if (activeBottomMenu === 'Recent' && !loading) {
+        if (activeBottomMenu === 'Recent' && !loading && !finishRecentJobs) {
             setLoading(true);
             let offset = 0;
             if (recentBookings.length > 0) {
@@ -193,6 +206,7 @@ const BookingList = () => {
                         if (recentBookings.length <= 0) {
                             setMessage("No recent  bookings found");
                         }
+                        setFinishRecentJobs(true)
                     }
                 })
                 .catch((error) => {
@@ -206,7 +220,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
-       if (activeBottomMenu === 'Schedule' && !loading) {
+       if (activeBottomMenu === 'Schedule' && !loading && !finishScheduleJobs) {
            setLoading(true);
            let offset = 0;
            if (todaySchedule.length > 0) {
@@ -217,6 +231,7 @@ const BookingList = () => {
                .then(res => {
                    const { booking } = res.data;
                    if (!booking || booking.length <= 0) {
+                       setFinishScheduleJobs(true)
                        setMessage("No booking schedule for today");
                        return;
                    }
@@ -237,7 +252,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount])
 
     useEffect(() => {
-        if (activeBottomMenu === 'Jobs' && !loading) {
+        if (activeBottomMenu === 'Jobs' && !loading && !finishJobs) {
             setLoading(true);
             let offset = 0;
             if (approvedBookings.length > 0) {
@@ -248,6 +263,7 @@ const BookingList = () => {
                 .then(res => {
                     const { booking } = res.data;
                     if (!booking || booking.length <= 0 && approvedBookings.length <= 0) {
+                        setFinishJobs(true)
                         setMessage("No booking for approval found for today");
                         return;
                     }

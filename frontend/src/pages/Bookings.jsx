@@ -225,7 +225,8 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     setPageCount(prev => prev + 1);
                 }
             }
-            else {
+
+            if (scrollTop <= scrollHeight / 2) {
                 setFinishedHistory(false)
                 setFinishedActive(false)
             }
@@ -234,6 +235,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loading]);
+
 
     useEffect(() => {
         const resetMessage = () => {
