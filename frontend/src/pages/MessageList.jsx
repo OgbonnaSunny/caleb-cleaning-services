@@ -139,6 +139,7 @@ const MessageList = () => {
                     ))}
                 </div>}
                 {message && <p>{message}</p>}
+                {loading && <p>Loading messages...</p>}
             </div>
 
         </div>

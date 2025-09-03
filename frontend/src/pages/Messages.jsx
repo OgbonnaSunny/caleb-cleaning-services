@@ -35,13 +35,13 @@ export default function Messages() {
     const [reply, setReply] = useState(null);
     const [loading, setLoading] = useState(false);
     const [senderReplyName, setSenderReplyName] = useState(null);
-  //  const [replies, setReplies] = useState(false);
     const [adminEmail, setAdminEmail] = useState(companyEmail);
     const [statuses, setStatuses] = useState({});
     const [socket, setSocket] = useState(socket1);
 
     const [prevSender, setPrevSender] = useState(currentReceiver);
     const [prevReceiver, setPrevReceiver] = useState(currentSender);
+    const [message, setMessage] = useState(null);
 
     const updateMessage =  (newMessages) => {
         const groupedMesages =  [...messagesList];
@@ -110,7 +110,7 @@ export default function Messages() {
     }
 
     useEffect(() => {
-        scrollerRef.current?.scrollIntoView();
+     //   scrollerRef.current?.scrollIntoView();
         if (messagesList.length > 2 || sender === adminEmail) return;
         let reply = false;
         let customerSend = false;
@@ -132,14 +132,17 @@ export default function Messages() {
     useEffect(() => {
         const fetchData = async () => {
             if (!sender || !receiver) { return; }
+            setLoading(true);
             try {
                 const res = await api.post('/api/messages', {sender: sender, receiver: receiver});
                 const { messages } = res.data;
                 if (!messages || messages.length <= 0) return;
                 setMessagesList(messages);
-
             } catch (err) {
                 console.log(err);
+                setMessage("Error fetching messages");
+            }finally {
+                setLoading(false);
             }
         }
         fetchData();
@@ -373,13 +376,14 @@ export default function Messages() {
                         }
                     </div>
                 ))}
-                {messagesList.length <= 0 && (
-                    <div
-                        style={{display:'flex', justifyContent:'center', alignItems:'center', marginTop:'10%'}}>
+                {(messagesList.length <= 0 && !loading) && (<div style={{display:'flex', justifyContent:'center', alignItems:'center', marginTop:'10%'}}>
                         <h2 style={{textAlign:'center'}}>Start chatting</h2>
-                    </div>)
-                }
-                <div ref={scrollerRef}></div>
+                    </div>)}
+                {loading && <p>Loading messages...</p>}
+                {message && <p style={{margin:'20px', textAlign:'center'}}>{message}</p>}
+                <div ref={scrollerRef}>
+
+                </div>
             </main>
 
             <nav  className='bottom-order-nav'>
