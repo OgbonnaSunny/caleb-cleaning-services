@@ -19,6 +19,7 @@ import api from './api.js'
 import { useNavigate } from 'react-router-dom';
 import {differenceInDays, format, isToday} from 'date-fns';
 
+
 const Bookings = ( {cancellable =  false, user, history = false }) => {
     const navigate = useNavigate();
     const bookings = [
@@ -385,9 +386,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 <div>
                     {!history && (<div>
                         <div className="recent-bookings card">
-                            <div className="card-header">
-                                <h2 className={'experience-text'} style={{color:'navy'}}>Active booking</h2>
-                            </div>
                             {allBookingData.length > 0 &&  <div className="card-body">
                                 <div className="grid-container">
                                     {allBookingData.map(booking => (
@@ -403,7 +401,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <FaClock className="icon-small" />
-                                                <p> {booking.time}</p>
+                                                <p>{format(new Date(booking.time), "EEE do MMM, yyyy h:mm a")}</p>
                                             </div>
                                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                                 <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', alignSelf:'end'}}>
@@ -447,9 +445,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     </div>)}
                     {history && (<div>
                         <div className="recent-bookings card">
-                            <div className="card-header">
-                                <h2 className={'experience-text'} style={{color:'navy'}}>History</h2>
-                            </div>
                             {clientHistory.length > 0 &&  <div className="card-body">
                                 <div className="grid-container">
                                     {clientHistory.map(booking => (
