@@ -319,8 +319,14 @@ const ProfilePage = ({ emailFromProile }) => {
                      setBio(user?.bio);
                      setProfilePhoto(user?.photo_path);
                      setAvailability(user?.available);
-                     setServices(user?.workExperience?.services);
-                     setSpecialties(user?.workExperience?.specialities)
+                     const serviceList = user?.workExperience?.services;
+                     if (serviceList?.length > 0) {
+                         setServices(serviceList);
+                     }
+                     const speciaties = user?.workExperience?.specialities;
+                     if (speciaties) {
+                         setSpecialties(speciaties);
+                     }
                  }
                  else {
                      setSuccessMessage('Error updating user');
@@ -334,7 +340,7 @@ const ProfilePage = ({ emailFromProile }) => {
                  setIsLoading(false);
              }
          };
-        if (email !== null || email !== undefined) {
+        if (email !== null && email !== undefined && email !== '') {
             fetchCleanerData();
         }
     }, [email]);
@@ -392,7 +398,7 @@ const ProfilePage = ({ emailFromProile }) => {
                 setLoadingMore(false);
             }
         };
-        if (email !== null || email !== undefined) {
+        if (email !== null && email !== undefined && email !== '') {
             fetchCleanerData();
         }
     }, [email, pageCount]);
