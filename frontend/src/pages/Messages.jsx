@@ -145,7 +145,6 @@ export default function Messages() {
         if (scrolling) return;
         const timeoutId = setTimeout(() => {
             scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
-            setScrolling(false);
         }, 100);
         return () => clearTimeout(timeoutId);
 
@@ -271,6 +270,7 @@ export default function Messages() {
     const handleChatMessage = (e) => {
         e.preventDefault();
         setChatMessage(e.target.value);
+        setScrolling(false);
     }
 
     const getTime = (date) => {
