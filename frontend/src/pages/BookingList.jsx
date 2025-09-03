@@ -135,7 +135,7 @@ const BookingList = () => {
     }, []);
 
     useEffect(() => {
-        if (activeBottomMenu === 'Today') {
+        if (activeBottomMenu === 'Today' && !loading) {
             setLoading(true);
             let offset = 0;
             if (todayBooking.length > 0) {
@@ -172,7 +172,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
-        if (activeBottomMenu === 'Recent') {
+        if (activeBottomMenu === 'Recent' && !loading) {
             setLoading(true);
             let offset = 0;
             if (recentBookings.length > 0) {
@@ -206,7 +206,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
-       if (activeBottomMenu === 'Schedule') {
+       if (activeBottomMenu === 'Schedule' && !loading) {
            setLoading(true);
            let offset = 0;
            if (todaySchedule.length > 0) {
@@ -237,7 +237,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount])
 
     useEffect(() => {
-        if (activeBottomMenu === 'Jobs') {
+        if (activeBottomMenu === 'Jobs' && !loading) {
             setLoading(true);
             let offset = 0;
             if (approvedBookings.length > 0) {
