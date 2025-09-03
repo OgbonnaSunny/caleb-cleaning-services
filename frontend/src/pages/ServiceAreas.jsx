@@ -302,7 +302,7 @@ const ServiceAreas = () => {
                 const data = [];
               //  console.log(postcodes);
                 if (postcodes.length <= 0) {
-                    setMessage("No cleaner was found for this area.");
+                    setMessage("No cleaner was found at this location.");
                     for (let i = 0; i < edinburghPostcodes.length; i++) {
                         if (edinburghPostcodes[i].postcode === postcode) {
                             const areas = edinburghPostcodes[i].category;
