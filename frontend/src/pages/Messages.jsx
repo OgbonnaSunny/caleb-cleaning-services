@@ -134,8 +134,9 @@ export default function Messages() {
         const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         if ((currentScrollTop < lastScrollTop) || (currentScrollTop > lastScrollTop) ) {
-           setScrolling(true);
+
         }
+        setScrolling(true);
 
         // Update for next comparison
         lastScrollTop = currentScrollTop;
