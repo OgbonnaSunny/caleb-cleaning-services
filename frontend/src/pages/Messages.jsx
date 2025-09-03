@@ -128,18 +128,12 @@ export default function Messages() {
         }
     }, [messagesList, sender, receiver, adminEmail]);
 
-    let lastScrollTop = 0;
 
     window.addEventListener("scroll", () => {
         const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-        if ((currentScrollTop < lastScrollTop) || (currentScrollTop > lastScrollTop) ) {
-
-        }
         setScrolling(true);
 
-        // Update for next comparison
-        lastScrollTop = currentScrollTop;
     });
 
     useEffect(() => {

@@ -673,8 +673,8 @@ const Admin = () => {
             marginTop:"20px"// Ensures it takes at least full viewport height
         }}>
             <div className={'admin-container'}>
-                <div className={['slide-box', 'panel', showPanel ? 'slide-in' : 'slide-out'].join(' ')}  >
-                    <div className="sidebar" >
+                <div  className={['slide-box', 'panel', showPanel ? 'slide-in' : 'slide-out'].join(' ')}  >
+                    <div style={{backgroundColor:'moccasin'}} className="sidebar" >
                         <div style={{display: 'flex', justifyContent: 'end', alignItems: 'baseline', width: '100%'}}>
                             <img src={LOGO} alt="logo" style={{width:'100px', height:'100px'}} />
                             < FaTimes style={{height: '40px', alignSelf: 'end', alignContent:'end', marginBottom:'30px'}}
@@ -683,7 +683,8 @@ const Admin = () => {
                         </div>
                         <nav className="sidebar-nav">
                             {links.map(link => (
-                                <div key={link.id} style={{display: 'flex', alignItems: 'center', justifyContent: 'start', marginTop: '20px'}} >
+                                <div key={link.id} style={{display: 'flex', alignItems: 'center',
+                                    justifyContent: 'start', marginTop: '20px', marginLeft:'15px'}} >
                                     <link.icon  style={link.link === activeLink ? active : notActive} />
                                     <Link
                                         to={link.link} style={link.link === activeLink ?
