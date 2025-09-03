@@ -300,6 +300,7 @@ const ServiceAreas = () => {
             .then((res) => {
                 const postcodes = res.data.postcodes;
                 const data = [];
+                console.log(postcodes);
                 if (!postcodes.length) {
                     setMessage("No cleaner was found for this area.");
                 }
