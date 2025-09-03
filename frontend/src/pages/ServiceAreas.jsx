@@ -301,8 +301,17 @@ const ServiceAreas = () => {
                 const postcodes = res.data.postcodes;
                 const data = [];
                 console.log(postcodes);
-                if (!postcodes.length) {
+                if (postcodes.length <= 0) {
                     setMessage("No cleaner was found for this area.");
+                    for (let i = 0; i < edinburghPostcodes.length; i++) {
+                        if (edinburghPostcodes[i].postcode === postcode) {
+                            const areas = edinburghPostcodes[i].category;
+                            for (let j = 0; j < areas.length; j++) {
+                                const area = {id: j, category: areas[j], value: 0.001};
+                                data.push(area);
+                            }
+                        }
+                    }
                 }
                 else {
                     for (let i = 0; i < edinburghPostcodes.length; i++) {
@@ -324,7 +333,7 @@ const ServiceAreas = () => {
             })
             .finally(() => {
                 setLoading(false);
-             //   setTimeout(() => setMessage(null), 5000);
+                setTimeout(() => setMessage(null), 5000);
             })
     }, [postcode]);
 
