@@ -249,6 +249,7 @@ export default function Messages() {
     const handleChatMessage = (e) => {
         e.preventDefault();
         setChatMessage(e.target.value);
+        scrollerRef.current?.scrollIntoView()
     }
 
     const getTime = (date) => {
