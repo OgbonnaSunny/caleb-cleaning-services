@@ -80,7 +80,10 @@ const MessageList = () => {
                     if (messages && messages?.length > 0) {
                         setMessages(messages);
                     }
-                    setMessage('No messages found.');
+                    else {
+                        setMessage('No messages found.');
+                    }
+
                 })
                 .catch((err) => {
                     setMessage('Error fetching messages');
