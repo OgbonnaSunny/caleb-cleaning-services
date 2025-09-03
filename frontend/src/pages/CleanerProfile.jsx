@@ -487,8 +487,12 @@ const CleanerProfile = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
-            setCleanerName(`${user.firstName.charAt(0).toUpperCase()+user.firstName.slice(1)} ${user.lastName.charAt(0).toUpperCase()+user.lastName.slice(1)}`);
-            setBio(`Professional ${user.roles.charAt(0).toUpperCase()+user.roles.slice(1)}`);
+            if (user?.firstName?.toString()?.length > 0 && user?.lastName?.toString()?.length > 0) {
+                setCleanerName(`${user?.firstName?.charAt(0)?.toUpperCase()+user?.firstName?.slice(1)} ${user?.lastName?.charAt(0)?.toUpperCase()+user?.lastName?.slice(1)}`);
+            }
+            if (user?.roles?.toString()?.length > 0) {
+                setBio(`Professional ${user?.roles?.charAt(0)?.toUpperCase()+user?.roles?.slice(1)}`);
+            }
             setEmail(user.email);
             setPhoneNumber(user.phone);
 
