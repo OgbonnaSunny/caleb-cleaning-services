@@ -302,15 +302,6 @@ const ServiceAreas = () => {
                 const data = [];
                 if (!postcodes || postcodes.length <= 0) {
                     setMessage("No cleaner was found for this area.");
-                    for (let i = 0; i < edinburghPostcodes.length; i++) {
-                        if (edinburghPostcodes[i].postcode === postcode) {
-                            const areas = edinburghPostcodes[i].category;
-                            for (let j = 0; j < areas.length; j++) {
-                                const area = {id: j, category: areas[j], value: 0.001};
-                                data.push(area);
-                            }
-                        }
-                    }
                 }
                 else {
                     for (let i = 0; i < edinburghPostcodes.length; i++) {
