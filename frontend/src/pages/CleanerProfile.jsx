@@ -363,8 +363,8 @@ const CleanerProfile = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             if (isActive === false) {
-                setMessage('You do not have the clearance to access booking at this moment');
-                return;
+             //   setMessage('You do not have the clearance to access booking at this moment');
+             //   return;
             }
             if (newOrders.length > 0) {
                 setLoadingMore(true);
@@ -506,7 +506,7 @@ const CleanerProfile = () => {
     })
 
     useEffect(() => {
-        if (email === null || email === undefined) {
+        if (email === null || email === undefined || email === '') {
             return;
         }
 
@@ -572,6 +572,7 @@ const CleanerProfile = () => {
     }, [email]);
 
     useEffect(() => {
+        if (email === null || email === undefined || email === '') return
         setLoadingMore(true)
         let  offset = 0;
         if (allIncome.length > 0) {
