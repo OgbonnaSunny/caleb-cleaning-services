@@ -231,6 +231,7 @@ const CleanerProfile = () => {
             setBio(user?.bio);
             setPhoneNumber(user?.phoneNumber);
             setIsActive(user?.isActive);
+            console.log(user);
         }
     }, []);
 
