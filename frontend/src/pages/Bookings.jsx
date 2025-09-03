@@ -194,7 +194,9 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         });
                     }
                     else {
-                        setMessage("No active bookings found for today");
+                        if (last7DaysBooking.length <= 0) {
+                            setMessage("No active bookings found for recent days");
+                        }
                     }
                 })
                 .catch((error) => {
@@ -230,8 +232,9 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             setMessage(null);
             setBgColor('red')
         }
-
-        setTimeout(()=> resetMessage(), 5000);
+        if (user !== 'admin') {
+            setTimeout(()=> resetMessage(), 5000);
+        }
 
     }, [message]);
 

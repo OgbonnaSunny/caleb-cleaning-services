@@ -6,7 +6,7 @@ import api from './api.js'
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 
-const ProfilePage = ({emailFromProile}) => {
+const ProfilePage = ({ emailFromProile }) => {
     const location = useLocation();
 
     const params = new URLSearchParams(window.location.search);

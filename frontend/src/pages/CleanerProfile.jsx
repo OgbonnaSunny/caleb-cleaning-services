@@ -1261,7 +1261,7 @@ const CleanerProfile = () => {
                 const data = {email: email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/history', data);
                 const jobList = acceptResponse.data.booking;
-                if (jobList.length <= 0 && jobHistory.length <= 0) {
+                if (jobList?.length <= 0 && jobHistory?.length <= 0) {
                     setHistoryMessage('You do not have active history');
                 }
                 else {
@@ -1400,7 +1400,6 @@ const CleanerProfile = () => {
                                         </div>
                                     </div>
                                     {message && <p style={{color:bgColor}}>{message}</p>}
-
                                     {order.id === bookingIdForReview && <div>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                             <p>Rating: {rating}</p>
