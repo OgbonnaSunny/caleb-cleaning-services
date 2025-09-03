@@ -76,7 +76,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     }, []);
 
     useEffect(() => {
-        if (email === null || email === undefined || loading) {
+        if (email === null || email === undefined || loading || history) {
             return;
         }
         if (user === 'client') {
