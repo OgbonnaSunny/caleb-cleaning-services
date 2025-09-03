@@ -391,6 +391,8 @@ const Settings = () => {
         }
     }, [message]);
 
+    //className={`settings-tab ${activeTab === 'general' ? 'active' : ''}`}
+
     return (
         <div className="support-page" style={{
             display: 'flex',
@@ -405,38 +407,33 @@ const Settings = () => {
             <div className="settings-container">
                 <div className="grid-container">
                     <button
-                        className={`settings-tab ${activeTab === 'general' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('general')}
-                    >
-                        <FaCog />
+                        className={activeTab === 'general' ? 'next-button' : 'back-button'}
+                        onClick={() => setActiveTab('general')}>
+                        <FaCog style={{width: '50px'}} />
                         <span>General Settings</span>
                     </button>
                     <button
-                        className={`settings-tab ${activeTab === 'notifications' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('notifications')}
-                    >
-                        <FaBell />
+                        className={activeTab === 'notifications' ? 'next-button' : 'back-button'}
+                        onClick={() => setActiveTab('notifications')}>
+                        <FaBell style={{width: '50px'}} />
                         <span>Notifications</span>
                     </button>
                     <button
-                        className={`settings-tab ${activeTab === 'payments' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('payments')}
-                    >
-                        <FaCreditCard />
+                        className={activeTab === 'payments' ? 'next-button' : 'back-button'}
+                        onClick={() => setActiveTab('payments')}>
+                        <FaCreditCard style={{width: '50px'}} />
                         <span>Payments</span>
                     </button>
                     <button
-                        className={`settings-tab ${activeTab === 'privacy' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('privacy')}
-                    >
-                        <FaShieldAlt />
+                        className={activeTab === 'privacy' ? 'next-button' : 'back-button'}
+                        onClick={() => setActiveTab('privacy')}>
+                        <FaShieldAlt style={{width: '50px'}} />
                         <span>Privacy & Security</span>
                     </button>
                     <button
                         className={`settings-tab ${activeTab === 'admin' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('admin')}
-                    >
-                        <FaUserCog />
+                        onClick={() => setActiveTab('admin')}>
+                        <FaUserCog style={{width: '30px'}} />
                         <span>Admin Users</span>
                     </button>
                 </div>

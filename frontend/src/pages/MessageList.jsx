@@ -75,8 +75,9 @@ const MessageList = () => {
             setLoading(true);
             api.post('/api/messages/all', {receiver: email })
                 .then((res) => {
-                    const { messages }= res.data;
-                    if (messages) {
+                    const { messages } = res.data;
+                    console.log(messages);
+                    if (messages && messages?.length > 0) {
                         setMessages(messages);
                     }
                 })
@@ -116,7 +117,7 @@ const MessageList = () => {
                     <img src={LOGO} className={'logo-icon'}/>
                     <h1 className="page-title" style={{width:'20%'}}>Messages</h1>
                 </div>
-                {messages.length > 0 && <div>
+                {messages?.length > 0 && <div>
                     {messages.map((msg, i) => (
                         <div onClick={() => navigate('/messages',
                             {state: {receiver: msg.sender_email, receiverName: msg.sender_name, sender: companyEmail, senderName: 'Fly Cleaner'}})}
@@ -132,7 +133,7 @@ const MessageList = () => {
                         </div>
                     ))}
                 </div>}
-                {messages.length === 0 && <p>No message found</p>}
+                {messages?.length === 0 && <p>No message found</p>}
             </div>
 
         </div>
