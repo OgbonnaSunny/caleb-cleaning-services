@@ -363,8 +363,8 @@ const CleanerProfile = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             if (isActive === false) {
-             //   setMessage('You do not have the clearance to access booking at this moment');
-             //   return;
+                setMessage('You do not have the clearance to access booking at this moment');
+                return;
             }
             if (newOrders.length > 0) {
                 setLoadingMore(true);
@@ -1386,9 +1386,7 @@ const CleanerProfile = () => {
                         <p style={{textAlign:'center'}}>Loading data...</p>
                     </div>
                     : (jobHistory.length <= 0 || jobHistory === null) ?
-                        <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
-                            <p style={{textAlign:'center'}}>{historyMessage}</p>
-                        </div> :
+                        <p style={{textAlign:'center'}}>{historyMessage}</p> :
                         <div className="grid-container">
                             {jobHistory.map(order => (
                                 <div key={order.id} className={'price-container'} >
