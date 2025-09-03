@@ -228,13 +228,6 @@ const CleanerProfile = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             setEmail(user?.email);
-            setBio(user?.bio);
-            setPhoneNumber(user?.phoneNumber);
-            const active = user?.isActive;
-            if (active > 0) {
-                setIsActive(true);
-            }
-
         }
     }, []);
 
@@ -1808,18 +1801,23 @@ const CleanerProfile = () => {
                         localStorage.setItem('user', JSON.stringify(user));
                         setValue('personal', {
                             ...getValues().personal,
-                            firstName: user.firstName,
-                            lastName: user.lastName,
-                            phone: user.phone,
-                            address: user.address,
-                            email: user.email,
+                            firstName: user?.firstName,
+                            lastName: user?.lastName,
+                            phone: user?.phone,
+                            address: user?.address,
+                            email: user?.email,
                             nationalInsurance: user.NIN,
-                            bio: user.bio,
-                            emergencyContact: user.emergency,
+                            bio: user?.bio,
+                            emergencyContact: user?.emergency,
                         });
-                        setValue('work', user.workExperience);
-                        setValue('availability', user.available);
-                        setValue('notifications', user.notification);
+                        setValue('work', user?.workExperience);
+                        setValue('availability', user?.available);
+                        setValue('notifications', user?.notification);
+
+                        const active = user?.isActive;
+                        if (active > 0) {
+                            setIsActive(true);
+                        }
                     }
                     else {
                         setSuccessMessage('Error updating user');

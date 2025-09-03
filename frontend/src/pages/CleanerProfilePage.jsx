@@ -238,7 +238,6 @@ const ProfilePage = ({ emailFromProile }) => {
     useEffect(() => {
         if (emailFromProile) {
             setEmail(emailFromProile);
-            console.log(emailFromProile)
         }
     }, [emailFromProile]);
 
@@ -369,18 +368,18 @@ const ProfilePage = ({ emailFromProile }) => {
             try {
                 const response = await api.post('/api/reviews/record', {cleanerEmail: email, limit: page, offset: offset});
                 const { reviews } = response.data;
-                if (reviews.reviews.length > 0) {
-                    setRating(reviews.value);
-                    setReviewCount(reviews.count);
+                if (reviews) {
+                    setRating(reviews?.value);
+                    setReviewCount(reviews?.count);
 
                     setReviewList(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
-                        reviews.reviews.forEach(item => map.set(item.id, item));    // add/replace new
+                        reviews?.reviews?.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
                 }
                 else {
-                    if (reviewList.length <= 0) {
+                    if (reviewList?.length <= 0) {
                         setSuccessMessage('No reviewList record was found');
                         setBgColor('red');
                     }
