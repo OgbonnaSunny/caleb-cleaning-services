@@ -236,8 +236,9 @@ const ProfilePage = ({ emailFromProile }) => {
     }, [cleanerName]);
 
     useEffect(() => {
-        if (emailFromProile !== null && emailFromProile !== undefined) {
+        if (emailFromProile) {
             setEmail(emailFromProile);
+            console.log(emailFromProile)
         }
     }, [emailFromProile]);
 

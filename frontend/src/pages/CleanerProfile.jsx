@@ -230,8 +230,11 @@ const CleanerProfile = () => {
             setEmail(user?.email);
             setBio(user?.bio);
             setPhoneNumber(user?.phoneNumber);
-            setIsActive(user?.isActive);
-            console.log(user);
+            const active = user?.isActive;
+            if (active > 0) {
+                setIsActive(true);
+            }
+
         }
     }, []);
 
@@ -373,7 +376,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            if (isActive === false) {
+            if (!isActive) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
             }
