@@ -24,6 +24,7 @@ export default function Messages() {
 
     const socket1 = useSocket();
     const scrollerRef = useRef(null);
+    const messagesContainerRef = useRef(null);
 
     const [messagesList, setMessagesList] = useState([]);
     const [pList, setPList] = useState([]);
@@ -127,11 +128,22 @@ export default function Messages() {
     }, [messagesList, sender, receiver, adminEmail]);
 
     useEffect(() => {
-        // Scroll to bottom whenever messages change
-        const timeoutId = setTimeout(() => {
-            scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 50);
-        return () => clearTimeout(timeoutId);
+        const container = messagesContainerRef.current;
+        if (!container) return;
+        // Check if user is already near the bottom
+        const isNearBottom = () => {
+            const threshold = 100; // px — how far from bottom is "near"
+            const position = container.scrollHeight - container.scrollTop - container.clientHeight;
+            return position <= threshold;
+        };
+
+        if (isNearBottom()) {
+            const timeoutId = setTimeout(() => {
+                scrollerRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            return () => clearTimeout(timeoutId);
+        }
+
     }, [messagesList]);
 
 
@@ -318,7 +330,7 @@ export default function Messages() {
     const longPress = useLongPress(handleLongPress, 700); // 700ms hold
 
     return (
-        <div className="sticky-nav-container">
+        <div ref={messagesContainerRef} style={{overflowY:'scroll'}} className="sticky-nav-container">
             <div className='top-order-nav'>
                 <div style={{marginLeft:'10px', marginTop:'20px'}} className="nav-order-content">
                     <img src={LOGO} className={'logo-icon'}/>
