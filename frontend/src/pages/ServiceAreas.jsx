@@ -300,7 +300,7 @@ const ServiceAreas = () => {
             .then((res) => {
                 const postcodes = res.data.postcodes;
                 const data = [];
-                console.log(postcodes);
+              //  console.log(postcodes);
                 if (postcodes.length <= 0) {
                     setMessage("No cleaner was found for this area.");
                     for (let i = 0; i < edinburghPostcodes.length; i++) {
