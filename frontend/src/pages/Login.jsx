@@ -139,7 +139,7 @@ const Login = () => {
 
                     <h4 onClick={() => window.close()}
                         style={{marginTop:'30px', color:'blue'}}>
-                        <Link style={{color:'blue'}} to={'/resetpassword'} target="_blank" rel="noopener noreferrer">
+                        <Link style={{color:'blue'}} to={'/forgotpassword'} target="_blank" rel="noopener noreferrer">
                             Forgot password!
                         </Link>
                     </h4>
