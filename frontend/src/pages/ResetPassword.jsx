@@ -57,11 +57,12 @@ export default function ResetPassword() {
         try {
             setSubmitting(true);
             const response = await api.post("/api/reset-password", { token, email, password,});
-            const { message, sucess } =  response.data;
+            const { message, success } =  response.data;
             setMessage(message);
-            if (sucess) {
+            if (success) {
                 setPassword("");
                 setConfirm("");
+                localStorage.removeItem('user');
                 navigate("/login");
                 window.close();
             }
