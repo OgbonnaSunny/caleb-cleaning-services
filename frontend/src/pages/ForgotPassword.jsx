@@ -18,7 +18,6 @@ export default function ForgotPassword() {
             const { message, success } = await response.data;
             setMessage(message);
             if (success) {
-                setSubmitting(false);
                 setEmail("");
                 localStorage.removeItem('user')
             }

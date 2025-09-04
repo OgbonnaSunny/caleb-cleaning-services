@@ -6,7 +6,6 @@ import {checkPostcodeExists, isValidUKPostcodeFormat} from "./Postcode.jsx";
 import { useNavigate} from "react-router-dom";
 
 function getQueryParams() {
-    const navigate = useNavigate();
     const url = new URL(window.location.href);
     return {
         token: url.searchParams.get("token") || "",
@@ -15,6 +14,7 @@ function getQueryParams() {
 }
 
 export default function ResetPassword() {
+    const navigate = useNavigate();
     const [{ token, email }, setParams] = useState({ token: "", email: "" });
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
