@@ -10,11 +10,27 @@ export default function ForgotPassword() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        if (submitting) return;
         setSubmitting(true);
         setMessage(null);
-        const { data } = await api.post("/api/forgot-password", { email});
-        setMessage(data?.message || "If an account exists, you’ll receive an email.");
-        setSubmitting(false);
+        try {
+            const response = await api.post("/api/forgot-password", { email});
+            const { message, success } = await response.data;
+            setMessage(message);
+            if (success) {
+                setSubmitting(false);
+                setEmail("");
+                localStorage.removeItem('user')
+            }
+
+        } catch (error) {
+            console.log(error);
+            setMessage('Error occured!');
+        }
+        finally {
+            setSubmitting(false);
+        }
+
     }
 
     return (

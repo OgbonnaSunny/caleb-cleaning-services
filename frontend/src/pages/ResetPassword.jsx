@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import LOGO from "../images/logo4.png";
 import api from './api.js'
 import {checkPostcodeExists, isValidUKPostcodeFormat} from "./Postcode.jsx";
+import { useNavigate} from "react-router-dom";
 
 function getQueryParams() {
+    const navigate = useNavigate();
     const url = new URL(window.location.href);
     return {
         token: url.searchParams.get("token") || "",
@@ -27,7 +29,9 @@ export default function ResetPassword() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        if (submitting) return;
         setErrors(null);
+        setMessage(null);
         const hasCapitalLetter = (str) => /[A-Z]/.test(str);
         const hasNumber = (str) => /\d/.test(str);
 
@@ -50,19 +54,25 @@ export default function ResetPassword() {
             setErrors("Password must contain at least one number");
             return;
         }
+        try {
+            setSubmitting(true);
+            const response = await api.post("/api/reset-password", { token, email, password,});
+            const { message, sucess } =  response.data;
+            setMessage(message);
+            if (sucess) {
+                setPassword("");
+                setConfirm("");
+                navigate("/login");
+                window.close();
+            }
 
-        setSubmitting(true);
-        const { ok, data } = await api.post("/api/reset-password", {
-            token,
-            email,
-            password,
-        });
-        setSubmitting(false);
-        if (ok) {
-            setMessage("Your password has been reset. You can now sign in.");
-        } else {
-            setErrors(data?.message || "Unable to reset password.");
+        } catch (error) {
+            console.log(error);
+            setMessage("Unable to reset password");
+        } finally {
+            setSubmitting(false);
         }
+
     }
 
     if (!token || !email) {
@@ -104,11 +114,13 @@ export default function ResetPassword() {
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
                     className="button-bg"
+                    style={{marginTop:'20px'}}
                 />
                 <button
                     type="submit"
                     disabled={submitting}
-                    className={submitting ? "next-button" : "submit-button"}>
+                    style={{marginTop:'20px'}}
+                    className={submitting ? "back-button" : "next-button"}>
                     {submitting ? "Saving..." : "Reset password"}
                 </button>
             </form>
