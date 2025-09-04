@@ -706,6 +706,7 @@ const Checkout = () => {
     const [minDate, setMinDate] = useState(new Date());
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
+    const [paymentMessage, setPaymentMessage] = useState('');
 
     const cleaningSubscriptions = [
         {
@@ -1446,7 +1447,6 @@ const Checkout = () => {
 
     }, [])
 
-
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth <= 768); // Common mobile breakpoint
@@ -1478,6 +1478,7 @@ const Checkout = () => {
 
     const handlePlanChange = (e) => {
         setFormData({...formData, plan: e.target.category});
+        setPaymentMessage(null)
     }
 
     const updateAddictions = (service, totalPrice, tenancyCount = -1) => {
@@ -1823,36 +1824,35 @@ const Checkout = () => {
     const handlePayment = async (event) => {
         event.preventDefault();
 
-        if (!stripe || !elements) {
-            return;
-        }
-        setError(null);
-        setMessage(null)
+       try {
+           if (!stripe || !elements) {
+               return;
+           }
+           setError(null);
+           setMessage(null)
 
-        setProcessing(true);
+           setProcessing(true);
 
-        // Confirm Card Payment
+           // Confirm Card Payment
 
-        const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: elements.getElement(CardNumberElement),
-                billing_details: {
-                    category: 'Customer Name' // Add dynamic name input if needed
-                }
-            }
-        });
+           const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+               payment_method: {card: elements.getElement(CardNumberElement), billing_details: {category: `${formData.firstName} ${formData.lastName}`}}
+           });
 
-        if (stripeError) {
-            setError(stripeError.message);
-            setProcessing(false);
-        }
-        else  {
-            updateBookingOnDatabase()
-            setMessage('Payment is sucessfully!');
-            setProcessing(false);
-            setFormData(data)
-            setCurrentStep(-1)
-        }
+           if (stripeError) {
+               setPaymentMessage(stripeError.message);
+           }
+           else  {
+               updateBookingOnDatabase()
+               setPaymentMessage('Payment is sucessful!');
+               setFormData(data)
+               setCurrentStep(-1)
+           }
+       } catch (error) {
+           console.error(error);
+       } finally {
+           setProcessing(false);
+       }
 
     };
 
@@ -1932,12 +1932,14 @@ const Checkout = () => {
                 startMinute: formData.minute,
             };
 
-            await api.post('/api/booking', orderData);
+            response = await api.post('/api/booking', orderData);
+
+            const bookSuccess = response.data.success;
 
             response = await api.post('/api/revenue', revenue);
 
-            if (response.data.success) {
-                setMessage("Booking is successful!");
+            if (response.data.success || bookSuccess) {
+                setMessage("Booking details are  successfully registered!");
             }
 
         } catch (error) {
@@ -2063,8 +2065,7 @@ const Checkout = () => {
             return;
         }
         setClientSecret(null);
-        updateBookingOnDatabase()
-   //     fetchData()
+        fetchData()
     }
 
     function PaymentHome() {
@@ -3453,6 +3454,7 @@ const Checkout = () => {
                 flexDirection: "column",
                 minHeight: "100vh",
             }}>
+            {paymentMessage && <p>{paymentMessage}</p>}
             <div className="sticky-nav-container">
                 <nav  className='top-order-nav'>
                     {(formData.totalAmount > 0 && !isVisible) &&
@@ -3695,10 +3697,7 @@ const Checkout = () => {
                                 </div>
                                 </div>
                             }
-                            {(clientSecret !== null && clientSecret !== undefined && clientSecret.trim().length > 0 && currentStep === 5) &&
-                                <div>
-                                    <PaymentPlatform />
-                                </div>}
+                            {(clientSecret && clientSecret?.trim().length > 0 && currentStep === 5) && <PaymentPlatform />}
                         </div>
                     </div>
                 </main>

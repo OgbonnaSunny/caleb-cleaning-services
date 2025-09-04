@@ -1,5 +1,5 @@
 // src/pages/ForgotPassword.jsx
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import LOGO from "../images/logo4.png";
 import api from './api.js'
 
@@ -7,6 +7,13 @@ export default function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [message, setMessage] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        if (success) {
+            setEmail('')
+        }
+    }, [success]);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -17,10 +24,7 @@ export default function ForgotPassword() {
             const response = await api.post("/api/forgot-password", { email});
             const { message, success } = await response.data;
             setMessage(message);
-            if (success) {
-                setEmail(null);
-            }
-
+            setSuccess(success);
         } catch (error) {
             console.log(error);
             setMessage('Error occured!');

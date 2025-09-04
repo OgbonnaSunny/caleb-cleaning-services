@@ -47,7 +47,6 @@ const Signup = () => {
         return formData.username === "user";
     }
 
-
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
@@ -409,7 +408,7 @@ const Signup = () => {
                    </div>
 
                    <p style={{marginTop:'20px'}}>Didn't get a code? <span onClick={handleResend} style={{color:'blue'}}>resend</span></p>
-               </div>}
+               </div> }
 
                {stage === 3 && <div className="steps">
                    <div className="form-actions">

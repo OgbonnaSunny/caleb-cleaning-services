@@ -23,7 +23,7 @@ const Become = () => {
         photo: null, identity: null, ni: null, addressProof: null,
         isActive: false, isOnLeave: false, payRate: 0,
         NIN: null, bio: 'A professional cleaner with attention to details', emergency: null,
-        workExperience: null, available: null, notification: null
+        workExperience: null, available: null, notification: null, receivedCode: ''
     }
 
     const [formData, setFormData] = useState(cleanerData);
@@ -46,9 +46,15 @@ const Become = () => {
     const [addressProofPreview, setAddressProofPreview] = useState(null);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [countDown, setCountDown] = useState(0);
+    const [messageForCode, setMessageForCode] = useState('');
+    const [code, setCode] = useState('');
+    const [error, setError] = useState('');
+    const [time, setTime] = useState('');
 
     const handleImage = (e) => {
         const newErrors = {}
+        setErrors(newErrors)
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -306,8 +312,86 @@ const Become = () => {
 
     const handleNext3 = () => {
       if (validateStep3() && validateProofs()) {
-          setCurrentStep(currentStep+1);
+          sendEmail()
       }
+    }
+
+    const handleResend = () => {
+        if (countDown > 0 || loading) {
+            return;
+        }
+        if (count > 3) {
+            setMessageForCode("Maximum resend count exceeded, wait for 30 seconds.");
+            startCountdown(30);
+            setCount(0)
+            return;
+        }
+        setCount(count + 1);
+        setMessageForCode('');
+        sendEmail(true);
+    }
+
+    function getSecureRandomNumbers(count) {
+        const array = new Uint32Array(count);
+        window.crypto.getRandomValues(array);
+        return Array.from(array, num => num % 10);
+    }
+
+    const sendEmail = (resend = false) => {
+        if (countDown > 0) return;
+        setLoading(true);
+        setError(null)
+        const randomNumbers = getSecureRandomNumbers(6);
+
+        let sixDigitNumber = '';
+        for (let i = 0; i < randomNumbers.length; i++) {
+            sixDigitNumber += `${(randomNumbers[i] % 10).toString()} `;
+        }
+
+        setCode(sixDigitNumber);
+
+        const emailData = {to: formData.email, text: sixDigitNumber};
+
+        api.post('/api/send-custom-email', emailData)
+            .then((res) => {
+                const { success, message } = res.data.result;
+                if (success) {
+                    if (!resend) {
+                        setCurrentStep(currentStep+1);
+                    }
+                    setTime(new Date())
+                    setMessageForCode(`Verification number has beent sent to ${formData.email}. Please enter the number to continue`);
+                }
+                else {
+                    setError(message);
+                }
+            })
+            .catch((error) => {
+                setError('Error occurred while sending email');
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    }
+
+    function checkTime() {
+        const now = new Date(Date.now());
+        const diffInMs = Math.abs(time - now);
+
+        return Math.floor(diffInMs / (1000 * 60));
+    }
+
+    const isCodeValidated = () => {
+        const time = checkTime()
+        if (time > 3) {
+            setError('Code has expired')
+            return false;
+        }
+        if (formData.receivedCode !== code.replace(/\s+/g, '')) {
+            setError('Code is invalid');
+            return false;
+        }
+        return true;
     }
 
     const cleanerBenefits = [
@@ -399,11 +483,13 @@ const Become = () => {
         },
     ]
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
+        setError(null)
+        if (!isCodeValidated()) {
+            return;
+        }
         setLoading(true);
-
         const data = new FormData();
 
         // Append text fields
@@ -440,13 +526,11 @@ const Become = () => {
         if (formData.addressProof) data.append('addressProof', formData.addressProof);
         else {newErrors.addressProof = 'Address proof is required';}
 
-
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             setLoading(false);
             return;
         };
-
 
         api.post('/api/users', data)
             .then((res) => {
@@ -673,8 +757,7 @@ const Become = () => {
 
                     <form onSubmit={handleSubmit}>
                         <h3 style={{marginTop:'30px', marginBottom:'30px'}}>{message}</h3>
-                        {currentStep === 1 && (
-                            <div className="form-step">
+                        {currentStep === 1 && (<div className="form-step">
                                 <div className="form-group">
                                     <label htmlFor="firstName">First Name*</label>
                                     <input
@@ -769,11 +852,9 @@ const Become = () => {
                                 <button type="button" className="next-button" onClick={handleNext}>
                                     Next
                                 </button>
-                            </div>
-                        )}
+                            </div>)}
 
-                        {currentStep === 2 && (
-                            <div className="form-step">
+                        {currentStep === 2 && (<div className="form-step">
                                 <h3 style={{textAlign:'center', marginBottom:'20px'}}>Create login creadentials</h3>
                                 <div className="form-group">
                                     <label htmlFor="password">Password*</label>
@@ -826,11 +907,9 @@ const Become = () => {
                                         Next
                                     </button>
                                 </div>
-                            </div>
-                        )}
+                            </div>)}
 
-                        {currentStep === 3 && (
-                            <div className="form-step">
+                        {currentStep === 3 && (<div className="form-step">
                                 <div className="form-group">
                                     <h3 style={{textAlign:'center', marginBottom:'30px'}}>Upload documents</h3>
                                     <div className="grid-container">
@@ -903,7 +982,8 @@ const Become = () => {
                                         </div>
                                     </div>
                                 </div>
-
+                                {loading && <p style={{margin:'10px'}}>Loading...</p>}
+                                {error && <span style={{margin:'10px'}} className="error-message">{error}</span>}
                                 <div className="form-actions">
                                     <button type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
@@ -912,16 +992,35 @@ const Become = () => {
                                         Next
                                     </button>
                                 </div>
-                            </div>
-                        )}
+                            </div>)}
 
                         {currentStep === 4 && (
                             <div className="form-step">
-                                <div className="form-actions">
-                                    <button disabled={loading} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
+                                <div className="form-group">
+                                    <p style={{marginBottom:'12px'}}>{messageForCode}</p>
+                                    <input
+                                        type="text"
+                                        id="receivedCode"
+                                        name="receivedCode"
+                                        placeholder="Enter code sent to your email"
+                                        onChange={handleChange}
+                                        value={formData.receivedCode}
+                                        className={'button-bg'}
+                                        required
+                                    />
+                                    {error && <span className="error-message">{error}</span>}
+                                    <p style={{marginTop:'15px'}}>Didn't get a code? <span onClick={handleResend} style={{color:'blue'}}>resend</span></p>
+                                </div>
+                                <div style={{display:'flex', justifyContent:'space-evenly', gap:'10px'}} className="form-actions">
+                                    <button
+                                        disabled={loading} type="button"
+                                        className="back-button"
+                                        onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
                                     </button>
-                                    <button disabled={loading} type="submit" className="submit-button">
+                                    <button
+                                        disabled={(formData.receivedCode.length < 6 && loading)} type="submit"
+                                        className={(formData.receivedCode.length < 6 || loading) ? "back-button" : "submit-button"}>
                                         Register
                                     </button>
                                 </div>

@@ -1,5 +1,5 @@
 // components/Cleaners.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaSearch, FaUserPlus, FaFilter, FaStar, FaPhone, FaEnvelope, FaUserEdit, FaUserTimes, FaTimes, FaArrowRight, FaUserTie, FaMapMarkerAlt } from 'react-icons/fa';
 import axios from 'axios'
 import LOGO from "../images/logo4.png";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Cleaners = () => {
     const navigate = useNavigate();
+    const docRef = useRef(null);
     const allCeaners = [
         {
             id: 1,
@@ -72,8 +73,9 @@ const Cleaners = () => {
     const [email, setEmail] = useState('');
     const [deleteEmail, setDeleteEmail] = useState(null);
     const [ids, setIds] = useState([]);
+    const [documents, setDocuments] = useState([]);
+    const [name, setName] = useState('');
 
-    const cleanerActions = ['Update areas', 'Activate', 'Deactivate', 'Approve leave', 'Update service', 'Update worked hours'];
 
     const filteredCleaners = allCleaners.filter(cleaner => {
         const matchesSearch = cleaner.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,7 +136,7 @@ const Cleaners = () => {
             const clientHeight = window.innerHeight;
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loading) {
+                if (!loading && documents.length <= 0) {
                     setPageCount(prev => prev + 1);
                 }
             }
@@ -142,7 +144,7 @@ const Cleaners = () => {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [loading]);
+    }, [loading, documents]);
 
     const openProfile = (email) => {
         window.open(`/cleanerprofilepage?email=${encodeURIComponent(email)}`, '_blank');
@@ -222,6 +224,16 @@ const Cleaners = () => {
         }
     }, [searchDatabase]);
 
+    const handleDocs = (cleaner) => {
+        setDocuments([])
+        setDocuments(prev => [...prev, {title:"Photo", img: cleaner?.photo_path}]);
+        setDocuments(prev => [...prev, {title: "ID", img: cleaner?.identify_path}]);
+        setDocuments(prev => [...prev, {title:"National insurance", img: cleaner?.ni_path}]);
+        setDocuments(prev => [...prev, {title: "Proof of address", img: cleaner?.addressProof_path}])
+        setName(cleaner?.firstName?.charAt(0)?.toUpperCase() + cleaner?.firstName.slice(1) + " " + cleaner?.lastName?.charAt(0)?.toUpperCase() + cleaner?.lastName.slice(1));
+        docRef?.current?.scrollIntoView({behavior: 'smooth'});
+    }
+
 
     return (
         <div style={{
@@ -233,8 +245,7 @@ const Cleaners = () => {
                 <img src={LOGO} className={'logo-icon'}/>
                 <h1 className="page-title">Cleaners Management</h1>
             </div>
-
-            <div className="cleaners-header">
+            {documents.length <= 0 && <div className="cleaners-header">
                 <div style={{flexFlow:'1', maxWidth:'900px'}}  className="search-bar" >
                     <FaSearch style={{ width:'10px'}} className="search-icon" />
                     <input
@@ -257,7 +268,23 @@ const Cleaners = () => {
                     <FaSearch onClick={searchCleaner} style={{width:'40px'}}  />
 
                 </div>
-            </div>
+            </div> }
+            {documents.length > 0 &&
+                <div ref={docRef} className="container">
+                    <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
+                        <h3 className={'experience-text'}>{name}</h3>
+                        <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName('')}} />
+                    </div>
+                    <div className={'grid-container'}>
+                        {documents.map((doc, index ) => (
+                            <div key={index}>
+                                <h3 style={{textAlign:'center'}}>{doc.title}</h3>
+                                <img src={doc.img}/>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            }
 
             <div className="cleaners-tabs">
                 <div
@@ -313,8 +340,7 @@ const Cleaners = () => {
                                 </div>
 
                             </div>
-
-                            <div className="cleaner-meta">
+                            {cleaner?.areas?.length > 0  &&  <div className="cleaner-meta">
                                 <div className="cleaner-areas">
                                     <h4>Areas Covered:</h4>
                                     {cleaner.areas && <div className="areas-tags">
@@ -325,7 +351,7 @@ const Cleaners = () => {
 
                                 </div>
 
-                            </div>
+                            </div> }
                             {(messages && cleaner.email === email) && <p>{messages}</p>}
 
                             {deleteEmail === cleaner.email &&
@@ -341,32 +367,43 @@ const Cleaners = () => {
                                 </div>
                             }
 
-                            <div style={{display: 'flex', alignItems: 'center', gap:'7px'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap:'7px', justifyContent:'space-evenly'}}>
                                 {cleaner.isActive === 1 ?
                                     <button onClick={() => activateOrDeactivate(cleaner.email, false)}
-                                            style={{color:'red', textAlign:'start', width:'40%'}}>
+                                            disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null || documents.length > 0)}
+                                            style={{color:'red', textAlign:'start'}}>
                                         DISABLE
                                     </button> :
                                     <button onClick={() => activateOrDeactivate(cleaner.email, true)}
-                                            style={{color:'black', textAlign:'start', width:'40%'}}>
+                                            style={{color:'black', textAlign:'start'}}
+                                            disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null || documents.length > 0)}>
                                         ENABLE
                                     </button>
                                 }
+
                                 <button onClick={() => setDeleteEmail(cleaner.email)}
-                                        style={{color:'darkred', textAlign:'start', width:'40%'}}
-                                        disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null)}>
+                                        style={{color:'darkred', textAlign:'start'}}
+                                        disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null || documents.length > 0)}>
                                     DELETE
                                 </button>
+
+                                <button onClick={() => handleDocs(cleaner)}
+                                        style={{color:'darkred', textAlign:'start'}}
+                                        disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null || documents.length > 0)}>
+                                    DOCS
+                                </button>
+
                                 <FaUserTie
-                                    size={20} style={{width:'20%', alignSelf:'end', marginBottom:'14px'}}
+                                    size={20} style={{width:'20px', alignSelf:'end', marginBottom:'14px'}}
                                     onClick={() => openProfile(cleaner.email)}
+                                    disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null || documents.length > 0)}
                                 />
                             </div>
                         </div>
                     ))
                 ) : (
                     <div className="no-results">
-                        <p>No cleaners found matching your criteria</p>
+                        <p>{(searchDatabase || searchTerm) ? "No cleaners found matching your criteria" : "No cleaner was found"}</p>
                     </div>
                 )}
             </div>
