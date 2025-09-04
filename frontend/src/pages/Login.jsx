@@ -3,6 +3,7 @@ import api from './api.js'
 import {Link, useNavigate} from "react-router-dom";
 import Payment from "./Payment.jsx";
 import LOGO from "../images/logo4.png";
+import {FaTimes} from "react-icons/fa";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Login = () => {
     const [formData, setFormData] = useState({email: "", password: ""});
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [forgotPassword, setForgotPassword] = useState(false);
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -90,14 +92,13 @@ const Login = () => {
                 </div>
             </div>}
             <div className={['container', 'main-banner'].join(' ')}>
+                <div className={['container', 'main-banner'].join(' ')}
+                     style={{display:'flex', flexDirection: 'row',
+                         marginTop:'20px', marginBottom:'30px', maxWidth:'1200px'}}>
+                    <img src={LOGO} className={'logo-container'}/>
+                    <h1 className={'help-text'} style={{textAlign:'start', color:'navy'}}>Sign in</h1>
+                </div>
                 <form onSubmit={handleSubmit}>
-                    <div className={['container', 'main-banner'].join(' ')}
-                         style={{display:'flex', flexDirection: 'row',
-                             marginTop:'20px', marginBottom:'30px', maxWidth:'1200px'}}>
-                        <img src={LOGO} className={'logo-container'}/>
-                        <h1 className={'help-text'} style={{textAlign:'start', color:'navy'}}>Sign in</h1>
-                    </div>
-
                     {message && <label className={'error-message'}>{message}</label> }
 
                     <div className="form-group" >
@@ -130,8 +131,18 @@ const Login = () => {
 
                     <button type="submit" className={loading ? "back-button" : "next-button" }  disabled={loading}>Submit</button>
 
-                    <p style={{marginTop:'20px'}}>Don't have an account? <Link style={{color:'navy'}} to={'/signup'} target="_blank" rel="noopener noreferrer">
-                        sign up</Link></p>
+                    <p onClick={() => window.close()}
+                        style={{marginTop:'20px'}}>Don't have an account?
+                        <Link style={{color:'navy', marginLeft:'10px'}} to={'/signup'} target="_blank" rel="noopener noreferrer">
+                        sign up</Link>
+                    </p>
+
+                    <h4 onClick={() => window.close()}
+                        style={{marginTop:'30px', color:'blue'}}>
+                        <Link style={{color:'blue'}} to={'/forgotpassword'} target="_blank" rel="noopener noreferrer">
+                            Forgot password!
+                        </Link>
+                    </h4>
                 </form>
             </div>
         </div>

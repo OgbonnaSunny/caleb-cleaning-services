@@ -209,10 +209,21 @@ const Become = () => {
 
     const validateStep2 = () => {
         const newErrors = {};
+        const hasCapitalLetter = (str) => /[A-Z]/.test(str);
+        const hasNumber = (str) => /\d/.test(str);
+
         if (!formData.password) {
             newErrors.password = 'Password is required';
         } else if (formData.password.length < 8) {
             newErrors.password = 'Password must be at least 8 characters';
+        }
+
+        if (!hasCapitalLetter(formData.password)) {
+            newErrors.password = 'Password must contain at least one capital letter';
+        }
+
+        if (!hasNumber(formData.password)) {
+            newErrors.password = 'Password must contain at least one number';
         }
 
         if (formData.password !== formData.confirmPassword) {

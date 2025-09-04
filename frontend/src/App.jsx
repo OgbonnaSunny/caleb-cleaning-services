@@ -43,6 +43,8 @@ import MessageList from "./pages/MessageList.jsx";
 import BookingList from "./pages/BookingList.jsx";
 import NewsLetters from "./pages/NewsLettters.jsx";
 import Expense from './pages/Expense.jsx';
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 function App() {
 
@@ -51,6 +53,8 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Overview />} />
+                <Route path="/resetpassword" element={<ResetPassword />} />
+                <Route path="/forgotpassword" element={<ForgotPassword />} />
                 <Route path="/expense" element={<Expense />} />
                 <Route path="/newsletters" element={<NewsLetters />} />
                 <Route path="/bookinglist" element={<BookingList />} />
