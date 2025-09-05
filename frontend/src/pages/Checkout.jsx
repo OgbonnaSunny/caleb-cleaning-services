@@ -3444,7 +3444,6 @@ const Checkout = () => {
         );
     }
 
-// checkout-summary-container
     return (
         <Formik
             onSubmit={handlePayment}
@@ -3454,7 +3453,6 @@ const Checkout = () => {
                 flexDirection: "column",
                 minHeight: "100vh",
             }}>
-            {paymentMessage && <p>{paymentMessage}</p>}
             <div className="sticky-nav-container">
                 <nav  className='top-order-nav'>
                     {(formData.totalAmount > 0 && !isVisible) &&
@@ -3474,6 +3472,7 @@ const Checkout = () => {
                         justifyContent:'center',
                         marginTop:'20px'}}>
                         <div className={['form-group', 'main-banner'].join(' ')}>
+                            {paymentMessage && <p>{paymentMessage}</p>}
                             {currentStep <= 0 &&  <Plan /> }
                             {currentStep === 1 &&  <Schedule />}
                             {currentStep === 2 && <Task /> }
