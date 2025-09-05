@@ -2071,8 +2071,7 @@ const Checkout = () => {
                 if (paymentIntent.status === "succeeded") {
                     updateBookingOnDatabase();
                     setPaymentMessage("Payment successful!");
-                    setFormData(data);
-                    setSelectedDate(null);
+                 //   setFormData(data);
                 }
             }
             setProcessing(false);
@@ -2112,6 +2111,7 @@ const Checkout = () => {
 
                             </div>
                             {error && <label className="card-error">{error}</label>}
+                            {paymentMessage &&  <label className="experience-text">{paymentMessage}</label>}
                         </div>
                     </div>
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
@@ -3471,7 +3471,6 @@ const Checkout = () => {
                         <img style={{display:'none'}} src={LOGO} className={'logo-icon'}/>
                         <Steps />
                     </div>
-                    {paymentMessage &&  <h3 className="card-error">{paymentMessage}</h3>}
                 </nav>
                 <main className={["main-content", "main-banner"].join(" ")}>
                     <div style={{
