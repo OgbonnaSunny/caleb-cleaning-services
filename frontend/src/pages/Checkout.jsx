@@ -2111,19 +2111,6 @@ const Checkout = () => {
 
         }, [elements]);
 
-        useEffect(() => {
-            if (stripe) {
-                stripe?.confirmCardPayment(clientSecret, {
-                    payment_method: {
-                        card: elements?.getElement(CardNumberElement),
-                        billing_details: {
-                            name: `${formData.firstName} ${formData.lastName}`,
-                            email: formData.email,
-                        },
-                    },
-                });
-            }
-        }, [stripe]);
 
         return (
             <form onSubmit={handlePayment}
