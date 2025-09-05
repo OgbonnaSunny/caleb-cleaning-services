@@ -2026,15 +2026,15 @@ const Checkout = () => {
 
                 response = await api.post('/api/booking', orderData);
 
-                const bookSuccess = response.data.success;
+              //  const bookSuccess = response.data.success;
 
                 response = await api.post('/api/revenue', revenue);
 
                 if (response.data.success || bookSuccess) {
-                    setBookMessage("Booking details are  successfully registered!");
+                 //   setBookMessage("Booking details are  successfully registered!");
                 }
                 else {
-                    setBookMessage("Booking details still processing!");
+                 //   setBookMessage("Booking details still processing!");
                 }
 
             } catch (error) {
@@ -2050,7 +2050,6 @@ const Checkout = () => {
             setProcessing(true);
             setError(null);
             setPaymentMessage(null);
-            setBookMessage(null);
 
             if (!stripe || !elements) {
                 return;
@@ -2071,8 +2070,8 @@ const Checkout = () => {
             }
             else if (paymentIntent) {
                 if (paymentIntent.status === "succeeded") {
-                    updateBookingOnDatabase();
                     setPaymentMessage("Payment successful!");
+                    updateBookingOnDatabase();
                     setFormData(data);
                     setSelectedDate(null);
                 }
@@ -2115,7 +2114,6 @@ const Checkout = () => {
                             </div>
                             {paymentMessage &&  <label className="card-error">{paymentMessage}</label>}
                             {error && <label className="card-error">{error}</label>}
-                            {bookMessage && <label className="card-error">{bookMessage}</label>}
                         </div>
                     </div>
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
@@ -2127,7 +2125,7 @@ const Checkout = () => {
                         <button disabled={(processing || !stripe)}
                                 type="submit"
                                 className={!stripe ? "back-button" : "submit-button"}>
-                            {processing ? 'Processing data...' : 'Book your cleaning'}
+                            {processing ? 'Processing...' : 'Book Now'}
                         </button>
                     </div>
                 </div>
@@ -3468,8 +3466,7 @@ const Checkout = () => {
             }}>
             <div className="sticky-nav-container">
                 <nav  className='top-order-nav'>
-                    {(formData.totalAmount > 0 && !isVisible) &&
-                        <p className={'booking-amount'}>
+                    {(formData.totalAmount > 0 && !isVisible) && <p className={'booking-amount'}>
                             Total Amount: £{formData.totalAmount}
                     </p> }
                     <div className="nav-order-content">
