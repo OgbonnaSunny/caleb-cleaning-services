@@ -2028,8 +2028,6 @@ const Checkout = () => {
 
                 response = await api.post('/api/booking', orderData);
 
-              //  const bookSuccess = response.data.success;
-
                 response = await api.post('/api/revenue', revenue);
 
                 if (response.data.success || bookSuccess) {
@@ -2063,36 +2061,49 @@ const Checkout = () => {
                 return;
             }
 
-            const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: elements.getElement(CardNumberElement),
-                    billing_details: {
-                        name: `${formData.firstName} ${formData.lastName}`,
-                        email: formData.email,
-                    },
-                },
-            });
+            const cardElement = elements.getElement(CardNumberElement);
+            if (!cardElement) {
+                setError("Card element is not ready. Try again.");
+                setProcessing(false);
+                return;
+            }
 
-            if (stripeError) {
-                setError(stripeError.message);
-            }
-            else if (paymentIntent) {
-                if (paymentIntent.status === "succeeded") {
-                    updateBookingOnDatabase();
-                    setSuccess(true);
-                    setPaymentMessage("Payment successful!");
+            try {
+                const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: elements.getElement(CardNumberElement),
+                        billing_details: {
+                            name: `${formData.firstName} ${formData.lastName}`,
+                            email: formData.email,
+                        },
+                    },
+                });
+
+                if (stripeError) {
+                    setError(stripeError.message);
                 }
+                else if (paymentIntent) {
+                    if (paymentIntent.status === "succeeded") {
+                        updateBookingOnDatabase();
+                        setSuccess(true);
+                        setPaymentMessage("Payment successful!");
+                    }
+                }
+
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setProcessing(false);
             }
-            setProcessing(false);
+
 
         };
 
         useEffect(() => {
-            const cardNumber = elements?.getElement('cardNumber');
+            const cardNumber = elements?.getElement(CardNumberElement);
             if (cardNumber) {
                 cardNumber.update({
                     showIcon: true,
-                    paymentMethod: 'card', // Shows all card brands
                     iconStyle: 'solid'
                 });
             }
