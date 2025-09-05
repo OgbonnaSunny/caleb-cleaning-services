@@ -1935,18 +1935,18 @@ const Checkout = () => {
     }
 
 
-   // const [processing, setProcessing] = useState(false);
-  //  const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
-    const [mounted, setMounted] = useState({
-        number: false,
-        expiry: false,
-        cvc: false,
-    });
-
     function PaymentHome() {
         const stripe = useStripe();
         const elements = useElements();
+
+         const [processing, setProcessing] = useState(false);
+         const [error, setError] = useState(null);
+        const [success, setSuccess] = useState(false);
+        const [mounted, setMounted] = useState({
+            number: false,
+            expiry: false,
+            cvc: false,
+        });
 
         const handleBackButton = (e) => {
             e.preventDefault();
