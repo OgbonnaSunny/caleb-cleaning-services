@@ -1824,14 +1824,14 @@ const Checkout = () => {
     const handlePayment = async (event) => {
         event.preventDefault();
         if (processing) return;
+        setProcessing(true);
+        setError(null);
+        setMessage(null)
        try {
            if (!stripe || !elements) {
                console.log("No payment data")
                return;
            }
-           setProcessing(true);
-           setError(null);
-           setMessage(null)
 
            // Confirm Card Payment
 
