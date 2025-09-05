@@ -2046,7 +2046,9 @@ const Checkout = () => {
 
         const handlePayment = async (e) => {
             e.preventDefault();
+            setProcessing(true);
             if (count === 0) {
+                setProcessing(false);
                 setCount(count + 1);
                 return;
             }
