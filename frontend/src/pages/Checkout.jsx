@@ -3451,7 +3451,6 @@ const Checkout = () => {
 
     return (
         <Formik
-            onSubmit={handlePayment}
             className={['form-group', 'main-banner'].join(' ')}
             style={{
                 display: "flex",
