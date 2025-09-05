@@ -2100,11 +2100,22 @@ const Checkout = () => {
             e.preventDefault();
 
             try {
-                const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment("", {
+
+                const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment(clientSecret, {
                     payment_method: { card: elements?.getElement(CardNumberElement),
                         billing_details: { name: `${formData.firstName} ${formData.lastName}`, email: formData.email}},
                 });
 
+                if (stripeError) {
+                    setError(stripeError.message);
+                }
+                else if (paymentIntent) {
+                    if (paymentIntent.status === "succeeded") {
+                        updateBookingOnDatabase();
+                        setSuccess(true);
+                        setPaymentMessage("Payment successful!");
+                    }
+                }
 
             } catch (error) {
                 console.log(error);
