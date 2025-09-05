@@ -65,8 +65,6 @@ const Checkout = () => {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
 
-    let stripe;
-    let elements;
     const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "SW1A 1AA";
 
     const cleaningFAQs = [
@@ -1948,8 +1946,8 @@ const Checkout = () => {
     }
 
     function PaymentHome() {
-        stripe = useStripe();
-        elements = useElements();
+        const stripe = useStripe();
+        const elements = useElements();
         const [processing, setProcessing] = useState(false);
         const [error, setError] = useState(null);
         const [success, setSuccess] = useState(false);
@@ -2090,7 +2088,8 @@ const Checkout = () => {
         };
 
         return (
-            <div className={'support-page'}>
+            <form onSubmit={handlePayment}
+                className={'support-page'}>
                 <div style={{maxWidth:"1000px"}}>
                     <div className="stripe-card-form">
                         <div className="price-container">
@@ -2131,14 +2130,13 @@ const Checkout = () => {
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
-                                onClick={handlePayment}
-                                type="button"
-                                className={!stripe ? "back-button" : "submit-button"}>
+                                type="submit"
+                                className={(!stripe || !elements) ? "back-button" : "submit-button"}>
                             {processing ? 'Processing...' : 'Book Now'}
                         </button>
                     </div>
                 </div>
-            </div>
+            </form>
         );
     }
 
