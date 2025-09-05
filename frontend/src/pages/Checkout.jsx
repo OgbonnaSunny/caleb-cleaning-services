@@ -2106,6 +2106,15 @@ const Checkout = () => {
                     iconStyle: 'solid'
                 });
             }
+            stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: elements.getElement(CardNumberElement),
+                    billing_details: {
+                        name: `${formData.firstName} ${formData.lastName}`,
+                        email: formData.email,
+                    },
+                },
+            });
         }, [elements]);
 
         return (
