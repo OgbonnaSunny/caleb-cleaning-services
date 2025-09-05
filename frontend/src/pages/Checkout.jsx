@@ -1821,40 +1821,6 @@ const Checkout = () => {
         return new Decimal(Number(cost)).toFixed(2);
     }
 
-    const handlePayment = async (event) => {
-        event.preventDefault();
-        if (processing) return;
-        setProcessing(true);
-        setError(null);
-        setMessage(null)
-       try {
-           if (!stripe || !elements) {
-               return;
-           }
-
-           // Confirm Card Payment
-
-           const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-               payment_method: {card: elements.getElement(CardNumberElement), billing_details: {category: `${formData.firstName} ${formData.lastName}`}}
-           });
-
-           if (stripeError) {
-               setPaymentMessage(stripeError.message);
-           }
-           else  {
-               updateBookingOnDatabase()
-               setPaymentMessage('Payment is sucessful!');
-               setFormData(data)
-               setCurrentStep(-1)
-           }
-       } catch (error) {
-           console.error(error);
-       } finally {
-           setProcessing(false);
-       }
-
-    };
-
     const getOrderId = () => {
         return `Fly${
             new Date().toISOString().replace(/[^\d]/g, '').slice(0, 14)
@@ -3421,6 +3387,44 @@ const Checkout = () => {
     };
 
     function PaymentPlatform() {
+        const [processing, setProcessing] = useState(false);
+
+        const handlePayment = async (e) => {
+            e.preventDefault();
+            if (processing) return;
+            setProcessing(true);
+
+            setError(null);
+            setMessage(null)
+
+            try {
+                if (!stripe || !elements) {
+                    return;
+                }
+
+                // Confirm Card Payment
+
+                const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {card: elements.getElement(CardNumberElement), billing_details: {category: `${formData.firstName} ${formData.lastName}`}}
+                });
+
+                if (stripeError) {
+                    setPaymentMessage(stripeError.message);
+                }
+                else  {
+                    updateBookingOnDatabase()
+                    setPaymentMessage('Payment is sucessful!');
+                    setFormData(data)
+                    setCurrentStep(-1)
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setProcessing(false);
+            }
+
+        };
+
         return(
             <div className={'slide-in'}>
                 <h2 style={{color:'blue', paddingLeft:'10px'}}>Payment details</h2>
