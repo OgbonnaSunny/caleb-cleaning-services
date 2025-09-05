@@ -1848,17 +1848,6 @@ const Checkout = () => {
         },
     };
 
-    useEffect(() => {
-        const cardNumber = elements?.getElement('cardNumber');
-        if (cardNumber) {
-            // Simulate a "blank" card state showing all supported brands
-            cardNumber.update({
-                showIcon: true,
-                paymentMethod: 'card', // Shows all card brands
-                iconStyle: 'solid'
-            });
-        }
-    }, [elements]);
 
     const fetchData = async () => {
         setProcessing(true);
@@ -2086,6 +2075,17 @@ const Checkout = () => {
             setProcessing(false);
 
         };
+
+        useEffect(() => {
+            const cardNumber = elements?.getElement('cardNumber');
+            if (cardNumber) {
+                cardNumber.update({
+                    showIcon: true,
+                    paymentMethod: 'card', // Shows all card brands
+                    iconStyle: 'solid'
+                });
+            }
+        }, [elements]);
 
         return (
             <form onSubmit={handlePayment}
