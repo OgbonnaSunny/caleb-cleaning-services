@@ -1937,7 +1937,7 @@ const Checkout = () => {
 
     function PaymentHome() {
         const stripe = useStripe();
-        const element = useElements();
+        const elements = useElements();
 
         const [processing, setProcessing] = useState(false);
         const [error, setError] = useState(null);
@@ -2049,7 +2049,7 @@ const Checkout = () => {
 
         const handlePayment = async (e) => {
             e.preventDefault();
-            if (!stripe || !element || processing) return;
+            if (!stripe || !elements || processing) return;
 
             setProcessing(true);
             setError(null);
@@ -2101,7 +2101,7 @@ const Checkout = () => {
         };
 
         useEffect(() => {
-            const cardNumber = element?.getElement(CardNumberElement);
+            const cardNumber = elements?.getElement(CardNumberElement);
             if (cardNumber) {
                 cardNumber.update({
                     showIcon: true,
@@ -2109,7 +2109,7 @@ const Checkout = () => {
                 });
             }
 
-        }, [element]);
+        }, [elements]);
 
         useEffect(() => {
             if (stripe) {
@@ -2178,7 +2178,7 @@ const Checkout = () => {
                         </button>
                         <button disabled={(processing || !stripe)}
                                 type="submit"
-                                className={(!stripe || !element) ? "back-button" : "submit-button"}>
+                                className={(!stripe || !elements) ? "back-button" : "submit-button"}>
                             {processing ? 'Processing...' : 'Book Now'}
                         </button>
                     </div>
