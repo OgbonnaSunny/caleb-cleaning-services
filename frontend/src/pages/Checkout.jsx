@@ -1848,7 +1848,6 @@ const Checkout = () => {
         },
     };
 
-
     const fetchData = async () => {
         setProcessing(true);
         try {
@@ -1950,7 +1949,6 @@ const Checkout = () => {
         const [pay, setPay] = useState(false);
         const [key, setKey] = useState(Date.now());
 
-
         const handleBackButton = (e) => {
             e.preventDefault();
             if (processing) return;
@@ -2011,19 +2009,13 @@ const Checkout = () => {
                     phone: formData.phone,
                 };
 
-
                 const orderData = {
                     orderId: orderId,
                     booking: JSON.stringify(booking),
                     details: JSON.stringify(bookDetails),
-                    cleanerAssigned: false,
-                    completed: false,
                     urgent: formData.urgent,
                     duration: formData.duration,
                     nature: formData.nature,
-                    assignedCleanerName: '',
-                    assignedCleanerEmail: '',
-                    assignedCleanerPhone: '',
                     customerEmail: formData.email,
                     payment: formData.totalAmount,
                     startTime: `${formData.date} ${formData.hourText}:${formData.minuteText}:00`,
@@ -2031,16 +2023,9 @@ const Checkout = () => {
                     startMinute: formData.minute,
                 };
 
-                response = await api.post('/api/booking', orderData);
+                await api.post('/api/booking', orderData);
 
-                response = await api.post('/api/revenue', revenue);
-
-                if (response.data.success || bookSuccess) {
-                 //   setBookMessage("Booking details are  successfully registered!");
-                }
-                else {
-                 //   setBookMessage("Booking details still processing!");
-                }
+                await api.post('/api/revenue', revenue);
 
             } catch (error) {
                 console.log(error)
@@ -2142,7 +2127,6 @@ const Checkout = () => {
             }
 
         }, [elements]);
-
 
 
         return (
@@ -3164,53 +3148,6 @@ const Checkout = () => {
         setFormData({...formData,  [e.target.category]: e.target.value });
     }
 
-    // const validationSchema = Yup.object().shape({
-    //     firstName: Yup.string().required('First name is required'),
-    //     lastName: Yup.string().required('Last name is required'),
-    //     email: Yup.string().email('Invalid email').required('Email is required'),
-    //     phone: Yup.string().required('Phone number is required'),
-    //     address: Yup.string().required('Address is required'),
-    //     date: Yup.date().required('Date is required'),
-    // });
-    //
-    // const formik = useFormik({
-    //     initialValues: formData,
-    //     onSubmit: values => {
-    //         // Final form submission
-    //         console.log('Form submitted:', values);
-    //     }
-    // });
-    //
-    // // Debounced save function
-    // const debouncedSave = useCallback(
-    //     debounce((name, value) => {
-    //         // Use functional update to avoid stale state
-    //         setFormData(prevFormData => ({
-    //             ...prevFormData,
-    //             [name]: value
-    //         }));
-    //     }, 1000),
-    //     [] // Still empty because debounce doesn't depend on external values
-    // );
-    //
-    // // Handle field changes with debounce
-    // const handleFieldChange = (e) => {
-    //     const { name, value } = e.target;
-    //     // Immediate update for responsiveness
-    //     setFormData(prev => ({
-    //         ...prev,
-    //         [name]: value
-    //     }));
-    //     // Debounced save
-    //     debouncedSave(name, value);; // Debounced save
-    // };
-    //
-    // // Cleanup debounce on unmount
-    // useEffect(() => {
-    //    // return () => debouncedSave.cancel();
-    // }, []);
-
-
     const Data = () => {
         const [firstName, setFirstName] = useState('');
         const [lastName, setLastName] = useState('');
@@ -3404,17 +3341,18 @@ const Checkout = () => {
                             {dataErrors.address && <label style={{color:'red'}}>{dataErrors.address}</label>}
                         </div>
 
-                        {useOldRecord &&
-                            <div style={{display:'flex', alignItems:'center', gap: '5px'}}>
+                        {useOldRecord && <div style={{display:'flex', alignItems:'center', gap: '5px'}}>
                                 <input
                                     type="checkbox"
                                     checked={acknwoledge}
-                                    onChange={() => setAcknwoledge(!acknwoledge)}
+                                    onChange={() => {
+                                        setAcknwoledge(!acknwoledge);
+                                        setDataMessage('')
+                                    }}
                                     name="acknowledge"
                                 />
-                                <label htmlFor="acknowledge">I acknowledge that the records from my data are correct</label>
-                            </div>
-                        }
+                                <label>I acknowledge that the records from my data are correct</label>
+                            </div>}
                     </div>
                     <div className="question-container">
                         <Summary />
