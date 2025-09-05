@@ -2098,6 +2098,11 @@ const Checkout = () => {
 
         const handlePayment2 = async (e) => {
             e.preventDefault();
+            if (!stripe || !elements || processing) return;
+
+            setProcessing(true);
+            setError(null);
+            setPaymentMessage(null);
 
             try {
 
