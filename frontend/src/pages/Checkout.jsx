@@ -3446,7 +3446,7 @@ const Checkout = () => {
     function PaymentPlatform() {
 
         return(
-            <div className={'service-card'}>
+            <div className={'price-container'}>
                 <h2 style={{color:'blue', paddingLeft:'10px'}}>Payment details</h2>
                 <p style={{paddingLeft:'15px', paddingRight:'5px'}}>
                     Please note that your payement details are securely
