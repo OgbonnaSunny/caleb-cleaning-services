@@ -706,6 +706,7 @@ const Checkout = () => {
     const [minDate, setMinDate] = useState(new Date());
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
+    const [paymentMessage, setPaymentMessage] = useState('');
 
 
     const cleaningSubscriptions = [
@@ -1950,10 +1951,8 @@ const Checkout = () => {
         stripe = useStripe();
         elements = useElements();
         const [processing, setProcessing] = useState(false);
-        const [paymentMessage, setPaymentMessage] = useState('');
         const [error, setError] = useState(null);
         const [success, setSuccess] = useState(false);
-        const [bookMessage, setBookMessage] = useState('');
 
         const updateBookingOnDatabase =  async () => {
             try {
@@ -2070,8 +2069,8 @@ const Checkout = () => {
             }
             else if (paymentIntent) {
                 if (paymentIntent.status === "succeeded") {
-                    setPaymentMessage("Payment successful!");
                     updateBookingOnDatabase();
+                    setPaymentMessage("Payment successful!");
                     setFormData(data);
                     setSelectedDate(null);
                 }
@@ -2112,7 +2111,6 @@ const Checkout = () => {
                                 </div>
 
                             </div>
-                            {paymentMessage &&  <label className="card-error">{paymentMessage}</label>}
                             {error && <label className="card-error">{error}</label>}
                         </div>
                     </div>
@@ -3473,6 +3471,7 @@ const Checkout = () => {
                         <img style={{display:'none'}} src={LOGO} className={'logo-icon'}/>
                         <Steps />
                     </div>
+                    {paymentMessage &&  <h3 className="card-error">{paymentMessage}</h3>}
                 </nav>
                 <main className={["main-content", "main-banner"].join(" ")}>
                     <div style={{
