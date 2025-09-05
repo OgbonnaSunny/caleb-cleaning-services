@@ -1934,18 +1934,19 @@ const Checkout = () => {
         fetchData()
     }
 
+
+   // const [processing, setProcessing] = useState(false);
+  //  const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+    const [mounted, setMounted] = useState({
+        number: false,
+        expiry: false,
+        cvc: false,
+    });
+
     function PaymentHome() {
         const stripe = useStripe();
         const elements = useElements();
-        const [processing, setProcessing] = useState(false);
-        const [error, setError] = useState(null);
-        const [success, setSuccess] = useState(false);
-        const [mounted, setMounted] = useState({
-            number: false,
-            expiry: false,
-            cvc: false,
-        });
-        const [count, setCount] = useState(0);
 
         const handleBackButton = (e) => {
             e.preventDefault();
@@ -2046,15 +2047,11 @@ const Checkout = () => {
 
         const handlePayment = async (e) => {
             e.preventDefault();
-            if (processing) return;
+            if (!stripe || !elements || processing) return;
 
             setProcessing(true);
             setError(null);
             setPaymentMessage(null);
-
-            if (!stripe || !elements) {
-                return;
-            }
 
             const allMounted = mounted.number && mounted.expiry && mounted.cvc;
             if (!allMounted) {
@@ -2085,9 +2082,9 @@ const Checkout = () => {
                 }
                 else if (paymentIntent) {
                     if (paymentIntent.status === "succeeded") {
-                    //    updateBookingOnDatabase();
-                    //    setSuccess(true);
-                    //    setPaymentMessage("Payment successful!");
+                        updateBookingOnDatabase();
+                        setSuccess(true);
+                        setPaymentMessage("Payment successful!");
                     }
                 }
 
