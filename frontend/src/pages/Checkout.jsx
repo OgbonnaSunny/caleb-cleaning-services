@@ -2065,12 +2065,13 @@ const Checkout = () => {
             if (stripeError) {
                 setError(stripeError.message);
             }
-            else if (paymentIntent && paymentIntent.status === "succeeded") {
-                updateBookingOnDatabase()
-                setPaymentMessage("Payment successful!");
-                setFormData(data)
-                setCurrentStep(-1)
-
+            else if (paymentIntent) {
+                if (paymentIntent.status === "succeeded") {
+                    updateBookingOnDatabase()
+                    setPaymentMessage("Payment successful!");
+                    setFormData(data)
+                    setCurrentStep(-1)
+                }
             }
             setProcessing(false);
 
@@ -2110,19 +2111,19 @@ const Checkout = () => {
                             </div>
                             {paymentMessage &&  <label style={{margin:'10px', fontSize:'small'}}>{paymentMessage}</label>}
                             {error && <label className="card-error">{error}</label>}
-                            <div style={{margin:'15px', gap:'10px'}} className="form-actions">
-                                <button disabled={processing}
-                                        type="button" className="back-button"
-                                        onClick={() => setCurrentStep(currentStep - 1)}>
-                                    Back
-                                </button>
-                                <button disabled={(processing || !stripe)}
-                                        type="submit"
-                                        className={!stripe ? "back-button" : "submit-button"}>
-                                    {processing ? 'Processing data...' : 'Book your cleaning'}
-                                </button>
-                            </div>
                         </div>
+                    </div>
+                    <div style={{margin:'15px', gap:'10px'}} className="form-actions">
+                        <button disabled={processing}
+                                type="button" className="back-button"
+                                onClick={() => setCurrentStep(currentStep - 1)}>
+                            Back
+                        </button>
+                        <button disabled={(processing || !stripe)}
+                                type="submit"
+                                className={!stripe ? "back-button" : "submit-button"}>
+                            {processing ? 'Processing data...' : 'Book your cleaning'}
+                        </button>
                     </div>
                 </div>
             </form>
