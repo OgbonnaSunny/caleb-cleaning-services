@@ -1829,7 +1829,6 @@ const Checkout = () => {
         setMessage(null)
        try {
            if (!stripe || !elements) {
-               console.log("No payment data")
                return;
            }
 
@@ -3438,7 +3437,7 @@ const Checkout = () => {
                             onClick={() => setCurrentStep(currentStep - 1)}>
                         Back
                     </button>
-                    <button disabled={processing} type="submit" className="next-button">
+                    <button onClick={handlePayment} disabled={processing} type="button" className="next-button">
                         {processing ? 'Processing data...' : 'Book your cleaning'}
                     </button>
                 </div>
