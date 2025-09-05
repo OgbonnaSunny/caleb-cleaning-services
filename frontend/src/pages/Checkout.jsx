@@ -1823,15 +1823,15 @@ const Checkout = () => {
 
     const handlePayment = async (event) => {
         event.preventDefault();
-
+        if (processing) return;
        try {
            if (!stripe || !elements) {
+               console.log("No payment data")
                return;
            }
+           setProcessing(true);
            setError(null);
            setMessage(null)
-
-           setProcessing(true);
 
            // Confirm Card Payment
 
@@ -3433,7 +3433,9 @@ const Checkout = () => {
                     <PaymentHome  />
                 </Elements>
                 <div style={{maxWidth:'900px'}} className="form-actions">
-                    <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep - 1)}>
+                    <button disabled={processing}
+                            type="button" className="back-button"
+                            onClick={() => setCurrentStep(currentStep - 1)}>
                         Back
                     </button>
                     <button disabled={processing} type="submit" className="next-button">
@@ -3472,13 +3474,11 @@ const Checkout = () => {
                         justifyContent:'center',
                         marginTop:'20px'}}>
                         <div className={['form-group', 'main-banner'].join(' ')}>
-                            {paymentMessage && <p>{paymentMessage}</p>}
                             {currentStep <= 0 &&  <Plan /> }
                             {currentStep === 1 &&  <Schedule />}
                             {currentStep === 2 && <Task /> }
                             {currentStep === 3 &&  <Data /> }
-                            {currentStep === 4  &&
-                                <div>
+                            {currentStep === 4  && <div>
                                     <div className={['checkout-box', 'main-banner'].join(' ')}>
                                     <div  className={['checkout-container', 'main-banner'].join(' ')}>
                                         <div>
@@ -3694,8 +3694,7 @@ const Checkout = () => {
                                         {processing ? 'Processing data...' : 'Next'}
                                     </button>
                                 </div>
-                                </div>
-                            }
+                                </div>}
                             {(clientSecret && clientSecret?.trim().length > 0 && currentStep === 5) && <PaymentPlatform />}
                         </div>
                     </div>
