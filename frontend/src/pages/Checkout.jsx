@@ -1954,6 +1954,17 @@ const Checkout = () => {
         const [error, setError] = useState(null);
         const [success, setSuccess] = useState(false);
 
+        const handleBackButton = (e) => {
+            e.preventDefault();
+            if (processing) return;
+            if (success) {
+                setFormData(data);
+                setCurrentStep(-1);
+                return;
+            }
+            setCurrentStep(currentStep - 1);
+        }
+
         const updateBookingOnDatabase =  async () => {
             try {
                 let response = await api.get('/api/order-id')
@@ -2070,8 +2081,8 @@ const Checkout = () => {
             else if (paymentIntent) {
                 if (paymentIntent.status === "succeeded") {
                     updateBookingOnDatabase();
+                    setSuccess(true);
                     setPaymentMessage("Payment successful!");
-                 //   setFormData(data);
                 }
             }
             setProcessing(false);
@@ -2079,8 +2090,7 @@ const Checkout = () => {
         };
 
         return (
-            <form onSubmit={handlePayment}
-                  className={'support-page'}>
+            <div className={'support-page'}>
                 <div style={{maxWidth:"1000px"}}>
                     <div className="stripe-card-form">
                         <div className="price-container">
@@ -2117,17 +2127,18 @@ const Checkout = () => {
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
                         <button disabled={processing}
                                 type="button" className="back-button"
-                                onClick={() => setCurrentStep( - 1)}>
+                                onClick={handleBackButton}>
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
-                                type="submit"
+                                onClick={handlePayment}
+                                type="button"
                                 className={!stripe ? "back-button" : "submit-button"}>
                             {processing ? 'Processing...' : 'Book Now'}
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
         );
     }
 
