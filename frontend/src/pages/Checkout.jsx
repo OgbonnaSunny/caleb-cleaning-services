@@ -2345,7 +2345,7 @@ const Checkout = () => {
                                         }}
                                     />
                                     {errors.date && <span className="error-message">{errors.date}</span>}
-                                    {formData.date && <p>{format(formData.date, "EEE do MMM, yyyy")}</p>}
+                                    {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
                                     <ErrorMessage name="date" component="span" className="error-message" />
                                 </div>
 
