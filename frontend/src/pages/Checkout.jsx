@@ -2070,13 +2070,8 @@ const Checkout = () => {
 
             try {
                 const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment(clientSecret, {
-                    payment_method: {
-                        card: elements?.getElement(CardNumberElement),
-                        billing_details: {
-                            name: `${formData.firstName} ${formData.lastName}`,
-                            email: formData.email,
-                        },
-                    },
+                    payment_method: { card: elements?.getElement(CardNumberElement),
+                        billing_details: { name: `${formData.firstName} ${formData.lastName}`, email: formData.email}},
                 });
 
                 if (stripeError) {
@@ -2110,6 +2105,13 @@ const Checkout = () => {
             }
 
         }, [elements]);
+
+        useEffect(() => {
+            stripe?.confirmCardPayment("", {
+                payment_method: { card: elements?.getElement(CardNumberElement),
+                    billing_details: { name: `${formData.firstName} ${formData.lastName}`, email: formData.email}},
+            });
+        }, []);
 
 
         return (
