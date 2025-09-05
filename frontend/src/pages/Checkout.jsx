@@ -706,7 +706,7 @@ const Checkout = () => {
     const [minDate, setMinDate] = useState(new Date());
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
-    const [paymentMessage, setPaymentMessage] = useState('');
+
 
     const cleaningSubscriptions = [
         {
@@ -2036,10 +2036,50 @@ const Checkout = () => {
     function PaymentHome() {
         stripe = useStripe();
         elements = useElements();
+        const [processing, setProcessing] = useState(false);
+        const [paymentMessage, setPaymentMessage] = useState('');
+        const [error, setError] = useState(null);
+
+        const handlePayment = async (e) => {
+            e.preventDefault();
+            if (processing) return;
+
+            setProcessing(true);
+            setError(null);
+            setPaymentMessage(null);
+
+            if (!stripe || !elements) {
+                return;
+            }
+
+            const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: elements.getElement(CardNumberElement),
+                    billing_details: {
+                        name: `${formData.firstName} ${formData.lastName}`,
+                        email: formData.email,
+                    },
+                },
+            });
+
+            if (stripeError) {
+                setError(stripeError.message);
+            }
+            else if (paymentIntent && paymentIntent.status === "succeeded") {
+                updateBookingOnDatabase()
+                setPaymentMessage("Payment successful!");
+                setFormData(data)
+                setCurrentStep(-1)
+
+            }
+            setProcessing(false);
+
+        };
 
         return (
-            <div className={'support-page'}>
-                <div style={{maxWidth:"800px"}}>
+            <form onSubmit={handlePayment}
+                  className={'support-page'}>
+                <div style={{maxWidth:"1000px"}}>
                     <div className="stripe-card-form">
                         <div className="price-container">
                             <h3 style={{color:'navy', marginBottom:'5px', textAlign:'end'}}>Powered by Stripe</h3>
@@ -2068,12 +2108,24 @@ const Checkout = () => {
                                 </div>
 
                             </div>
-                            {message &&  <label style={{marginTop:'20px', fontSize:'small'}}>{message}</label>}
+                            {paymentMessage &&  <label style={{margin:'10px', fontSize:'small'}}>{paymentMessage}</label>}
                             {error && <label className="card-error">{error}</label>}
+                            <div style={{margin:'15px', gap:'10px'}} className="form-actions">
+                                <button disabled={processing}
+                                        type="button" className="back-button"
+                                        onClick={() => setCurrentStep(currentStep - 1)}>
+                                    Back
+                                </button>
+                                <button disabled={(processing || !stripe)}
+                                        type="submit"
+                                        className={!stripe ? "back-button" : "submit-button"}>
+                                    {processing ? 'Processing data...' : 'Book your cleaning'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         );
     }
 
@@ -3387,43 +3439,6 @@ const Checkout = () => {
     };
 
     function PaymentPlatform() {
-        const [processing, setProcessing] = useState(false);
-
-        const handlePayment = async (e) => {
-            e.preventDefault();
-            if (processing) return;
-            setProcessing(true);
-
-            setError(null);
-            setMessage(null)
-
-            try {
-                if (!stripe || !elements) {
-                    return;
-                }
-
-                // Confirm Card Payment
-
-                const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                    payment_method: {card: elements.getElement(CardNumberElement), billing_details: {category: `${formData.firstName} ${formData.lastName}`}}
-                });
-
-                if (stripeError) {
-                    setPaymentMessage(stripeError.message);
-                }
-                else  {
-                    updateBookingOnDatabase()
-                    setPaymentMessage('Payment is sucessful!');
-                    setFormData(data)
-                    setCurrentStep(-1)
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setProcessing(false);
-            }
-
-        };
 
         return(
             <div className={'slide-in'}>
@@ -3435,23 +3450,12 @@ const Checkout = () => {
                 <Elements stripe={stripePromise}>
                     <PaymentHome  />
                 </Elements>
-                <div style={{maxWidth:'900px'}} className="form-actions">
-                    <button disabled={processing}
-                            type="button" className="back-button"
-                            onClick={() => setCurrentStep(currentStep - 1)}>
-                        Back
-                    </button>
-                    <button onClick={handlePayment} disabled={processing} type="button" className="next-button">
-                        {processing ? 'Processing data...' : 'Book your cleaning'}
-                    </button>
-                </div>
             </div>
         );
     }
 
     return (
-        <Formik
-            className={['form-group', 'main-banner'].join(' ')}
+        <div className={['form-group', 'main-banner'].join(' ')}
             style={{
                 display: "flex",
                 flexDirection: "column",
@@ -3702,7 +3706,7 @@ const Checkout = () => {
                     </div>
                 </main>
             </div>
-        </Formik>
+        </div>
     )
 
 }
