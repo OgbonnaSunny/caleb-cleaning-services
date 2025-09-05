@@ -2053,8 +2053,8 @@ const Checkout = () => {
             if (!stripe || !elements || processing) return;
 
             setProcessing(true);
-            setError(null);
-            setPaymentMessage(null);
+         //   setError(null);
+         //   setPaymentMessage(null);
 
             const allMounted = mounted.number && mounted.expiry && mounted.cvc;
             if (!allMounted) {
