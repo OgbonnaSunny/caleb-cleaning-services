@@ -1826,92 +1826,6 @@ const Checkout = () => {
         }${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
     }
 
-    const updateBookingOnDatabase =  async () => {
-
-        try {
-            let response = await api.get('/api/order-id')
-            const orderId = response.data.orderId;
-
-            const revenue = {
-                customer: `${formData.firstName} ${formData.lastName}`,
-                payment: formData.totalAmount,
-                orderId: orderId,
-                customerEmail: formData.email,
-                plan: formData.plan
-            }
-
-            const booking = [];
-            for (let i = 0; i < formData.booking.length; i++) {
-                const duration = formData.booking[i].time2;
-                let book;
-                if (duration > 0) {
-                    book = {room: formData.booking[i].plan,  count: formData.booking[i].count}
-                }
-                else {
-                    book = {room: formData.booking[i].plan,  count: 'Needed'}
-                }
-                booking.push(book);
-            }
-
-            const bookDetails = {
-                bookDate: `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`,
-                date: formData.date,
-                today: new Date().toISOString(),
-                customer: `${formData.firstName} ${formData.lastName}`,
-                payment: formData.totalAmount,
-                paymentIntentId: paymentIntentId,
-                clientSecret: clientSecret,
-                nature: formData.nature,
-                plan: formData.plan,
-                email: formData.email,
-                rate: formData.rate,
-                timeCompleted: '',
-                extraTime: 0,
-                extraCharge: 0,
-                mainDate: selectedDate,
-                minimumPrice: formData.minimumEstimate,
-                cleanerWage: 0,
-                address: formData.address,
-                postcode: postcode,
-                phone: formData.phone,
-            };
-
-
-            const orderData = {
-                orderId: orderId,
-                booking: JSON.stringify(booking),
-                details: JSON.stringify(bookDetails),
-                cleanerAssigned: false,
-                completed: false,
-                urgent: formData.urgent,
-                duration: formData.duration,
-                nature: formData.nature,
-                assignedCleanerName: '',
-                assignedCleanerEmail: '',
-                assignedCleanerPhone: '',
-                customerEmail: formData.email,
-                payment: formData.totalAmount,
-                startTime: `${formData.date} ${formData.hourText}:${formData.minuteText}:00`,
-                startHour: formData.hour,
-                startMinute: formData.minute,
-            };
-
-            response = await api.post('/api/booking', orderData);
-
-            const bookSuccess = response.data.success;
-
-            response = await api.post('/api/revenue', revenue);
-
-            if (response.data.success || bookSuccess) {
-                setMessage("Booking details are  successfully registered!");
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-
     function getPaymentIntentIdFromClientSecret(clientSecret) {
         return clientSecret.split('_')[1];
     }
@@ -2039,6 +1953,95 @@ const Checkout = () => {
         const [paymentMessage, setPaymentMessage] = useState('');
         const [error, setError] = useState(null);
         const [success, setSuccess] = useState(false);
+        const [bookMessage, setBookMessage] = useState('');
+
+        const updateBookingOnDatabase =  async () => {
+            try {
+                let response = await api.get('/api/order-id')
+                const orderId = response.data.orderId;
+
+                const revenue = {
+                    customer: `${formData.firstName} ${formData.lastName}`,
+                    payment: formData.totalAmount,
+                    orderId: orderId,
+                    customerEmail: formData.email,
+                    plan: formData.plan
+                }
+
+                const booking = [];
+                for (let i = 0; i < formData.booking.length; i++) {
+                    const duration = formData.booking[i].time2;
+                    let book;
+                    if (duration > 0) {
+                        book = {room: formData.booking[i].plan,  count: formData.booking[i].count}
+                    }
+                    else {
+                        book = {room: formData.booking[i].plan,  count: 'Needed'}
+                    }
+                    booking.push(book);
+                }
+
+                const bookDetails = {
+                    bookDate: `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`,
+                    date: formData.date,
+                    today: new Date().toISOString(),
+                    customer: `${formData.firstName} ${formData.lastName}`,
+                    payment: formData.totalAmount,
+                    paymentIntentId: paymentIntentId,
+                    clientSecret: clientSecret,
+                    nature: formData.nature,
+                    plan: formData.plan,
+                    email: formData.email,
+                    rate: formData.rate,
+                    timeCompleted: '',
+                    extraTime: 0,
+                    extraCharge: 0,
+                    mainDate: selectedDate,
+                    minimumPrice: formData.minimumEstimate,
+                    cleanerWage: 0,
+                    address: formData.address,
+                    postcode: postcode,
+                    phone: formData.phone,
+                };
+
+
+                const orderData = {
+                    orderId: orderId,
+                    booking: JSON.stringify(booking),
+                    details: JSON.stringify(bookDetails),
+                    cleanerAssigned: false,
+                    completed: false,
+                    urgent: formData.urgent,
+                    duration: formData.duration,
+                    nature: formData.nature,
+                    assignedCleanerName: '',
+                    assignedCleanerEmail: '',
+                    assignedCleanerPhone: '',
+                    customerEmail: formData.email,
+                    payment: formData.totalAmount,
+                    startTime: `${formData.date} ${formData.hourText}:${formData.minuteText}:00`,
+                    startHour: formData.hour,
+                    startMinute: formData.minute,
+                };
+
+                response = await api.post('/api/booking', orderData);
+
+                const bookSuccess = response.data.success;
+
+                response = await api.post('/api/revenue', revenue);
+
+                if (response.data.success || bookSuccess) {
+                    setBookMessage("Booking details are  successfully registered!");
+                }
+                else {
+                    setBookMessage("Booking details still processing!");
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
 
         const handlePayment = async (e) => {
             e.preventDefault();
@@ -2047,6 +2050,7 @@ const Checkout = () => {
             setProcessing(true);
             setError(null);
             setPaymentMessage(null);
+            setBookMessage(null);
 
             if (!stripe || !elements) {
                 return;
@@ -2067,9 +2071,9 @@ const Checkout = () => {
             }
             else if (paymentIntent) {
                 if (paymentIntent.status === "succeeded") {
-                    updateBookingOnDatabase()
+                    updateBookingOnDatabase();
                     setPaymentMessage("Payment successful!");
-                    setFormData(data)
+                    setFormData(data);
                     setSelectedDate(null);
                 }
             }
@@ -2109,8 +2113,9 @@ const Checkout = () => {
                                 </div>
 
                             </div>
-                            {paymentMessage &&  <label style={{margin:'10px', fontSize:'small'}}>{paymentMessage}</label>}
+                            {paymentMessage &&  <label className="card-error">{paymentMessage}</label>}
                             {error && <label className="card-error">{error}</label>}
+                            {bookMessage && <label className="card-error">{bookMessage}</label>}
                         </div>
                     </div>
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
@@ -3441,7 +3446,7 @@ const Checkout = () => {
     function PaymentPlatform() {
 
         return(
-            <div className={'slide-in'}>
+            <div className={'service-card'}>
                 <h2 style={{color:'blue', paddingLeft:'10px'}}>Payment details</h2>
                 <p style={{paddingLeft:'15px', paddingRight:'5px'}}>
                     Please note that your payement details are securely
