@@ -2038,6 +2038,7 @@ const Checkout = () => {
         const [processing, setProcessing] = useState(false);
         const [paymentMessage, setPaymentMessage] = useState('');
         const [error, setError] = useState(null);
+        const [success, setSuccess] = useState(false);
 
         const handlePayment = async (e) => {
             e.preventDefault();
@@ -2069,7 +2070,7 @@ const Checkout = () => {
                     updateBookingOnDatabase()
                     setPaymentMessage("Payment successful!");
                     setFormData(data)
-                    setCurrentStep(-1)
+                    setSelectedDate(null);
                 }
             }
             setProcessing(false);
@@ -2115,7 +2116,7 @@ const Checkout = () => {
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
                         <button disabled={processing}
                                 type="button" className="back-button"
-                                onClick={() => setCurrentStep(currentStep - 1)}>
+                                onClick={() => setCurrentStep( - 1)}>
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
