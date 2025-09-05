@@ -1936,17 +1936,20 @@ const Checkout = () => {
 
 
     function PaymentHome() {
-        const stripe = useStripe();
+        const stripes = useStripe();
         const elements = useElements();
 
-         const [processing, setProcessing] = useState(false);
-         const [error, setError] = useState(null);
+        const [processing, setProcessing] = useState(false);
+        const [error, setError] = useState(null);
         const [success, setSuccess] = useState(false);
         const [mounted, setMounted] = useState({
             number: false,
             expiry: false,
             cvc: false,
         });
+        const [pay, setPay] = useState(false);
+        const [element, setElements] = useState(elements);
+        const [stripe, setStripe] = useState(stripes);
 
         const handleBackButton = (e) => {
             e.preventDefault();
@@ -2047,7 +2050,7 @@ const Checkout = () => {
 
         const handlePayment = async (e) => {
             e.preventDefault();
-            if (!stripe || !elements || processing) return;
+            if (!stripe || !element || processing) return;
 
             setProcessing(true);
             setError(null);
@@ -2099,23 +2102,29 @@ const Checkout = () => {
         };
 
         useEffect(() => {
-            const cardNumber = elements?.getElement(CardNumberElement);
+            const cardNumber = element?.getElement(CardNumberElement);
             if (cardNumber) {
                 cardNumber.update({
                     showIcon: true,
                     iconStyle: 'solid'
                 });
             }
-            stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: elements.getElement(CardNumberElement),
-                    billing_details: {
-                        name: `${formData.firstName} ${formData.lastName}`,
-                        email: formData.email,
+
+        }, [element]);
+
+        useEffect(() => {
+            if (stripe) {
+                stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: elements.getElement(CardNumberElement),
+                        billing_details: {
+                            name: `${formData.firstName} ${formData.lastName}`,
+                            email: formData.email,
+                        },
                     },
-                },
-            });
-        }, [elements]);
+                });
+            }
+        }, [stripe]);
 
         return (
             <form onSubmit={handlePayment}
@@ -2169,8 +2178,8 @@ const Checkout = () => {
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
-                                type="submit"
-                                className={(!stripe || !elements) ? "back-button" : "submit-button"}>
+                                type="button"
+                                className={(!stripe || !element) ? "back-button" : "submit-button"}>
                             {processing ? 'Processing...' : 'Book Now'}
                         </button>
                     </div>
