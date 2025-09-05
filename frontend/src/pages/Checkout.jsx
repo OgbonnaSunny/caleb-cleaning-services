@@ -2046,12 +2046,6 @@ const Checkout = () => {
 
         const handlePayment = async (e) => {
             e.preventDefault();
-            setProcessing(true);
-            if (count === 0) {
-                setProcessing(false);
-                setCount(count + 1);
-                return;
-            }
             if (processing) return;
 
             setProcessing(true);
@@ -2091,14 +2085,15 @@ const Checkout = () => {
                 }
                 else if (paymentIntent) {
                     if (paymentIntent.status === "succeeded") {
-                        updateBookingOnDatabase();
-                        setSuccess(true);
-                        setPaymentMessage("Payment successful!");
+                    //    updateBookingOnDatabase();
+                    //    setSuccess(true);
+                    //    setPaymentMessage("Payment successful!");
                     }
                 }
 
             } catch (error) {
                 console.log(error);
+                setError("Payment failed!. Please try Again!");
             } finally {
                 setProcessing(false);
             }
