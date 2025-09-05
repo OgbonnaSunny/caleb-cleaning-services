@@ -51,7 +51,7 @@ import {
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
+//import { useFormik } from 'formik';
 import { debounce } from 'lodash';
 import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
@@ -1478,7 +1478,6 @@ const Checkout = () => {
 
     const handlePlanChange = (e) => {
         setFormData({...formData, plan: e.target.category});
-        setPaymentMessage(null)
     }
 
     const updateAddictions = (service, totalPrice, tenancyCount = -1) => {
@@ -2341,7 +2340,7 @@ const Checkout = () => {
                             </div>
                         </div>
                         }
-                        <Form>
+                        <div>
                             <div className={'grid-container'} style={{margin:'20px'}}>
 
                                 <div style={{backgroundColor:'white', paddingRight:'30px', maxWidth:'300px'}}>
@@ -2364,7 +2363,6 @@ const Checkout = () => {
                                     />
                                     {errors.date && <span className="error-message">{errors.date}</span>}
                                     {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
-                                    <ErrorMessage name="date" component="span" className="error-message" />
                                 </div>
 
                                 <div  style={{ flexDirection:'column', alignItems:'center', maxWidth:'200px'}}>
@@ -2398,7 +2396,7 @@ const Checkout = () => {
                                     {errors.time && <span className="error-message">{errors.time}</span>}
                                 </div>
                             </div>
-                        </Form>
+                        </div>
 
                     </div>
                     <div className={'question-container'}>
@@ -3087,51 +3085,51 @@ const Checkout = () => {
         setFormData({...formData,  [e.target.category]: e.target.value });
     }
 
-    const validationSchema = Yup.object().shape({
-        firstName: Yup.string().required('First name is required'),
-        lastName: Yup.string().required('Last name is required'),
-        email: Yup.string().email('Invalid email').required('Email is required'),
-        phone: Yup.string().required('Phone number is required'),
-        address: Yup.string().required('Address is required'),
-        date: Yup.date().required('Date is required'),
-    });
-
-    const formik = useFormik({
-        initialValues: formData,
-        onSubmit: values => {
-            // Final form submission
-            console.log('Form submitted:', values);
-        }
-    });
-
-    // Debounced save function
-    const debouncedSave = useCallback(
-        debounce((name, value) => {
-            // Use functional update to avoid stale state
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                [name]: value
-            }));
-        }, 1000),
-        [] // Still empty because debounce doesn't depend on external values
-    );
-
-    // Handle field changes with debounce
-    const handleFieldChange = (e) => {
-        const { name, value } = e.target;
-        // Immediate update for responsiveness
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        // Debounced save
-        debouncedSave(name, value);; // Debounced save
-    };
-
-    // Cleanup debounce on unmount
-    useEffect(() => {
-        return () => debouncedSave.cancel();
-    }, [debouncedSave]);
+    // const validationSchema = Yup.object().shape({
+    //     firstName: Yup.string().required('First name is required'),
+    //     lastName: Yup.string().required('Last name is required'),
+    //     email: Yup.string().email('Invalid email').required('Email is required'),
+    //     phone: Yup.string().required('Phone number is required'),
+    //     address: Yup.string().required('Address is required'),
+    //     date: Yup.date().required('Date is required'),
+    // });
+    //
+    // const formik = useFormik({
+    //     initialValues: formData,
+    //     onSubmit: values => {
+    //         // Final form submission
+    //         console.log('Form submitted:', values);
+    //     }
+    // });
+    //
+    // // Debounced save function
+    // const debouncedSave = useCallback(
+    //     debounce((name, value) => {
+    //         // Use functional update to avoid stale state
+    //         setFormData(prevFormData => ({
+    //             ...prevFormData,
+    //             [name]: value
+    //         }));
+    //     }, 1000),
+    //     [] // Still empty because debounce doesn't depend on external values
+    // );
+    //
+    // // Handle field changes with debounce
+    // const handleFieldChange = (e) => {
+    //     const { name, value } = e.target;
+    //     // Immediate update for responsiveness
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         [name]: value
+    //     }));
+    //     // Debounced save
+    //     debouncedSave(name, value);; // Debounced save
+    // };
+    //
+    // // Cleanup debounce on unmount
+    // useEffect(() => {
+    //    // return () => debouncedSave.cancel();
+    // }, []);
 
 
     const Data = () => {
