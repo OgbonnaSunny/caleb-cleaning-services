@@ -1948,6 +1948,7 @@ const Checkout = () => {
             cvc: false,
         });
         const [pay, setPay] = useState(false);
+        const [key, setKey] = useState(Date.now());
 
 
         const handleBackButton = (e) => {
@@ -2095,6 +2096,26 @@ const Checkout = () => {
 
         };
 
+        const handlePayment2 = async (e) => {
+            e.preventDefault();
+
+            try {
+                const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment("", {
+                    payment_method: { card: elements?.getElement(CardNumberElement),
+                        billing_details: { name: `${formData.firstName} ${formData.lastName}`, email: formData.email}},
+                });
+
+
+            } catch (error) {
+                console.log(error);
+                setError("Payment failed!. Please try Again!");
+            } finally {
+                setProcessing(false);
+            }
+
+
+        };
+
         useEffect(() => {
             const cardNumber = elements?.getElement(CardNumberElement);
             if (cardNumber) {
@@ -2106,12 +2127,6 @@ const Checkout = () => {
 
         }, [elements]);
 
-        useEffect(() => {
-            stripe?.confirmCardPayment("", {
-                payment_method: { card: elements?.getElement(CardNumberElement),
-                    billing_details: { name: `${formData.firstName} ${formData.lastName}`, email: formData.email}},
-            });
-        }, []);
 
 
         return (
@@ -2126,6 +2141,7 @@ const Checkout = () => {
                                 <CardNumberElement
                                     options={elementOptions}
                                     className="stripe-card-element"
+                                    key={key}
                                     onReady={() =>
                                         setMounted((prev) => ({ ...prev, number: true }))
                                     }
@@ -2162,7 +2178,7 @@ const Checkout = () => {
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
                         <button disabled={processing}
                                 type="button" className="back-button"
-                                onClick={handleBackButton}>
+                                onClick={handlePayment2}>
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
