@@ -1936,8 +1936,8 @@ const Checkout = () => {
 
 
     function PaymentHome() {
-        const stripes = useStripe();
-        const elements = useElements();
+        const stripe = useStripe();
+        const element = useElements();
 
         const [processing, setProcessing] = useState(false);
         const [error, setError] = useState(null);
@@ -1948,8 +1948,7 @@ const Checkout = () => {
             cvc: false,
         });
         const [pay, setPay] = useState(false);
-        const [element, setElements] = useState(elements);
-        const [stripe, setStripe] = useState(stripes);
+
 
         const handleBackButton = (e) => {
             e.preventDefault();
