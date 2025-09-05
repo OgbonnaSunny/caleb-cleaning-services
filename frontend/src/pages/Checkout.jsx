@@ -1945,6 +1945,7 @@ const Checkout = () => {
             expiry: false,
             cvc: false,
         });
+        const [count, setCount] = useState(0);
 
         const handleBackButton = (e) => {
             e.preventDefault();
@@ -2045,6 +2046,10 @@ const Checkout = () => {
 
         const handlePayment = async (e) => {
             e.preventDefault();
+            if (count === 0) {
+                setCount(count + 1);
+                return;
+            }
             if (processing) return;
 
             setProcessing(true);
