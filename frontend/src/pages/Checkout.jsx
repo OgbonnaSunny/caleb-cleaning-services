@@ -2053,8 +2053,8 @@ const Checkout = () => {
             if (!stripe || !elements || processing) return;
 
             setProcessing(true);
-         //   setError(null);
-         //   setPaymentMessage(null);
+            setError('');
+            setPaymentMessage('');
 
             const allMounted = mounted.number && mounted.expiry && mounted.cvc;
             if (!allMounted) {
@@ -2194,7 +2194,7 @@ const Checkout = () => {
                     <div style={{margin:'15px', gap:'10px'}} className="form-actions">
                         <button disabled={processing}
                                 type="button" className="back-button"
-                                onClick={handlePayment2}>
+                                onClick={handleBackButton}>
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
