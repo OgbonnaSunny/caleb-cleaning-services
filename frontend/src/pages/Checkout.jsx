@@ -1963,7 +1963,7 @@ const Checkout = () => {
         const updateBookingOnDatabase =  async () => {
             try {
                 let response = await api.get('/api/order-id')
-                const orderId = response.data.orderId;
+                const { orderId } = response.data;
 
                 const revenue = {
                     customer: `${formData.firstName} ${formData.lastName}`,
