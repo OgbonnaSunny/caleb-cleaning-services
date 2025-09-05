@@ -1936,8 +1936,8 @@ const Checkout = () => {
 
 
     function PaymentHome() {
-        const stripes = useStripe();
-        const elements = useElements();
+    //    const stripes = useStripe();
+    //    const elements = useElements();
 
         const [processing, setProcessing] = useState(false);
         const [error, setError] = useState(null);
@@ -1948,8 +1948,8 @@ const Checkout = () => {
             cvc: false,
         });
         const [pay, setPay] = useState(false);
-        const [element, setElements] = useState(elements);
-        const [stripe, setStripe] = useState(stripes);
+        const [element, setElements] = useState(useElements());
+        const [stripe, setStripe] = useState(useStripe());
 
         const handleBackButton = (e) => {
             e.preventDefault();
@@ -2072,7 +2072,7 @@ const Checkout = () => {
             try {
                 const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
                     payment_method: {
-                        card: elements.getElement(CardNumberElement),
+                        card: element.getElement(CardNumberElement),
                         billing_details: {
                             name: `${formData.firstName} ${formData.lastName}`,
                             email: formData.email,
@@ -2116,7 +2116,7 @@ const Checkout = () => {
             if (stripe) {
                 stripe.confirmCardPayment(clientSecret, {
                     payment_method: {
-                        card: elements.getElement(CardNumberElement),
+                        card: element.getElement(CardNumberElement),
                         billing_details: {
                             name: `${formData.firstName} ${formData.lastName}`,
                             email: formData.email,
@@ -2178,7 +2178,7 @@ const Checkout = () => {
                             Back
                         </button>
                         <button disabled={(processing || !stripe)}
-                                type="button"
+                                type="submit"
                                 className={(!stripe || !element) ? "back-button" : "submit-button"}>
                             {processing ? 'Processing...' : 'Book Now'}
                         </button>
