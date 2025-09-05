@@ -2061,7 +2061,7 @@ const Checkout = () => {
                 return;
             }
 
-            const cardElement = elements.getElement(CardNumberElement);
+            const cardElement = elements?.getElement(CardNumberElement);
             if (!cardElement) {
                 setError("Card element is not ready. Try again.");
                 setProcessing(false);
@@ -2069,9 +2069,9 @@ const Checkout = () => {
             }
 
             try {
-                const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment(clientSecret, {
                     payment_method: {
-                        card: element.getElement(CardNumberElement),
+                        card: elements?.getElement(CardNumberElement),
                         billing_details: {
                             name: `${formData.firstName} ${formData.lastName}`,
                             email: formData.email,
@@ -2113,9 +2113,9 @@ const Checkout = () => {
 
         useEffect(() => {
             if (stripe) {
-                stripe.confirmCardPayment(clientSecret, {
+                stripe?.confirmCardPayment(clientSecret, {
                     payment_method: {
-                        card: element.getElement(CardNumberElement),
+                        card: elements?.getElement(CardNumberElement),
                         billing_details: {
                             name: `${formData.firstName} ${formData.lastName}`,
                             email: formData.email,
