@@ -1940,6 +1940,11 @@ const Checkout = () => {
         const [processing, setProcessing] = useState(false);
         const [error, setError] = useState(null);
         const [success, setSuccess] = useState(false);
+        const [mounted, setMounted] = useState({
+            number: false,
+            expiry: false,
+            cvc: false,
+        });
 
         const handleBackButton = (e) => {
             e.preventDefault();
@@ -2052,6 +2057,12 @@ const Checkout = () => {
                 return;
             }
 
+            const allMounted = mounted.number && mounted.expiry && mounted.cvc;
+            if (!allMounted) {
+                setProcessing(false);
+                return;
+            }
+
             const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: elements.getElement(CardNumberElement),
@@ -2099,6 +2110,9 @@ const Checkout = () => {
                                 <CardNumberElement
                                     options={elementOptions}
                                     className="stripe-card-element"
+                                    onReady={() =>
+                                        setMounted((prev) => ({ ...prev, number: true }))
+                                    }
                                 />
                             </div>
                             <div className="form-row" style={{ display: 'flex', width: '100%', flexDirection: 'row'}} >
@@ -2107,6 +2121,9 @@ const Checkout = () => {
                                     <CardExpiryElement
                                         options={elementOptions}
                                         className="stripe-card-element"
+                                        onReady={() =>
+                                            setMounted((prev) => ({ ...prev, expiry: true }))
+                                        }
                                     />
                                 </div>
 
@@ -2115,6 +2132,9 @@ const Checkout = () => {
                                     <CardCvcElement
                                         options={elementOptions}
                                         className="stripe-card-element"
+                                        onReady={() =>
+                                            setMounted((prev) => ({ ...prev, cvc: true }))
+                                        }
                                     />
                                 </div>
 
