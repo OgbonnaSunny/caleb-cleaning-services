@@ -48,6 +48,7 @@ import ResetPassword from "./pages/ResetPassword.jsx";
 import Blogs from './pages/Blogs.jsx';
 import BlogDetails from './pages/Blog-Details.jsx';
 import Reviews from './pages/Reviews.jsx';
+import About from './pages/About.jsx';
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Overview />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/blog-details" element={<BlogDetails />} />
                 <Route path="/blogs" element={<Blogs />} />

@@ -55,7 +55,7 @@ const LocationFooter = () => {
 
     return (
         <footer className="footer-banner">
-            <div className="container">
+            <div className="support-page">
                 <div className="footer-content">
                     <div className="footer-section">
                         <h3 style={{color:'white'}}>Our services</h3>

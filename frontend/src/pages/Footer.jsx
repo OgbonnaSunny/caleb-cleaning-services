@@ -167,7 +167,7 @@ const Footer = () => {
 
     return (
         <footer style={{marginTop:'30px'}} className="footer-banner">
-            <div className="container">
+            <div className="support-page">
 
                 <div className="footer-content" >
                     <div className="footer-section" style={currentLocation === '/locations' ? hide : show}>
