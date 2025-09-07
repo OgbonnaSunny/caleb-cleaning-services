@@ -26,7 +26,7 @@ const About = () => {
                         <h2 style={{textAlign:'center'}}>Who We Are</h2>
                         <div className="idea-container">
                             <p style={{textAlign:'start'}}>
-                                At <strong>Shiny Homes Cleaning Services</strong>, we pride ourselves
+                                At <strong>Fly Cleaning Services</strong>, we pride ourselves
                                 on being one of the most reliable and affordable cleaning companies
                                 in Edinburgh. Established with the mission of making homes and
                                 businesses spotless, our team is dedicated to delivering top-notch
