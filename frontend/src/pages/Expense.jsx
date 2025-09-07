@@ -47,7 +47,6 @@ const Expense = () => {
             if (scrollTop + clientHeight >= scrollHeight - 100) {
                 if (!loading) {
                     setPageCount(prev => prev + 1);
-                  //  alert(pageCount)
                 }
             }
         };
@@ -110,7 +109,7 @@ const Expense = () => {
                 setMessage(message)
                 setExpenses(prev => {
                     const map = new Map(prev.map(item => [item.id, item])); // old items
-                    expenses.forEach(item => map.set(item.id, item));    // add/replace new
+                    expenses?.forEach(item => map.set(item.id, item));    // add/replace new
                     return Array.from(map.values()).sort((a, b) => b.id - a.id); // convert back to array
                 });
                 if (expenses.length > 0) {
@@ -122,9 +121,14 @@ const Expense = () => {
             }
             if (edit && expense) {
                 response = await api.post('/api/expenses/update', data);
-                const {success, message} = response.data;
+                const {success, message, expenses} = response.data;
                 setMessage(message)
                 if (success) {
+                    setExpenses(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        expenses?.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => b.id - a.id); // convert back to array
+                    });
                     setCategory('Wages');
                     setAmount(0);
                     setComment('');

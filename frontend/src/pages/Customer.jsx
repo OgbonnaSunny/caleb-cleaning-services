@@ -11,7 +11,7 @@ import {
     FaPoundSign,
     FaQuestionCircle, FaUserCircle,
     FaUserTie,
-    FaEnvelope, FaCommentDots, FaPen, FaTimes,
+    FaEnvelope, FaCommentDots, FaPen, FaTimes, FaPhone,
 } from "react-icons/fa";
 import api from "./api.js";
 import { FaCalendarCheck} from 'react-icons/fa';
@@ -83,7 +83,6 @@ const Customer = () => {
     const [billing, setBilling] = useState(0);
     const [messageCount, setMessageCount] = useState(0);
 
-
     const bottomNavItems = [
         {id: 1, category: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}/>},
@@ -92,6 +91,21 @@ const Customer = () => {
         {id: 4, category: 'Support', items: ['Contact us'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
     ];
+
+    function CallButton({ phoneNumber, name }) {
+        if (role === 'Support') {
+            return null;
+        }
+        return (
+            <div style={{width:'50%'}}>
+                <p>
+                    <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
+                        <FaPhone style={{width:'100%'}} size={20}/>
+                    </a>
+                </p>
+            </div>
+        );
+    }
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));

@@ -202,7 +202,6 @@ const ProfilePage = ({ emailFromProile }) => {
         setPage(10);
     }, [])
 
-
     const renderStars = (rating) => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -372,11 +371,16 @@ const ProfilePage = ({ emailFromProile }) => {
                 setIsLoading(true);
             }
             try {
+                let offset = 0;
+                if (reviewList?.length > 0) {
+                    offset = reviewList[reviewList.length - 1].id;
+                }
                 const response = await api.post('/api/reviews/record', {cleanerEmail: email, limit: page, offset: offset});
                 const { reviews } = response.data;
                 if (reviews) {
                     setRating(reviews?.value);
                     setReviewCount(reviews?.count);
+
 
                     setReviewList(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
@@ -386,7 +390,7 @@ const ProfilePage = ({ emailFromProile }) => {
                 }
                 else {
                     if (reviewList?.length <= 0) {
-                        setSuccessMessage('No reviewList record was found');
+                        setSuccessMessage('No review record was found');
                         setBgColor('red');
                     }
                 }

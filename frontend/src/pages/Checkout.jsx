@@ -1954,7 +1954,7 @@ const Checkout = () => {
             if (processing) return;
             if (success) {
                 setFormData(data);
-                setCurrentStep(-1);
+                setCurrentStep(0);
                 return;
             }
             setCurrentStep(currentStep - 1);
@@ -2081,41 +2081,6 @@ const Checkout = () => {
 
         };
 
-        const handlePayment2 = async (e) => {
-            e.preventDefault();
-            if (!stripe || !elements || processing) return;
-
-            setProcessing(true);
-         //   setError(null);
-         //   setPaymentMessage(null);
-
-            try {
-
-                const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment(clientSecret, {
-                    payment_method: { card: elements?.getElement(CardNumberElement),
-                        billing_details: { name: `${formData.firstName} ${formData.lastName}`, email: formData.email}},
-                });
-
-                if (stripeError) {
-                    setError(stripeError.message);
-                }
-                else if (paymentIntent) {
-                    if (paymentIntent.status === "succeeded") {
-                        updateBookingOnDatabase();
-                        setSuccess(true);
-                        setPaymentMessage("Payment successful!");
-                    }
-                }
-
-            } catch (error) {
-                console.log(error);
-                setError("Payment failed!. Please try Again!");
-            } finally {
-                setProcessing(false);
-            }
-
-
-        };
 
         useEffect(() => {
             const cardNumber = elements?.getElement(CardNumberElement);

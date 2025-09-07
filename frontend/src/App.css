@@ -6708,3 +6708,43 @@ tr:hover {
   color: blue;
 }
 
+.blog-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  text-align: start;
+  margin-bottom: 8px;
+  font-weight: lighter;
+}
+
+.blog-container {
+  display: grid;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.blog-search {
+  display: flex;
+  align-items: baseline;
+  margin-top: 15px;
+  justify-content: space-evenly;
+}
+
+@media (max-width: 768px) {
+  .blog-container {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .blog-search {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+}

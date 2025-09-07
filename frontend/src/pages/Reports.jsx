@@ -354,7 +354,7 @@ const Reports = () => {
             try {
 
                 let response = await api.get('/api/revenue/today');
-                const { incomes } = response.data;
+                const { incomes } = response?.data;
                 if (incomes && incomes?.length > 0) {
                     const incomeToady = incomes[0].today_income;
                     const booking = incomes[0].today_booking;
@@ -368,7 +368,7 @@ const Reports = () => {
                 }
 
                 response = await api.get('/api/revenue/month');
-                const { income } = response.data;
+                const { income } = response?.data;
                 if (income && income?.length > 0) {
                     const incomeMonth = income[0].this_month;
                     const lastMonth = income[0].last_month;
@@ -398,7 +398,7 @@ const Reports = () => {
                 }
 
                 response = await api.get('/api/expenses/today')
-                const { expenses } = response.data;
+                const { expenses } = response?.data;
                 if (expenses && expenses?.length > 0) {
                     const expenseToday = expenses[0].today_expenses;
                     const expenseYesterday = expenses[0].yesterday_expenses;
@@ -408,7 +408,7 @@ const Reports = () => {
                 }
 
                 response = await api.get('/api/expenses/month')
-                const { expense  } = response.data;
+                const { expense  } = response?.data;
                 if (expense && expense?.length > 0) {
                     const thisMonth = expense[0].this_month;
                     const lastMonthExp = expense[0].last_month;
@@ -417,7 +417,7 @@ const Reports = () => {
                 }
 
                 response = await api.get('/api/revenue/month/profitable')
-                const plans = response.data.plans;
+                const plans = response?.data?.plans;
                 if (plans && plans?.length > 0) {
                     const mostFrequentPlan = Object.entries(plans.reduce((a, b) =>
                         (a[b.plan] = (a[b.plan] || 0) + 1, a), {})).sort((a, b) => b[1] - a[1])[0][0];

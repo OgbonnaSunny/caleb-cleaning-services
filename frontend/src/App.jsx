@@ -45,6 +45,9 @@ import NewsLetters from "./pages/NewsLettters.jsx";
 import Expense from './pages/Expense.jsx';
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import Blogs from './pages/Blogs.jsx';
+import BlogDetails from './pages/Blog-Details.jsx';
+import Reviews from './pages/Reviews.jsx';
 
 function App() {
 
@@ -53,6 +56,9 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Overview />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/blog-details" element={<BlogDetails />} />
+                <Route path="/blogs" element={<Blogs />} />
                 <Route path="/resetpassword" element={<ResetPassword />} />
                 <Route path="/forgotpassword" element={<ForgotPassword />} />
                 <Route path="/expense" element={<Expense />} />
@@ -81,7 +87,7 @@ function App() {
                 <Route path="/locations" element={<Locations />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/pricing" element={<Pricing />} />
-                <Route path="/about" element={<Blog />} />
+                <Route path="/blog" element={<Blog />} />
                 <Route path="/gift" element={<Gift />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/reclean" element={<Reclean />} />
