@@ -212,7 +212,7 @@ const Terms = () => {
 
                         18.1. If any of the terms and conditions are found to be illegal, invalid or unenforceable, the rest of these terms and conditions shall remain in full force and effect.<br/><br/>
 
-                        18.2. Only eMop and you shall be entitled to enforce these terms. No third-party shall be entitled to enforce any of these terms and conditions.<br/><br/>
+                        18.2. Only Fly Cleaner and you shall be entitled to enforce these terms. No third-party shall be entitled to enforce any of these terms and conditions.<br/><br/>
 
                         18.3. These terms and conditions set out the entire agreement between you and Fly cleaner with respect to your use of the website and supersede any and all representations, communications and prior agreements (written or oral) made by you or eMop in relation to your use of our website.<br/><br/>
                     </p>

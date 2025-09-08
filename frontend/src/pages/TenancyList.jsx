@@ -209,7 +209,7 @@ const TenancyList = () => {
 
                 <h4 style={{marginTop:'20px'}}>Important notes</h4>
                 <p style={{marginLeft:'20px', marginBottom:'30px'}}>
-                    • End of tenancy cleaning requires your property to be completely empty before our eMoppers arrive to clean it. The reason being it can prevent the professional cleaning.<br/>
+                    • End of tenancy cleaning requires your property to be completely empty before our Fly Cleaners arrive to clean it. The reason being it can prevent the professional cleaning.<br/>
                     • In case it is impossible your Flat/House to be emptied please ensure that you store your possessions together in room/corner<br/>
                     • The refrigerator will have to be defrosted before cleaners arrive.
                 </p>
