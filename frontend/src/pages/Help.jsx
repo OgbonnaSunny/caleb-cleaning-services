@@ -15,8 +15,11 @@ import Bathroom from "../images/bathroom.png";
 import Kitchen from "../images/kitchen.png";
 import Oven from "../images/oven.png";
 import api from "./api.js";
+import {useNavigate} from "react-router-dom";
 
 const Help = () => {
+  const navigate = useNavigate();
+
   const faqCategoriesClients = [
     {
       id: 1,
@@ -766,8 +769,8 @@ const Help = () => {
             <h1 className={'experience-text'} style={{ color:'darkred', padding:'8px', textAlign:'start'}}>Frequently Asked Questions</h1>
             <p className={'header-text'} style={{textAlign:'start', color:'black', padding:'10px' }}>
               There are answers for everyone whether you’re a client and having trouble ordering a cleaning or a cleaner and want to be sure that you’re following the procedure.<br/>
-              Need help? <span style={{color:'blue'}} onClick={() => setShowContact(!showContact)}>{showContact ? 'Close email form': 'Click here to email us'}</span> —
-              For urgent issues, we aim to respond within minutes. Apart from that please navigate yourself through our FAQ pages
+              Need help? <strong style={{color:'blue'}} onClick={() => navigate('/contact')}> Contact us now</strong>
+              . For urgent issues, we aim to respond within minutes. Apart from that please navigate yourself through our FAQ pages
             </p>
             {showContact && <Contact />}
             <div style={{marginTop:'20px'}} className={'burden-container'}>
