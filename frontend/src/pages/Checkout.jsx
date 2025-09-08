@@ -1933,7 +1933,6 @@ const Checkout = () => {
         fetchData()
     }
 
-
     function PaymentHome() {
         const stripe = useStripe();
         const elements = useElements();
@@ -1954,7 +1953,7 @@ const Checkout = () => {
             if (processing) return;
             if (success) {
                 setFormData(data);
-                setCurrentStep(0);
+                setCurrentStep(1);
                 return;
             }
             setCurrentStep(currentStep - 1);
@@ -2068,6 +2067,7 @@ const Checkout = () => {
                         updateBookingOnDatabase();
                         setSuccess(true);
                         setPaymentMessage("Payment successful!");
+                        setCurrentStep( currentStep + 1);
                     }
                 }
 
@@ -2092,6 +2092,12 @@ const Checkout = () => {
             }
 
         }, [elements]);
+
+        useEffect(() => {
+            if (success) {
+                setTimeout(() => {setFormData(data); setCurrentStep(1)}, 5000)
+            }
+        }, [success]);
 
 
         return (

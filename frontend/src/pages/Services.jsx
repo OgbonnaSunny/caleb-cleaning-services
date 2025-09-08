@@ -517,7 +517,7 @@ const Services = () => {
     {
       id: 1,
       tag: "Preparation",
-      details: "The area is first prepared by eMop's carpet cleaners. Moving light furniture (including heavy furniture sometimes) enabling easy access, and checking the carpet for common stains or special cleaning requirements are all part of this process. They hoover the carpet as well to get rid of any loose dirt or debris especially from areas with heavy foot traffic, remove stains, and give you refreshed carpets."
+      details: "The area is first prepared by Fly Cleaner's carpet cleaners. Moving light furniture (including heavy furniture sometimes) enabling easy access, and checking the carpet for common stains or special cleaning requirements are all part of this process. They hoover the carpet as well to get rid of any loose dirt or debris especially from areas with heavy foot traffic, remove stains, and give you refreshed carpets."
     },
     {
       id: 2,
