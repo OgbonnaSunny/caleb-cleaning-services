@@ -63,7 +63,7 @@ const Cancellation = () => {
                         Time is valuable for both clients and Fly cleaners. That is why we have introduced a Cancellation Policy for both clients and Fly cleaners, which also covers rescheduling.
                         By accepting our terms and conditions you accept the conditions set out in this cancellation policy.<br/>
                         If a client cancels a job less than 12 hours before the start time or at the last minute,
-                        our Fly cleaners lose their income and it messes with their schedule. Clients’ cancellation fees cover eMoppers’ time and the Fly cleaner platform’s costs.
+                        our Fly cleaners lose their income and it messes with their schedule. Clients’ cancellation fees cover Fly Cleaner’s time and the Fly cleaner platform’s costs.
                     </p>
                     <table className="cookie-table">
                         <thead>

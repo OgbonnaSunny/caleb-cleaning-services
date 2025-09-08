@@ -120,7 +120,7 @@ const Pricing = () => {
     {
       id: 1,
       category: "Clear prices",
-      reason: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their carpet cleaning prices, but with eMop, you know the price of the professional carpet cleaning services at the moment of booking."
+      reason: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their carpet cleaning prices, but with Fly Cleaner, you know the price of the professional carpet cleaning services at the moment of booking."
     },
   ]
   const sofaText = ['We frequently ignore our upholstery until we spill something or see a significant stain. Your upholstery should be cleaned for more than just spills and stains. Over time, the dust and filth on your sofa and chairs may accumulate.\n' +
@@ -131,11 +131,11 @@ const Pricing = () => {
   const miniUpholsteryList = [
     {
       id: 1,
-      reason: "Regardless of whether you require a one-time clean or regular cleaning services, eMop professional cleaners will go above and beyond your expectations."
+      reason: "Regardless of whether you require a one-time clean or regular cleaning services, Fly Cleaner professional cleaners will go above and beyond your expectations."
     },
     {
       id: 2,
-      reason: "We've cleaned a lot of sofas over the years, and we don't consider any job to be too big or small. In all of our activities, at eMop, we place a high priority on quality, using only the best cleaning products and disinfection techniques."
+      reason: "We've cleaned a lot of sofas over the years, and we don't consider any job to be too big or small. In all of our activities, at Fly Cleaner, we place a high priority on quality, using only the best cleaning products and disinfection techniques."
     }
   ]
 
@@ -535,7 +535,7 @@ const Pricing = () => {
     {
       id: 1,
       category: "Clear prices",
-      detail: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their office cleaning costs, but with eMop, you know the price of the professional cleaning services at the moment of booking."
+      detail: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their office cleaning costs, but with Fly Cleaner, you know the price of the professional cleaning services at the moment of booking."
     },
     {
       id: 2,
@@ -545,7 +545,7 @@ const Pricing = () => {
     {
       id: 3,
       category: "Insured and accredited cleaners",
-      detail: "A thorough background check is carried out on our commercial cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional cleaners over time and can fit into any professional cleaning company. You can be sure to get professional office cleaning services when you choose eMop. If you also need domestic cleaning services, eMop cleaners can help."
+      detail: "A thorough background check is carried out on our commercial cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional cleaners over time and can fit into any professional cleaning company. You can be sure to get professional office cleaning services when you choose Fly Cleaner. If you also need domestic cleaning services, Fly cleaners can help."
     }
   ];
 
@@ -632,7 +632,7 @@ const Pricing = () => {
     },
     {
       id: 7,
-      narration: "eMop may charge more if you need urgent or same-day cleaning services because we may need to add more workers or adjust their timetable."
+      narration: "Fly Cleaner may charge more if you need urgent or same-day cleaning services because we may need to add more workers or adjust their timetable."
     },
     {
       id: 8,
@@ -657,7 +657,7 @@ const Pricing = () => {
     {
       id: 1,
       category: "Clear prices",
-      story: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Most cleaning companies may hide their service costs, but for eMop, you know the price of the professional cleaning services at the moment of booking."
+      story: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Most cleaning companies may hide their service costs, but for Fly Cleaner, you know the price of the professional cleaning services at the moment of booking."
     },
     {
       id: 2,
@@ -667,7 +667,7 @@ const Pricing = () => {
     {
       id: 3,
       category: "Insured and accredited cleaners",
-      story: "A thorough background check is carried out on our end of tenancy cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional cleaners over time and can fit into any professional cleaning company. You can be sure to get professional end of tenancy cleaning services when you choose eMop. If you need office cleaning also, eMop cleaners can help also."
+      story: "A thorough background check is carried out on our end of tenancy cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional cleaners over time and can fit into any professional cleaning company. You can be sure to get professional end of tenancy cleaning services when you choose Fly Cleaner. If you need office cleaning also, Fly Cleaner cleaners can help also."
     }
   ];
 
@@ -778,7 +778,7 @@ const Pricing = () => {
     {
       id: 1,
       category: "Clear prices",
-      reason: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their carpet cleaning prices, but with eMop, you know the price of the professional carpet cleaning services at the moment of booking."
+      reason: "Prices that are transparent and free of ambiguity enable customers to make well-informed choices. Ensuring there are no surprises or hidden fees improves client happiness and trust. Any other local cleaning company may hide their carpet cleaning prices, but with Fly Cleaner, you know the price of the professional carpet cleaning services at the moment of booking."
     },
     {
       id: 2,
@@ -788,7 +788,7 @@ const Pricing = () => {
     {
       id: 3,
       category: "Insured and accredited cleaners",
-      reason: "A thorough background check is carried out on our carpet cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional carpet cleaners over time and can fit into any professional cleaning company. You can be sure to get professional carpet cleaning services when you choose eMop. If you also need end of tenancy cleaning services, eMop cleaners can help too."
+      reason: "A thorough background check is carried out on our carpet cleaners to examine their past records. This is to ensure the safety of our customers. In addition to that, our professional clean team are duly insured and licensed to carry out cleaning activities in the UK. They are trained and have become professional carpet cleaners over time and can fit into any professional cleaning company. You can be sure to get professional carpet cleaning services when you choose Fly Cleaner. If you also need end of tenancy cleaning services, Fly cleaners can help too."
     }
   ];
 
@@ -884,15 +884,15 @@ const Pricing = () => {
   const upholsteryCleaningBenefits = [
     {
       id: 1,
-      reason: "Regardless of whether you require a one-time clean or regular cleaning services, eMop professional cleaners will go above and beyond your expectations."
+      reason: "Regardless of whether you require a one-time clean or regular cleaning services, Fly Cleaner professional cleaners will go above and beyond your expectations."
     },
     {
       id: 2,
-      reason: "We've cleaned a lot of sofas over the years, and we don't consider any job to be too big or small. In all of our activities, at eMop, we place a high priority on quality, using only the best cleaning products and disinfection techniques."
+      reason: "We've cleaned a lot of sofas over the years, and we don't consider any job to be too big or small. In all of our activities, at Fly Cleaner, we place a high priority on quality, using only the best cleaning products and disinfection techniques."
     },
     {
       id: 3,
-      reason: "Your house is safe with us since we are completely covered by insurance, including fidelity guarantee, public and products liability, and employer's responsibility. You don't need to be home to allow our staff in to clean because we are an insured company. If you are looking to get the best upholstery cleaning services, eMop is the agency to call."
+      reason: "Your house is safe with us since we are completely covered by insurance, including fidelity guarantee, public and products liability, and employer's responsibility. You don't need to be home to allow our staff in to clean because we are an insured company. If you are looking to get the best upholstery cleaning services, Fly Cleaner is the agency to call."
     },
     {
       id: 4,
@@ -1037,7 +1037,7 @@ const Pricing = () => {
                             <li>One off: cost start at £18/h</li>
                           </ul>
                         </div>
-                        <p>Our cleaning prices at Fly cleaners are the best you will get in Edinburgh and around the UK. We take pride in offering cost-effective cleaning aid of the highest quality. For all cleaning services in Edinburgh that are provided to our cherished clients, eMop strives to offer the finest price to quality ratio.</p>
+                        <p>Our cleaning prices at Fly cleaners are the best you will get in Edinburgh and around the UK. We take pride in offering cost-effective cleaning aid of the highest quality. For all cleaning services in Edinburgh that are provided to our cherished clients, Fly Cleaner strives to offer the finest price to quality ratio.</p>
                       </div>
                       <img src={Stairs} alt={"cleaners"} className={'cart-image2'}/>
                     </div>
@@ -1073,9 +1073,9 @@ const Pricing = () => {
                       <div className="service-card">
                         <h3 style={{color:'navy'}}>Cleaning prices for extra services</h3>
                         <ul className={'dot-list'}>
-                          <li>For an additional cost, eMop provides additional services. That may entail outdoor and deep cleaning plan, carpet cleaning, window washing, fridge, microwave, ironing, bed making, kitchen, bathroom, bookcase, oven and grill cleaning.</li>
+                          <li>For an additional cost, Fly Cleaner provides additional services. That may entail outdoor and deep cleaning plan, carpet cleaning, window washing, fridge, microwave, ironing, bed making, kitchen, bathroom, bookcase, oven and grill cleaning.</li>
                           <li>If you find that you require any of these services, be sure to research the cost of our house cleaning. Be aware that the minimum charge for the extra aid prices starts at £9 to £25 on an hourly rate.</li>
-                          <li>If you're looking for a trustworthy cleaning plan that's reasonably priced and also provides other solutions, eMop is the ideal option. We provide carpet cleaning, upholstery, and end of tenancy cleaning, for instance, at very affordable prices.</li>
+                          <li>If you're looking for a trustworthy cleaning plan that's reasonably priced and also provides other solutions, Fly Cleaner is the ideal option. We provide carpet cleaning, upholstery, and end of tenancy cleaning, for instance, at very affordable prices.</li>
                           <li>Additionally, one of our many areas of expertise is window washing. Delivering exceptional plan to every customer has always been the priority of our professional cleaners</li>
                         </ul>
                       </div>
@@ -1210,14 +1210,14 @@ const Pricing = () => {
                     <div className="service-card">
                       <h3 style={{color:'brown'}}>Preparation</h3>
                       <p>
-                        The area is first prepared by eMop's carpet cleaners. Moving light furniture (including heavy furniture sometimes) enabling easy access, and checking the carpet for common stains or special cleaning requirements are all part of this process. They hoover the carpet as well to get rid of any loose dirt or debris especially from areas with heavy foot traffic, remove stains, and give you refreshed carpets.
+                        The area is first prepared by Fly Cleaner's carpet cleaners. Moving light furniture (including heavy furniture sometimes) enabling easy access, and checking the carpet for common stains or special cleaning requirements are all part of this process. They hoover the carpet as well to get rid of any loose dirt or debris especially from areas with heavy foot traffic, remove stains, and give you refreshed carpets.
                       </p>
                     </div>
 
                     <div className="service-card">
                       <h3 style={{color:'brown'}}>Carpet cleaning process</h3>
                       <p>
-                        Utilising cutting-edge tools and efficient cleaning methods are part of the fundamental carpet cleaning process. Depending on the type of carpet and its state, eMop carpet cleaners frequently use hot water extraction (also known as 'steam cleaning') or dry cleaning techniques.
+                        Utilising cutting-edge tools and efficient cleaning methods are part of the fundamental carpet cleaning process. Depending on the type of carpet and its state, Fly Cleaner carpet cleaners frequently use hot water extraction (also known as 'steam cleaning') or dry cleaning techniques.
                         Hot water and a cleaning solution are injected into the carpet during a hot water extraction, which is then completely extracted. Specialised chemicals or foams may be used in dry cleaning processes.
                       </p>
                     </div>
@@ -1226,7 +1226,7 @@ const Pricing = () => {
                       <h3 style={{color:'brown'}}>Finishing touch</h3>
                       <p>
                         Fly carpet cleaners ensure that the carpet dries efficiently after cleaning by using powerful extraction instruments and, if required, air movers. In order to ensure that all stains and spots have been removed and the carpet looks clean and new, our expert carpet cleaning plan staff also performs a final inspection.
-                        The comprehensiveness and customer satisfaction of eMop's professional carpet cleaning services make them a trustworthy choice for maintaining the stain- and wear-resistant qualities of your rugs.
+                        The comprehensiveness and customer satisfaction of Fly Cleaner's professional carpet cleaning services make them a trustworthy choice for maintaining the stain- and wear-resistant qualities of your rugs.
                       </p>
                     </div>
                   </div>
@@ -1241,7 +1241,7 @@ const Pricing = () => {
                       <p>Whether you need a deep cleaning plan once or often, Fly cleaners offers professional deep cleaning services in the Edinburgh area.
                         The thought of having to dedicate time to clean your property, flat, office (commercial cleaning), or any other location might be depressing. However, assigning this job to reliable expert and fully insured cleaners with years of expertise will greatly reduce your workload.
                         You can be confident that we have staff with the highest standards for the task if you're seeking expert deep cleaning services. As the premier and go-to option for deep cleaning in Edinburgh, our achievements over the years speak for themselves, and we take satisfaction in our very good plan, which is suitable for any of your cleaning needs.
-                        We are all aware of how time-consuming and annoying cleaning your whole property feels. For a one-off deep clean in Edinburgh, eMop is the best choice.
+                        We are all aware of how time-consuming and annoying cleaning your whole property feels. For a one-off deep clean in Edinburgh, Fly Cleaner is the best choice.
                         Our professional cleaners will work on as many things as we can in the allocated time, while also considering your cleanliness needs and preferences.</p>
                     </div>
                     <img src={Kept} alt={"cleaners"} className={'cart-image2'}/>
@@ -1258,7 +1258,7 @@ const Pricing = () => {
                       <ul className={'dot-list'}>
                         <li>We stand out from other deep cleaning plan providers in Edinburgh because of our accountability, commitment to quality, and professionalism. All Edinburgh landlords and tenants love our work because we always deliver a healthy home at the end of the day.</li>
                         <li>Our highly recommended services offer our customers the opportunity to select a day and time that works for you. Even on short notice, house cleaning appointments can be made in advance with our booking system.</li>
-                        <li>In addition to our one-off cleaning plan, we can tailor our orders to include weekly, fortnightly, or monthly appointments; this is one of the finest things about the eMop professional deep cleaning services.</li>
+                        <li>In addition to our one-off cleaning plan, we can tailor our orders to include weekly, fortnightly, or monthly appointments; this is one of the finest things about the Fly Cleaner professional deep cleaning services.</li>
                         <li>You pay for only the plan provided.</li>
                         <li>We have highly trained cleaners that can give you the high-quality deep cleaning plan that our agency is associated with in the cleaning industry. A large part of our friendly team is made up of local cleaners who are familiar with the Edinburgh area. This makes us stand out as the best cleaning company.</li>
                       </ul>
@@ -1331,7 +1331,7 @@ const Pricing = () => {
                 <div className="container" style={{marginBottom:'30px'}}>
                   <div style={{display:'block'}}>
                     <h3 style={{color:'navy'}}>Let the results amaze you!</h3>
-                    <p>Our deep cleaners are fully trained, licensed and background checked to deliver cleaning services in Edinburgh. eMop is known for delivering cleaning of the highest quality, and that will never change. We guarantee complete satisfaction after our deep cleaners are done with your property in Edinburgh. Did you know you can book other services alongside deep cleaning as well, like moving home plan? Send us a message today</p>
+                    <p>Our deep cleaners are fully trained, licensed and background checked to deliver cleaning services in Edinburgh. Fly Cleaner is known for delivering cleaning of the highest quality, and that will never change. We guarantee complete satisfaction after our deep cleaners are done with your property in Edinburgh. Did you know you can book other services alongside deep cleaning as well, like moving home plan? Send us a message today</p>
                   </div>
                 </div>
               </section>
@@ -1412,7 +1412,7 @@ const Pricing = () => {
                       <p style={{textAlign:'end', color:'red'}}>Cashback up to £150</p>
                       <h3 style={{textAlign:'center'}}>Office cleaning</h3>
                       <p style={{color:'navy'}}>from £16</p>
-                      <p>Professional cleaning and maintenance services for workplaces and other business settings are part of our office cleaning plan. Vacuuming, dusting, sanitising toilets, and maintaining a neat space for staff and customers are among the duties carried out by eMop cleaners.</p>
+                      <p>Professional cleaning and maintenance services for workplaces and other business settings are part of our office cleaning plan. Vacuuming, dusting, sanitising toilets, and maintaining a neat space for staff and customers are among the duties carried out by Fly cleaners.</p>
                     </div>
                   </div>
                 </div>

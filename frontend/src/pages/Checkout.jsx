@@ -2454,7 +2454,7 @@ const Checkout = () => {
                                 <div style={{display:'block', paddingLeft:'10px', paddingRight:'10px', marginTop:'20px'}}>
                                     <h4 style={{textAlign:'start'}}>What is Cancellation Policy?</h4>
                                     <p style={question2 === 'What is Cancellation Policy?' ? showQs: hideQs}>
-                                        Time is valuable for both clients and cleaners. If a customer cancels a job 12 hours before the start time or at the last minute, cleaners lose their income and it messes with their schedule. Clients cancellation fees cover cleaners time and the eMop platform costs. Please see our <Link to={'/cancellation'} style={{color:'blue'}}>Cancellation Policy</Link>
+                                        Time is valuable for both clients and cleaners. If a customer cancels a job 12 hours before the start time or at the last minute, cleaners lose their income and it messes with their schedule. Clients cancellation fees cover cleaners time and the Fly Cleaner platform costs. Please see our <Link to={'/cancellation'} style={{color:'blue'}}>Cancellation Policy</Link>
                                     </p>
                                 </div>
                             </div>

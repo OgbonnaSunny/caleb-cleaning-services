@@ -193,7 +193,7 @@ const TenancyList = () => {
 
                 <p style={{marginTop:'30px'}}>
                     Fly clean professional end of tenancy cleaners follow strict company procedures and checklists to ensure you
-                    receive the highest level of service. eMop cleaning list includes the areas/rooms our expert team cleans
+                    receive the highest level of service. Fly cleaning list includes the areas/rooms our expert team cleans
                     while at your property. Our end of tenancy cleaning checklist is as follows:
                 </p>
                 <div className={'grid-container'}>

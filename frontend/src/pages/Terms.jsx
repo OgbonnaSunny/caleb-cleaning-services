@@ -43,7 +43,7 @@ const Terms = () => {
                     <p>
                         1. ABOUT US <br/><br/>
 
-                        1.1. Welcome to our website. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following Website Terms and Conditions of use, which together with our Booking Terms and Conditions and Privacy Policy govern eMop’s relationship with you. If you disagree with any part of these terms and conditions, please do not use our website.<br/><br/>
+                        1.1. Welcome to our website. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following Website Terms and Conditions of use, which together with our Booking Terms and Conditions and Privacy Policy govern Fly Cleaner’s relationship with you. If you disagree with any part of these terms and conditions, please do not use our website.<br/><br/>
 
                         1.2. These are the terms and conditions on which we, Flymax Ltd,  supply our services to you (“Customer”), via our website, our App and the Fly cleaner Platform (collectively referred to throughout these Terms and Conditions as “Website”).<br/><br/>
 
@@ -66,7 +66,7 @@ const Terms = () => {
 
                         3.2. You agree to keep your User details secret. We may disable any User, at any time, if in our reasonable opinion they have failed to comply with any of the provisions of these terms of use.<br/><br/>
 
-                        3.3. If you believe or suspect that your User login details have been compromised, please notify us at: emop@emop.world and update your user credentials immediately.<br/><br/>
+                        3.3. If you believe or suspect that your User login details have been compromised, please notify us at: info@flymax.uk and update your user credentials immediately.<br/><br/>
 
                         4. ACCESSING OUR WEBSITE<br/><br/>
 
@@ -92,7 +92,7 @@ const Terms = () => {
 
                         7.1. We are the owner or the licensee of all intellectual property rights on the website, being any and all rights under patent law, copyright law, trade secret law, trademark law, and any and all other proprietary rights.<br/><br/>
 
-                        7.2. We expressly reserve all intellectual property rights on our website, app and platform, including the eMop domain name and all related domains and sub-domains, the name “eMop”, our logo device, service marks, trading names and/or trademarks. Other trademarks and product/company names mentioned on eMop platform may be trademarks of their respective owners or licensors and the rights in such marks are reserved to them.<br/><br/>
+                        7.2. We expressly reserve all intellectual property rights on our website and platform, including the Fly Cleaner domain name and all related domains and sub-domains, the name “Fly Cleaner”, our logo device, service marks, trading names and/or trademarks. Other trademarks and product/company names mentioned on Fly Cleaner platform may be trademarks of their respective owners or licensors and the rights in such marks are reserved to them.<br/><br/>
 
                         7.3. Any content you upload to our website will be considered non-confidential and non-proprietary, and we have the right to use, copy, distribute and disclose to third parties any such content for any purpose. You grant us a worldwide, non-exclusive, irrevocable, perpetual, royalty-free license to reproduce, adapt, distribute and publish such uploaded content.<br/><br/>
 
@@ -114,7 +114,7 @@ const Terms = () => {
 
                         9.2. To the extent permitted by law, we exclude all conditions, warranties, representations or other terms which may apply to our website, whether express or implied.<br/><br/>
 
-                        9.3. The service which you book via our website, is the responsibility of the eMopper who provides it. We are not responsible or liable to you for the actual service provided by the eMopper to the fullest extent permissible by law.<br/><br/>
+                        9.3. The service which you book via our website, is the responsibility of the Fly Cleaner who provides it. We are not responsible or liable to you for the actual service provided by the Fly Cleaner to the fullest extent permissible by law.<br/><br/>
 
                         9.4. We will not be liable to any user for any loss or damage, whether in contract, tort (including negligence), breach of statutory duty, or otherwise, even if foreseeable, arising under or in connection with use of, or inability to use, our website; or use of or reliance on any content displayed on our website.<br/><br/>
 
@@ -128,7 +128,7 @@ const Terms = () => {
 
                         10. INDEMNITY<br/><br/>
 
-                        10.1. You will protect, indemnify, defend and hold harmless eMop, our directors, employees, agents, eMoppers, partners, from any third-party claim or demand, including reasonable lawyers’ fees, relating to or arising from: (a) your uploading any content to our website; (b) your use of our website and activities and behaviours occurring during such use of our website; (c) any violation by you of these terms; or (d) your violation of any third-party rights. This obligation will survive the termination of these terms and your use of our website.<br/><br/>
+                        10.1. You will protect, indemnify, defend and hold harmless Fly Cleaner, our directors, employees, agents, Fly Cleaner, partners, from any third-party claim or demand, including reasonable lawyers’ fees, relating to or arising from: (a) your uploading any content to our website; (b) your use of our website and activities and behaviours occurring during such use of our website; (c) any violation by you of these terms; or (d) your violation of any third-party rights. This obligation will survive the termination of these terms and your use of our website.<br/><br/>
 
                         11. LINKING TO OUR WEBSITE<br/><br/>
 
@@ -142,7 +142,7 @@ const Terms = () => {
 
                         11.1.4. you do not do so in a way that removes or obscures by framing or otherwise advertisements or copyright or other proprietary notices contained on the website.<br/><br/>
 
-                        11.2. We reserve the right to withdraw linking permission at any time without notice. If you would like to link to our website for commercial purposes, or other than provided above, please contact us: emop@emop.world.<br/><br/>
+                        11.2. We reserve the right to withdraw linking permission at any time without notice. If you would like to link to our website for commercial purposes, or other than provided above, please contact us: info@flymax.uk.<br/><br/>
 
                         12. THIRD-PARTY LINKS<br/><br/>
 
@@ -152,11 +152,11 @@ const Terms = () => {
 
                         13.1. Our website has some areas where you may communicate with other users or us, such as blogs, message boards, and leaving reviews. Any material which is posted on the website (“User Content”) through your Account will be attributed to you, and you are personally responsible for it.<br/><br/>
 
-                        13.2. Some Submission Area content is available to the public, and, in the interests of data protection, we recommend that you anonymise your personal information on any publicly viewable areas. eMop will not be responsible for any information or materials posted on such public areas.<br/><br/>
+                        13.2. Some Submission Area content is available to the public, and, in the interests of data protection, we recommend that you anonymise your personal information on any publicly viewable areas. Fly Cleaner will not be responsible for any information or materials posted on such public areas.<br/><br/>
 
                         13.3. We reserve the right to refuse to publish any User Content or to remove or suspend access to such User Content if it does not comply with these Website Terms and Conditions, including the ‘Acceptable Content’ listed below at Section 14. We will not be responsible for any loss or damages arising from our decision to exercise our rights under this clause.<br/><br/>
 
-                        13.4. Views and opinions expressed in any User Content are those of the individual submitting that content. They are not our views and opinions and we do not accept responsibility for them. However, if you find any User Content on the website that you consider is in breach of the Acceptable Content section below, please notify us by email: emop@emop.world using the subject heading “Unacceptable Content”, setting out details of the User Content and where it can be found, and we will investigate the matter.<br/><br/>
+                        13.4. Views and opinions expressed in any User Content are those of the individual submitting that content. They are not our views and opinions and we do not accept responsibility for them. However, if you find any User Content on the website that you consider is in breach of the Acceptable Content section below, please notify us by email: info@flymax.uk using the subject heading “Unacceptable Content”, setting out details of the User Content and where it can be found, and we will investigate the matter.<br/><br/>
 
                         13.5. If you do not comply with the Acceptable Content contained at Section14, or if any of your User Content causes us concern, we reserve the right to pass on that User Content to the relevant authorities.
 
@@ -214,7 +214,7 @@ const Terms = () => {
 
                         18.2. Only Fly Cleaner and you shall be entitled to enforce these terms. No third-party shall be entitled to enforce any of these terms and conditions.<br/><br/>
 
-                        18.3. These terms and conditions set out the entire agreement between you and Fly cleaner with respect to your use of the website and supersede any and all representations, communications and prior agreements (written or oral) made by you or eMop in relation to your use of our website.<br/><br/>
+                        18.3. These terms and conditions set out the entire agreement between you and Fly cleaner with respect to your use of the website and supersede any and all representations, communications and prior agreements (written or oral) made by you or Fly Cleaner in relation to your use of our website.<br/><br/>
                     </p>
                 </div>
             </section>

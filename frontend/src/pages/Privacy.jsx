@@ -51,7 +51,7 @@ const Privacy = () => {
                     If you have any questions about how we process personal data, or would like to exercise your rights as a data subject, then please email us at flyclean@gmail.com. <br/>
                     3 Purpose of processing<br/><br/>
 
-                    3.1. We collect, hold and use personal data received from you to match your request for domestic services with ‘Fly clean’, our third-party contractors. We will then share some of your personal details with designated eMoppers to enable them to carry out the service requested.<br/>
+                    3.1. We collect, hold and use personal data received from you to match your request for domestic services with ‘Fly clean’, our third-party contractors. We will then share some of your personal details with designated Fly Cleaners to enable them to carry out the service requested.<br/>
                     3.2. We will not ask you for any information which is not necessary for the particular service we are providing to you.<br/>
                     4 Definitions<br/><br/>
 
@@ -59,7 +59,7 @@ const Privacy = () => {
                     4.2. “GDPR” means the General Data Protection Regulation.<br/>
                     4.3. “ICO” means the Information Commissioners Office, the governing body for Data Protection in the UK.<br/>
                     4.4. “Personal data” means any information relating to a person who can be identified, directly or indirectly, from that information. This could include your name, your identification number, location data, online identifier (such as IP address) or to one or more factors specific to the physical, physiological, mental, economic, cultural or social identity of that person.<br/>
-                    4.5. “Platform” means the eMop platform.<br/>
+                    4.5. “Platform” means the Fly Cleaner platform.<br/>
                     4.6. “Processing” means obtaining, recording, organising, storing, amending, retrieving, disclosing and/or destroying information, or using or doing anything with it.<br/>
                     5 Conditions of Processing<br/><br/>
 
@@ -76,8 +76,8 @@ const Privacy = () => {
                     6.2. Processing may also be necessary for the purposes of our legitimate interests, or with your consent. Where we require your consent to process your personal data we will set out exactly what it is you are consenting to, and how you can withdraw your consent at any stage.<br/>
                     6.3. Customer<br/>
                     6.3.1. If you are a customer, then the information that we collect from you relates to your request for professional services, such as – name, address, telephone, email address, billing information. We will also use your personal data for the purpose of support, accounting and follow-up assistance.<br/>
-                    6.3.2. If a booking request is accepted, then we may need to transfer your aforementioned data and any other relevant data you may provide to your designated eMopper, for the purpose of fulfilling the contractual relationship for the provision of professional cleaning services.<br/>
-                    6.3.3. Any ratings you leave for our eMoppers, and any reviews you post either voluntarily on our website, or where you have already made publicly available reviews on external review sites such as Google Review, may be used by us on our website to promote our services.<br/>
+                    6.3.2. If a booking request is accepted, then we may need to transfer your aforementioned data and any other relevant data you may provide to your designated Fly Cleaner, for the purpose of fulfilling the contractual relationship for the provision of professional cleaning services.<br/>
+                    6.3.3. Any ratings you leave for our Fly cleaners, and any reviews you post either voluntarily on our website, or where you have already made publicly available reviews on external review sites such as Google Review, may be used by us on our website to promote our services.<br/>
                     6.3.4. Advertising consent: If you have consented to receiving promotional offers from us, we process and use your personal data to understand your usage habits better and to contact you with informative information on additional services that might be of interest to you. You can withdraw your consent for promotional purposes at any time using the unsubscribe link available in every email.<br/>
                     6.3.5. We may also use your personal data for other purposes of legitimate interests in promoting and selling our services. Where we rely on legitimate interests it will be of minimum privacy impact.
                     6.4. Fly cleaner<br/>
@@ -87,7 +87,7 @@ const Privacy = () => {
                     7 Retention<br/><br/>
 
                     7.1. We will only keep customer’s personal information for as long as is necessary to fulfil the purposes we collected it for, or because of a statutory obligation to retain the information, and unless there is an ongoing relationship, we will delete customer personal data after a period of 3 years.<br/>
-                    7.2. We will retain eMopper’s personal data for a period of 3 years in accordance with legal, or statutory obligations, such as to meet HMRC requirements.<br/>
+                    7.2. We will retain Fly Cleaner’s personal data for a period of 3 years in accordance with legal, or statutory obligations, such as to meet HMRC requirements.<br/>
                     8 Security<br/><br/>
 
                     8.1. We will use appropriate technical and organisational measures to keep personal information secure, and in particular to protect against unauthorised or unlawful processing and against accidental loss, destruction or damage, and in accordance with the data protection legislation.<br/>
@@ -119,7 +119,7 @@ const Privacy = () => {
                     12 Cookies<br/><br/>
 
                     12.1. Cookies are small text files that are placed on your computer, smartphone, tablet or smart TV when you access a website. They are widely used in order to make websites work, or work more efficiently, by allowing the website to recognise your device and store information about past actions or preferences. An example could be internet banking, where your device may recognise and populate certain previously entered login details.<br/>
-                    12.2. The eMop website uses cookies in order to provide a better service and experience to our customers and other website users.<br/>
+                    12.2. The Fly Cleaner website uses cookies in order to provide a better service and experience to our customers and other website users.<br/>
                     12.3. There are two kinds of cookies:<br/>
                     12.3.1. session cookies which are short-term and auto-delete after a few minutes or when you close your browser;<br/>
                     12.3.2. persistent cookies – set by the website and stored for a longer period of time, usually used to store commonly entered information on forms (such as your name, address, and telephone number). They also store information about your browsing habits across multiple sites, usually used to allow advertisers and social network site operators to target advertising to you.<br/>
@@ -128,13 +128,13 @@ const Privacy = () => {
                     12.5.1. You can find out more about cookies by visiting aboutcookies.org<br/>
                     13 Links to other websites<br/><br/>
 
-                    13.1. The Fly cleaner website may contain links to other websites run by other organisations. This Privacy Policy applies only to the eMop website‚ so we encourage you to read the privacy statements on the other websites you visit via our site. We cannot be responsible for the privacy policies and practices of other sites, even if you access them using links from our website.<br/>
+                    13.1. The Fly cleaner website may contain links to other websites run by other organisations. This Privacy Policy applies only to the Fly Cleaner website‚ so we encourage you to read the privacy statements on the other websites you visit via our site. We cannot be responsible for the privacy policies and practices of other sites, even if you access them using links from our website.<br/>
                     14 Amendments<br/><br/>
 
                     14.1. We will continually review and update this privacy notice to reflect changes in our services and feedback from service users, as well as to comply with changes in law. When such changes occur, we will revise the “last updated” date at the top of this notice.<br/>
                     15 Complaints<br/><br/>
 
-                    15.1. If you wish to make a complaint about how we are processing your personal data, then in the first instance please contact our data protection officer/data protection lead at: emop@emop.world.<br/>
+                    15.1. If you wish to make a complaint about how we are processing your personal data, then in the first instance please contact our data protection officer/data protection lead at: inf@flymax.uk.<br/>
                     15.2. If you are still dissatisfied with how we have handled your complaint, then you have the right to complain to the Information Commissioners Office (ICO). The ICO can be contacted as follows:<br/>
                     The Information Commissioner<br/>
                     • Wycliffe House<br/>

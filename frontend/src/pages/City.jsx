@@ -106,7 +106,7 @@ const City = () => {
         {id:'submit', src: Booking, stage:'Stage 1', category:'Submit your booking online', steps:['Enter postcode','Choose a type of cleaning','Select a cleaning schedule', 'Choose rooms to get an estimated price', 'Select additional cleaning services if you need them', 'Indicate the level of dirt in your property']},
         {id:'pay', src: Currency, stage:'Stage 2', category: 'Pay as you go', steps: [' The estimated amount of your booking will be held in your bank account', ' You will only be charged after the cleaning session is completed and according to the actual time a cleaner worked']},
         {id:'manage',src: Manage,  stage: 'Stage 3', category: 'Manage your booking online', steps: [' When you submit your cleaning request, your booking becomes available to all cleaners in the system',
-                ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use MyAccount on our website or the eMop App to keep track of your booking']}
+                ' When you make an appointment with a cleaner, we email you or send a text message through the app', 'You can use MyAccount on our website to keep track of your booking']}
     ]
 
     const reasons = [
@@ -524,8 +524,8 @@ const City = () => {
                         <img src={Cleaners} alt={"cleaners"} className={'cart-image2'}/>
                         <div className="service-card">
                             <p>Our domestic cleaners can render one-off, end-of-tenancy, deep cleaning, and regular cleaning services. This full range of professional cleaning services in St Albans is affordable and customisable.
-                                If you need cleaners in St Albans that will show up to your house even on short notice and clean your bedrooms, kitchen, toilet, cabinets, and living room, and even provide laundry services like washing and ironing, eMop has the right cleaners for you.
-                                One-off visits, as well as regular appointments, are available from eMop professional cleaning services in St Albans. No matter the plan, it is carried out to the greatest standards possible by our reliable house cleaning crew.</p>
+                                If you need cleaners in St Albans that will show up to your house even on short notice and clean your bedrooms, kitchen, toilet, cabinets, and living room, and even provide laundry services like washing and ironing, Fly Cleaner has the right cleaners for you.
+                                One-off visits, as well as regular appointments, are available from Fly Cleaner professional cleaning services in St Albans. No matter the plan, it is carried out to the greatest standards possible by our reliable house cleaning crew.</p>
                         </div>
                     </div>
                 </div>
@@ -554,8 +554,8 @@ const City = () => {
                         <div className="service-card">
                             <p style={{color:'navy'}}>Cleaning plan that cares for your home</p>
                             <p>{`In ${city},  our cleaners offer expert house cleaning services. Our domestic cleaning services are followed with other packages like laundry, one-off and other deep cleaning for home homes and offices.
-Nobody enjoys having to clean their house in their free time. Our cleaners are responsible for that. Home cleaning services from eMop in St Albans offer you back time to focus on activities you enjoy.
-We provide a regular cleaning plan as needed, whether it be daily, weekly, bi-weekly, or monthly, and we provide all of our own cleaning supplies. eMop has trusted cleaners with experience in providing cleaning solutions for shared housing, small offices, social areas of apartments, and family residences.`}</p>
+Nobody enjoys having to clean their house in their free time. Our cleaners are responsible for that. Home cleaning services from Fly Cleaner in St Albans offer you back time to focus on activities you enjoy.
+We provide a regular cleaning plan as needed, whether it be daily, weekly, bi-weekly, or monthly, and we provide all of our own cleaning supplies. Fly Cleaner has trusted cleaners with experience in providing cleaning solutions for shared housing, small offices, social areas of apartments, and family residences.`}</p>
                         </div>
                     </div>
                 </div>

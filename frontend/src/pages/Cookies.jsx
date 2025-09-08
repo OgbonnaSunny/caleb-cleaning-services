@@ -9,7 +9,7 @@ const Cookies = () => {
         {
             title: 'Fly.ApplicationCookie',
             category: 'Fly.ApplicationCookie',
-            purpose: 'This cookie is necessary for user auto-login to the personal eMop account.'
+            purpose: 'This cookie is necessary for user auto-login to the personal Fly Cleaner account.'
         },
         {
             title: 'Referral Cookie',
