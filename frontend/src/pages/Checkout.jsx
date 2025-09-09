@@ -2217,10 +2217,10 @@ const Checkout = () => {
                         </div>
                     ))}
                     {!loggedIn && <div style={{marginTop:'20px'}}>
-                        <h3 style={{fontWeight:"lighter"}}>We couldn't find a record of your credentials. In order to proceed, it is important that you sign up or sign in.
+                        <p>We couldn't find a record of your credentials. In order to proceed, it is important that you sign up or sign in.
                             If you already have an account, sign in  <Link style={{color:'blue', fontWeight:'bold'}} to={'/login'}>here</Link>,
                             otherwise sign up <Link style={{color:'darkred', fontWeight:'bold'}} to={'/signup'}>here</Link>.
-                        </h3>
+                        </p>
                     </div>  }
                     <button disabled={starter.length === 0} className={starter.length === 0 ?
                         'back-button' :'next-button'} style={{width:'100px', marginTop:'20px'}}
