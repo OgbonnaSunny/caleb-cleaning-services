@@ -3,7 +3,7 @@ import api from './api.js'
 import {Link, useNavigate} from "react-router-dom";
 import Payment from "./Payment.jsx";
 import LOGO from "../images/logo4.png";
-import {FaTimes} from "react-icons/fa";
+import {FaEye, FaEyeSlash, FaTimes} from "react-icons/fa";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -13,6 +13,7 @@ const Login = () => {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [forgotPassword, setForgotPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -117,15 +118,22 @@ const Login = () => {
 
                     <div className="form-group">
                         <label htmlFor="postcode">Password*</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className={'button-bg'}
-                            required
-                        />
+                        <div className="password-container">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className={'password-input'}
+                                required
+                            />
+                            <label
+                                className={'toggle-button'}
+                                onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                            </label>
+                        </div>
                         {error.password && <span className="error-message">{error.password}</span>}
                     </div>
 

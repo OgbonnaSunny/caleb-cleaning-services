@@ -12,6 +12,7 @@ import postcode, {isValidUKPostcodeFormat, checkPostcodeExists} from "./Postcode
 import axios from 'axios'
 import {Link, useNavigate } from 'react-router-dom'
 import LOGO from "../images/logo4.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -38,6 +39,8 @@ const Signup = () => {
     const [loading, setLoading] = useState(false);
     const [countDown, setCountDown] = useState(0);
     const [count, setCount] = useState(0);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const getAdminUser = () => {
         if (!formData.username) { return '' }
@@ -236,6 +239,10 @@ const Signup = () => {
        sendEmail(true);
    }
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return <div style={{
         display: 'flex',
         flexDirection: 'column',
@@ -266,7 +273,7 @@ const Signup = () => {
                            name="firstName"
                            value={formData.firstName}
                            onChange={handleChange}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.firstName && <span className="error-message">{errors.firstName}</span>}
@@ -280,7 +287,7 @@ const Signup = () => {
                            name="lastName"
                            value={formData.lastName}
                            onChange={handleChange}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.lastName && <span className="error-message">{errors.lastName}</span>}
@@ -294,7 +301,7 @@ const Signup = () => {
                            name="phone"
                            value={formData.phone}
                            onChange={handleChange}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.phone && <span className="error-message">{errors.phone}</span>}
@@ -308,7 +315,7 @@ const Signup = () => {
                            name="postcode"
                            value={formData.postcode}
                            onChange={handleChange}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.postcode && <span className="error-message">{errors.postcode}</span>}
@@ -322,7 +329,7 @@ const Signup = () => {
                            name="email"
                            value={formData.email}
                            onChange={handleChange}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.email && <span className="error-message">{errors.email}</span>}
@@ -330,29 +337,45 @@ const Signup = () => {
 
                    <div className="form-group">
                        <label htmlFor="password">Password*</label>
-                       <input
-                           type="password"
-                           id="password"
-                           name="password"
-                           value={formData.password}
-                           onChange={handleChange}
-                           className={'button-bg'}
-                           required
-                       />
+                       <div className="password-container">
+                           <input
+                               type={showPassword ? 'text' : 'password'}
+                               id="password"
+                               name="password"
+                               value={formData.password}
+                               onChange={handleChange}
+                               className={'password-input'}
+                               required
+                           />
+                           <label
+                               className={'toggle-button'}
+                               onClick={togglePasswordVisibility}>
+                               {showPassword ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                           </label>
+                       </div>
+
                        {errors.password && <span className="error-message">{errors.password}</span>}
                    </div>
 
                    <div className="form-group">
                        <label htmlFor="postcode">Confrim password*</label>
-                       <input
-                           type="password"
-                           id="confirmPassword"
-                           name="confirmPassword"
-                           value={formData.confirmPassword}
-                           onChange={handleChange}
-                           className={'button-bg'}
-                           required
-                       />
+                       <div className="password-container">
+                           <input
+                               type={showConfirmPassword ? 'text' : 'password'}
+                               id="confirmPassword"
+                               name="confirmPassword"
+                               value={formData.confirmPassword}
+                               onChange={handleChange}
+                               className={'password-input'}
+                               required
+                           />
+                           <label
+                               className={'toggle-button'}
+                               onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                               {showConfirmPassword ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                           </label>
+                       </div>
+
                        {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
                    </div>
 
@@ -364,7 +387,7 @@ const Signup = () => {
                            name="address"
                            onChange={handleChange}
                            value={formData.address}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.address && <span className="error-message">{errors.address}</span>}
@@ -377,7 +400,7 @@ const Signup = () => {
                        Next
                    </button>
                    
-                   <p style={{marginTop:'20px'}}>Already have an account? <Link style={{color:'navy'}} to={'/login'} target="_blank" rel="noopener noreferrer">sign in</Link></p>
+                   <p onClick={() => window.close()} style={{marginTop:'20px'}}>Already have an account? <Link style={{color:'navy'}} to={'/login'} target="_blank" rel="noopener noreferrer">sign in</Link></p>
                </div>}
 
                {stage === 2 && <div className="steps">
@@ -390,7 +413,7 @@ const Signup = () => {
                            placeholder="Enter code sent to your email"
                            onChange={(e) => setFormData({...formData, receivedCode: e.target.value})}
                            value={formData.receivedCode}
-                           className={'button-bg'}
+                           className={'password-container'}
                            required
                        />
                        {errors.receivedCode && <span className="error-message">{errors.receivedCode}</span>}

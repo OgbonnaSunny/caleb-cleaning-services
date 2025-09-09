@@ -5,7 +5,7 @@ import Interview from '../images/interview.png'
 import UniformBranded from '../images/uniformBranded.png'
 import Upload from '../images/upload.png'
 import Training from '../images/training.png'
-import { FaArrowLeft, FaArrowRight  } from 'react-icons/fa';
+import {FaArrowLeft, FaArrowRight, FaEye, FaEyeSlash} from 'react-icons/fa';
 import Meeting from "../images/meeting.png";
 import { Link, useNavigate } from 'react-router-dom'
 import postcode, {isValidUKPostcodeFormat, checkPostcodeExists} from "./Postcode.jsx";
@@ -51,6 +51,8 @@ const Become = () => {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
     const [time, setTime] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const handleImage = (e) => {
         const newErrors = {}
@@ -858,27 +860,41 @@ const Become = () => {
                                 <h3 style={{textAlign:'center', marginBottom:'20px'}}>Create login creadentials</h3>
                                 <div className="form-group">
                                     <label htmlFor="password">Password*</label>
-                                    <input
-                                        type="password"
-                                        orderId="password"
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        className={errors.password ? 'error' : 'button-bg'}
-                                    />
+                                    <div className="password-container">
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            orderId="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            className={'password-input'}
+                                        />
+                                        <label
+                                            className={'toggle-button'}
+                                            onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                                        </label>
+                                    </div>
                                     {errors.password && <span className="error-message">{errors.password}</span>}
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="confirmPassword">Confirm Password*</label>
-                                    <input
-                                        type="password"
-                                        orderId="confirmPassword"
-                                        name="confirmPassword"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        className={errors.confirmPassword ? 'error' : 'button-bg'}
-                                    />
+                                    <div className="password-container">
+                                        <input
+                                            type={showPasswordConfirm ? 'text' : 'password'}
+                                            orderId="confirmPassword"
+                                            name="confirmPassword"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
+                                            className={'password-input'}
+                                        />
+                                        <label
+                                            className={'toggle-button'}
+                                            onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}>
+                                            {showPasswordConfirm ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                                        </label>
+                                    </div>
                                     {errors.confirmPassword && (
                                         <span className="error-message">{errors.confirmPassword}</span>
                                     )}

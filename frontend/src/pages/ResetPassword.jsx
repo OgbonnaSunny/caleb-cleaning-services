@@ -4,6 +4,7 @@ import LOGO from "../images/logo4.png";
 import api from './api.js'
 import {checkPostcodeExists, isValidUKPostcodeFormat} from "./Postcode.jsx";
 import { useNavigate} from "react-router-dom";
+import {FaEye, FaEyeSlash} from "react-icons/fa";
 
 function getQueryParams() {
     const url = new URL(window.location.href);
@@ -21,6 +22,8 @@ export default function ResetPassword() {
     const [submitting, setSubmitting] = useState(false);
     const [message, setMessage] = useState(null);
     const [errors, setErrors] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
     useEffect(() => {
@@ -99,24 +102,41 @@ export default function ResetPassword() {
                 <h1 className="experience-text">Set a new password</h1>
             </div>
             <form onSubmit={handleSubmit} className="form-group">
-                <input
-                    type="password"
-                    required
-                    minLength={8}
-                    placeholder="New password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="button-bg"
-                />
-                <input
-                    type="password"
-                    required
-                    placeholder="Confirm new password"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
-                    className="button-bg"
-                    style={{marginTop:'20px'}}
-                />
+                <div className="password-container">
+                    <input
+                        type={showPassword ? 'text' : 'password' }
+                        required
+                        minLength={8}
+                        placeholder="New password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="password-input"
+                    />
+
+                    <label
+                        className={'toggle-button'}
+                        onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                    </label>
+                </div>
+
+                <div style={{marginTop:'20px'}} className="password-container">
+                    <input
+                        type={showConfirmPassword ? 'text' : 'password' }
+                        required
+                        placeholder="Confirm new password"
+                        value={confirm}
+                        onChange={(e) => setConfirm(e.target.value)}
+                        className="password-input"
+                    />
+
+                    <label
+                        className={'toggle-button'}
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                        {showConfirmPassword ? <FaEyeSlash style={{color:'blue'}} /> : <FaEye style={{color:'blue'}} />}
+                    </label>
+                </div>
+
                 <button
                     type="submit"
                     disabled={submitting}
