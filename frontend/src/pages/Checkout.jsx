@@ -56,6 +56,8 @@ import { debounce } from 'lodash';
 import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
 
+// ksi66exy.up.railway.app
+
 const Checkout = () => {
     const STRIPE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
    // const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');

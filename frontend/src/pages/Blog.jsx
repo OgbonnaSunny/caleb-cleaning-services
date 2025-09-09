@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from './api.js'
 import {FaArrowRight, FaSearch} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import {differenceInDays, format, isToday} from "date-fns";
 
 const Blog = () => {
     const navigate = useNavigate();
@@ -74,6 +75,11 @@ const Blog = () => {
         navigate('/blog-details', {state: {blog: blog}});
     }
 
+    const getTime = (date) => {
+        if (!date) return ;
+        return format(new Date(date), "EEE do MMM, yyyy h:mm a");
+    }
+
 
     return (
         <div className={['support-page', 'main-banner'].join(' ')} style={{
@@ -100,7 +106,8 @@ const Blog = () => {
                     {blogs?.map(blog => (
                         <div  onClick={() => viewDetails(blog)}
                              className={'price-container'} key={blog.id}>
-                            <img style={{width:'100%', height:'400px', borderRadius:'10px'}} src={blog.image} alt="" />
+                            <img style={{width:'100%', height:'300px', borderRadius:'10px'}} src={blog.image} alt="" />
+                            <label style={{color:'blue', marginBottom:'10px', textAlign:'center'}}>{getTime(blog?.create_at)}</label>
                             <h3>{blog.title}</h3>
                             <p className={'blog-content'}>{blog.content}</p>
                             <strong style={{display:'flex', alignItems: 'baseline'}}>Read more..</strong>
