@@ -35,6 +35,10 @@ export default function ForgotPassword() {
 
     }
 
+    useEffect(() => {
+        document.title = "Password Reset";
+    })
+
     return (
         <div className={'support-page'} style={{
             display: "block",

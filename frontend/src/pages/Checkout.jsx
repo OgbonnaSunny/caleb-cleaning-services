@@ -705,7 +705,7 @@ const Checkout = () => {
     const [endOfTenancy, setEndOfTenancy] = useState(false);
     const [subscriptionCount, setSubscriptionCount] = useState(0);
     const [minDate, setMinDate] = useState(new Date());
-    const [loggedIn, setLoggedIn] = useState(true);
+    const [loggedIn, setLoggedIn] = useState(false);
     const [time, setTime] = useState('');
     const [paymentMessage, setPaymentMessage] = useState('');
 
@@ -929,12 +929,11 @@ const Checkout = () => {
         if (user) {
             setCurrentStep(0);
             setStarter(value);
+            setLoggedIn(true);
         }
         else {
             setLoggedIn(false);
         }
-        setCurrentStep(0);
-        setStarter(value);
 
     }
 
@@ -1480,6 +1479,7 @@ const Checkout = () => {
     };
 
     const handlePlanChange = (e) => {
+
         setFormData({...formData, plan: e.target.category});
     }
 
@@ -2224,7 +2224,7 @@ const Checkout = () => {
                     </div>  }
                     <button disabled={starter.length === 0} className={starter.length === 0 ?
                         'back-button' :'next-button'} style={{width:'100px', marginTop:'20px'}}
-                            onClick={initializeForm}>
+                            onClick={loggedIn ? () => initializeForm : () => setCurrentStep(currentStep - 1)}>
                         Next
                     </button>
                 </div>

@@ -30,6 +30,10 @@ export default function ResetPassword() {
         setParams(getQueryParams());
     }, []);
 
+    useEffect(() => {
+        document.title = "Password Reset";
+    }, []);
+
     async function handleSubmit(e) {
         e.preventDefault();
         if (submitting) return;
