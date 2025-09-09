@@ -33,7 +33,7 @@ import DiningRoomIcon from '../images/diningRoomIcon.png'
 import LoungeIcon from '../images/loungeIcon.png'
 import CarpetIcon from '../images/carpetIcon.png'
 import Decimal from 'decimal.js';
-import { format } from 'date-fns';
+import {differenceInMinutes, format} from 'date-fns';
 import services from "./Services.jsx";
 import Info from '../images/info.png'
 import { isToday, differenceInDays } from 'date-fns';
@@ -579,6 +579,7 @@ const Checkout = () => {
         onSubscription: false,
         durationQty: 0,
         urgent: false,
+        sessionTime:'',
 
     }
 
@@ -775,6 +776,7 @@ const Checkout = () => {
         let time;
         let hourText = '';
         const date =  format(selectedDate, 'yyyy-MM-dd');
+        const session = format(new Date(), 'yyyy-MM-dd hh:mm:ss');
         if (now) {
             const hour = new Date().getHours();
             let newHour = hour + 4;
@@ -790,14 +792,14 @@ const Checkout = () => {
                 hourText = newHour.toString();
             }
 
-            setFormData({...formData, hour: newHour, hourText: hourText, date: date, minimumEstimate: 97, time: time });
+            setFormData({...formData, hour: newHour, hourText: hourText, date: date, minimumEstimate: 97, time: time, sessionTime: session });
             setSelectedDate(selectedDate);
             newErrors['time'] = null;
         }
         else {
 
             const time = `${formData.hourText}:${formData.minuteText}`;
-            setFormData({...formData, date: date, minimumEstimate: 67, time: time });
+            setFormData({...formData, date: date, minimumEstimate: 67, time: time, sessionTime: session });
             newErrors['time'] = null;
         }
         newErrors['date'] = null;
@@ -2038,6 +2040,12 @@ const Checkout = () => {
             e.preventDefault();
             if (!stripe || !elements || processing) return;
 
+            const elapsedTime = differenceInMinutes(new Date(), new Date(formData.sessionTime).toISOString());
+            if (elapsedTime > 30) {
+                setError("Session expired. Please restart this booking");
+                return;
+            }
+
             setProcessing(true);
             setError('');
             setPaymentMessage('');
@@ -2082,7 +2090,6 @@ const Checkout = () => {
 
 
         };
-
 
         useEffect(() => {
             const cardNumber = elements?.getElement(CardNumberElement);
