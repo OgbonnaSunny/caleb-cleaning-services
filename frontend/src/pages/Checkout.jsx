@@ -2222,7 +2222,7 @@ const Checkout = () => {
                     </div>  }
                     <button disabled={starter.length === 0} className={starter.length === 0 ?
                         'back-button' :'next-button'} style={{width:'100px', marginTop:'20px'}}
-                            onClick={loggedIn ? () => initializeForm : () => setCurrentStep(currentStep - 1)}>
+                            onClick={loggedIn ? () => initializeForm :  null}>
                         Next
                     </button>
                 </div>
