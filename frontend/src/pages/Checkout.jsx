@@ -705,7 +705,7 @@ const Checkout = () => {
     const [endOfTenancy, setEndOfTenancy] = useState(false);
     const [subscriptionCount, setSubscriptionCount] = useState(0);
     const [minDate, setMinDate] = useState(new Date());
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
     const [paymentMessage, setPaymentMessage] = useState('');
 
@@ -923,17 +923,15 @@ const Checkout = () => {
     const handleStarterChange = (e) => {
         e.preventDefault();
         const user = localStorage.getItem('user');
+        if (!user) {
+            setLoggedIn(false);
+            return;
+        }
         const { name, value } = e.target;
         setFormData(data)
         setSelectedDate(null);
-        if (user) {
-            setCurrentStep(0);
-            setStarter(value);
-            setLoggedIn(true);
-        }
-        else {
-            setLoggedIn(false);
-        }
+        setCurrentStep(0);
+        setStarter(value);
 
     }
 
