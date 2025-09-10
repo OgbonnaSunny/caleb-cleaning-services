@@ -712,7 +712,6 @@ const Checkout = () => {
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
     const [paymentMessage, setPaymentMessage] = useState('');
-    const [hideDetail, setHideDetail] = useState(false);
 
 
     const cleaningSubscriptions = [
@@ -1096,6 +1095,7 @@ const Checkout = () => {
     const addRoomQuote = (id) => {
         const oldQuotes = formData.room;
         const oldRugs = formData.rugRooms;
+        let found = false;
 
         for (let i = 0; oldQuotes.length > i; i++) {
             const newCount = oldQuotes[i].count + 1;
@@ -1103,8 +1103,14 @@ const Checkout = () => {
             if (id === oldQuotes[i].id) {
                 oldQuotes[i].totalPrice = price;
                 oldQuotes[i].count = newCount;
+                found = true;
                 break;
             }
+        }
+        if (found) {
+            setFormData({...formData, room: oldQuotes});
+            updateBooking()
+            return
         }
 
         for (let i = 0; oldRugs.length > i; i++) {
@@ -1113,12 +1119,15 @@ const Checkout = () => {
             if (id === oldRugs[i].id) {
                 oldRugs[i].totalPrice = price;
                 oldRugs[i].count = newCount;
+                found = true;
                 break;
             }
         }
+        if (found) {
+            setFormData({...formData, rugRooms: oldRugs});
+            updateBooking()
+        }
 
-        setFormData({...formData, room: oldQuotes, rugRooms: oldRugs});
-        updateBooking()
     };
 
     const removeRoomQuote = (id) => {
@@ -2718,6 +2727,7 @@ const Checkout = () => {
     }
 
     function Summary() {
+        const [hideDetail, setHideDetail] = useState(false);
 
         useEffect(() => {
             const observer = new IntersectionObserver(
@@ -2767,7 +2777,7 @@ const Checkout = () => {
                     </div>
                     {!hideDetail && <div style={{display:'flex', flexDirection:'column'}}>
                         <div className={'checkout-summary-unit'}>
-                            <h3 style={{width:'20%', fontWeight:'lighter'}} className={'summary-text'}>Tarrif</h3>
+                            <p style={{width:'20%'}} className={'summary-text'}>Tarrif</p>
                             {formData.plan.includes('One-Off') &&  <h3 className={'summary-text'} style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
                             {!formData.plan.includes('One-Off') &&  <h3 className={'summary-text'} style={{textAlign:'end'}}>
                                 {formData.plan}
@@ -2849,8 +2859,8 @@ const Checkout = () => {
                 <div className={'line'} style={{height:'2px'}}/>
 
                 {formData.totalAmount > 0 && <div className={'total'}>
-                    <h4 className={"summary-text"}>Estimated Amount</h4>
-                    <h2 className={'summary-text'} style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</h2>
+                    <h4 className={"experience-text"}>Estimated Amount</h4>
+                    <h2 className={'experience-text'} style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</h2>
                 </div>}
 
                 <div className={'line'} style={{height:'2px'}}/>
@@ -2859,6 +2869,8 @@ const Checkout = () => {
     }
 
     function Task() {
+
+
         return (
             <div>
                 <div className={['checkout-box', 'main-banner'].join(' ')}>
@@ -2868,6 +2880,7 @@ const Checkout = () => {
                                 <p className={'number-background'}>1</p>
                                 <h3 style={{color:'navy', marginLeft:'10px'}}> Please choose the rooms to clean to get an estimated price</h3>
                             </div>
+
                             <div  style={{padding:'10px',  boxShadow:'20px', marginLeft:'10px'}} className={['grid-container'].join(' ')}>
                                 {formData.room.map(task => (
                                     <div key={task.id} style={{display:'flex', flexDirection:'row', alignItems:'center', borderColor:'dodgerblue', borderRadius:'10px', border:'dotted'}}>
@@ -3674,11 +3687,10 @@ const Checkout = () => {
                 <nav  className='top-order-nav'>
                     {(formData.totalAmount > 0 && !isVisible) &&
                         <p onClick={() => ref.current?.scrollIntoView({behavior:'smooth'})}
-                           style={{display:'flex', alignItems:'center'}}
                            className={'booking-amount'}>
                             Total Amount: £{formData.totalAmount}
                             <MdKeyboardArrowDown size={30} style={{width:'40px', marginLeft:'10px', color:'navy'}} />
-                    </p>
+                        </p>
                     }
                     <div className="nav-order-content">
                         <img style={{display:'none'}} src={LOGO} className={'logo-icon'}/>

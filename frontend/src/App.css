@@ -2555,9 +2555,9 @@ a:hover {
 
 .summary-row.total {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: large;
   border-top: 1px solid #ddd;
-  padding-top: 10px;
+  padding-top: 5px;
 }
 
 .checkout-btn {
