@@ -712,6 +712,9 @@ const Checkout = () => {
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
     const [paymentMessage, setPaymentMessage] = useState('');
+    const [adjustLower, setAdjustLower] = useState(true);
+    const [minimumHour, setMinimumHour] = useState(0);
+    const [minimumMinute, setMinimumMinute] = useState(0);
 
 
     const cleaningSubscriptions = [
@@ -758,12 +761,10 @@ const Checkout = () => {
             ]
         }
     ];
-
     const showQs = {display:'', textAlign:'start', height:'100%'};
     const hideQs = {display:'none', textAlign:'start', height:'0px'};
     const showAll = {display:''};
     const hideAll = {display:'none'};
-
     const starters = [
         {id: 1,
             starter:'One-Off / Regular / Carpet & Upholstery'
@@ -783,20 +784,44 @@ const Checkout = () => {
         const session = format(new Date(), 'yyyy-MM-dd hh:mm:ss');
         if (now) {
             const hour = new Date().getHours();
+            let minutesToBeUse = 0;
+            const minute = new Date().getMinutes();
+            if (minute > 10) {
+                minutesToBeUse = 30;
+            }
             let newHour = hour + 4;
             if (newHour < 9) {
                 newHour = 9;
             }
             if (newHour.toString().length <= 1) {
-                time = `0${newHour}:${formData.minuteText}`;
+                if (minutesToBeUse > 0) {
+                    time = `0${newHour}:${minutesToBeUse}`;
+                }
+                else {
+                    time = `0${newHour}`;
+                }
                 hourText = `0${newHour}`;
             }
             else {
-                time = `${newHour}:${formData.minuteText}`;
+                if (minutesToBeUse > 0) {
+                    time = `${newHour}:${minutesToBeUse}`;
+                }
+                else {
+                    time = `${newHour}`;
+                }
                 hourText = newHour.toString();
             }
+            setAdjustLower(false)
+            setMinimumHour(newHour)
+            setMinimumMinute(minutesToBeUse)
 
-            setFormData({...formData, hour: newHour, hourText: hourText, date: date, minimumEstimate: 97, time: time, sessionTime: session });
+            setFormData({...formData,
+                hour: newHour, hourText: hourText,
+                date: date, minimumEstimate: 97,
+                time: time, sessionTime: session,
+                minute: minutesToBeUse,
+                minuteText: minutesToBeUse.toString()
+            });
             setSelectedDate(selectedDate);
             newErrors['time'] = null;
         }
@@ -1735,6 +1760,9 @@ const Checkout = () => {
 
     const removeHour = () => {
         let hours = formData.hour - 1;
+        if (!adjustLower) {
+            if (hours < minimumHours) return;
+        }
         const thisHour = new Date().getHours();
         let minimumHours = thisHour + 4;
         let minuteText = formData.minuteText;
@@ -1801,6 +1829,10 @@ const Checkout = () => {
             return
         }
         minutes =  formData.minute - 30;
+        if (!adjustLower) {
+            if (minutes < minimumMinute) return;
+        }
+
         let minute = `0${minutes}`;
         time = `${hourText}:${minute}`;
 
