@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState, useCallback, memo, useMemo} from "react";
-import { FaArrowLeft, FaArrowRight, FaTimes,  FaCheck } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaTimes,  FaCheck, FaLock } from 'react-icons/fa';
 import {Link, useLocation } from 'react-router-dom'
 import Payment,  { fetchData } from "./Payment.jsx";
 import TimePicker from 'react-time-picker';
@@ -16,7 +16,7 @@ import StaircaseIcon from '../images/staircaseIcon.png'
 import LivingRoomIcon from '../images/livinRoomIcon.png'
 import HallIcon from '../images/hallIcon.png'
 import GarageIcon from '../images/garageIcon.png'
-import { MdAdd, MdRemove,  MdArrowDownward, MdArrowUpward, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'; // Material Design icons
+import { MdAdd, MdRemove,  MdArrowDownward, MdArrowUpward, MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardArrowRight } from 'react-icons/md'; // Material Design icons
 import FridgeIcon from '../images/fridgeIcon.png'
 import WindowIcon from '../images/windowIcon.png'
 import BookcaseIcon from '../images/bookcaseIcon.png'
@@ -55,6 +55,7 @@ import * as Yup from 'yup';
 import { debounce } from 'lodash';
 import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
+import {FaArrowTurnDown} from "react-icons/fa6";
 
 // ksi66exy.up.railway.app
 
@@ -328,7 +329,7 @@ const Checkout = () => {
 
     const endOfTenancyServices = [
         {
-            id: 1,
+            id: 101,
             plan: "Single Bedroom",
             unitPrice: 24,
             time: "£24",
@@ -338,7 +339,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 2,
+            id: 202,
             plan: "Double Bedroom",
             unitPrice: 32,
             time: "£32",
@@ -348,7 +349,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 3,
+            id: 303,
             plan: "Living room",
             unitPrice: 32,
             time: "£32",
@@ -358,7 +359,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 4,
+            id: 404,
             plan: "Dining room",
             unitPrice: 32,
             time: "£32",
@@ -368,7 +369,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 5,
+            id: 505,
             plan: "Office",
             unitPrice: 20,
             time: "£20",
@@ -378,7 +379,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 6,
+            id: 606,
             plan: "Hall",
             unitPrice: 12,
             time: "£12",
@@ -388,7 +389,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 7,
+            id: 707,
             plan: "Toilet",
             unitPrice: 12,
             time: "£12",
@@ -398,7 +399,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 8,
+            id: 808,
             plan: "Bathroom",
             unitPrice: 20,
             time: "£20",
@@ -408,7 +409,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 9,
+            id: 909,
             plan: "Through lounge",
             unitPrice: 44,
             time: "£44",
@@ -418,7 +419,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 10,
+            id: 1011,
             plan: "Staircase",
             unitPrice: 36,
             time: "£36",
@@ -431,7 +432,7 @@ const Checkout = () => {
 
     const sizeBasedPricing = [
         {
-            id: 30,
+            id: 3000,
             plan: "Small (35 sq.ft.)",
             unitPrice: 16,
             time: "£16",
@@ -441,7 +442,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 31,
+            id: 3100,
             plan: "Medium (70 sq.ft.)",
             unitPrice: 24,
             time: "£24",
@@ -451,7 +452,7 @@ const Checkout = () => {
             totalPrice: 0
         },
         {
-            id: 32,
+            id: 3200,
             plan: "Large (100 sq.ft.)",
             unitPrice: 32,
             time: "£32",
@@ -580,6 +581,9 @@ const Checkout = () => {
         durationQty: 0,
         urgent: false,
         sessionTime:'',
+        showRugs: false,
+        rugRooms: [],
+        rugSizes: [],
 
     }
 
@@ -708,6 +712,7 @@ const Checkout = () => {
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
     const [paymentMessage, setPaymentMessage] = useState('');
+    const [hideDetail, setHideDetail] = useState(false);
 
 
     const cleaningSubscriptions = [
@@ -910,10 +915,10 @@ const Checkout = () => {
         }
         else {
             if (minute.toString().length > 0) {
-                time = `${hour}h:${minute}m`;
+                time = `${hour}h ${minute}m`;
             }
             else {
-                time = `${hour}h:0${minute}m`;
+                time = `${hour}h 0${minute}m`;
             }
 
         }
@@ -1025,6 +1030,8 @@ const Checkout = () => {
                 room: roomEstimates,
                 onSubscription: false,
                 addresses: addresses,
+                rugRooms: endOfTenancyServices,
+                rugSizes: sizeBasedPricing,
             });
         }
         else {
@@ -1087,7 +1094,9 @@ const Checkout = () => {
     }
 
     const addRoomQuote = (id) => {
-        const oldQuotes = formData.room
+        const oldQuotes = formData.room;
+        const oldRugs = formData.rugRooms;
+
         for (let i = 0; oldQuotes.length > i; i++) {
             const newCount = oldQuotes[i].count + 1;
             const price = oldQuotes[i].unitPrice * newCount;
@@ -1097,28 +1106,63 @@ const Checkout = () => {
                 break;
             }
         }
-        setFormData({...formData, room: oldQuotes});
+
+        for (let i = 0; oldRugs.length > i; i++) {
+            const newCount = oldRugs[i].count + 1;
+            const price = oldRugs[i].unitPrice * newCount;
+            if (id === oldRugs[i].id) {
+                oldRugs[i].totalPrice = price;
+                oldRugs[i].count = newCount;
+                break;
+            }
+        }
+
+        setFormData({...formData, room: oldQuotes, rugRooms: oldRugs});
         updateBooking()
     };
 
     const removeRoomQuote = (id) => {
         const oldQuotes = formData.room
         let price;
+        let found;
         for (let i = 0; oldQuotes.length > i; i++) {
             const newCount = oldQuotes[i].count - 1;
             price = oldQuotes[i].unitPrice * newCount
             if (id === oldQuotes[i].id) {
                 oldQuotes[i].totalPrice = price;
                 oldQuotes[i].count = newCount;
+                found = true;
                 break;
             }
         }
-        setFormData({...formData, room: oldQuotes});
-        updateBooking()
+        if (found) {
+            setFormData({...formData, room: oldQuotes});
+            updateBooking()
+            return;
+        }
+
+        const oldRugRooms = formData.rugRooms;
+        for (let i = 0; oldRugRooms.length > i; i++) {
+            const newCount = oldRugRooms[i].count - 1;
+            price = oldRugRooms[i].unitPrice * newCount
+            if (id === oldRugRooms[i].id) {
+                oldRugRooms[i].totalPrice = price;
+                oldRugRooms[i].count = newCount;
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            setFormData({...formData, rugRooms: oldRugRooms});
+            updateBooking();
+        }
+
     }
 
     const addApplienceQuote = (id) => {
-        const oldQuotes = formData.appliance
+        const oldQuotes = formData.appliance;
+        const oldRugSizes = formData.rugSizes;
+
         for (let i = 0; oldQuotes.length > i; i++) {
             const newCount = oldQuotes[i].count + 1;
             const price = oldQuotes[i].unitPrice * newCount ;
@@ -1128,24 +1172,57 @@ const Checkout = () => {
                 break;
             }
         }
-        setFormData({...formData, appliance: oldQuotes});
+
+        for (let i = 0; oldRugSizes.length > i; i++) {
+            const newCount = oldRugSizes[i].count + 1;
+            const price = oldRugSizes[i].unitPrice * newCount;
+            if (id === oldRugSizes[i].id) {
+                oldRugSizes[i].totalPrice = price;
+                oldRugSizes[i].count = newCount;
+                break;
+            }
+        }
+
+        setFormData({...formData, appliance: oldQuotes, rugSizes: oldRugSizes});
         updateBooking()
     }
 
     const removeApplienceQuote = (id) => {
-        const oldQuotes = formData.appliance
+        const oldQuotes = formData.appliance;
         let price;
+        let found = false;
         for (let i = 0; oldQuotes.length > i; i++) {
             const newCount = oldQuotes[i].count - 1;
             price = oldQuotes[i].unitPrice * newCount
             if (id === oldQuotes[i].id) {
                 oldQuotes[i].totalPrice = price;
                 oldQuotes[i].count = newCount;
+                found = true;
                 break;
             }
         }
-        setFormData({...formData, appliance: oldQuotes});
-        updateBooking()
+        if (found) {
+            setFormData({...formData, appliance: oldQuotes});
+            updateBooking();
+            return;
+        }
+
+        const oldRugSizes = formData.rugSizes;
+        for (let i = 0; oldRugSizes.length > i; i++) {
+            const newCount = oldRugSizes[i].count - 1;
+            if (id === oldRugSizes[i].id) {
+                price = oldRugSizes[i].unitPrice * newCount;
+                oldRugSizes[i].totalPrice = price;
+                oldRugSizes[i].count = newCount;
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            setFormData({...formData, rugSizes: oldRugSizes});
+            updateBooking();
+        }
+
     }
 
     const updateBooking = (nature = null) => {
@@ -1155,18 +1232,41 @@ const Checkout = () => {
         }
 
         const services = []
-        let total = 0
-        const room = formData.room
-        const appliance = formData.appliance
-        const options = formData.options
-        const added = formData.addictions
-        const newRoom = room.filter(item =>  item.count > 0)
-        const newAppliance = appliance.filter(item =>  item.count > 0)
-        const newOptions = options.filter(item =>  item.count > 0)
-        const newAdded = added.filter(item =>  item.count > 0)
-        services.push(...newRoom)
-        services.push(...newAppliance)
-        services.push(...newAdded)
+        let total = 0;
+        const room = formData.room;
+        const appliance = formData.appliance;
+        const options = formData.options;
+        const added = formData.addictions;
+        const rugRooms = formData.rugRooms;
+        const sizeRugs = formData.rugSizes;
+
+        const newRoom = room.filter(item =>  item.count > 0);
+        const newAppliance = appliance.filter(item =>  item.count > 0);
+        const newOptions = options.filter(item =>  item.count > 0);
+        const newAdded = added.filter(item =>  item.count > 0);
+        const newRugRooms = rugRooms.filter(item =>  item.count > 0);
+        const newSizeRugs = sizeRugs.filter(item =>  item.count > 0);
+
+        const refineRugRm = newRugRooms?.map(item => ({
+            ...item,
+            plan: `${item.plan}(Carpet)`
+        }))
+
+        const refinedRugSizes = newSizeRugs?.map(item => ({
+            ...item,
+            plan: `${item.plan}(Rug)`
+        }))
+
+
+        services.push(...newRoom);
+        services.push(...newAppliance);
+        services.push(...newAdded);
+        if (refineRugRm?.length > 0) {
+            services.push(...refineRugRm);
+        }
+        if (refinedRugSizes?.length > 0) {
+            services.push(...refinedRugSizes);
+        }
 
         for (let i = 0; newOptions.length > i; i++) {
             const price = newOptions[i].unitPrice + newOptions[i].additionPrice;
@@ -1248,6 +1348,8 @@ const Checkout = () => {
             if (id === oldOptions[i].id) {
                 oldOptions[i].totalPrice = 0;
                 oldOptions[i].count = 0;
+                found = true;
+                break;
             }
         }
         if (found) {
@@ -1255,15 +1357,51 @@ const Checkout = () => {
             updateBooking()
             return
         }
+
         const oldAddictions = formData.addictions;
         for (let i = 0; oldAddictions.length > i; i++) {
             if (id === oldAddictions[i].id) {
                 oldAddictions[i].totalPrice = 0;
                 oldAddictions[i].count = 0;
+                found = true;
+                break;
             }
         }
-        setFormData({...formData, addictions: oldAddictions});
-        updateBooking()
+        if (found) {
+            setFormData({...formData, addictions: oldAddictions});
+            updateBooking()
+            return;
+        }
+
+        const oldRugRooms = formData.rugRooms;
+        for (let i = 0; oldRugRooms.length > i; i++) {
+            if (id === oldRugRooms[i].id) {
+                oldRugRooms[i].totalPrice = 0;
+                oldRugRooms[i].count = 0;
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            setFormData({...formData, rugRooms: oldRugRooms});
+            updateBooking();
+            return;
+        }
+
+        const oldRugSizes = formData.rugSizes;
+        for (let i = 0; oldRugSizes.length > i; i++) {
+            if (id === oldRugSizes[i].id) {
+                oldRugSizes[i].totalPrice = 0;
+                oldRugSizes[i].count = 0;
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            setFormData({...formData, rugSizes: oldRugSizes});
+            updateBooking();
+
+        }
 
     }
 
@@ -2176,27 +2314,27 @@ const Checkout = () => {
 
                 <div className={`step ${currentStep === 0 ? 'passive' : currentStep > 0 ? 'active' : ''}`} >
                     <span>0</span>
-                    <p>Plan</p>
+                    <p className={'experience-text'}>Plan</p>
                 </div>
 
                 <div className={`step ${currentStep === 1 ? 'passive' : currentStep > 1 ? 'active' : ''}`} >
                     <span>1</span>
-                    <p>Schedule</p>
+                    <p className={'experience-text'}>Schedule</p>
                 </div>
 
                 <div className={`step ${currentStep === 2 ? 'passive' : currentStep > 2 ? 'active' : ''}`}>
                     <span>2</span>
-                    <p>Tasks</p>
+                    <p className={'experience-text'}>Tasks</p>
                 </div>
 
                 <div className={`step ${currentStep === 3 ? 'passive' : currentStep > 3 ? 'active' : ''}`} >
                     <span>3</span>
-                    <p>Data</p>
+                    <p className={'experience-text'}>Data</p>
                 </div>
 
                 <div className={`step ${currentStep === 4 ? 'passive' : currentStep == 5 ? 'passive' : currentStep > 5 ? 'active' : ''}`} >
                     <span>4</span>
-                    <p>Pay</p>
+                    <p className={'experience-text'}>Pay</p>
                 </div>
             </div>
         );
@@ -2222,7 +2360,7 @@ const Checkout = () => {
                     </div>  }
                     <button disabled={starter.length === 0} className={starter.length === 0 ?
                         'back-button' :'next-button'} style={{width:'100px', marginTop:'20px'}}
-                            onClick={loggedIn ? () => initializeForm :  null}>
+                            onClick={initializeForm}>
                         Next
                     </button>
                 </div>
@@ -2614,84 +2752,100 @@ const Checkout = () => {
         return (
             <div ref={ref} className={'support-page'}>
                 <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
-                    <h3 style={{textAlign:'center', marginBottom:'5px'}}>Booking Summary</h3>
-                    <div className={'checkout-summary-unit'}>
-                        <p style={{textAlign:'center'}}> {formData.date} {formData.time}</p>
+                    <div style={{display:'flex', alignItems:'center', marginBottom:'5px'}}>
+                        <h3 style={{textAlign:'center'}}>Booking Summary</h3>
+                        <MdKeyboardArrowRight
+                            size={30}
+                            style={{width:'40px', alignSelf:'end'}}
+                            onClick={() => setHideDetail(!hideDetail)}
+                            className={!hideDetail ? 'rotate-down' : 'rotate-up'}
+                        />
                     </div>
+
                     <div className={'checkout-summary-unit'}>
-                        <p style={{width:'40px'}}>Tarrif</p>
-                        {formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
-                        {!formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>
-                            {formData.plan}
-                            <span style={{fontWeight:'lighter'}}>
+                        <p style={{textAlign:'center'}}> {format(new Date(formData.date), "EEE do MMM, yyyy") } {formData.time}</p>
+                    </div>
+                    {!hideDetail && <div style={{display:'flex', flexDirection:'column'}}>
+                        <div className={'checkout-summary-unit'}>
+                            <p style={{width:'40px'}}>Tarrif</p>
+                            {formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
+                            {!formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>
+                                {formData.plan}
+                                <span style={{fontWeight:'lighter'}}>
                             Subscription
                         </span>
-                        </h3>
-                        }
-                    </div>
-                    <div className={'checkout-summary-unit'}>
-                        <p>Rate</p>
-                        <h3 style={{textAlign:'end'}}>£{formData.rate}/h</h3>
-                    </div>
-                    <div className={'checkout-summary-unit'}>
-                        <p>Minimum Price</p>
-                        <h3 style={{textAlign:'end'}}>£{formData.minimumEstimate}</h3>
-                    </div>
-
-                    {!formData.onSubscription &&  <div className="checkout-summary-unit">
-                        <p>Level of dirt</p>
-                        <h3 style={formData.nature === 'Light' ? {color:'green', textAlign:'end'} :
-                            formData.nature === 'Medium' ? {color:'blue', textAlign:'end'}: {color:'red', textAlign:'end'}}>
-                            {formData.nature}
-                        </h3>
-                    </div> }
-
-                    {formData.durationQty > 0 &&  <div className={'checkout-summary-unit'}>
-                        <p>Estimated time</p>
-                        <h3 style={{textAlign:'end'}}>{formData.duration}</h3>
-                    </div> }
-                </div>
-                {formData.booking.map(task => (
-                    <div key={task.id}>
-                        <div className={task.totalPrice <= 10 ? 'one':
-                            task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
-                            <div className={'line'} style={{height:'1px'}}/>
-                            <div className={'summary-row'}>
-                                {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
-                                {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
-                                {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
-                                                                              onClick={() =>
-                                                                              {task.id <= 10 ? addRoomQuote(task.id) : addApplienceQuote(task.id)}}
-                                /> }
-                                <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
-                                <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} />
-                            </div>
-                            <div className={'line'} style={{height:'1px'}}/>
+                            </h3>
+                            }
                         </div>
-                    </div>
-                ))}
+                        <div className={'checkout-summary-unit'}>
+                            <p>Rate</p>
+                            <h3 style={{textAlign:'end'}}>£{formData.rate}/h</h3>
+                        </div>
+                        <div className={'checkout-summary-unit'}>
+                            <p>Minimum Price</p>
+                            <h3 style={{textAlign:'end'}}>£{formData.minimumEstimate}</h3>
+                        </div>
 
-                {formData.choresPrevPrice > 0 && <div>
-                    {formData.chores.map(task => (
+                        {!formData.onSubscription &&  <div className="checkout-summary-unit">
+                            <p>Level of dirt</p>
+                            <h3 style={formData.nature === 'Light' ? {color:'green', textAlign:'end'} :
+                                formData.nature === 'Medium' ? {color:'blue', textAlign:'end'}: {color:'red', textAlign:'end'}}>
+                                {formData.nature}
+                            </h3>
+                        </div> }
+
+                        {formData.durationQty > 0 &&  <div className={'checkout-summary-unit'}>
+                            <p>Estimated time</p>
+                            <h3 style={{textAlign:'end'}}>{formData.duration}</h3>
+                        </div> }
+                    </div> }
+
+                </div>
+                {!hideDetail &&  <div style={{display:'flex', flexDirection:'column'}}>
+                    {formData.booking.map(task => (
                         <div key={task.id}>
-                            <div className={'chores'}>
+                            <div className={task.totalPrice <= 10 ? 'one':
+                                task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
+                                <div className={'line'} style={{height:'1px'}}/>
                                 <div className={'summary-row'}>
                                     {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
-                                    {task.time.length > 0 && <p style={{textAlign:'center', flex:'1'}}>{task.time}</p> }
+                                    {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
+                                    {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
+                                                                                  onClick={() =>
+                                                                                  {task.id <= 10 ? addRoomQuote(task.id) : addApplienceQuote(task.id)}}
+                                    /> }
                                     <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
-                                    <FaTimes style={{width:'30px', marginLeft:'10px'}}
-                                             onClick={() => setFormData({...formData,
-                                                 totalAmount: (new Decimal(Number(formData.totalAmount - formData.choresPrevPrice))).toFixed(2),
-                                                 choresPrevPrice: 0,
-                                                 erranTimeInMinutes: 0,
-                                                 errandTime: '0'
-                                             })
-                                             }/>
+                                    {!endOfTenancy ? <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} /> :
+                                        (endOfTenancy && task.plan === 'End of Tenancy' && starter ==='End of Tenancy' ) ? null :
+                                            <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} /> }
                                 </div>
+                                <div className={'line'} style={{height:'1px'}}/>
                             </div>
                         </div>
                     ))}
-                </div>}
+
+                    {formData.choresPrevPrice > 0 && <div>
+                        {formData.chores.map(task => (
+                            <div key={task.id}>
+                                <div className={'chores'}>
+                                    <div className={'summary-row'}>
+                                        {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
+                                        {task.time.length > 0 && <p style={{textAlign:'center', flex:'1'}}>{task.time}</p> }
+                                        <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
+                                        <FaTimes style={{width:'30px', marginLeft:'10px'}}
+                                                 onClick={() => setFormData({...formData,
+                                                     totalAmount: (new Decimal(Number(formData.totalAmount - formData.choresPrevPrice))).toFixed(2),
+                                                     choresPrevPrice: 0,
+                                                     erranTimeInMinutes: 0,
+                                                     errandTime: '0'
+                                                 })
+                                                 }/>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>}
+                </div> }
 
                 <div className={'line'} style={{height:'2px'}}/>
 
@@ -2926,14 +3080,14 @@ const Checkout = () => {
                                 <p className={'number-background'}>4</p>
                                 <h3 style={{color:'navy', marginLeft:'10px'}}> Let us know the level of dirt at your property</h3>
                             </div>
-                            <div style={{display:'flex', flexDirection:'row', marginBottom:'5px', marginLeft:'10px'}}>
+                            <div style={{display:'flex', flexDirection:'row', marginBottom:'5px', justifyContent:'space-evenly', gap:'10px'}}>
                                 {dirt.map((level, index) => (
                                     <button key={index} type={'button'}
-                                            style={{flex:'1'}}
+                                            style={(endOfTenancy && level !== "Heavy" && starter === 'End of Tenancy') ? {flex:'1', backgroundColor:'lightblue'} : {flex:'1', backgroundColor: ''} }
                                             className={formData.nature === level ? "next-button" : "back-button"}
-                                            onClick={() => { updateBooking(level)}}
-                                            disabled={formData.natureActive[index]}>
-                                        {level}
+                                            onClick={() => updateBooking(level)}
+                                            disabled={(formData.natureActive[index] || (endOfTenancy && starter === 'End of Tenancy'))}>
+                                        {level} {(endOfTenancy && level === "Heavy" && starter === 'End of Tenancy') && <FaLock className={'icon-small'}  />}
                                     </button>
                                 ))}
                             </div>
@@ -2955,11 +3109,72 @@ const Checkout = () => {
                                     <li>You had a party and there are a lot of things to be cleaned and arranged</li>
                                 </ul>}
                             </div>
+
+                            <div className={'price-container'} style={{display:'flex', flex:'1',
+                                flexDirection:'row', alignItems:'center', marginTop:'30px', maxWidth:'300px'}}
+                                 onClick={() => setFormData({...formData, showRugs: !formData.showRugs})}>
+                                <input
+                                    type="checkbox"
+                                    checked={formData.showRugs}
+                                    onChange={(e) => setFormData({...formData, showRugs: e.currentTarget.checked })}
+                                    name={'standard'}
+                                />
+                                <p style={{marginLeft:'10px', display:'flex', flexDirection:'row'}}>
+                                    {!formData.showRugs ? "Show carpet and rug quotes" : "Hide carpet and rug quotes"}   {formData.showRugs && <FaCheck style={{width:'20px', flex:'1'}} />}</p>
+
+                            </div>
+
+                            {formData.showRugs &&
+                                <div>
+                                    <h3 style={{colorL:"blue", marginTop:'20px'}}>Please choose number of rooms or staircases with carpets</h3>
+                                    <div style={{padding:'10px',  boxShadow:'20px', marginLeft:'10px'}} className={['grid-container'].join(' ')}>
+                                        {formData.rugRooms.map(task => (
+                                            <div key={task.id} style={{display:'flex', flexDirection:'row', alignItems:'center', borderColor:'dodgerblue', borderRadius:'10px', border:'dotted'}}>
+                                                <img src={task.src} style={{width:'50px', height:'55px'}} alt='' />
+                                                <div style={{marginLeft:'10px'}}>
+                                                    <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
+                                                        {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> }
+                                                    </h5>
+                                                    <p>{task.time}</p>
+                                                </div>
+                                                <MdRemove style={{background:'white', color:'black', width:'50%', height:'25px'}}
+                                                          onClick={() => {task.count > 0 ? removeRoomQuote(task.id) : null }}
+                                                />
+                                                <p style={{width:'20px', alignSelf:'center'}}>{task.count}</p>
+                                                < MdAdd style={{ background:'white', color:'black', width:'50%', height:'25px'}}
+                                                        onClick={() => addRoomQuote(task.id)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <h3 style={{marginTop:'50px'}}>Please choose number and size of your rugs</h3>
+                                    <div  style={{padding:'10px',  boxShadow:'20px', marginLeft:'10px'}} className={['grid-container'].join(' ')}>
+                                        {formData.rugSizes.map((task, index ) => (
+                                            <div key={task.id} className={'appliance'}>
+                                                <img src={task.src} style={index === 0 ? {width:'20px', height:'25px'} : index === 1 ? {width:'30px', height:'35px'}: {width:'50px', height:'55px'} } alt='' />
+                                                <div style={{marginLeft:'10px'}}>
+                                                    <h5 style={task.count > 0 ? {color:'red', display:'flex', flexDirection:'row'}: {color:'', display:'flex', flexDirection:'row' }}>
+                                                        {task.plan} {task.count > 0 && <FaCheck style={{width:'10px', marginLeft:'4px', marginTop:'4px'}}/> } </h5>
+                                                    <p>{task.time}</p>
+                                                </div>
+                                                <MdRemove style={{background:'white', color:'black', width:'50%', height:'25px'}}
+                                                          onClick={() => {task.count > 0 ? removeApplienceQuote(task.id) : null}}
+                                                />
+                                                <p style={{width:'20px', alignSelf:'center'}}>{task.count}</p>
+                                                < MdAdd style={{ background:'white', color:'black', width:'50%', height:'25px'}}
+                                                        onClick={() => addApplienceQuote(task.id)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            }
+
                         </div> }
                         { starter === starters[2].starter &&
                             <div>
                                 <h3>What fibers are your carpets/rugs made off?</h3>
-                                <div style={{display:'flex', flexDirection:'row', marginBottom:'5px',justifyContent:'space-evenly', alignItems:'center', maxWidth:'700px'}}>
+                                <div className={'grid-container'}>
                                     <div className={'price-container'} style={{display:'flex', flex:'1',
                                         flexDirection:'row', alignItems:'center', marginTop:'20px', maxWidth:'300px'}}
                                          onClick={() => setFormData({...formData, standardOnly: true})}
@@ -3027,6 +3242,7 @@ const Checkout = () => {
                                         </div>
                                     ))}
                                 </div>
+
                                 <div>
                                     {yesNoQuestions.map(question => (
                                         <div style={{marginLeft:'20px'}} key={question.id}>
