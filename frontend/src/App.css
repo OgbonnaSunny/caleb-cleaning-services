@@ -4844,7 +4844,7 @@ input[type="checkbox"]:checked {
   .booking-amount {
     display: flex;
     flex-direction: row;
-    align-items: end;
+    align-items: center;
     width: 100%;
     justify-content: flex-end;
     padding-right: 10px;
