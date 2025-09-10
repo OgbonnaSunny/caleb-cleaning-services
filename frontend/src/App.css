@@ -580,6 +580,10 @@ img {
   font-size: xx-large;
 }
 
+.summary-text {
+  font-size: large;
+}
+
 @media (max-width: 768px) {
   .experience-text {
     font-size: medium;
@@ -600,6 +604,10 @@ img {
     font-size: small;
     justify-content: center;
     box-shadow: var(--shadow);
+  }
+
+  .summary-text {
+    font-size: medium;
   }
 }
 

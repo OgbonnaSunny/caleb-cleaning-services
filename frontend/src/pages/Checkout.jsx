@@ -1249,12 +1249,12 @@ const Checkout = () => {
 
         const refineRugRm = newRugRooms?.map(item => ({
             ...item,
-            plan: `${item.plan}(Carpet)`
+            plan: `Carpet: ${item.plan}`
         }))
 
         const refinedRugSizes = newSizeRugs?.map(item => ({
             ...item,
-            plan: `${item.plan}(Rug)`
+            plan: `Rug: ${item.plan}`
         }))
 
 
@@ -2750,8 +2750,8 @@ const Checkout = () => {
         }, []);
 
         return (
-            <div ref={ref} className={'support-page'}>
-                <div style={{backgroundColor:'burlywood', padding:'10px', borderRadius:'12px'}}>
+            <div ref={ref} className={'main-banner'}>
+                <div style={{backgroundColor:'burlywood', padding:'5px', borderRadius:'12px'}}>
                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px'}}>
                         <h3 style={{textAlign:'center'}}>Booking Summary</h3>
                         <MdKeyboardArrowRight
@@ -2767,15 +2767,14 @@ const Checkout = () => {
                     </div>
                     {!hideDetail && <div style={{display:'flex', flexDirection:'column'}}>
                         <div className={'checkout-summary-unit'}>
-                            <p style={{width:'40px'}}>Tarrif</p>
-                            {formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
-                            {!formData.plan.includes('One-Off') &&  <h3 style={{textAlign:'end'}}>
+                            <h3 style={{width:'20%', fontWeight:'lighter'}} className={'summary-text'}>Tarrif</h3>
+                            {formData.plan.includes('One-Off') &&  <h3 className={'summary-text'} style={{textAlign:'end'}}>{formData.plan}/{formData.planType}</h3> }
+                            {!formData.plan.includes('One-Off') &&  <h3 className={'summary-text'} style={{textAlign:'end'}}>
                                 {formData.plan}
                                 <span style={{fontWeight:'lighter'}}>
                             Subscription
                         </span>
-                            </h3>
-                            }
+                            </h3>}
                         </div>
                         <div className={'checkout-summary-unit'}>
                             <p>Rate</p>
@@ -2808,13 +2807,13 @@ const Checkout = () => {
                                 task.totalPrice > 10 && task.totalPrice <= 15 ? 'two' : 'more'}>
                                 <div className={'line'} style={{height:'1px'}}/>
                                 <div className={'summary-row'}>
-                                    {task.time2 > 0 ? <p>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
-                                    {task.unitPrice > 0 && task.id < 20 && <p style={{textAlign:'center', flex:'1'}}>{task.count}</p> }
-                                    {task.unitPrice > 0 && task.id < 20 && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
+                                    {task.time2 > 0 ? <p className={'summary-text'}>{task.plan} {task.time2}min </p> : <p>{task.plan}</p>}
+                                    {(task.unitPrice > 0 && task.id < 20) && <p style={{textAlign:'center', flex:'1', width:'12%'}}>{task.count}</p> }
+                                    {(task.unitPrice > 0 && task.id < 20) && <MdAdd style={{width:'30px', height:'30px', marginLeft:'10px', marginRight:'10px'}}
                                                                                   onClick={() =>
                                                                                   {task.id <= 10 ? addRoomQuote(task.id) : addApplienceQuote(task.id)}}
                                     /> }
-                                    <p style={{textAlign:'end'}}>£{task.totalPrice}</p>
+                                    <p className={'summary-text'} style={{textAlign:'end', width:'20%', marginLeft:'10px'}}>£{task.totalPrice}</p>
                                     {!endOfTenancy ? <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} /> :
                                         (endOfTenancy && task.plan === 'End of Tenancy' && starter ==='End of Tenancy' ) ? null :
                                             <FaTimes style={{width:'30px', marginLeft:'10px'}} onClick={() => clearBooking(task.id)} /> }
@@ -2850,8 +2849,8 @@ const Checkout = () => {
                 <div className={'line'} style={{height:'2px'}}/>
 
                 {formData.totalAmount > 0 && <div className={'total'}>
-                    <h4>Estimated Amount</h4>
-                    <h2 style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</h2>
+                    <h4 className={"summary-text"}>Estimated Amount</h4>
+                    <h2 className={'summary-text'} style={{color:'red', alignItems:'end', flex:'1'}}>£{formData.totalAmount}</h2>
                 </div>}
 
                 <div className={'line'} style={{height:'2px'}}/>
@@ -3673,9 +3672,14 @@ const Checkout = () => {
             }}>
             <div className="sticky-nav-container">
                 <nav  className='top-order-nav'>
-                    {(formData.totalAmount > 0 && !isVisible) && <p className={'booking-amount'}>
+                    {(formData.totalAmount > 0 && !isVisible) &&
+                        <p onClick={() => ref.current?.scrollIntoView({behavior:'smooth'})}
+                           style={{display:'flex', alignItems:'center'}}
+                           className={'booking-amount'}>
                             Total Amount: £{formData.totalAmount}
-                    </p> }
+                            <MdKeyboardArrowDown size={30} style={{width:'40px', marginLeft:'10px', color:'navy'}} />
+                    </p>
+                    }
                     <div className="nav-order-content">
                         <img style={{display:'none'}} src={LOGO} className={'logo-icon'}/>
                         <Steps />
