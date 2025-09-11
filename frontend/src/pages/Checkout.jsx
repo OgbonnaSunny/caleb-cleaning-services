@@ -1757,7 +1757,7 @@ const Checkout = () => {
     const removeHour = () => {
         let hours = formData.hour - 1;
         if (!adjustLower) {
-            if (hours < minimumHours) return;
+            if (hours < minimumHour) return;
         }
         const thisHour = new Date().getHours();
         let minimumHours = thisHour + 4;
