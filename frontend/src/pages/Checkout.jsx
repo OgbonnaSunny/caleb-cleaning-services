@@ -785,30 +785,26 @@ const Checkout = () => {
         if (now) {
             const hour = new Date().getHours();
             let minutesToBeUse = 0;
+            let minuteText = '';
             const minute = new Date().getMinutes();
-            if (minute > 10) {
+            if (minute > 9) {
                 minutesToBeUse = 30;
+                minuteText = `${minutesToBeUse}`
             }
+            else {
+                minuteText = '00';
+            }
+
             let newHour = hour + 4;
             if (newHour < 9) {
                 newHour = 9;
             }
             if (newHour.toString().length <= 1) {
-                if (minutesToBeUse > 0) {
-                    time = `0${newHour}:${minutesToBeUse}`;
-                }
-                else {
-                    time = `0${newHour}`;
-                }
+                time = `0${newHour}:${minuteText}`;
                 hourText = `0${newHour}`;
             }
             else {
-                if (minutesToBeUse > 0) {
-                    time = `${newHour}:${minutesToBeUse}`;
-                }
-                else {
-                    time = `${newHour}`;
-                }
+                time = `${newHour}:${minuteText}`;
                 hourText = newHour.toString();
             }
             setAdjustLower(false)
@@ -820,7 +816,7 @@ const Checkout = () => {
                 date: date, minimumEstimate: 97,
                 time: time, sessionTime: session,
                 minute: minutesToBeUse,
-                minuteText: minutesToBeUse.toString()
+                minuteText: minuteText,
             });
             setSelectedDate(selectedDate);
             newErrors['time'] = null;
