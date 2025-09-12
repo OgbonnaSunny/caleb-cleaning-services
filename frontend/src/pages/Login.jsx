@@ -48,22 +48,6 @@ const Login = () => {
             const { success, user } = response.data;
             if (success === true) {
                 localStorage.setItem("user", JSON.stringify(user));
-                const role = user.roles;
-                if (role === 'admin') {
-                    navigate('/admin');
-                    window.close();
-                    return;
-                }
-                if (role === 'user') {
-                    navigate('/checkout');
-                    window.close();
-                    return;
-                }
-                if (role === 'cleaner') {
-                    navigate('/cleanerprofile');
-                    window.close();
-                    return;
-                }
                 navigate('/overview');
                 window.close();
             }
@@ -72,7 +56,7 @@ const Login = () => {
             }
         } catch (error) {
             const errorMessage = error.response?.data?.error || error.message;
-            setMessage(errorMessage);
+            setMessage("Error occured");
         } finally {
             setLoading(false);
         }

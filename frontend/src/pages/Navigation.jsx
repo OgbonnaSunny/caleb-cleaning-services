@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css'; // We'll create this CSS file next
-import {FaBars, FaUsers, FaUserTie, FaTimes, FaCommentDots} from 'react-icons/fa';
+import {FaBars, FaUsers, FaUserTie, FaTimes, FaCommentDots, FaUser, FaUserAlt, FaUserMd} from 'react-icons/fa';
 import LOGO from '../images/logo4.png'
 import {useLocation} from 'react-router-dom'
 import {commonjs} from "globals";
@@ -20,7 +20,7 @@ import { IoShield } from 'react-icons/io5';
 import { FaSquare } from 'react-icons/fa'; // Font Awesome solid square
 import { MdSquare } from 'react-icons/md'; // Material Design solid square
 import { BsSquareFill } from 'react-icons/bs'; // Bootstrap solid square
-import { FaRectangleXmark } from 'react-icons/fa6'; // Font Awesome solid rectangle
+import {FaCircleUser, FaRectangleXmark, FaRegUser, FaUserLock} from 'react-icons/fa6'; // Font Awesome solid rectangle
 import { MdRectangle } from 'react-icons/md'; // Material Design rectangle (outline)
 import { MdDashboard } from 'react-icons/md'; // Material Design
 import { BsSpeedometer2 } from 'react-icons/bs'; // Bootstrap (speedometer-style)
@@ -69,10 +69,17 @@ const Navigation = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showNav, setShowNav] = useState(true);
+    const [role, setRole] = useState('');
 
     useEffect(() => {
         let show = false;
         const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setRole(user?.roles);
+        }
+        else {
+            setRole('');
+        }
 
         switch (location.pathname) {
             case '/cleanerprofile':
@@ -187,14 +194,15 @@ const Navigation = () => {
                     <div style={{display:'block'} }>
                         <div className="navbar-logo" >
                             <img src={LOGO} alt="logo" className="logo-icon" onClick={handleHomeNav} />
-                            <p  className="experience-text">Fly Cleaner</p>
-                            <FaUserTie className={'logo-icon2'} style={{height:'25px'}}  onClick={handleAuth}  />
-                            <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/>
-                            <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} />
-                            <MdAdminPanelSettings  style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon2'} />
+                            <h1  className="main-header">Fly Cleaner</h1>
+                            <FaUserTie className={'logo-icon3'}   onClick={handleAuth}  />
+                            {role === 'cleaner' && <MdDashboard style={{color:'navy'}} onClick={() => navigate('/cleanerprofile')}  className={'logo-icon2'}/> }
+                            {role === 'user' &&  <MdDashboard  style={{color:'purple'}}  onClick={() => navigate('/customer')} className={'logo-icon2'} /> }
+                            {role === 'admin' &&  <MdAdminPanelSettings  style={{color:'purple'}}  onClick={() => navigate('/admin')} className={'logo-icon2'} /> }
+
                             {!isOpen && <FaBars
-                                style={{width:'40px', height:'30px', marginLeft:'10px'}}
-                                className={` hamburger ${isOpen ? 'open' : ''}`}
+                                style={{width:'70px', height:'30px', marginLeft:'10px'}}
+                                className={`hamburger ${isOpen ? 'open' : ''}`}
                                 onClick={toggleMenu}>
                                 open
                             </FaBars>

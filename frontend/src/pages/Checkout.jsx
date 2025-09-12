@@ -56,6 +56,7 @@ import { debounce } from 'lodash';
 import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
 import {FaArrowTurnDown} from "react-icons/fa6";
+import { getAddreses } from "./Postcode.jsx";
 
 // ksi66exy.up.railway.app
 
@@ -64,11 +65,11 @@ const Checkout = () => {
    // const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
     const stripePromise = loadStripe(STRIPE_KEY);
     const location = useLocation();
-    const { postcode } = location.state || {};
+    const  postcode  = location.state?.postcode || {};
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
 
-    const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "SW1A 1AA";
+    const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "EH1 1AA";
 
     const cleaningFAQs = [
         {
@@ -584,6 +585,7 @@ const Checkout = () => {
         showRugs: false,
         rugRooms: [],
         rugSizes: [],
+        personel: 1,
 
     }
 
@@ -1021,17 +1023,19 @@ const Checkout = () => {
         }
 
         let addresses = ["Select Address"];
-        addresses.push(...formData.addresses);
         if (postcode !== null && postcode !== undefined) {
             addresses = ["Select Address"];
             const cleanedPostcode = postcode.replace(/\s/g, "").toUpperCase();
             const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
             for (let i = 0; i < edinburghPostcodes.length; i++) {
                 if (normalPostcode === edinburghPostcodes[i].postcode) {
-                    addresses.push(...edinburghPostcodes[i].addresses);
+                //    addresses.push(...edinburghPostcodes[i].addresses);
                     break;
                 }
             }
+            addresses.push(getAddreses(normalPostcode));
+            console.log(addresses);
+
         }
 
         if (starter === starters[0].starter || starter === starters[1].starter) {
@@ -2214,27 +2218,26 @@ const Checkout = () => {
             if (!stripe || !elements || processing) return;
 
             const elapsedTime = differenceInMinutes(new Date(), new Date(formData.sessionTime).toISOString());
-            if (elapsedTime > 30) {
+            if (elapsedTime > 20) {
                 setError("Session expired. Please restart this booking");
                 return;
             }
 
-            setProcessing(true);
-            setError('');
-            setPaymentMessage('');
-
             const allMounted = mounted.number && mounted.expiry && mounted.cvc;
             if (!allMounted) {
-                setProcessing(false);
+                setError("Card element is not ready. Try again.");
                 return;
             }
 
             const cardElement = elements?.getElement(CardNumberElement);
             if (!cardElement) {
                 setError("Card element is not ready. Try again.");
-                setProcessing(false);
                 return;
             }
+
+            setError('');
+            setPaymentMessage('');
+            setProcessing(true);
 
             try {
                 const { error: stripeError, paymentIntent } = await stripe?.confirmCardPayment(clientSecret, {
@@ -3676,7 +3679,7 @@ const Checkout = () => {
                     </div>
                 </div>
                 {missingRecord && <label style={{color:'red', paddingLeft:'10px', paddingRight:'10px'}}>{dataMessage}</label>}
-                <div style={{marginLeft:'40px,', marginRight:'40px', padding:'20px', maxWidth:'700px'}} className="form-actions">
+                <div style={{ padding:'10px', maxWidth:'700px', gap:'10px', display:'flex'}} className="form-actions">
                     <button type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                         Back
                     </button>
@@ -3943,9 +3946,9 @@ const Checkout = () => {
                                     </div>
 
                                 </div>
-                                    <div style={{marginLeft:'40px,',
-                                    marginRight:'40px',
-                                    padding:'20px', maxWidth:'700px'}} className="form-actions">
+                                    <div style={{
+                                        gap:'10px',
+                                        padding:'20px', maxWidth:'700px'}} className="form-actions">
                                     <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
                                     </button>

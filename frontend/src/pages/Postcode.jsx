@@ -24,6 +24,16 @@ export async function checkPostcodeExists(postcode) {
     }
 }
 
+export async function getAddreses(postcode) {
+    try {
+        const response = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
+        const data = await response.json();
+        return data.result.addresses;
+    } catch (error) {
+        return [];
+    }
+}
+
 const Postcode = () => {
     const navigate = useNavigate();
 

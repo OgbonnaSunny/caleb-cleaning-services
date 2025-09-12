@@ -583,10 +583,16 @@ img {
 .summary-text {
   font-size: large;
 }
+.main-header {
+  font-size: 2.5rem;
+}
 
 @media (max-width: 768px) {
   .experience-text {
     font-size: medium;
+  }
+  .main-header {
+    font-size: 1.5rem;
   }
   .experience-badge {
     position: absolute;
@@ -6579,7 +6585,12 @@ tr:hover {
   margin-right: 10px;
 }
 .logo-icon2 {
-  width: 80px;
+  width: 100px;
+  height: 40px;
+}
+
+.logo-icon3 {
+  width: 100px;
   height: 30px;
 }
 
@@ -6591,7 +6602,13 @@ tr:hover {
 
 @media (max-width: 768px) {
   .logo-icon2 {
-    width: 60px;
+    width: 80px;
+    height: 40px;
+    margin: 8px;
+  }
+  .logo-icon3 {
+    width: 100px;
+    height: 30px;
     margin: 8px;
   }
   .logo-icon {
