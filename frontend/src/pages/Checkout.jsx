@@ -65,11 +65,11 @@ const Checkout = () => {
    // const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
     const stripePromise = loadStripe(STRIPE_KEY);
     const location = useLocation();
-    const  postcode  = location.state?.postcode || {};
+    const  currentPostcode  = location.state?.postcode || {};
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
 
-    const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "EH1 1AA";
+ //   const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "EH1 1AA";
 
     const cleaningFAQs = [
         {
@@ -691,7 +691,7 @@ const Checkout = () => {
 
     const [formData, setFormData] = useState(data);
     const [durationStep, setDurationStep] = useState(0);
-    const [code, setCode] = useState(currentPostcode);
+    const [postcode, setPostcode] = useState(currentPostcode);
 
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState(false);
@@ -717,7 +717,8 @@ const Checkout = () => {
     const [adjustLower, setAdjustLower] = useState(true);
     const [minimumHour, setMinimumHour] = useState(0);
     const [minimumMinute, setMinimumMinute] = useState(0);
-
+    const [noted, setNoted] = useState(false);
+    const [covered, setCovered] = useState(true);
 
     const cleaningSubscriptions = [
         {
@@ -786,18 +787,24 @@ const Checkout = () => {
         const session = format(new Date(), 'yyyy-MM-dd hh:mm:ss');
         if (now) {
             const hour = new Date().getHours();
+            let newHour = hour + 4;
+
             let minutesToBeUse = 0;
             let minuteText = '';
             const minute = new Date().getMinutes();
-            if (minute > 9) {
+            if (minute > 5) {
                 minutesToBeUse = 30;
                 minuteText = `${minutesToBeUse}`
+                if (minute > 30) {
+                    newHour++;
+                    minuteText = '00';
+                    minutesToBeUse = 0;
+                }
             }
             else {
                 minuteText = '00';
             }
 
-            let newHour = hour + 4;
             if (newHour < 9) {
                 newHour = 9;
             }
@@ -949,20 +956,43 @@ const Checkout = () => {
 
     const handleStarterChange = (e) => {
         e.preventDefault();
+        if (!covered) return;
         const user = localStorage.getItem('user');
+        const { name, value } = e.target;
+        setStarter(value);
         if (!user) {
             setLoggedIn(false);
             return;
         }
-        const { name, value } = e.target;
         setFormData(data)
         setSelectedDate(null);
         setCurrentStep(0);
-        setStarter(value);
 
     }
 
+    const proceed = (e) => {
+        e.preventDefault();
+        var checked = e.target.checked;
+        setFormData(data)
+        setSelectedDate(null);
+        if (checked) {
+            setCurrentStep(0);
+        }
+        else {
+            setCurrentStep(-1);
+        }
+        setNoted(checked);
+
+    }
+
+    useEffect(() => {
+        var covered = postcode.toString().toUpperCase().startsWith('EH')
+        setCovered(covered);
+    }, [postcode]);
+
     const initializeForm = () => {
+        if (!covered) return;
+
         let natureActive = [false, false, false]
         let nature = dirt[0];
         if ( starter === starters[1].starter) {
@@ -1029,13 +1059,10 @@ const Checkout = () => {
             const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
             for (let i = 0; i < edinburghPostcodes.length; i++) {
                 if (normalPostcode === edinburghPostcodes[i].postcode) {
-                //    addresses.push(...edinburghPostcodes[i].addresses);
+                    addresses.push(...edinburghPostcodes[i].addresses);
                     break;
                 }
             }
-            addresses.push(getAddreses(normalPostcode));
-            console.log(addresses);
-
         }
 
         if (starter === starters[0].starter || starter === starters[1].starter) {
@@ -2386,19 +2413,31 @@ const Checkout = () => {
                 <div className={["form-group", "main-banner"].join(" ")}>
                     {starters.map(item => (
                         <div key={item.id}>
-                            <button value={item.starter} onClick={handleStarterChange}
-                                    className={item.starter !== starter ? 'trapezium-button': 'trapezium-button-active'}>
+                            <button
+                                disabled={!covered}
+                                value={item.starter} onClick={handleStarterChange}
+                                    className={(item.starter !== starter) ? 'trapezium-button': 'trapezium-button-active'}>
                                 {item.starter}
                             </button>
                         </div>
                     ))}
-                    {!loggedIn && <div style={{marginTop:'20px'}}>
-                        <p>We couldn't find a record of your credentials. In order to proceed, it is important that you sign up or sign in.
-                            If you already have an account, sign in  <Link style={{color:'blue', fontWeight:'bold'}} to={'/login'}>here</Link>,
-                            otherwise sign up <Link style={{color:'darkred', fontWeight:'bold'}} to={'/signup'}>here</Link>.
-                        </p>
-                    </div>  }
-                    <button disabled={starter.length === 0} className={starter.length === 0 ?
+                    {(!loggedIn && !noted) && <div style={{marginTop:'20px'}}>
+                            <p>
+                                We couldn't find a record of your credentials. In order to be able to manage your order after booking, it is important that you have an account and also signed in.
+                                If you already have an account, sign in  <Link style={{color:'blue', fontWeight:'bold'}} to={'/login'}>here</Link>,
+                                otherwise sign up <Link style={{color:'darkred', fontWeight:'bold'}} to={'/signup'}>here</Link>.
+                            </p>
+                            <label style={{display: 'flex', alignItems: 'center', gap:'10px', marginTop:'10px'}}>
+                                <input
+                                    type={'checkbox'}
+                                    checked={noted}
+                                    onChange={proceed}
+                                />
+                                I want to proceed without an account
+                            </label>
+                        </div>}
+                    {!covered && <h3 style={{margin:'10px'}}>We currently do not cover this location yet but we are working on expanding our services to this location. Thank you!</h3>}
+                    <button disabled={(currentStep < 0 || !covered)} className={(currentStep < 0 || !covered) ?
                         'back-button' :'next-button'} style={{width:'100px', marginTop:'20px'}}
                             onClick={initializeForm}>
                         Next
@@ -3491,6 +3530,7 @@ const Checkout = () => {
                             <input
                                 type="checkbox"
                                 checked={useOldRecord}
+                                disabled={!loggedIn}
                                 onChange={handleOldRecordChange}
                                 name="useOldRecord"
                             />
@@ -3550,7 +3590,7 @@ const Checkout = () => {
                             </div>
                         </div>
 
-                        <div className="form-group">
+                        {formData.addresses.length > 1 &&  <div className="form-group">
                             <select
                                 name="address"
                                 value={address}
@@ -3560,19 +3600,24 @@ const Checkout = () => {
                                     <option key={index} value={address}>{address}</option>
                                 ))}
                             </select>
-                        </div>
+                        </div> }
 
-                        <div className="form-group">
-                            <p>Please provide your address if not in the list above</p>
-                            <input
-                                type="textarea"
+                        <div style={{marginTop:'12px'}} className="form-group">
+                            <label>{formData.addresses.length > 1 ? "Please provide your address if not in the list above" : "Address"}</label>
+                            <textarea
                                 id="address"
                                 name="address"
                                 placeholder="Your address"
-                                rows="5"
-                                cols="50"
+                                rows={5}
                                 value={address}
-                                onChange={(e) => setAddress(e.target.value)}
+                                onChange={(e) => {
+                                    const address = e.target.value;
+                                    if (address === "Select Address") {
+                                        setAddress('');
+                                        return;
+                                    }
+                                    setAddress(e.target.value)
+                                }}
                                 className="button-bg"
                             />
                             {dataErrors.address && <label style={{color:'red'}}>{dataErrors.address}</label>}
