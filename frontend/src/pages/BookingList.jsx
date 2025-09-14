@@ -147,6 +147,7 @@ const BookingList = () => {
     }, []);
 
     useEffect(() => {
+        setMessage('');
         if (activeBottomMenu === 'Today' && !loading && !finishTodayJobs) {
             setLoading(true);
             let offset = 0;
@@ -185,6 +186,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
+        setMessage('');
         if (activeBottomMenu === 'Recent' && !loading && !finishRecentJobs) {
             setLoading(true);
             let offset = 0;
@@ -220,6 +222,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
+        setMessage('');
        if (activeBottomMenu === 'Schedule' && !loading && !finishScheduleJobs) {
            setLoading(true);
            let offset = 0;
@@ -252,6 +255,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount])
 
     useEffect(() => {
+        setMessage('');
         if (activeBottomMenu === 'Jobs' && !loading && !finishJobs) {
             setLoading(true);
             let offset = 0;
@@ -262,7 +266,7 @@ const BookingList = () => {
             api.post('/api/booking/get-approval', data)
                 .then(res => {
                     const { booking } = res.data;
-                    if (!booking || booking.length <= 0 && approvedBookings.length <= 0) {
+                    if (approvedBookings?.length <= 0 && booking?.length <= 0) {
                         setFinishJobs(true)
                         setMessage("No booking for approval found for today");
                         return;
@@ -311,8 +315,8 @@ const BookingList = () => {
     }
 
     const TodayBookings = ({ todayBooking, message }) => {
-        if ( !todayBooking || todayBooking.length <= 0) {
-            return <p style={{margin:'10px'}}>{message}</p>;
+        if (todayBooking?.length <= 0) {
+            return <p style={{margin:'10px'}}>{message ? message : "No booking found for today"}</p>;
         }
         return (
             <div className="card-body">
@@ -365,8 +369,8 @@ const BookingList = () => {
     }
 
     const Recent = ({ last7DaysBooking, message }) => {
-        if (!last7DaysBooking || last7DaysBooking.length <= 0) {
-            return <p style={{margin:'10px', textAlign:'center'}}>{message}</p>;
+        if (last7DaysBooking?.length <= 0) {
+            return <p style={{margin:'10px', textAlign:'center'}}>{message ? message : "No recent  bookings found"}</p>;
         }
 
         return (
@@ -508,8 +512,8 @@ const BookingList = () => {
     }
 
     const Schedule = ({ todaySchedule, message }) => {
-        if (!todaySchedule || todaySchedule.length <= 0) {
-            return <p style={{textAlign:'center'}}>{message}</p>;
+        if (todaySchedule?.length <= 0) {
+            return <p style={{textAlign:'center'}}>{message ? message : "No booking schedule for today"}</p>;
         }
         return (
             <div >
@@ -578,8 +582,8 @@ const BookingList = () => {
         if (notice) {
             return <p style={{textAlign:'center'}}>{notice}</p>;
         }
-        if (!jobs || jobs.length <= 0) {
-            return <p style={{textAlign:'center'}}>{message}</p>;
+        if (jobs?.length <= 0) {
+            return <p style={{textAlign:'center'}}>{message ? message : "No booking for approval found for today"}</p>;
         }
 
         return (
@@ -659,12 +663,12 @@ const BookingList = () => {
             </main>
 
             <nav  className='bottom-order-nav'>
-                <div className="nav-order-content">
+                <div style={{padding:'10px'}} className="nav-order-content">
                     {bottomNavItems.map((item, index) => (
                         <div key={`bottom-${item.id}`} className="nav-order-item"
                              onClick={() => {setActiveBottomMenu(item.category); setTitle(item.title)}}>
                             <div className={'book-list'} style={activeBottomMenu === item.category ? {color:'blue'} : {color:''}}>
-                                <FaCalendarAlt className="logo-icon2" />
+                                <FaCalendarAlt className="book-menu" />
                                 <h3  style={activeBottomMenu === item.category ?
                                     {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
                                     {item.category}

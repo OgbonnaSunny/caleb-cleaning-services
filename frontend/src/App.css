@@ -6600,7 +6600,18 @@ tr:hover {
   text-align: start;
 }
 
+.book-menu {
+  width: 100px;
+  height: 40px;
+}
+
 @media (max-width: 768px) {
+  .book-menu {
+    width: 40px;
+    height: 40px;
+    margin: 8px;
+  }
+
   .logo-icon2 {
     width: 80px;
     height: 40px;

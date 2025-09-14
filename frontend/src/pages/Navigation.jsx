@@ -69,7 +69,25 @@ const Navigation = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showNav, setShowNav] = useState(true);
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('none');
+
+
+    useEffect(() => {
+        const checUser = () => {
+            const currentUser = JSON.parse(localStorage.getItem('user'));
+            if (currentUser) {
+                setRole(currentUser?.roles)
+            }
+            else {
+                setRole('none');
+            }
+        }
+
+        window.addEventListener('storage', checUser);
+
+        return () => window.removeEventListener('storage', checUser);
+
+    }, []);
 
     useEffect(() => {
         let show = false;
@@ -78,8 +96,9 @@ const Navigation = () => {
             setRole(user?.roles);
         }
         else {
-            setRole('');
+            setRole('none');
         }
+
 
         switch (location.pathname) {
             case '/cleanerprofile':
