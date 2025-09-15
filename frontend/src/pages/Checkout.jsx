@@ -710,7 +710,7 @@ const Checkout = () => {
     const [addressCode, setAddressCode] = useState(0);
     const [endOfTenancy, setEndOfTenancy] = useState(false);
     const [subscriptionCount, setSubscriptionCount] = useState(0);
-    const [minDate, setMinDate] = useState(new Date());
+    const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
     const [loggedIn, setLoggedIn] = useState(true);
     const [time, setTime] = useState('');
     const [paymentMessage, setPaymentMessage] = useState('');
@@ -827,7 +827,7 @@ const Checkout = () => {
                 minute: minutesToBeUse,
                 minuteText: minuteText,
             });
-            setSelectedDate(selectedDate);
+            setSelectedDate(new Date(selectedDate).setHours(0, 0, 0, 0));
             newErrors['time'] = null;
         }
         else {
@@ -2448,6 +2448,17 @@ const Checkout = () => {
         );
     }
 
+    const isSameOrAfter = (date, baseDate = new Date()) => {
+        const d1 = new Date(date.setHours(0, 0, 0, 0));
+        const d2 = new Date(baseDate.setHours(0, 0, 0, 0));
+        return d1 >= d2;
+    };
+
+    const filterDate = (date) => {
+        // Enable only today and future dates
+        return isSameOrAfter(date);
+    };
+
     function Schedule() {
         return(
             <div>
@@ -2596,66 +2607,52 @@ const Checkout = () => {
                                     <p>2h clean with Cleaning products included</p>
                                 </div>
                             </div>
-                        </div>
-                        }
-                        <div>
-                            <div className={'grid-container'} style={{margin:'20px'}}>
+                        </div>}
+                        <div className={'date-time-container'} style={{marginTop:'20px'}}>
+                            <div style={{backgroundColor:'white', paddingRight:'30px', maxWidth:'300px'}}>
+                                <label style={{textAlign:'center'}} htmlFor="deliveryDate">Choose date</label>
+                                <DatePicker
+                                    selected={formData.date}
+                                    type={'date'}
+                                    name={'date'}
+                                    onChange={(date) => handleDateChange(date)}
+                                    dateFormat="yyyy-MM-dd"
+                                    placeholderText="Select a date"
+                                    inline
+                                    minDate={minDate}
+                                    filterDate={formData.disableThisDay ? filterDate : undefined}
+                                    dayClassName={(date) => {
+                                        const selected = formData.date === format(new Date(date), 'yyyy-MM-dd');
+                                        return selected ? 'selected-day' : undefined;
+                                    }}
+                                />
+                                {errors.date && <span className="error-message">{errors.date}</span>}
+                                {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
+                            </div>
 
-                                <div style={{backgroundColor:'white', paddingRight:'30px', maxWidth:'300px'}}>
-                                    <label htmlFor="deliveryDate">Choose date</label>
-                                    <DatePicker
-                                        selected={selectedDate}
-                                        value={formData.date}
-                                        type={'date'}
-                                        name={'date'}
-                                        onChange={(date) => handleDateChange(date)}
-                                        dateFormat="yyyy-MM-dd"
-                                        placeholderText="Select a date"
-                                        minDate={minDate}
-                                        inline
-                                        filterDate={formData.disableThisDay ? disableThisday : enableThisday}
-                                        dayClassName={(date) => {
-                                            const selected = selectedDate && date.toDateString() === selectedDate.toDateString();
-                                            return selected ? 'selected-day' : undefined;
-                                        }}
-                                    />
-                                    {errors.date && <span className="error-message">{errors.date}</span>}
-                                    {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
+                            <div  style={{ flexDirection:'column', alignItems:'center', maxWidth:'200px', marginTop:'20px', justifyContent:'space-around'}}>
+                                <label>Choose time</label>
+                                <div  style={{display:'flex', flexDirection:'row', width:'80px', alignSelf:'center'}}>
+                                    <MdKeyboardArrowUp size={60}  style={{marginLeft:'12px'}} onClick={addHour} />
+                                    <MdKeyboardArrowUp size={60} onClick={addMinute} />
+                                </div>
+                                <div className={'time-container'} style={{display:'flex', flexDirection:'row',
+                                    justifyContent:'center', width:'100px', padding:'10px'}}>
+                                    <h2  style={{textAlign:'end'}}>{formData.hourText}</h2>
+                                    <h2  style={{textAlign:'center'}}>:</h2>
+                                    <h2  style={{textAlign:'start'}}>{formData.minuteText}</h2>
                                 </div>
 
-                                <div  style={{ flexDirection:'column', alignItems:'center', maxWidth:'200px'}}>
-                                    <label>Choose time</label>
-                                    <div  style={{display:'flex', flexDirection:'row', justifyContent:'center', width:'80px'}}>
-                                        <MdKeyboardArrowUp size={60}
-                                                           onClick={addHour}
-                                        />
-                                        <MdKeyboardArrowUp size={60}
-                                                           onClick={addMinute}
-                                        />
-                                    </div>
-                                    <div className={'time-container'} style={{display:'flex', flexDirection:'row',
-                                        justifyContent:'center', width:'100px', padding:'10px'
-                                    }}>
-                                        <h2  style={{textAlign:'end'}}>{formData.hourText}</h2>
-                                        <h2  style={{textAlign:'center'}}>:</h2>
-                                        <h2  style={{textAlign:'start'}}>{formData.minuteText}</h2>
-                                    </div>
+                                <div style={{display:'flex', flexDirection:'row', width:'80px', alignSelf:'center' }}>
+                                    <MdKeyboardArrowDown  size={60} style={{marginLeft:'12px'}} onClick={removeHour} />
 
-                                    <div style={{display:'flex', flexDirection:'row', justifyContent:'center', width:'80px' }}>
-                                        <MdKeyboardArrowDown  size={60}
-                                                              onClick={removeHour}
-                                        />
-                                        <MdKeyboardArrowDown  size={60}
-                                                              onClick={removeMinute}
-                                        />
-                                    </div>
-                                    <p>24-hour format</p>
-                                    {time && <p>{time}</p>}
-                                    {errors.time && <span className="error-message">{errors.time}</span>}
+                                    <MdKeyboardArrowDown  size={60} onClick={removeMinute} />
                                 </div>
+                                <p>24-hour format</p>
+                                {time && <p>{time}</p>}
+                                {errors.time && <span className="error-message">{errors.time}</span>}
                             </div>
                         </div>
-
                     </div>
                     <div className={'question-container'}>
                         {formData.totalAmount > 0 && <div> <Summary /></div> }

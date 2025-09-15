@@ -6977,3 +6977,23 @@ tr:hover {
 .toggle-button:hover {
   color: #007bff;
 }
+
+.selected-day {
+  background-color: #0022cc !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-weight: bold;
+}
+
+.date-time-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+@media (max-width: 768px) {
+  .date-time-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
