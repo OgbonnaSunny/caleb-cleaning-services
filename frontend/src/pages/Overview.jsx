@@ -534,7 +534,7 @@ const Overview = () => {
                                     </div>
                                     <p className="testimonial-text">"{testimonial.text}"</p>
                                     <div className="client-name">— {testimonial.author}</div>
-                                    <div className="client-location">West London</div>
+                                    <p className="client-location">Edinburgh</p>
                                 </div>
                             ))}
                         </div>
