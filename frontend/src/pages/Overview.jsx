@@ -557,13 +557,13 @@ const Overview = () => {
                                     <div className="contact-method">
                                         <i className="fas fa-envelope"></i>
                                         <h4>Email Us</h4>
-                                        <p>flyclean@gmail.com</p>
+                                        <p>flyclean02@gmail.com</p>
                                         <p>Response within 24 hours</p>
                                     </div>
                                     <div className="contact-method">
                                         <i className="fas fa-map-marker-alt"></i>
                                         <h4>Areas We Serve</h4>
-                                        <p>All West London boroughs including Kensington, Chelsea, Hammersmith, and more</p>
+                                        <p>All Edinburgh and locations nearby</p>
                                     </div>
                                 </div>
                             </div>

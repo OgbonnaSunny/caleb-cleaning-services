@@ -1004,7 +1004,6 @@ const Checkout = () => {
         }
     }, [currentStep]);
 
-
     useEffect(() => {
         const handlePopState = () => {
             if (interceptMode) {
