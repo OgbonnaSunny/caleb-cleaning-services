@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState, useCallback, memo, useMemo} from "react";
 import { FaArrowLeft, FaArrowRight, FaTimes,  FaCheck, FaLock } from 'react-icons/fa';
-import {Link, useLocation } from 'react-router-dom'
+import {Link, useLocation, useNavigationType } from 'react-router-dom'
 import Payment,  { fetchData } from "./Payment.jsx";
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
@@ -68,6 +68,8 @@ const Checkout = () => {
     const  currentPostcode  = location.state?.postcode || {};
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
+    const navigationType = useNavigationType();
+
 
  //   const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "EH1 1AA";
 
@@ -989,6 +991,17 @@ const Checkout = () => {
         var covered = postcode.toString().toUpperCase().startsWith('EH')
         setCovered(covered);
     }, [postcode]);
+
+    useEffect(() => {
+        if (navigationType === 'POP') {
+            console.log('Back/forward navigation occurred');
+        } else if (navigationType === 'PUSH') {
+            console.log('New entry was pushed to history');
+        } else if (navigationType === 'REPLACE') {
+            console.log('History entry was replaced');
+        }
+    }, [location, navigationType]);
+
 
     const initializeForm = () => {
         if (!covered) return;

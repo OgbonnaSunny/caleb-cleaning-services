@@ -1267,8 +1267,6 @@ const Locations = () => {
     }
   ];
 
-
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [locations, setLocations] = useState(edinburghLocations);
   const [locationList, setLocationList] = useState(miniLocations2);
@@ -1403,8 +1401,8 @@ const Locations = () => {
         <section className="location-banner">
           <div className="container">
             <h1 className={'location-header'}>Our Cleaner Locations</h1>
-            <h4 style={{justifyContent:'center', color:'blue', maxWidth:'1000px', textAlign:'start', marginTop:'10px', backgroundColor:'transparent'}}>
-              Get professional home and office cleaning in London and the surrounding areas. Search for a local cleaner,
+            <h4 style={{ color:'blue', maxWidth:'500px', textAlign:'justify', marginTop:'10px', backgroundColor:'transparent'}}>
+              Get professional home and office cleaning in Edinburgh and the surrounding areas. Search for a local cleaner,
               book the service and they will arrive at your location shortly. Our cleaners have extensive experience and
               skills to satisfy all your cleaning needs. Enter your postcode to find a cleaner near you.
             </h4>
@@ -1465,7 +1463,7 @@ const Locations = () => {
                   </div>
               ) : (
                   <div className="no-results">
-                    <p>No locations found matching your search.</p>
+                    <p>No Cleaner was found in this location</p>
                   </div>
               )}
             </section>

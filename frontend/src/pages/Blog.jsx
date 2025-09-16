@@ -88,7 +88,7 @@ const Blog = () => {
             minHeight: '100vh'
         }}>
             <div className="recent-jobs">
-                <div className="blog-search">
+                {blogs?.length > 1 &&  <div className="blog-search">
                     <div style={{width:'100%', paddingRight:'10px', paddingLeft:'10px'}}  className="form-group">
                         <select
                             id={'category'}
@@ -101,7 +101,7 @@ const Blog = () => {
                             ))}
                         </select>
                     </div>
-                </div>
+                </div> }
                 <div className={'blog-container'}>
                     {blogs?.map(blog => (
                         <div  onClick={() => viewDetails(blog)}
