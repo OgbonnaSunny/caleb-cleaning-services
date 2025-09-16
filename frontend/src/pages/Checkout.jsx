@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState, useCallback, memo, useMemo} from "react";
 import { FaArrowLeft, FaArrowRight, FaTimes,  FaCheck, FaLock } from 'react-icons/fa';
-import {Link, useLocation, useNavigationType } from 'react-router-dom'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import Payment,  { fetchData } from "./Payment.jsx";
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
@@ -57,6 +57,7 @@ import LOGO from "../images/logo4.png";
 import {Surface} from "recharts";
 import {FaArrowTurnDown} from "react-icons/fa6";
 import { getAddreses } from "./Postcode.jsx";
+import useBackButtonInterceptor from "./useBackButtonInterceptor.js";
 
 // ksi66exy.up.railway.app
 
@@ -68,7 +69,8 @@ const Checkout = () => {
     const  currentPostcode  = location.state?.postcode || {};
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
-    const navigationType = useNavigationType();
+    const navigate = useNavigate();
+    const hasDummy = useRef(false);
 
 
  //   const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "EH1 1AA";
@@ -721,6 +723,7 @@ const Checkout = () => {
     const [minimumMinute, setMinimumMinute] = useState(0);
     const [noted, setNoted] = useState(false);
     const [covered, setCovered] = useState(true);
+    const [interceptMode, setInterceptMode] = useState(false);
 
     const cleaningSubscriptions = [
         {
@@ -993,14 +996,35 @@ const Checkout = () => {
     }, [postcode]);
 
     useEffect(() => {
-        if (navigationType === 'POP') {
-            console.log('Back/forward navigation occurred');
-        } else if (navigationType === 'PUSH') {
-            console.log('New entry was pushed to history');
-        } else if (navigationType === 'REPLACE') {
-            console.log('History entry was replaced');
+        if (currentStep > 0) {
+            setInterceptMode(true);
         }
-    }, [location, navigationType]);
+        else {
+            setInterceptMode(false);
+        }
+    }, [currentStep]);
+
+
+    useEffect(() => {
+        const handlePopState = () => {
+            if (interceptMode) {
+                // Intercept: do custom logic and stay on this page
+                setCurrentStep(0);
+            }
+            else {
+                // Allow back navigation
+                window.history.back();
+            }
+        };
+
+        if (interceptMode) {
+            window.history.pushState({ dummy: true }, "", window.location.href);
+        }
+
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, [interceptMode]);
+
 
 
     const initializeForm = () => {
