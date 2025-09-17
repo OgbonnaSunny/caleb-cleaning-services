@@ -2282,8 +2282,8 @@ const Checkout = () => {
 
             const elapsedTime = differenceInMinutes(new Date(), new Date(formData.sessionTime).toISOString());
             if (elapsedTime > 20) {
-                setError("Session expired. Please restart this booking");
-                return;
+             //   setError("Session expired. Please restart this booking");
+             //   return;
             }
 
             const allMounted = mounted.number && mounted.expiry && mounted.cvc;

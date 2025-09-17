@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef} from 'react';
-import { FaStar, FaRegStar, FaCheck, FaClock, FaMapMarkerAlt,
+import {
+    FaStar, FaRegStar, FaCheck, FaClock, FaMapMarkerAlt,
     FaBroom, FaShieldAlt, FaUserTie, FaCertificate,
     FaPoundSign, FaLifeRing, FaQuestionCircle,
     FaFilePdf, FaFile, FaFileAlt, FaHome, FaTimes, FaSearch,
-    FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft} from 'react-icons/fa';
+    FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft, FaCommentDots
+} from 'react-icons/fa';
 import api from './api.js';
 import { useNavigate } from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
@@ -26,6 +28,9 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tool
 const CleanerProfile = () => {
     const navigate = useNavigate();
     const ref = useRef(null);
+
+    const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
+    const companyName =  "Fly Cleaner";
 
     const bookData = {
         id: 0,
@@ -223,11 +228,29 @@ const CleanerProfile = () => {
     const [showDateTime, setShowDateTime] = useState(false);
     const [quarter, setQuarter] = useState([]);
     const [isActive, setIsActive] = useState(false);
+    const [messageCount, setMessageCount] = useState(0);
+    const [name, setName] = useState('');
+
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
+        const fetchData = async () => {
+            try {
+                var data = {receiver: user?.email};
+                response = await api.post('/api/messages/users', data)
+                const count = response.data.messages;
+                setMessageCount(prev => prev + count);
+
+            }catch (error) {
+                console.log(error);
+            }
+        }
         if (user) {
+            if (user?.firstName?.toString()?.length > 0) {
+                setName(user.firstName?.charAt(0)?.toUpperCase() + user?.firstName?.slice(1));
+            }
             setEmail(user?.email);
+            fetchData()
         }
     }, []);
 
@@ -2625,14 +2648,32 @@ const CleanerProfile = () => {
     return (
         <div className="sticky-nav-container">
             <nav  className='top-order-nav'>
-                <div className="nav-order-content">
-                    <img src={LOGO} className={'logo-icon2'}/>
-                    {topNavItems.map((item, index) => (
-                        <div key={`top-${index}`} className="nav-order-item"
-                             onClick={() => setActiveMenu(item)}>
-                            <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
+                <div style={{display:'flex', flexDirection: 'column'}}>
+                    <div style={{display:'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                        <img src={LOGO} style={{maxWidth:'12%'}}  className={'logo-icon2'}/>
+                        <h1 style={{width:'20%', textAlign:'start'}} className={'page-title'}>My App</h1>
+                        <button
+                            style={{color:'blue', background:'none', width:'20px'}}
+                            onClick={() => navigate('/help')}>
+                            FAQs
+                        </button>
+                        <div style={{width:'10%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
+                            <FaCommentDots
+                                size={25}
+                                style={{color:'black'}}
+                                onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
+                            />
+                            {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
                         </div>
-                    ))}
+                    </div>
+                    <div className="nav-order-content">
+                        {topNavItems.map((item, index) => (
+                            <div key={`top-${index}`} className="nav-order-item"
+                                 onClick={() => setActiveMenu(item)}>
+                                <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </nav>
 

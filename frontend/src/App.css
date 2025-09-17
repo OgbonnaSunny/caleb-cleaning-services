@@ -511,7 +511,7 @@ img {
 
 /* ===== Blog Section ===== */
 .about-section {
-  padding: 20px 0;
+  padding: 10px 0;
 }
 
 .about-section .container {
@@ -6841,8 +6841,8 @@ tr:hover {
 .about-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  padding: 60px 10%;
+  gap: 10px;
+  padding: 20px 10%;
   align-items: center;
 }
 

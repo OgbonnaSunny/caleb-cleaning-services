@@ -110,7 +110,7 @@ const Customer = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
-            setEmail(user.email);
+            setEmail(user?.email);
             if (user?.firstName?.toString()?.length > 0) {
                 setName(user.firstName?.charAt(0)?.toUpperCase() + user?.firstName?.slice(1));
             }
@@ -503,38 +503,47 @@ const Customer = () => {
         <div className="sticky-nav-container">
             {message && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
             <nav  className='top-order-nav'>
-                <div className="nav-order-content">
-                    <div style={{display:'flex', flexDirection:'row', marginLeft:'20px', marginRight:'20px', alignItems:'center'}}>
-                        <div style={{width:'80%', display:'flex', justifyContent:'center', alignItems: 'center'}}>
-                            <img src={LOGO} className={'logo-icon'}/>
-                            {topItems.map((item, index) => (
-                                <div key={`top-${index}`} className="nav-order-item"
-                                     onClick={() => handleTopItem(item)}>
-                                    <h3  style={activeTopMenu === item ? {color:'goldenrod', textDecoration:'underline'}:
-                                        {color:'', textDecoration:'none'} } >
-                                        {item}
-                                    </h3>
-                                </div>
-                            ))}
-                            {activeBottomMenu === 'Support' &&
-                                <div
-                                    onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
-                                    style={{width:'20%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
-                                    <FaCommentDots
-                                        size={30}
-                                        style={{width: '40px', color:'black'}}
-                                    />
-                                    {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
-                                </div>
-
-                            }
-                        </div>
-                        <div style={{maxWidth:'20%'}} className={'book-icon'} onClick={handleNewOrder}>
-                            <MdAdd  size={40} style={{width:'40%', marginRight:'10px'}}/>
-                            <h3>New</h3>
+                <div style={{display:'flex', flexDirection: 'column'}}>
+                    <div style={{display:'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                        <img src={LOGO} style={{maxWidth:'12%'}}  className={'logo-icon2'}/>
+                        <h1 style={{width:'20%', textAlign:'start'}} className={'page-title'}>My App</h1>
+                        <button
+                            style={{color:'blue', background:'none', width:'20px'}}
+                            onClick={() => navigate('/help')}>
+                            FAQs
+                        </button>
+                        <div style={{width:'10%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
+                            <FaCommentDots
+                                size={25}
+                                style={{color:'black'}}
+                                onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
+                            />
+                            {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
                         </div>
                     </div>
 
+                    <div className="nav-order-content">
+                        <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-evenly'}}>
+                            <div style={{display:'flex', justifyContent:'space-evenly', alignItems: 'center'}}>
+                                {topItems.map((item, index) => (
+                                    <div key={`top-${index}`} className="nav-order-item"
+                                         onClick={() => handleTopItem(item)}>
+                                        <h3  style={activeTopMenu === item ? {color:'goldenrod', textDecoration:'underline'}:
+                                            {color:'', textDecoration:'none'} } >
+                                            {item}
+                                        </h3>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{color:'navy', backgroundColor:'greenyellow', padding:'8px', display:'flex', alignItems: 'center'}}
+                                 className={'book-icon'} onClick={handleNewOrder}>
+                                <MdAdd  size={40} style={{width:'40px'}}  />
+                                <h3 className={'experience-text'}>New</h3>
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
             </nav>
 

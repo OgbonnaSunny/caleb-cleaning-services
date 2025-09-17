@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import {FaBroom, FaCheck, FaClock, FaMapMarkerAlt, FaRegStar, FaStar, FaUserTie} from "react-icons/fa";
+import {FaBroom, FaCheck, FaClock, FaCommentDots, FaMapMarkerAlt, FaRegStar, FaStar, FaUserTie} from "react-icons/fa";
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from "react-router-dom";
 import api from './api.js'
@@ -8,6 +8,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ProfilePage = ({ emailFromProile }) => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const params = new URLSearchParams(window.location.search);
     const cleanerEmail = params.get("email");
@@ -193,6 +194,7 @@ const ProfilePage = ({ emailFromProile }) => {
     const [loadingMore, setLoadingMore] = useState(false);
     const [pageCount, setPageCount] = useState(0);
     const [page, setPage] = useState(10);
+
 
     useEffect(() => {
         if (window.innerWidth > 768) {
@@ -416,6 +418,7 @@ const ProfilePage = ({ emailFromProile }) => {
                 </div>
             </div>}
             <div className="profile-container" >
+
                 <div className="profile-header">
                     <div className="profile-image-container">
                         {profilePhoto && <img src={profilePhoto}  className="profile-image" alt={firstName} />}
@@ -453,9 +456,10 @@ const ProfilePage = ({ emailFromProile }) => {
                 </div>
 
                 <div className="tab-content">
-                    {activeTab2 === 'about' && (<div className="about-section">
-                            <h2 className={'experience-text'}>About {firstName} {lastName}</h2>
-                            <p>{bio}</p>
+                    {activeTab2 === 'about' &&
+                        <div style={{margin:'12px'}}>
+                            <h2 className={'experience-text'}>About {firstName} {lastName} <br/> <p style={{fontWeight:'lighter', margin:'4px'}}>{bio}</p> </h2>
+
                             <div className="details-section">
                                 <h3 className={'experience-text'}><FaClock style={{width:'40px'}} /> Availability</h3>
                                 {availability && <div className="availability-grid">
@@ -535,7 +539,7 @@ const ProfilePage = ({ emailFromProile }) => {
                                     ))}
                                 </div>
                             </div>
-                        </div>)}
+                        </div>}
 
                     {activeTab2 === 'services' && (<div className="services-section">
                             <h1 className={'experience-text'}>Services Offered</h1>
