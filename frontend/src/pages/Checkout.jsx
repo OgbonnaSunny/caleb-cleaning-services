@@ -1024,8 +1024,6 @@ const Checkout = () => {
         return () => window.removeEventListener("popstate", handlePopState);
     }, [interceptMode]);
 
-
-
     const initializeForm = () => {
         if (!covered) return;
 
@@ -1106,8 +1104,6 @@ const Checkout = () => {
                 dayName: day,
                 monthName: month,
                 disableThisDay: disable,
-                date: date,
-                time: time,
                 nature: nature,
                 natureActive: natureActive,
                 starter: starter,
@@ -1126,8 +1122,6 @@ const Checkout = () => {
                 dayName: day,
                 monthName: month,
                 disableThisDay: disable,
-                date: date,
-                time: time,
                 nature: nature,
                 natureActive: natureActive,
                 starter: starter,
@@ -1142,7 +1136,9 @@ const Checkout = () => {
        setSelectedDate(null)
 
         setCurrentStep(currentStep+1)
+
         setAddressCode(addressCode+1)
+
         setClientSecret(null)
 
         if (starter === starters[1].starter) {
@@ -2280,10 +2276,11 @@ const Checkout = () => {
             e.preventDefault();
             if (!stripe || !elements || processing) return;
 
-            const elapsedTime = differenceInMinutes(new Date(), new Date(formData.sessionTime).toISOString());
+            const now = format(new Date(), 'yyyy-MM-dd hh:mm:ss');
+            const elapsedTime = differenceInMinutes(new Date(now), new Date(formData.sessionTime));
             if (elapsedTime > 20) {
-             //   setError("Session expired. Please restart this booking");
-             //   return;
+                setError("Session expired. Please restart this booking");
+                return;
             }
 
             const allMounted = mounted.number && mounted.expiry && mounted.cvc;
@@ -2875,9 +2872,11 @@ const Checkout = () => {
                         />
                     </div>
 
+
                     <div className={'checkout-summary-unit'}>
-                        <p style={{textAlign:'center'}}> {format(new Date(formData.date), "EEE do MMM, yyyy") } {formData.time}</p>
+                        <p style={{textAlign:'center'}}> {format(new Date(formData?.date), "EEE do MMM, yyyy") } {formData?.time}</p>
                     </div>
+
                     {!hideDetail && <div style={{display:'flex', flexDirection:'column'}}>
                         <div className={'checkout-summary-unit'}>
                             <p style={{width:'20%'}} className={'summary-text'}>Tarrif</p>
@@ -2913,6 +2912,7 @@ const Checkout = () => {
                     </div> }
 
                 </div>
+
                 {!hideDetail &&  <div style={{display:'flex', flexDirection:'column'}}>
                     {formData.booking.map(task => (
                         <div key={task.id}>
