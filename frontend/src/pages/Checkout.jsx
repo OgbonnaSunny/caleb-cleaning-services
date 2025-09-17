@@ -3798,7 +3798,7 @@ const Checkout = () => {
                         <p onClick={() => ref.current?.scrollIntoView({behavior:'smooth'})}
                            className={'booking-amount'}>
                             Total Amount: £{formData.totalAmount}
-                            <MdKeyboardArrowDown size={30} style={{width:'40px', marginLeft:'10px', color:'navy'}} />
+                            {currentStep < 4 &&  <MdKeyboardArrowDown size={30} style={{width:'40px', marginLeft:'10px', color:'navy'}} /> }
                         </p>
                     }
                     <div className="nav-order-content">
