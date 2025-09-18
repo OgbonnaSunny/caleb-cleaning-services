@@ -391,7 +391,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            if (orderEnded || !email) return;
+            if (orderEnded) return;
             if (isActive !== null && isActive === false) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
@@ -435,10 +435,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
+        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded && isActive !== null) {
             fetchOrders();
         }
-    }, [pageCount, activeMenu, isActive, orderEnded, email]);
+    }, [pageCount, activeMenu, isActive, orderEnded]);
 
     useEffect(() => {
         const handleScroll = () => {
