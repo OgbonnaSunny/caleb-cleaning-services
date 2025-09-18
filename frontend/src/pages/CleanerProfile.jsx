@@ -230,6 +230,7 @@ const CleanerProfile = () => {
     const [isActive, setIsActive] = useState(false);
     const [messageCount, setMessageCount] = useState(0);
     const [name, setName] = useState('');
+    const [orderEnded, setOrderEnded] = useState(false);
 
 
     useEffect(() => {
@@ -393,6 +394,8 @@ const CleanerProfile = () => {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
             }
+            if (orderEnded) return;
+
             if (newOrders.length > 0) {
                 setLoadingMore(true);
             }
@@ -407,7 +410,7 @@ const CleanerProfile = () => {
                 const data = {limit: page, offset: offset};
                 const newOrderResponse = await api.post('api/booking/new', data);
                 const orders = await newOrderResponse.data;
-                if (orders.booking.length <= 0 && newOrders.length <= 0) {
+                if (orders?.booking?.length <= 0 && newOrders.length <= 0) {
                     setMessage('No new orders yet.');
                 }
                 else {
@@ -417,6 +420,10 @@ const CleanerProfile = () => {
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
                 }
+                if (orders?.booking?.length <= 0) {
+                    setOrderEnded(true);
+                }
+
             } catch (error) {
                 console.log(error);
                 setNewOrders([])
@@ -449,6 +456,10 @@ const CleanerProfile = () => {
                         setHistoryPageCount(prev => prev + 1)
                     }
                 }
+            }
+
+            if (scrollTop <= scrollHeight / 2) {
+                setOrderEnded(false);
             }
         };
 
@@ -606,7 +617,7 @@ const CleanerProfile = () => {
     }, [email]);
 
     useEffect(() => {
-        if (email === null || email === undefined || email === '') return
+        if (email === null || email === undefined || email === '' || orderEnded) return
         setLoadingMore(true)
         let  offset = 0;
         if (allIncome.length > 0) {
@@ -622,6 +633,9 @@ const CleanerProfile = () => {
                         income.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
+                }
+                if (income?.length <= 0) {
+                    setOrderEnded(true);
                 }
 
             })
@@ -1096,7 +1110,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const myOders = async () => {
-            if (email === null || email === undefined) {
+            if (email === null || email === undefined || orderEnded) {
                 return;
             }
             if (myOrders.length === 0) {
@@ -1122,6 +1136,9 @@ const CleanerProfile = () => {
                         jobList.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
+                }
+                if (jobList.length <= 0) {
+                    setOrderEnded(true);
                 }
             }
             catch (error) {
@@ -1278,7 +1295,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const history = async () => {
-            if (email === null || email === undefined) {
+            if (email === null || email === undefined || orderEnded) {
                 return;
             }
             if (jobHistory.length > 0) {
@@ -1304,6 +1321,9 @@ const CleanerProfile = () => {
                         jobList.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
+                }
+                if (jobList?.length <= 0) {
+                    setOrderEnded(true)
                 }
             }
             catch (error) {
@@ -2676,7 +2696,10 @@ const CleanerProfile = () => {
                     <div className="nav-order-content">
                         {topNavItems.map((item, index) => (
                             <div key={`top-${index}`} className="nav-order-item"
-                                 onClick={() => setActiveMenu(item)}>
+                                 onClick={() => {
+                                     setOrderEnded(false);
+                                     setActiveMenu(item);
+                                 }}>
                                 <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
                             </div>
                         ))}
@@ -2700,7 +2723,10 @@ const CleanerProfile = () => {
                 <div className="nav-order-content">
                     {bottomNavItems.map((item, index) => (
                         <div key={`bottom-${item.id}`} className="nav-order-item"
-                             onClick={() => setActiveMenu(item.category)}>
+                             onClick={() => {
+                                 setOrderEnded(false);
+                                 setActiveMenu(item.category);
+                             }}>
                             <div style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
                                 {renderMenuIcon(item.id)}
                                 <h3 style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>{item.category}</h3>

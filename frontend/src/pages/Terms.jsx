@@ -49,7 +49,6 @@ const Terms = () => {
 
                         1.3. If you are a customer, then these Website Terms and Conditions MUST be read in conjunction with our Booking Terms and Conditions.<br/><br/>
 
-                        1.4. Our registered office is: 11-13 Bayley street, London, WC1B3HD. Our company registration number is SC839400.<br/><br/>
 
                         What we do<br/><br/>
                         1.5. Fly provides an online platform to facilitate the introduction of self-employed domestic cleaners (“Fly cleaners”) and customers who require domestic cleaning.<br/><br/>
