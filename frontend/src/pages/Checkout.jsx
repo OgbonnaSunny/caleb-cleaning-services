@@ -66,7 +66,11 @@ const Checkout = () => {
    // const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
     const stripePromise = loadStripe(STRIPE_KEY);
     const location = useLocation();
-    const  currentPostcode  = location.state?.postcode || {};
+    const code = location.state?.postcode;
+    if (code && code?.toString().length > 0) {
+        sessionStorage.setItem('postcode', JSON.stringify(code));
+    }
+    const  currentPostcode  = code || JSON.parse(sessionStorage.getItem('postcode'));
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
     const navigate = useNavigate();
