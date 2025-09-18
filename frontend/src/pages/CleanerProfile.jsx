@@ -465,9 +465,6 @@ const CleanerProfile = () => {
     }, [loadingMore]);
 
     const NewOrders = ({ active }) => {
-        if (active !== null && active === false && !isLoading) {
-            return <p style={{textAlign:'center'}}>You do not have the clearance to access booking at this moment</p>
-        }
 
         return (
             <div className={'support-page'}>
@@ -479,40 +476,41 @@ const CleanerProfile = () => {
                     : (newOrders.length <= 0 || newOrders === null) ?
                         <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
                             <p style={{textAlign:'center'}}>{message}</p>
-                        </div> :
-                        <div className="grid-container">
-                            {newOrders.map(order => (
-                                <div key={order.orderId}  className={'stat-card'}>
-                                    <p style={{textAlign:'center'}}>{order.orderId}</p>
-                                    <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
-                                    <div className={'new-order-container'}>
-                                        <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
-                                        <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
+                        </div> : (active !== null && active === true) ?
+                            <div className="grid-container">
+                                {newOrders.map(order => (
+                                    <div key={order.orderId}  className={'stat-card'}>
+                                        <p style={{textAlign:'center'}}>{order.orderId}</p>
+                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
+                                        <div className={'new-order-container'}>
+                                            <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
+                                            <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
+                                        </div>
+                                        <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
+                                        <div className={'new-order-container'}>
+                                            <FaMapMarkerAlt  className={'icon-small'} />
+                                            <p style={{textAlign:'start', width:'15%', fontWeight:'bold'}}>EH66JN</p>
+                                            <p className='truncate-text'>{order.address}</p>
+                                            <FaHome className={'icon-small'} onClick={() => navigate('/sitemap', {state: {address: order.address}})}  />
+                                        </div>
+                                        <div className={'new-order-container'}>
+                                            <p style={{marginLeft:'10px'}}>Estimated duration</p>
+                                            <h4 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h4>
+                                        </div>
+                                        <div className={'new-order-container'}>
+                                            <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
+                                            <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
+                                        </div>
+                                        {(acceptingOrders && acceptedJobIds.includes(order.orderId)) && <p>Load...</p>}
+                                        <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
+                                                onClick={() => acceptOrder(order.orderId)}
+                                                className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'next-button'}>
+                                            {acceptedJobIds.includes(order.orderId) ?  "Accepted" : "Accept this job"}
+                                        </button>
                                     </div>
-                                    <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
-                                    <div className={'new-order-container'}>
-                                        <FaMapMarkerAlt  className={'icon-small'} />
-                                        <p style={{textAlign:'start', width:'15%', fontWeight:'bold'}}>EH66JN</p>
-                                        <p className='truncate-text'>{order.address}</p>
-                                        <FaHome className={'icon-small'} onClick={() => navigate('/sitemap', {state: {address: order.address}})}  />
-                                    </div>
-                                    <div className={'new-order-container'}>
-                                        <p style={{marginLeft:'10px'}}>Estimated duration</p>
-                                        <h4 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h4>
-                                    </div>
-                                    <div className={'new-order-container'}>
-                                        <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
-                                        <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
-                                    </div>
-                                    {(acceptingOrders && acceptedJobIds.includes(order.orderId)) && <p>Load...</p>}
-                                    <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
-                                            onClick={() => acceptOrder(order.orderId)}
-                                            className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'next-button'}>
-                                        {acceptedJobIds.includes(order.orderId) ?  "Accepted" : "Accept this job"}
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div> :
+                            <p style={{textAlign:'center'}}>You do not have the clearance to access booking at this moment</p>
                 }
                 {loadingMore && <p>Loading...</p>}
             </div>
