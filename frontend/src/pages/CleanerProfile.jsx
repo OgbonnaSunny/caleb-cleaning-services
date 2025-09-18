@@ -391,7 +391,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            if (newOrderEnded) return;
+            if (orderEnded) return;
             if (!isActive) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
@@ -435,10 +435,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading && activeMenu === 'New' && !newOrderEnded) {
+        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
             fetchOrders();
         }
-    }, [pageCount, activeMenu, isActive, newOrderEnded]);
+    }, [pageCount, activeMenu, isActive, orderEnded]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -446,7 +446,7 @@ const CleanerProfile = () => {
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = window.innerHeight;
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loadingMore) {
+                if (!loadingMore && !orderEnded) {
                     if (activeMenu === 'New') {
                         setPageCount(prev => prev + 1)
                     }
@@ -485,8 +485,9 @@ const CleanerProfile = () => {
                             {newOrders.map(order => (
                                 <div key={order.orderId}  className={'stat-card'}>
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
-                                    <div style={{display:'flex', flexDirection:'column'}}>
-                                        <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
+                                    <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
+                                    <div className={'new-order-container'}>
+                                        <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
                                         <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
                                     </div>
                                     <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
