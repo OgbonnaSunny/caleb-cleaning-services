@@ -390,6 +390,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
+            if (orderEnded) return;
             if (!isActive) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
