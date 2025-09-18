@@ -391,7 +391,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            if (orderEnded) return;
+            if (orderEnded || !email) return;
             if (!isActive) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
@@ -438,7 +438,7 @@ const CleanerProfile = () => {
         if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
             fetchOrders();
         }
-    }, [pageCount, activeMenu, isActive, orderEnded]);
+    }, [pageCount, activeMenu, isActive, orderEnded, email]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -533,18 +533,19 @@ const CleanerProfile = () => {
                 if (user?.firstName?.toString()?.length > 0 && user?.lastName?.toString()?.length > 0) {
                     setCleanerName(`${user?.firstName?.charAt(0)?.toUpperCase()+user?.firstName?.slice(1)} ${user?.lastName?.charAt(0)?.toUpperCase()+user?.lastName?.slice(1)}`);
                 }
+                const isActive = user.isActive;
+                if (isActive === 1 || isActive === true || isActive === 'true') {
+                    setIsActive(true);
+                }
+                else {
+                    setIsActive(false);
+                }
                 if (user?.roles?.toString()?.length > 0) {
                     setBio(`Professional ${user?.roles?.charAt(0)?.toUpperCase()+user?.roles?.slice(1)}`);
                 }
                 setEmail(user.email);
                 setPhoneNumber(user.phone);
 
-                const isActive = user.isActive;
-                if (isActive === 1 || isActive === true || isActive === 'true') {
-                    setIsActive(true);
-                    return;
-                }
-                setIsActive(false);
             }
 
             })
