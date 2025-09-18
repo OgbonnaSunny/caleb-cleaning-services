@@ -1007,11 +1007,20 @@ const Checkout = () => {
     }, [currentStep]);
 
     useEffect(() => {
-        const emailData = {
+        const user = JSON.parse(localStorage.getItem('user'));
+        let emailData = {
             to: formData?.email,
             text: "We noticed that you did not complete your booking. If you are having trouble placing a booking, contact our help desk through live chat or email us via flycean02@gmail.com",
             subject: "Cleaning service"
         };
+        if (!formData?.email && user ) {
+            emailData = {
+                to: user?.email,
+                text: "We noticed that you did not complete your booking. If you are having trouble placing a booking, contact our help desk through live chat or email us via flycean02@gmail.com",
+                subject: "Cleaning service"
+            };
+        }
+
         const handlePopState =  () => {
             if (interceptMode) {
                 // Intercept: do custom logic and stay on this page
@@ -1019,7 +1028,7 @@ const Checkout = () => {
             }
             else {
                 // Allow back navigation
-                if (!success && formData?.email) {
+                if (!success && emailData?.to) {
                     api.post('/api/send-email-to-customer', emailData)
                         .then((response) => {})
                         .catch((error) => {console.log(error)})

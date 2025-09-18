@@ -75,6 +75,7 @@ const Cleaners = () => {
     const [ids, setIds] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [name, setName] = useState('');
+    const [noCleaner, setNoCleaner] = useState(false);
 
 
     const filteredCleaners = allCleaners.filter(cleaner => {
@@ -106,6 +107,7 @@ const Cleaners = () => {
     }, []);
 
     useEffect(() => {
+        if (noCleaner) return;
         setLoading(true);
         let offset = 0;
         if (allCleaners.length > 0) {
@@ -119,6 +121,9 @@ const Cleaners = () => {
                     cleaners.forEach(item => map.set(item.id, item));    // add/replace new
                     return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                 });
+                if (cleaners.length <= 0) {
+                    setNoCleaner(true)
+                }
 
             })
             .catch(error => {
@@ -139,6 +144,9 @@ const Cleaners = () => {
                 if (!loading && documents.length <= 0) {
                     setPageCount(prev => prev + 1);
                 }
+            }
+            if (scrollTop <= scrollHeight / 2) {
+                setNoCleaner(false)
             }
         };
 

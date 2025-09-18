@@ -166,7 +166,7 @@ const Become = () => {
 
         if (!formData.NIN.trim()) newErrors.NIN = 'NI is required';
 
-   //     if (!isValidNINumber(formData.NIN)) newErrors.NIN = 'NI is invalid';
+        if (!isValidNINumber(formData.NIN)) newErrors.NIN = 'NI is invalid';
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
