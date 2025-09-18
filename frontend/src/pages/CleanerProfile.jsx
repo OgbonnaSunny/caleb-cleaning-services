@@ -410,6 +410,9 @@ const CleanerProfile = () => {
                 const data = {limit: page, offset: offset};
                 const newOrderResponse = await api.post('api/booking/new', data);
                 const orders = await newOrderResponse.data;
+                if (orders?.booking?.length <= 0) {
+                    setOrderEnded(true);
+                }
                 if (orders?.booking?.length <= 0 && newOrders.length <= 0) {
                     setMessage('No new orders yet.');
                 }
@@ -419,9 +422,6 @@ const CleanerProfile = () => {
                         orders.booking.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
-                }
-                if (orders?.booking?.length <= 0) {
-                    setOrderEnded(true);
                 }
 
             } catch (error) {
