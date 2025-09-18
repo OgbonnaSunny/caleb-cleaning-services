@@ -431,7 +431,7 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded && isActive !== null) {
+        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
             fetchOrders();
         }
     }, [pageCount, activeMenu, isActive, orderEnded]);
