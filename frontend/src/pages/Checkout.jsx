@@ -1025,14 +1025,14 @@ const Checkout = () => {
             if (interceptMode) {
                 // Intercept: do custom logic and stay on this page
                 setCurrentStep(0);
-            }
-            else {
-                // Allow back navigation
                 if (!success && emailData?.to) {
                     api.post('/api/send-email-to-customer', emailData)
                         .then((response) => {})
                         .catch((error) => {console.log(error)})
                 }
+            }
+            else {
+                // Allow back navigation
                 window.history.back();
             }
 
