@@ -392,10 +392,6 @@ const CleanerProfile = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             if (orderEnded) return;
-            if (isActive !== null && isActive === false) {
-                setMessage('You do not have the clearance to access booking at this moment');
-                return;
-            }
 
             if (newOrders.length > 0) {
                 setLoadingMore(true);
@@ -468,7 +464,10 @@ const CleanerProfile = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loadingMore]);
 
-    const NewOrders = () => {
+    const NewOrders = ({ active }) => {
+        if (active !== null && active === false && !isLoading) {
+            return <p style={{textAlign:'center'}}>You do not have the clearance to access booking at this moment</p>
+        }
 
         return (
             <div className={'support-page'}>
@@ -2711,7 +2710,7 @@ const CleanerProfile = () => {
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
-                {activeMenu === topNavItems[0] && <NewOrders /> }
+                {activeMenu === topNavItems[0] && <NewOrders active={isActive} /> }
                 {activeMenu === topNavItems[1] && <MyOrders /> }
                 {activeMenu === topNavItems[2] && <History /> }
                 {activeMenu === bottomNavItems[3].category && <SupportPage /> }
