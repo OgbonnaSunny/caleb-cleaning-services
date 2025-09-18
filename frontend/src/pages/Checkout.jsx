@@ -969,7 +969,7 @@ const Checkout = () => {
             setLoggedIn(false);
             return;
         }
-        setFormData(data)
+        setFormData(data);
         setSelectedDate(null);
         setCurrentStep(0);
 
@@ -4027,15 +4027,15 @@ const Checkout = () => {
                                     <div style={{
                                         gap:'10px',
                                         padding:'20px', maxWidth:'700px'}} className="form-actions">
-                                    <button disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
+                                    <button style={{width:'40%'}} disabled={processing} type="button" className="back-button" onClick={() => setCurrentStep(currentStep -1)}>
                                         Back
                                     </button>
-                                    <button disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
+                                    <button style={{width:'60%'}} disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
                                         {processing ? 'Processing data...' : 'Next'}
                                     </button>
                                 </div>
                                 </div>}
-                            {(clientSecret && clientSecret?.trim().length > 0 && currentStep === 5) && <PaymentPlatform />}
+                            {(clientSecret && clientSecret?.trim().length > 0 && currentStep >= 5) && <PaymentPlatform />}
                         </div>
                     </div>
                 </main>
