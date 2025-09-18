@@ -239,7 +239,8 @@ const Cleaners = () => {
         setDocuments(prev => [...prev, {title:"National insurance", img: cleaner?.ni_path}]);
         setDocuments(prev => [...prev, {title: "Proof of address", img: cleaner?.addressProof_path}])
         setName(cleaner?.firstName?.charAt(0)?.toUpperCase() + cleaner?.firstName.slice(1) + " " + cleaner?.lastName?.charAt(0)?.toUpperCase() + cleaner?.lastName.slice(1));
-        docRef?.current?.scrollIntoView({behavior: 'smooth'});
+      //  docRef?.current?.scrollIntoView({behavior: 'smooth'});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
 
