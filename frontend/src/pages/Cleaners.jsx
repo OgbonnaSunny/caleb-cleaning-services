@@ -244,13 +244,35 @@ const Cleaners = () => {
         setDocEmail(cleaner?.email);
     }
 
+    const docStyle = {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0
+    }
+
 
     return (
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '100vh' // Ensures it takes at least full viewport height
+            minHeight: '100vh',
+            position: 'relative',
         }} className="cleaners-page">
+            {(documents.length > 0) && <div style={docStyle}  className="container">
+                <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
+                    <h3 className={'experience-text'}>{name}</h3>
+                    <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName(''); setDocEmail('')}} />
+                </div>
+                <div className={'grid-container'}>
+                    {documents.map((doc, index ) => (
+                        <div key={index}>
+                            <h3 style={{textAlign:'center'}}>{doc.title}</h3>
+                            <img src={doc.img}/>
+                        </div>
+                    ))}
+                </div>
+            </div>}
             <div ref={docRef} style={{display:'flex', flexDirection: 'row',alignItems: 'center', justifyContent:'flex-start', gap:'10px'}}>
                 <img src={LOGO} className={'logo-icon'}/>
                 <h1 className="page-title">Cleaners Management</h1>
@@ -358,21 +380,6 @@ const Cleaners = () => {
                                     </div>
 
                                 </div>}
-
-                            {(documents.length > 0 && cleaner?.email === docEmail) && <div  className="container">
-                                <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
-                                    <h3 className={'experience-text'}>{name}</h3>
-                                    <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName(''); setDocEmail('')}} />
-                                </div>
-                                <div className={'grid-container'}>
-                                    {documents.map((doc, index ) => (
-                                        <div key={index}>
-                                            <h3 style={{textAlign:'center'}}>{doc.title}</h3>
-                                            <img src={doc.img}/>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>}
 
                             <div style={{display: 'flex', alignItems: 'center', gap:'7px', justifyContent:'space-evenly'}}>
                                 {cleaner.isActive === 1 ?
