@@ -227,7 +227,7 @@ const CleanerProfile = () => {
     const [financePageCount, setFinancePageCount] = useState(0);
     const [showDateTime, setShowDateTime] = useState(false);
     const [quarter, setQuarter] = useState([]);
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState(null);
     const [messageCount, setMessageCount] = useState(0);
     const [name, setName] = useState('');
     const [orderEnded, setOrderEnded] = useState(false);
@@ -392,7 +392,7 @@ const CleanerProfile = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             if (orderEnded || !email) return;
-            if (!isActive) {
+            if (isActive !== null && isActive === true) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
             }
