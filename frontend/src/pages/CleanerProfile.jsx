@@ -484,9 +484,9 @@ const CleanerProfile = () => {
                             {newOrders.map(order => (
                                 <div key={order.orderId}  className={'stat-card'}>
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
-                                    <div className={'new-order-container'}>
+                                    <div style={{display:'flex', flexDirection:'column'}}>
                                         <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
-                                        <p style={{textAlign:'end',fontWeight:'900' }}>{order.plan}</p>
+                                        <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
                                     </div>
                                     <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
                                     <div className={'new-order-container'}>
