@@ -146,7 +146,7 @@ const Cleaners = () => {
                 }
             }
             if (scrollTop <= scrollHeight / 2) {
-                setNoCleaner(false)
+            //    setNoCleaner(false)
             }
         };
 
