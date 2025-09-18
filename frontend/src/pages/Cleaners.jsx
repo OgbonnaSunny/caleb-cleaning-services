@@ -399,7 +399,7 @@ const Cleaners = () => {
                                 }
 
                                 <button onClick={() => setDeleteEmail(cleaner.email)}
-                                        style={{color:'darkred', textAlign:'start'}}
+                                        style={deleteEmail === cleaner.email ? {color:'darkred', textAlign:'start', backgroundColor:'grey'} : {color:'darkred', textAlign:'start', backgroundColor:''} }
                                         disabled={(cleaner.email === ids.includes(cleaner.email) || deleteEmail !== null || documents.length > 0)}>
                                     DELETE
                                 </button>
