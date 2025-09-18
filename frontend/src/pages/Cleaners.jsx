@@ -259,26 +259,12 @@ const Cleaners = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '100vh',
-            position: 'relative',
-        }} className="cleaners-page">
-            {(documents.length > 0) && <div style={docStyle}  className="container">
-                <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
-                    <h3 className={'experience-text'}>{name}</h3>
-                    <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName(''); setDocEmail('')}} />
-                </div>
-                <div className={'grid-container'}>
-                    {documents.map((doc, index ) => (
-                        <div key={index}>
-                            <h3 style={{textAlign:'center'}}>{doc.title}</h3>
-                            <img src={doc.img}/>
-                        </div>
-                    ))}
-                </div>
-            </div>}
+        }} className="support-page">
             <div ref={docRef} style={{display:'flex', flexDirection: 'row',alignItems: 'center', justifyContent:'flex-start', gap:'10px'}}>
                 <img src={LOGO} className={'logo-icon'}/>
                 <h1 className="page-title">Cleaners Management</h1>
             </div>
+
             {documents.length <= 0 && <div className="cleaners-header">
                 <div style={{flexFlow:'1', maxWidth:'900px'}}  className="search-bar" >
                     <FaSearch style={{ width:'10px'}} className="search-icon" />
@@ -325,7 +311,22 @@ const Cleaners = () => {
                 </div>
             </div>
 
-            <div className="grid-container">
+            {documents.length > 0 && <div className="container">
+                <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
+                    <h3 className={'experience-text'}>{name}</h3>
+                    <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName(''); setDocEmail('')}} />
+                </div>
+                <div className={'grid-container'}>
+                    {documents.map((doc, index ) => (
+                        <div key={index}>
+                            <h3 style={{textAlign:'center'}}>{doc.title}</h3>
+                            <img src={doc.img}/>
+                        </div>
+                    ))}
+                </div>
+            </div>}
+
+            {documents.length <= 0 &&   <div className="grid-container">
                 {filteredCleaners.length > 0 ? (
                     filteredCleaners.map(cleaner => (
                         <div key={cleaner.id} className="service-card">
@@ -373,15 +374,15 @@ const Cleaners = () => {
                             {(messages && cleaner.email === email) && <p>{messages}</p>}
 
                             {deleteEmail === cleaner.email && <div style={{display: 'flex', alignItems: 'center', flexDirection:'column', border:'dashed', padding:'10px'}}>
-                                    <p>
-                                        Are you sure you want to delele <span style={{fontWeight:'bold', color:'darkred'}}>{cleaner.firstName} {cleaner.lastName}</span>'s records? This cannot be undone.
-                                    </p>
-                                    <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between'}}>
-                                        <button onClick={() => deleteCleaner(cleaner.email)} style={{color:'red'}}>YES</button>
-                                        <button onClick={() => setDeleteEmail(null)} style={{color:'green'}}>NO</button>
-                                    </div>
+                                <p>
+                                    Are you sure you want to delele <span style={{fontWeight:'bold', color:'darkred'}}>{cleaner.firstName} {cleaner.lastName}</span>'s records? This cannot be undone.
+                                </p>
+                                <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between'}}>
+                                    <button onClick={() => deleteCleaner(cleaner.email)} style={{color:'red'}}>YES</button>
+                                    <button onClick={() => setDeleteEmail(null)} style={{color:'green'}}>NO</button>
+                                </div>
 
-                                </div>}
+                            </div>}
 
                             <div style={{display: 'flex', alignItems: 'center', gap:'7px', justifyContent:'space-evenly'}}>
                                 {cleaner.isActive === 1 ?
@@ -422,7 +423,8 @@ const Cleaners = () => {
                         <p>{(searchDatabase || searchTerm) ? "No cleaners found matching your criteria" : "No cleaner was found"}</p>
                     </div>
                 )}
-            </div>
+            </div>  }
+
             {loading && <div>Loading...</div>}
         </div>
     );
