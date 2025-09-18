@@ -394,7 +394,6 @@ const CleanerProfile = () => {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
             }
-            if (orderEnded) return;
 
             if (newOrders.length > 0) {
                 setLoadingMore(true);
@@ -434,10 +433,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading && activeMenu === 'New') {
+        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
             fetchOrders();
         }
-    }, [pageCount, activeMenu, isActive]);
+    }, [pageCount, activeMenu, isActive, orderEnded]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -645,7 +644,7 @@ const CleanerProfile = () => {
             .finally(() => {
                 setLoadingMore(false);
             })
-    }, [email, financePageCount])
+    }, [email, financePageCount, orderEnded])
 
     const Finance = () => {
 
@@ -1153,7 +1152,7 @@ const CleanerProfile = () => {
         if (!loadingMore && !isLoadMyOrders && activeMenu === 'Jobs') {
             myOders()
         }
-    }, [activeMenu, myPageCount]);
+    }, [activeMenu, myPageCount, orderEnded]);
 
     const updateOrder = async (e) => {
         e.preventDefault();
