@@ -76,9 +76,6 @@ const Checkout = () => {
     const navigate = useNavigate();
     const hasDummy = useRef(false);
 
-
- //   const currentPostcode = (postcode !== null && postcode !== undefined) ? postcode : "EH1 1AA";
-
     const cleaningFAQs = [
         {
             id: 1,
@@ -728,6 +725,7 @@ const Checkout = () => {
     const [noted, setNoted] = useState(false);
     const [covered, setCovered] = useState(true);
     const [interceptMode, setInterceptMode] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const cleaningSubscriptions = [
         {
@@ -1009,15 +1007,26 @@ const Checkout = () => {
     }, [currentStep]);
 
     useEffect(() => {
-        const handlePopState = () => {
+        const emailData = {
+            to: formData?.email,
+            text: "We noticed that you did not complete your booking. If you are having trouble placing a booking, contact our help desk through live chat or email us via flycean02@gmail.com",
+            subject: "Cleaning service"
+        };
+        const handlePopState =  () => {
             if (interceptMode) {
                 // Intercept: do custom logic and stay on this page
                 setCurrentStep(0);
             }
             else {
                 // Allow back navigation
+                if (!success && formData?.email) {
+                    api.post('/api/send-email-to-customer', emailData)
+                        .then((response) => {})
+                        .catch((error) => {console.log(error)})
+                }
                 window.history.back();
             }
+
         };
 
         if (interceptMode) {
@@ -2180,10 +2189,8 @@ const Checkout = () => {
     function PaymentHome() {
         const stripe = useStripe();
         const elements = useElements();
-
         const [processing, setProcessing] = useState(false);
         const [error, setError] = useState(null);
-        const [success, setSuccess] = useState(false);
         const [mounted, setMounted] = useState({
             number: false,
             expiry: false,
@@ -2192,12 +2199,18 @@ const Checkout = () => {
         const [pay, setPay] = useState(false);
         const [key, setKey] = useState(Date.now());
 
+        const emailData = {
+            to: formData.email,
+            text: "Your booking has been successfully placed. We will send you cleaner detais as soon as a cleaner is available. Thanks for choosing Fly Cleaner!",
+            subject: "Cleaning service"
+        };
+
         const handleBackButton = (e) => {
             e.preventDefault();
             if (processing) return;
             if (success) {
                 setFormData(data);
-                setCurrentStep(1);
+                setCurrentStep(0);
                 return;
             }
             setCurrentStep(currentStep - 1);
@@ -2270,6 +2283,10 @@ const Checkout = () => {
 
                 await api.post('/api/revenue', revenue);
 
+                await api.post('/api/send-email-to-customer', emailData);
+
+                setSuccess(true);
+
             } catch (error) {
                 console.log(error)
             }
@@ -2322,7 +2339,6 @@ const Checkout = () => {
                 }
 
             } catch (error) {
-                console.log(error);
                 setError("Payment failed!. Please try Again!");
             } finally {
                 setProcessing(false);
@@ -4035,7 +4051,7 @@ const Checkout = () => {
                                         Back
                                     </button>
                                     <button style={{width:'60%'}} disabled={processing} onClick={checkAuthorizationAndFetchData} type="button" className="next-button">
-                                        {processing ? 'Processing data...' : 'Next'}
+                                        {processing ? 'Processing...' : 'Next'}
                                     </button>
                                 </div>
                                 </div>}
