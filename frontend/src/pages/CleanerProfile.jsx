@@ -460,7 +460,7 @@ const CleanerProfile = () => {
             }
 
             if (scrollTop <= scrollHeight / 2) {
-                setOrderEnded(false);
+          //      setOrderEnded(false);
             }
         };
 
