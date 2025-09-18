@@ -231,6 +231,7 @@ const CleanerProfile = () => {
     const [messageCount, setMessageCount] = useState(0);
     const [name, setName] = useState('');
     const [orderEnded, setOrderEnded] = useState(false);
+    const [newOrderEnded, setNewOrderEnded] = useState(false);
 
 
     useEffect(() => {
@@ -390,7 +391,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            if (orderEnded) return;
+            if (newOrderEnded) return;
             if (!isActive) {
                 setMessage('You do not have the clearance to access booking at this moment');
                 return;
@@ -411,7 +412,7 @@ const CleanerProfile = () => {
                 const newOrderResponse = await api.post('api/booking/new', data);
                 const orders = await newOrderResponse.data;
                 if (orders?.booking?.length <= 0) {
-                    setOrderEnded(true);
+                    setNewOrderEnded(true);
                 }
                 if (orders?.booking?.length <= 0 && newOrders.length <= 0) {
                     setMessage('No new orders yet.');
@@ -434,10 +435,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
+        if (!loadingMore && !isLoading && activeMenu === 'New' && !newOrderEnded) {
             fetchOrders();
         }
-    }, [pageCount, activeMenu, isActive, orderEnded]);
+    }, [pageCount, activeMenu, isActive, newOrderEnded]);
 
     useEffect(() => {
         const handleScroll = () => {
