@@ -239,8 +239,8 @@ const Cleaners = () => {
         setDocuments(prev => [...prev, {title:"National insurance", img: cleaner?.ni_path}]);
         setDocuments(prev => [...prev, {title: "Proof of address", img: cleaner?.addressProof_path}])
         setName(cleaner?.firstName?.charAt(0)?.toUpperCase() + cleaner?.firstName.slice(1) + " " + cleaner?.lastName?.charAt(0)?.toUpperCase() + cleaner?.lastName.slice(1));
-      //  docRef?.current?.scrollIntoView({behavior: 'smooth'});
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        docRef?.current?.scrollIntoView({behavior: 'smooth'});
+      //  window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
 
@@ -250,7 +250,7 @@ const Cleaners = () => {
             flexDirection: 'column',
             minHeight: '100vh' // Ensures it takes at least full viewport height
         }} className="cleaners-page">
-            <div style={{display:'flex', flexDirection: 'row',alignItems: 'center', justifyContent:'flex-start', gap:'10px'}}>
+            <div ref={docRef} style={{display:'flex', flexDirection: 'row',alignItems: 'center', justifyContent:'flex-start', gap:'10px'}}>
                 <img src={LOGO} className={'logo-icon'}/>
                 <h1 className="page-title">Cleaners Management</h1>
             </div>
@@ -279,7 +279,7 @@ const Cleaners = () => {
                 </div>
             </div> }
             {documents.length > 0 &&
-                <div ref={docRef} className="container">
+                <div  className="container">
                     <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
                         <h3 className={'experience-text'}>{name}</h3>
                         <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName('')}} />
