@@ -290,7 +290,7 @@ const Cleaners = () => {
                 </div>
             </div> }
 
-            <div className="cleaners-tabs">
+            {documents.length <= 0 && <div className="cleaners-tabs">
                 <div
                     style={{textAlign:'center'}}
                     className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
@@ -309,7 +309,7 @@ const Cleaners = () => {
                     onClick={() => {setActiveTab('inactive'); setTabValue(0)}}>
                     Inactive
                 </div>
-            </div>
+            </div> }
 
             {documents.length > 0 && <div className="container">
                 <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
