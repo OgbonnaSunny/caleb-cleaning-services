@@ -76,6 +76,7 @@ const Cleaners = () => {
     const [documents, setDocuments] = useState([]);
     const [name, setName] = useState('');
     const [noCleaner, setNoCleaner] = useState(false);
+    const [docEmail, setDocEmail] = useState('');
 
 
     const filteredCleaners = allCleaners.filter(cleaner => {
@@ -240,7 +241,7 @@ const Cleaners = () => {
         setDocuments(prev => [...prev, {title: "Proof of address", img: cleaner?.addressProof_path}])
         setName(cleaner?.firstName?.charAt(0)?.toUpperCase() + cleaner?.firstName.slice(1) + " " + cleaner?.lastName?.charAt(0)?.toUpperCase() + cleaner?.lastName.slice(1));
         docRef?.current?.scrollIntoView({behavior: 'smooth'});
-      //  window.scrollTo({ top: 0, behavior: 'smooth' });
+        setDocEmail(cleaner?.email);
     }
 
 
@@ -278,22 +279,6 @@ const Cleaners = () => {
 
                 </div>
             </div> }
-            {documents.length > 0 &&
-                <div  className="container">
-                    <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
-                        <h3 className={'experience-text'}>{name}</h3>
-                        <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName('')}} />
-                    </div>
-                    <div className={'grid-container'}>
-                        {documents.map((doc, index ) => (
-                            <div key={index}>
-                                <h3 style={{textAlign:'center'}}>{doc.title}</h3>
-                                <img src={doc.img}/>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            }
 
             <div className="cleaners-tabs">
                 <div
@@ -363,8 +348,7 @@ const Cleaners = () => {
                             </div> }
                             {(messages && cleaner.email === email) && <p>{messages}</p>}
 
-                            {deleteEmail === cleaner.email &&
-                                <div style={{display: 'flex', alignItems: 'center', flexDirection:'column', border:'dashed', padding:'10px'}}>
+                            {deleteEmail === cleaner.email && <div style={{display: 'flex', alignItems: 'center', flexDirection:'column', border:'dashed', padding:'10px'}}>
                                     <p>
                                         Are you sure you want to delele <span style={{fontWeight:'bold', color:'darkred'}}>{cleaner.firstName} {cleaner.lastName}</span>'s records? This cannot be undone.
                                     </p>
@@ -373,8 +357,22 @@ const Cleaners = () => {
                                         <button onClick={() => setDeleteEmail(null)} style={{color:'green'}}>NO</button>
                                     </div>
 
+                                </div>}
+
+                            {(documents.length > 0 && cleaner?.email === docEmail) && <div  className="container">
+                                <div style={{display:'flex', alignItems:'baseline', marginBottom:'10px'}}>
+                                    <h3 className={'experience-text'}>{name}</h3>
+                                    <FaTimes size={25} style={{width:'20px', alignSelf:'end'}} onClick={() => {setDocuments([]); setName(''); setDocEmail('')}} />
                                 </div>
-                            }
+                                <div className={'grid-container'}>
+                                    {documents.map((doc, index ) => (
+                                        <div key={index}>
+                                            <h3 style={{textAlign:'center'}}>{doc.title}</h3>
+                                            <img src={doc.img}/>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>}
 
                             <div style={{display: 'flex', alignItems: 'center', gap:'7px', justifyContent:'space-evenly'}}>
                                 {cleaner.isActive === 1 ?
