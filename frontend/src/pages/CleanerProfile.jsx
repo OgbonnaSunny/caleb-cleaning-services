@@ -1213,14 +1213,14 @@ const CleanerProfile = () => {
 
     const finishJob = async (e) => {
         e.preventDefault();
-        let data = {email: email, orderId: order.orderId};
+        let data = {email: order.cleanerEmail, orderId: order.orderId};
         setSubmitting(true);
         setColor('green');
         try {
             let response = await api.post('/api/booking/stop-cleaning', data);
             const { success, message, job } = response.data;
-            setMyMesage(message);
             if (!success) {
+                setMyMesage(message);
                 setColor('darkred')
             }
             else {
@@ -1261,7 +1261,38 @@ const CleanerProfile = () => {
 
     }
 
-    const startJob = async (e) => {}
+    const startJob = async (e) => {
+        let data = {email: order.cleanerEmail, orderId: order.orderId};
+        setSubmitting(true);
+        setColor('green');
+        try {
+            let response = await api.post('/api/booking/start-cleaning', data);
+            const { success, message, job } = response.data;
+            setMyMesage(message);
+            if (!success) {
+                setColor('darkred')
+            }
+            else {
+                setMyOrders(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    job.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+            setMyMesage('Error occured. Please try again');
+            setColor('darkred')
+        } finally {
+            const resetMessage = () => {
+                setMyMesage(null)
+                setSubmitting(false);
+                setIdForUpdate('')
+            }
+            setTimeout(() => resetMessage(), 4000);
+        }
+    }
 
     const MyOrders = () => {
 
