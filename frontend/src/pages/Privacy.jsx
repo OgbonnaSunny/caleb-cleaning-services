@@ -45,10 +45,7 @@ const Privacy = () => {
                     1.1. We (“Flymax Ltd”) collect and use personal data or information about individuals for specific and lawful purposes. Individuals could include customers, employees, temporary and agency workers, contractors and suppliers.<br/>
                     1.2. We understand that your personal data is important to you, and we have a responsibility to you to ensure that the information we collect and use is done so proportionately, correctly and safely. This policy sets out how we comply with our data protection obligations.<br/><br/>
                     2 Our Details<br/>
-
-                    2.1. Our registered office address is: Suite 5 3rd Floor, Sovereign House, 1 Albert Place, London, England, N31QB.<br/>
-                    2.2. We are registered as a ‘data controller’ with the Information Commissioner’s Office (ICO). Our registration number is SC839400.<br/>
-                    If you have any questions about how we process personal data, or would like to exercise your rights as a data subject, then please email us at flyclean@gmail.com. <br/>
+                    If you have any questions about how we process personal data, or would like to exercise your rights as a data subject, then please email us at flyclean02@gmail.com. <br/>
                     3 Purpose of processing<br/><br/>
 
                     3.1. We collect, hold and use personal data received from you to match your request for domestic services with ‘Fly clean’, our third-party contractors. We will then share some of your personal details with designated Fly Cleaners to enable them to carry out the service requested.<br/>
@@ -76,7 +73,7 @@ const Privacy = () => {
                     6.2. Processing may also be necessary for the purposes of our legitimate interests, or with your consent. Where we require your consent to process your personal data we will set out exactly what it is you are consenting to, and how you can withdraw your consent at any stage.<br/>
                     6.3. Customer<br/>
                     6.3.1. If you are a customer, then the information that we collect from you relates to your request for professional services, such as – name, address, telephone, email address, billing information. We will also use your personal data for the purpose of support, accounting and follow-up assistance.<br/>
-                    6.3.2. If a booking request is accepted, then we may need to transfer your aforementioned data and any other relevant data you may provide to your designated Fly Cleaner, for the purpose of fulfilling the contractual relationship for the provision of professional cleaning services.<br/>
+                    6.3.2. If a booking request is accepted, then we may need to transfer your aforementioned data and any other relevant data you may provide to your designated FFly Cleaner, for the purpose of fulfilling the contractual relationship for the provision of professional cleaning services.<br/>
                     6.3.3. Any ratings you leave for our Fly cleaners, and any reviews you post either voluntarily on our website, or where you have already made publicly available reviews on external review sites such as Google Review, may be used by us on our website to promote our services.<br/>
                     6.3.4. Advertising consent: If you have consented to receiving promotional offers from us, we process and use your personal data to understand your usage habits better and to contact you with informative information on additional services that might be of interest to you. You can withdraw your consent for promotional purposes at any time using the unsubscribe link available in every email.<br/>
                     6.3.5. We may also use your personal data for other purposes of legitimate interests in promoting and selling our services. Where we rely on legitimate interests it will be of minimum privacy impact.
@@ -132,16 +129,7 @@ const Privacy = () => {
                     14 Amendments<br/><br/>
 
                     14.1. We will continually review and update this privacy notice to reflect changes in our services and feedback from service users, as well as to comply with changes in law. When such changes occur, we will revise the “last updated” date at the top of this notice.<br/>
-                    15 Complaints<br/><br/>
 
-                    15.1. If you wish to make a complaint about how we are processing your personal data, then in the first instance please contact our data protection officer/data protection lead at: inf@flymax.uk.<br/>
-                    15.2. If you are still dissatisfied with how we have handled your complaint, then you have the right to complain to the Information Commissioners Office (ICO). The ICO can be contacted as follows:<br/>
-                    The Information Commissioner<br/>
-                    • Wycliffe House<br/>
-                    • Water Lane<br/>
-                    • Wilmslow<br/>
-                    • Cheshire<br/>
-                    • SK9 5AF<br/>
                 </p>
             </section>
 

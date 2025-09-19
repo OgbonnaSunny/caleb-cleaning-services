@@ -1211,25 +1211,31 @@ const CleanerProfile = () => {
         }
     }, [activeMenu, myPageCount, orderEnded]);
 
-    const updateOrder = async (e) => {
+    const finishJob = async (e) => {
         e.preventDefault();
         let data = {email: email, orderId: order.orderId};
         setSubmitting(true);
         setColor('green');
         try {
-            let response = await api.post('/api/booking/my-orders/submit', data);
-            const { success } = response.data;
+            let response = await api.post('/api/booking/stop-cleaning', data);
+            const { success, message, job } = response.data;
+            setMyMesage(message);
             if (!success) {
-                setMyMesage('Error occured. Please try again');
                 setColor('darkred')
             }
             else {
+                setMyOrders(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    job.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+
                 data = {cleanerEmail: order.cleanerEmail, cleanerName: order.cleaner, client: order.customer, duration: order.duration, amount: order.estimatedAmount, orderId: order.orderId};
                 response = await api.post('/api/income', data);
                 const { success } = response.data;
                 if (!success) {
-                    setColor('darkred')
                     setMyMesage('Error occured while creating income record. Please try again');
+                    setColor('darkred')
                 }
                 else {
                     setMyMesage('Income record successfully created');
@@ -1242,12 +1248,7 @@ const CleanerProfile = () => {
 
         } catch (error) {
             console.log(error);
-            if (error.response.status !== 500) {
-                setMyMesage(error.response.data);
-            }
-            else {
-                setMyMesage("Error occured while updating data");
-            }
+            setMyMesage('Error occured. Please try again');
             setColor('darkred')
         } finally {
             const resetMessage = () => {
@@ -1259,6 +1260,8 @@ const CleanerProfile = () => {
         }
 
     }
+
+    const startJob = async (e) => {}
 
     const MyOrders = () => {
 
@@ -1330,24 +1333,25 @@ const CleanerProfile = () => {
                                     </div>
 
                                     {order.orderId === idForUpdate &&
-                                        <form
-                                            onSubmit={updateOrder} className="support-form">
-                                            <label className={'order-container'} style={{ textAlign:'center', fontSize:'small'}}>Submit job only if you are sure it's done
+                                        <div className="price-container">
+                                            <label className={'order-container'} style={{ textAlign:'center', fontSize:'small'}}>
+                                                It is very important to only press start when you arrive at client's place or press finish only when the job is done.
                                             <FaTimes style={{width:'20px', marginLeft:'15px', color:'black'}} onClick={() => {setIdForUpdate(''); setOrder({})}} />
                                             </label>
+
                                             {myMesage && <p style={{color: color, textAlign:'center', margin:'10px'}}>{myMesage}</p>}
-                                           <div className="form-group">
-                                            <button  disabled={submitting} className={'submit-button'} type="submit">
-                                                Finish Job
-                                            </button>
+
+                                            <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center'}}>
+                                                <button disabled={(submitting || order?.actualStartTime !== null)} onClick={startJob} className={'submit-button'}>Start</button>
+                                                <button disabled={(submitting || order?.actualStopTime !== null)} onClick={finishJob} className={'submit-button'}>Finish</button>
+                                            </div>
                                         </div>
-                                    </form>
                                     }
                                     {order.orderId !== idForUpdate &&
                                         <button className={(idForUpdate === order.orderId || idForUpdate !== '') ? 'back-button' : 'next-button'}
                                                                   disabled={(idForUpdate === order.orderId || idForUpdate !== '' || historyIds.includes(order.orderId)) ? true : false}
                                                                   onClick={() => {setIdForUpdate(order.orderId); setOrder(order)}}>
-                                        Register job
+                                         Begin or finish this job
                                     </button>
                                     }
 

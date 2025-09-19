@@ -79,7 +79,7 @@ const Booking = () => {
                         1.2. These Booking Terms and Conditions MUST be read in conjunction with our Website Terms and Conditions.<br/>
                         1.3. By making a booking via the platform website at www.flymax.uk, you confirm that you accept these terms and conditions, and that you agree to comply with them.
                         If you think that there is a mistake in these Booking Terms and Conditions please contact us to discuss the issue.
-                        If there is anything you do not agree with in these Booking Terms and Conditions, please do not make a booking. If there is anything you do not understand in these Booking Terms and Conditions, then please contact us at support@emop.world and we will do our best to assist you.
+                        If there is anything you do not agree with in these Booking Terms and Conditions, please do not make a booking. If there is anything you do not understand in these Booking Terms and Conditions, then please contact us at flyclean02@gmail.com and we will do our best to assist you.
                     </p>
 
                     <h3 className={'help-text'} style={{marginTop:'50px'}}>2. SUMMARY</h3>
@@ -94,13 +94,11 @@ const Booking = () => {
 
                     <h3 className={'help-text'} style={{color:'navy', marginTop:'30px'}}>3. INFORMATION ABOUT US AND HOW TO CONTACT US</h3>
                     <p>
-                        3.1. Who we are – We are eMop Ltd, a company registered in England and Wales. Our company registration number is 10643724 and our registered office is eMop Ltd, 7-12 Tavistock Sq, London, WC1H9BQ.<br/>
+                        3.1. How to contact us – You can contact us by <Link style={{color:'blue'}} to={'/contact'}>email</Link>.<br/>
 
-                        3.2. How to contact us – You can contact us by email.<br/>
+                        3.2 How we may contact you – If we have to contact you, we will do so by telephone or by writing to you at the email address or postal address you provided to us in your Booking.<br/>
 
-                        3.3 How we may contact you – If we have to contact you, we will do so by telephone or by writing to you at the email address or postal address you provided to us in your Booking.<br/>
-
-                        3.4. ”Writing” includes emails – When we use the words “writing” or “written” in these terms, this includes emails.
+                        3.3. ”Writing” includes emails – When we use the words “writing” or “written” in these terms, this includes emails.
 
                     </p>
 
