@@ -4,7 +4,7 @@ import {
     FaBroom, FaShieldAlt, FaUserTie, FaCertificate,
     FaPoundSign, FaLifeRing, FaQuestionCircle,
     FaFilePdf, FaFile, FaFileAlt, FaHome, FaTimes, FaSearch,
-    FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft, FaCommentDots
+    FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft, FaCommentDots, FaPhone, FaUser
 } from 'react-icons/fa';
 import api from './api.js';
 import { useNavigate } from 'react-router-dom'
@@ -352,10 +352,10 @@ const CleanerProfile = () => {
     }, []);
 
     const renderName = (customer) => {
-        if (name === null || name === '' || name === undefined) {
-            return name;
+        if (customer === null || customer === '' || customer === undefined) {
+            return customer;
         }
-        const names = name.split(' ');
+        const names = customer.split(' ');
         if (names.length <= 1) {
             return name.charAt(0).toUpperCase() + name.slice(1);
         }
@@ -466,6 +466,18 @@ const CleanerProfile = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loadingMore]);
 
+    function CallButton({ phoneNumber }) {
+        return (
+            <div style={{width:'20px', alignSelf:'end', display:'flex', alignItems:'center'}}>
+                <p>
+                    <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
+                        <p style={{color:'blue', fontSize:'medium'}}>Call</p>
+                    </a>
+                </p>
+            </div>
+        );
+    }
+
     const NewOrders = ({ active }) => {
 
         return (
@@ -488,7 +500,17 @@ const CleanerProfile = () => {
                                             <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
                                             <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
                                         </div>
-                                        <p style={{fontWeight:'bold', marginLeft:'10px'}}>{renderName(order.customer)}</p>
+                                        <div className={'new-order-container'}>
+                                            <FaUser  className={'icon-small'} />
+                                            <p style={{fontWeight:'bold', marginLeft:'2px', fontSize:'medium'}}>{renderName(order.customer)}</p>
+                                        </div>
+
+                                        <div className={'new-order-container'}>
+                                            <FaPhone  className={'icon-small'} />
+                                            <p>{order.phone}</p>
+                                            <CallButton phoneNumber={order.phone} />
+                                        </div>
+
                                         <div className={'new-order-container'}>
                                             <FaMapMarkerAlt  className={'icon-small'} />
                                             <p style={{textAlign:'start', width:'15%', fontWeight:'bold'}}>EH66JN</p>
@@ -504,10 +526,10 @@ const CleanerProfile = () => {
                                             <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
                                         </div>
 
-                                        <div style={{display:'flex', alignItems:'center', marginBottom:'5px'}}>
-                                            <p style={{textAlign:'start'}}>Details</p>
+                                        <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
+                                            <h3 style={{textAlign:'start'}}>Details</h3>
                                             <MdKeyboardArrowRight
-                                                size={30}
+                                                size={40}
                                                 style={{width:'40px', alignSelf:'end'}}
                                                 onClick={() => {
                                                     if (detailsId?.length > 0 && order.orderId !== detailsId) return;
@@ -517,10 +539,11 @@ const CleanerProfile = () => {
                                                     }
                                                     setDetailsId(null);
                                                 }}
-                                                className={(!detailsId || detailsId !== order.orderId) ? 'rotate-down' : 'rotate-up'}
+                                                className={detailsId === order.orderId ? 'rotate-down' : 'rotate-up'}
                                             />
                                         </div>
-                                        {detailsId === order.orderId && <div className={'idea-container'}>
+
+                                        {detailsId === order.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
                                                 {order.booking.map((book, index) => (
                                                     <div key={index} className={'order-container'}>
                                                         <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
@@ -538,7 +561,11 @@ const CleanerProfile = () => {
                                     </div>
                                 ))}
                             </div> :
-                            <p style={{textAlign:'center'}}>You do not have the clearance to access booking at this moment</p>
+                            <p style={{textAlign:'start'}}>
+                                You do not have the clearance to access booking at this moment.
+                                If you believe this could be an error, contact help desk by email or through call <Link style={{color:'blue'}} to={'/contact'}>here </Link>
+                                or via live chat
+                            </p>
                 }
                 {loadingMore && <p>Loading...</p>}
             </div>
@@ -551,6 +578,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
+        if (!currentUser) return;
         api.post('/api/users/record', {email: currentUser?.email})
             .then((response) => {
             const { user } = response.data;
@@ -1270,6 +1298,17 @@ const CleanerProfile = () => {
                                         <p style={{fontSize:'smaller', width:'70%'}} >{getTime(order.startTime)}</p>
                                         <p style={{textAlign:'end'}}><span style={order.nature === 'Light'? {color:'Green', fontWeight:'bold'}:
                                             order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>{order.nature} </span>{order.plan}</p>
+                                    </div>
+
+                                    <div className={'new-order-container'}>
+                                        <FaUser  className={'icon-small'} />
+                                        <p style={{fontWeight:'bold', marginLeft:'2px', fontSize:'medium'}}>{renderName(order.customer)}</p>
+                                    </div>
+
+                                    <div className={'new-order-container'}>
+                                        <FaPhone  className={'icon-small'} />
+                                        <p>{order.phone}</p>
+                                        <CallButton phoneNumber={order.phone} />
                                     </div>
 
                                     <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>

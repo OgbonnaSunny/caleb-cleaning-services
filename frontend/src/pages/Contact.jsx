@@ -18,6 +18,7 @@ import {FaPhone} from "react-icons/fa";
 const Contact = () => {
     const services = [
         { id: 'select', icon: 'fa-home', title: 'Select service', description: 'Upholstery cleaning for surfaces', src: Upholstery },
+        { id: 'complains', icon: 'fa-home', title: 'Complains', description: 'Upholstery cleaning for surfaces', src: Upholstery },
         { id: 'Upholstery ', icon: 'fa-home', title: 'Upholstery cleaning', description: 'Upholstery cleaning for surfaces', src: Upholstery },
         { id: 'Regulqr', icon: 'fa-home', title: 'Regular cleaning', description: 'Regular cleaning for your home', src: Regular },
         { id: 'End of tenancy', icon: 'fa-couch', title: 'End of tenancy', description: 'Thorough cleaning to get your deposit back', src: EndOfTenancy },
