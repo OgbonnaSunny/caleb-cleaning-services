@@ -764,7 +764,6 @@ const Become = () => {
                                     <label htmlFor="firstName">First Name*</label>
                                     <input
                                         type="text"
-                                        orderId="firstName"
                                         name="firstName"
                                         value={formData.firstName}
                                         onChange={handleChange}
@@ -777,7 +776,6 @@ const Become = () => {
                                     <label htmlFor="lastName">Last Name*</label>
                                     <input
                                         type="text"
-                                        orderId="lastName"
                                         name="lastName"
                                         value={formData.lastName}
                                         onChange={handleChange}
@@ -790,7 +788,6 @@ const Become = () => {
                                     <label htmlFor="email">Email*</label>
                                     <input
                                         type="email"
-                                        orderId="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
@@ -803,7 +800,6 @@ const Become = () => {
                                     <label htmlFor="phone">Phone Number*</label>
                                     <input
                                         type="tel"
-                                        orderId="phone"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
@@ -816,7 +812,6 @@ const Become = () => {
                                     <label htmlFor="postcode">Postcode*</label>
                                     <input
                                         type="text"
-                                        orderId="postcode"
                                         name="postcode"
                                         value={formData.postcode}
                                         onChange={handleChange}
@@ -829,7 +824,6 @@ const Become = () => {
                                     <label htmlFor="NI">NI*</label>
                                     <input
                                         type="text"
-                                        orderId="NIN"
                                         name="NIN"
                                         value={formData.NIN}
                                         onChange={handleChange}
@@ -841,7 +835,6 @@ const Become = () => {
                                 <div className="form-group">
                                     <label htmlFor="Address">Address*</label>
                                     <textarea
-                                        orderId="address"
                                         name="address"
                                         value={formData.address}
                                         rows={5}
@@ -934,7 +927,6 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                orderId="photo"
                                                 ref={inputRef}
                                                 name="photo"
                                                 onClick={() => setImageId('photo')}
@@ -951,7 +943,6 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                orderId="orderId"
                                                 name="ID"
                                                 ref={inputRef2}
                                                 onClick={() => setImageId('orderId')}
@@ -968,7 +959,6 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                orderId="ni"
                                                 name="ni"
                                                 ref={inputRef4}
                                                 onClick={() => setImageId('ni')}
@@ -985,7 +975,6 @@ const Become = () => {
                                             <input
                                                 type="file"
                                                 accept="application/pdf, image/*"
-                                                orderId="addressProof"
                                                 ref={inputRef4}
                                                 name="addressProof"
                                                 onClick={() => setImageId('addressProof')}

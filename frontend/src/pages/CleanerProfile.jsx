@@ -379,6 +379,8 @@ const CleanerProfile = () => {
                 const prevIds = acceptedJobIds;
                 prevIds.push(orderId);
                 setAcceptedJobIds(prevIds);
+                const prevOrder = newOrders.filter(order => order.orderId !== orderId);
+                setNewOrders(prevOrder);
             }
 
         }
@@ -471,7 +473,7 @@ const CleanerProfile = () => {
             <div style={{width:'20px', alignSelf:'end', display:'flex', alignItems:'center'}}>
                 <p>
                     <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
-                        <p style={{color:'blue', fontSize:'medium'}}>Call</p>
+                        <label style={{color:'blue', fontSize:'medium'}}>Call</label>
                     </a>
                 </p>
             </div>
@@ -1351,30 +1353,64 @@ const CleanerProfile = () => {
                                         <FaHome  style={{width:'30px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
                                     </div>
 
-                                    {order.booking.map((book, index) => (
-                                        <div key={index} className={'order-container'}>
-                                            <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
-                                            <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
-                                        </div>
-                                    ))}
+                                    <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
+                                        <h3 style={{textAlign:'start'}}>Details</h3>
+                                        <MdKeyboardArrowRight
+                                            size={40}
+                                            style={{width:'40px', alignSelf:'end'}}
+                                            onClick={() => {
+                                                if (detailsId?.length > 0 && order.orderId !== detailsId) return;
+                                                if (detailsId === null || detailsId === undefined) {
+                                                    setDetailsId(order.orderId);
+                                                    return;
+                                                }
+                                                setDetailsId(null);
+                                            }}
+                                            className={detailsId === order.orderId ? 'rotate-down' : 'rotate-up'}
+                                        />
+                                    </div>
+
+                                    {detailsId === order.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
+                                        {order.booking.map((book, index) => (
+                                            <div key={index} className={'order-container'}>
+                                                <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
+                                                <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
+                                            </div>
+                                        ))}
+                                    </div>}
 
                                     <div className={'order-container'}>
                                         <p style={{width:'70%'}}>Estimated time</p>
                                         <h3 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h3>
                                     </div>
 
+                                    <div className={'order-container'}>
+                                        <p style={{flex:'1'}}>Estimated Amount</p>
+                                        <h3 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h3>
+                                    </div>
+
                                     {order.orderId === idForUpdate &&
                                         <div className="price-container">
-                                            <label className={'order-container'} style={{ textAlign:'center', fontSize:'small'}}>
-                                                It is very important to only press start when you arrive at client's place or press finish only when the job is done.
-                                            <FaTimes style={{width:'20px', marginLeft:'15px', color:'black'}} onClick={() => {setIdForUpdate(''); setOrder({})}} />
-                                            </label>
+                                            <div className={'new-order-container'}>
+                                                <h3 style={{textAlign:'center'}}>Job update</h3>
+                                                <FaTimes size={20} style={{width:'30px', marginLeft:'15px', color:'black', alignSelf:'end'}}
+                                                         onClick={() => {setIdForUpdate(''); setOrder({})}} />
+                                            </div>
+                                            <p className={'order-container'} style={{ textAlign:'start'}}>
+                                                It is very important that you only press START when you arrive at client's place or press FINISH only when the job is done.
+                                            </p>
 
                                             {myMesage && <p style={{color: color, textAlign:'center', margin:'10px'}}>{myMesage}</p>}
 
-                                            <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center'}}>
-                                                <button disabled={(submitting || order?.actualStartTime !== null)} onClick={startJob} className={'submit-button'}>Start</button>
-                                                <button disabled={(submitting || order?.actualStopTime !== null)} onClick={finishJob} className={'submit-button'}>Finish</button>
+                                            <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px'}}>
+                                                <button disabled={(submitting || order?.beginTime !== null)}
+                                                        onClick={startJob} className={(submitting || order?.beginTime !== null) ? 'back-button' : 'next-button'}>
+                                                    START
+                                                </button>
+                                                <button disabled={(submitting || order?.beginTime === null)}
+                                                        onClick={finishJob} className={(submitting || order?.beginTime === null) ? 'back-button' : 'next-button'}>
+                                                    FINISH
+                                                </button>
                                             </div>
                                         </div>
                                     }

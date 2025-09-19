@@ -566,10 +566,12 @@ const BookingList = () => {
         try {
             const response = await api.post('/api/booking/approval-booking', {orderId: booking.orderId, cleanerEmail: booking.cleanerEmail , cleanerName: booking.cleaner })
             const { success, message} = response.data;
+            setApprovedMessage(message)
             if (success) {
                 setApprovedIds(prev => [...prev, booking.orderId]);
+                const prevOrder = approvedBookings.filter(book => book.orderId !== booking.orderId);
+                setTimeout(() => setApprovedBookings(prevOrder), 2000);
             }
-            setApprovedMessage(message)
         } catch (error) {
             console.error(error)
             setApprovedMessage("Error occured")

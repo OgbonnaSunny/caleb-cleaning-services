@@ -166,8 +166,15 @@ const Cleaners = () => {
         setLoading(true);
         api.post('/api/users/cleaners/status', {email: email, status: status})
             .then(response => {
-                const message = response.data.message;
+                const { success, message, cleaners} = response.data;
                 setMessages(message);
+                if (success) {
+                    setAllCleaners(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        cleaners.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+                }
             })
             .catch(error => {
                 console.log(error);
