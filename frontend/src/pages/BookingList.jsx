@@ -67,10 +67,10 @@ const BookingList = () => {
             }
 
             if (scrollTop <= scrollHeight / 4) {
-                setFinishJobs(false);
-                setFinishTodayJobs(false);
-                setFinishRecentJobs(false);
-                setFinishScheduleJobs(false);
+            //    setFinishJobs(false);
+            //    setFinishTodayJobs(false);
+             //   setFinishRecentJobs(false);
+            //    setFinishScheduleJobs(false);
             }
         };
 
