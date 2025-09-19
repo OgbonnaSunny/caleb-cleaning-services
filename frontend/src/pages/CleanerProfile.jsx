@@ -21,6 +21,7 @@ import ProfilePage from './CleanerProfilePage.jsx';
 import { format } from 'date-fns';
 import {all} from "axios";
 import globals from "globals";
+import {MdKeyboardArrowRight} from "react-icons/md";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
@@ -232,6 +233,7 @@ const CleanerProfile = () => {
     const [name, setName] = useState('');
     const [orderEnded, setOrderEnded] = useState(false);
     const [newOrderEnded, setNewOrderEnded] = useState(false);
+    const [detailsId, setDetailsId] = useState(null);
 
 
     useEffect(() => {
@@ -501,6 +503,32 @@ const CleanerProfile = () => {
                                             <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
                                             <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
                                         </div>
+
+                                        <div style={{display:'flex', alignItems:'center', marginBottom:'5px'}}>
+                                            <p style={{textAlign:'start'}}>Details</p>
+                                            <MdKeyboardArrowRight
+                                                size={30}
+                                                style={{width:'40px', alignSelf:'end'}}
+                                                onClick={() => {
+                                                    if (detailsId?.length > 0 && order.orderId !== detailsId) return;
+                                                    if (detailsId === null || detailsId === undefined) {
+                                                        setDetailsId(order.orderId);
+                                                        return;
+                                                    }
+                                                    setDetailsId(null);
+                                                }}
+                                                className={(!detailsId || detailsId !== order.orderId) ? 'rotate-down' : 'rotate-up'}
+                                            />
+                                        </div>
+                                        {detailsId === order.orderId && <div className={'idea-container'}>
+                                                {order.booking.map((book, index) => (
+                                                    <div key={index} className={'order-container'}>
+                                                        <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
+                                                        <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
+                                                    </div>
+                                                ))}
+                                            </div>}
+
                                         {(acceptingOrders && acceptedJobIds.includes(order.orderId)) && <p>Load...</p>}
                                         <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
                                                 onClick={() => acceptOrder(order.orderId)}
