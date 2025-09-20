@@ -364,6 +364,12 @@ const CleanerProfile = () => {
         return fullName;
     }
 
+    const getPostcode = (postcode) => {
+        const cleanedPostcode = postcode.replace(/\s/g, "").toUpperCase();
+        const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
+        return normalPostcode;
+    }
+
     const acceptOrder = async (orderId) => {
         if (acceptingOrders) {
             return
@@ -1605,6 +1611,18 @@ const CleanerProfile = () => {
                                             <FaUserTie onClick={() => goToClientProfile(order.clientEmail, order.customer)} size={30} style={{width:'30px', color:'dodgerblue', marginRight: '3%'}} />
                                         </div>
                                     </div>
+
+                                    <div className={'new-order-container'}>
+                                        <FaPhone  className={'icon-small'} />
+                                        <p style={{fontSize:'medium'}} >{order.phone}</p>
+                                        <CallButton phoneNumber={order.phone} />
+                                    </div>
+
+                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                        <FaMapMarkerAlt className={'icon-small'}  />
+                                        <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
+                                    </div>
+
                                     {message && <p style={{color:bgColor}}>{message}</p>}
                                     {order.id === bookingIdForReview && <div>
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
@@ -1636,6 +1654,32 @@ const CleanerProfile = () => {
                                         <h4 style={{width:'50%'}}>Duration</h4>
                                         <h3 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h3>
                                     </div>
+
+                                    <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
+                                        <h3 style={{textAlign:'start'}}>Details</h3>
+                                        <MdKeyboardArrowRight
+                                            size={40}
+                                            style={{width:'40px', alignSelf:'end'}}
+                                            onClick={() => {
+                                                if (detailsId?.length > 0 && order.orderId !== detailsId) return;
+                                                if (detailsId === null || detailsId === undefined) {
+                                                    setDetailsId(order.orderId);
+                                                    return;
+                                                }
+                                                setDetailsId(null);
+                                            }}
+                                            className={detailsId === order.orderId ? 'rotate-down' : 'rotate-up'}
+                                        />
+                                    </div>
+
+                                    {detailsId === order.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
+                                        {order.booking.map((book, index) => (
+                                            <div key={index} className={'order-container'}>
+                                                <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
+                                                <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
+                                            </div>
+                                        ))}
+                                    </div>}
 
                                     <div className={'order-container'}>
                                         <FaClock onClick={() => {setDateToggle(!dateToggle); updateHistoryIds(order.id)}} style={{width:'30px'}} size={20}/>
@@ -2042,6 +2086,7 @@ const CleanerProfile = () => {
     }, [successMessage])
 
     const [dataForUpdate, setDataForUpdate] = useState('');
+
     const [runCounter, setRunCounter] = useState(0);
 
     const SettingsPage = () => {

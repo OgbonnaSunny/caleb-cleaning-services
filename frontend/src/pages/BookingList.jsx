@@ -9,7 +9,7 @@ import {
     FaHome, FaTimes,
     FaMapMarkerAlt, FaClock, FaCheckCircle, FaTimesCircle, FaUser, FaPhone
 } from "react-icons/fa";
-import {MdAdd} from "react-icons/md";
+import {MdAdd, MdKeyboardArrowRight} from "react-icons/md";
 import Bookings from "./Bookings.jsx";
 import api from "./api.js";
 import {differenceInDays, format, isToday} from "date-fns";
@@ -38,6 +38,7 @@ const BookingList = () => {
     const [finishTodayJobs, setFinishTodayJobs] = useState(false);
     const [finishRecentJobs, setFinishRecentJobs] = useState(false);
     const [finishScheduleJobs, setFinishScheduleJobs] = useState(false);
+    const [detailsId, setDetailsId] = useState(null);
 
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
@@ -619,6 +620,33 @@ const BookingList = () => {
                                         {booking.nature}
                                     </p>
                                 </div>
+
+                                <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
+                                    <h3 style={{textAlign:'start'}}>Details</h3>
+                                    <MdKeyboardArrowRight
+                                        size={40}
+                                        style={{width:'40px', alignSelf:'end'}}
+                                        onClick={() => {
+                                            if (detailsId?.length > 0 && booking.orderId !== detailsId) return;
+                                            if (detailsId === null || detailsId === undefined) {
+                                                setDetailsId(booking.orderId);
+                                                return;
+                                            }
+                                            setDetailsId(null);
+                                        }}
+                                        className={detailsId === booking.orderId ? 'rotate-down' : 'rotate-up'}
+                                    />
+                                </div>
+
+                                {detailsId === booking.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
+                                    {booking.booking.map((book, index) => (
+                                        <div key={index} className={'order-container'}>
+                                            <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
+                                            <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
+                                        </div>
+                                    ))}
+                                </div>}
+
                                 <div style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent:'space-between', padding:'10px'}}>
                                     <h4 style={{marginLeft:'10px'}}>Cleaner Details</h4>
                                     <ul style={{marginLeft:'10px'}}>
