@@ -48,9 +48,6 @@ const Sitemap = () => {
                             countrycodes: "gb", // Restrict to UK
                             limit: 5,
                         },
-                        headers: {
-                            "User-Agent": "FlymaxApp/1.0 (flyclean02@gmail.com)",
-                        },
                     }
                 );
 
