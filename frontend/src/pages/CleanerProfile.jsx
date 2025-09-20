@@ -365,8 +365,9 @@ const CleanerProfile = () => {
     }
 
     const getPostcode = (postcode) => {
-        const cleanedPostcode = postcode.replace(/\s/g, "").toUpperCase();
-        const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
+        if (!postcode) {return;}
+        const cleanedPostcode = postcode?.replace(/\s/g, "").toUpperCase();
+        const normalPostcode =  cleanedPostcode?.slice(0, -3) + " " + cleanedPostcode?.slice(-3);
         return normalPostcode;
     }
 
