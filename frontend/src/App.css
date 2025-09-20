@@ -4543,7 +4543,7 @@ button:disabled {
 }
 .new-order-container {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
   padding: 5px;
 }
@@ -4555,7 +4555,7 @@ button:disabled {
 @media (max-width: 768px) {
   .new-order-container {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: center;
     font-size: small;
     margin: 0 auto;

@@ -226,16 +226,19 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 }
             }
 
-            if (scrollTop <= scrollHeight / 4) {
-                setFinishedHistory(false)
-                setFinishedActive(false)
-            }
         };
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loading]);
 
+    useEffect(() => {
+
+        setFinishedHistory(false)
+
+        setFinishedActive(false)
+
+    }, [history]);
 
     useEffect(() => {
         const resetMessage = () => {

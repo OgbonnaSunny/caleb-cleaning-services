@@ -232,16 +232,14 @@ const CleanerProfile = () => {
     const [messageCount, setMessageCount] = useState(0);
     const [name, setName] = useState('');
     const [orderEnded, setOrderEnded] = useState(false);
-    const [newOrderEnded, setNewOrderEnded] = useState(false);
     const [detailsId, setDetailsId] = useState(null);
-
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         const fetchData = async () => {
             try {
                 var data = {receiver: user?.email};
-                response = await api.post('/api/messages/users', data)
+                const response = await api.post('/api/messages/users', data)
                 const count = response.data.messages;
                 setMessageCount(prev => prev + count);
 
@@ -411,9 +409,6 @@ const CleanerProfile = () => {
                 const data = {limit: page, offset: offset};
                 const newOrderResponse = await api.post('api/booking/new', data);
                 const orders = await newOrderResponse.data;
-                if (orders?.booking?.length <= 0) {
-                    setNewOrderEnded(true);
-                }
                 if (orders?.booking?.length <= 0 && newOrders.length <= 0) {
                     setMessage('No new orders yet.');
                 }
@@ -459,9 +454,6 @@ const CleanerProfile = () => {
                 }
             }
 
-            if (scrollTop <= scrollHeight / 2) {
-          //      setOrderEnded(false);
-            }
         };
 
         window.addEventListener("scroll", handleScroll);
@@ -497,14 +489,13 @@ const CleanerProfile = () => {
                                 {newOrders.map(order => (
                                     <div key={order.orderId}  className={'stat-card'}>
                                         <p style={{textAlign:'center'}}>{order.orderId}</p>
+
                                         <p style={{textAlign:'start', marginLeft:'10px'}}>{getTime(order.startTime)}</p>
-                                        <div className={'new-order-container'}>
-                                            <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
-                                            <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
-                                        </div>
+
                                         <div className={'new-order-container'}>
                                             <FaUser  className={'icon-small'} />
                                             <p style={{fontWeight:'bold', marginLeft:'2px', fontSize:'medium'}}>{renderName(order.customer)}</p>
+                                            <FaHome size={20} style={{width:'30px', alignSelf:'end', marginBottom:'7px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
                                         </div>
 
                                         <div className={'new-order-container'}>
@@ -513,16 +504,22 @@ const CleanerProfile = () => {
                                             <CallButton phoneNumber={order.phone} />
                                         </div>
 
-                                        <div className={'new-order-container'}>
-                                            <FaMapMarkerAlt  className={'icon-small'} />
-                                            <p style={{textAlign:'start', width:'15%', fontWeight:'bold'}}>EH66JN</p>
-                                            <p className='truncate-text'>{order.address}</p>
-                                            <FaHome className={'icon-small'} onClick={() => navigate('/sitemap', {state: {address: order.address}})}  />
+                                        <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                            <FaMapMarkerAlt className={'icon-small'}  />
+                                            <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
                                         </div>
+
+                                        <div className={'new-order-container'}>
+                                            <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
+                                            <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
+                                        </div>
+
+
                                         <div className={'new-order-container'}>
                                             <p style={{marginLeft:'10px'}}>Estimated duration</p>
                                             <h4 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h4>
                                         </div>
+
                                         <div className={'new-order-container'}>
                                             <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
                                             <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
@@ -1185,6 +1182,7 @@ const CleanerProfile = () => {
                 const userData = {email: email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/my-orders', userData);
                 const jobList = acceptResponse.data.booking;
+
                 if (jobList.length <= 0 && myOrders.length <= 0) {
                     setMessage('You do not have active job');
                 }
@@ -1264,6 +1262,9 @@ const CleanerProfile = () => {
     }
 
     const startJob = async (e) => {
+        e.preventDefault();
+        if (!order) return;
+        count++
         let data = {email: order.cleanerEmail, orderId: order.orderId};
         setSubmitting(true);
         setColor('green');
@@ -1287,10 +1288,10 @@ const CleanerProfile = () => {
             setMyMesage('Error occured. Please try again');
             setColor('darkred')
         } finally {
+            setSubmitting(false);
+            setOrder(null);
             const resetMessage = () => {
-                setMyMesage(null)
-                setSubmitting(false);
-                setIdForUpdate('')
+                setMyMesage(null);
             }
             setTimeout(() => resetMessage(), 4000);
         }
@@ -1330,15 +1331,12 @@ const CleanerProfile = () => {
                                 <div key={order.orderId} style={{border:'dashed', padding:'10px', borderRadius:'10px'}} >
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
 
-                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-                                        <p style={{fontSize:'smaller', width:'70%'}} >{getTime(order.startTime)}</p>
-                                        <p style={{textAlign:'end'}}><span style={order.nature === 'Light'? {color:'Green', fontWeight:'bold'}:
-                                            order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>{order.nature} </span>{order.plan}</p>
-                                    </div>
+                                    <p style={{fontSize:'medium', textAlign:'center'}} >{getTime(order.startTime)}</p>
 
                                     <div className={'new-order-container'}>
                                         <FaUser  className={'icon-small'} />
                                         <p style={{fontWeight:'bold', marginLeft:'2px', fontSize:'medium'}}>{renderName(order.customer)}</p>
+                                        <FaHome size={20} style={{width:'30px', alignSelf:'end', marginBottom:'7px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
                                     </div>
 
                                     <div className={'new-order-container'}>
@@ -1350,8 +1348,21 @@ const CleanerProfile = () => {
                                     <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                                         <FaMapMarkerAlt className={'icon-small'}  />
                                         <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
-                                        <FaHome  style={{width:'30px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
                                     </div>
+
+                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                        <p style={{width:'40%'}}>Dirt Level</p>
+                                        <p style={{textAlign:'end'}}><span style={order.nature === 'Light'? {color:'Green', fontWeight:'bold'}:
+                                            order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>
+                                            {order.nature} </span>
+                                        </p>
+                                    </div>
+
+                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                        <p style={{width:'20%'}}>Tarif</p>
+                                        <p style={{textAlign:'end'}}>{order.plan}</p>
+                                    </div>
+
 
                                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
                                         <h3 style={{textAlign:'start'}}>Details</h3>
@@ -1402,13 +1413,19 @@ const CleanerProfile = () => {
 
                                             {myMesage && <p style={{color: color, textAlign:'center', margin:'10px'}}>{myMesage}</p>}
 
+                                            {submitting && <p>Loading...</p>}
+
                                             <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px'}}>
                                                 <button disabled={(submitting || order?.beginTime !== null)}
-                                                        onClick={startJob} className={(submitting || order?.beginTime !== null) ? 'back-button' : 'next-button'}>
+                                                        onClick={startJob}
+                                                        className={(submitting || order?.beginTime !== null) ?
+                                                            'back-button' : 'next-button'}>
                                                     START
                                                 </button>
                                                 <button disabled={(submitting || order?.beginTime === null)}
-                                                        onClick={finishJob} className={(submitting || order?.beginTime === null) ? 'back-button' : 'next-button'}>
+                                                        onClick={finishJob}
+                                                        className={(submitting || order?.beginTime === null) ?
+                                                            'back-button' : 'next-button'}>
                                                     FINISH
                                                 </button>
                                             </div>
@@ -1416,7 +1433,8 @@ const CleanerProfile = () => {
                                     }
                                     {order.orderId !== idForUpdate &&
                                         <button className={(idForUpdate === order.orderId || idForUpdate !== '') ? 'back-button' : 'next-button'}
-                                                                  disabled={(idForUpdate === order.orderId || idForUpdate !== '' || historyIds.includes(order.orderId)) ? true : false}
+                                                                  disabled={(idForUpdate === order.orderId || idForUpdate !== ''
+                                                                      || historyIds.includes(order.orderId)) ? true : false}
                                                                   onClick={() => {setIdForUpdate(order.orderId); setOrder(order)}}>
                                          Begin or finish this job
                                     </button>

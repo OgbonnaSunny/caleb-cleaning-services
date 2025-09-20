@@ -66,17 +66,18 @@ const BookingList = () => {
                 }
             }
 
-            if (scrollTop <= scrollHeight / 4) {
-            //    setFinishJobs(false);
-            //    setFinishTodayJobs(false);
-             //   setFinishRecentJobs(false);
-            //    setFinishScheduleJobs(false);
-            }
         };
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [loading]);
+
+    useEffect(() => {
+            setFinishJobs(false);
+            setFinishTodayJobs(false);
+            setFinishRecentJobs(false);
+            setFinishScheduleJobs(false);
+    }, [activeBottomMenu]);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
