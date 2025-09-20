@@ -319,6 +319,7 @@ const ProfilePage = ({ emailFromProile }) => {
                      setPhone(user?.phone);
                      setBio(user?.bio);
                      setProfilePhoto(user?.photo_path);
+                     console.log(user?.photo_path);
                      setAvailability(user?.available);
                      const serviceList = user?.workExperience?.services;
                      if (serviceList?.length > 0) {
