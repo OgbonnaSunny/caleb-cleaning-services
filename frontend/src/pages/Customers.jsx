@@ -284,12 +284,8 @@ const Customers = () => {
                     {filteredCustomers.length > 0 ? (
                         filteredCustomers.map(customer => (
                             <div key={customer.id} className="service-card">
-
-                                <div style={{display: 'flex', justifyContent: 'stretch', alignItems: 'baseline'}}>
-                                    <h3>{renderName(customer.customer)}</h3>
-                                    <p style={{ alignSelf:'end', textAlign:'end'}}>{format(new Date(customer.lastDate), 'yyyy-MM-dd')}</p>
-
-                                </div>
+                                <p style={{ textAlign:'center'}}>{format(new Date(customer.lastDate), 'yyyy-MM-dd')}</p>
+                                <h3>{renderName(customer.customer)}</h3>
                                 <div className="table-cell contact">
                                     <div style={{display: 'flex', alignItems: 'baseline'}}>
                                         <FaPhone style={{width:'20px'}} className="icon-small" />
