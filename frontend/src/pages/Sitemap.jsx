@@ -12,10 +12,7 @@ import api from './api.js'
 
 const Sitemap = () => {
     const location = useLocation();
-    let currentAddress = "Unknown address";
-    if (location.state !== null && location.state !== undefined) {
-        currentAddress = location.state.address;
-    }
+    const currentAddress = location?.state?.address || "Unknown address";
 
     // Fix default marker icons (React-Leaflet issue)
     delete L.Icon.Default.prototype._getIconUrl;
@@ -25,10 +22,12 @@ const Sitemap = () => {
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     });
 
-    const [position, setPosition] = useState([51.505, -0.09]); // Default position (London)
+    const [position, setPosition] = useState([55.9533, -3.1883]); // Default position (Edinburgh)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [address, setAddress] = useState(currentAddress);
+    const [results, setResults] = useState([]);
+    const [tempAddress, setTempAddress] = useState('');
 
     useEffect(() => {
         if (!address) return;
@@ -36,16 +35,33 @@ const Sitemap = () => {
         const geocodeAddress = async () => {
             try {
                 setLoading(true);
-                const response = await api.get(
+                /*const response = await axios.get(
                     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+                );*/
+
+                const response = await axios.get(
+                    "https://nominatim.openstreetmap.org/search",
+                    {
+                        params: {
+                            format: "json",
+                            q: address,
+                            countrycodes: "gb", // Restrict to UK
+                            limit: 5,
+                        },
+                        headers: {
+                            "User-Agent": "FlymaxApp/1.0 (flyclean02@gmail.com)",
+                        },
+                    }
                 );
 
-                if (response.data && response.data.length > 0) {
+                if (response?.data?.length > 0) {
                     const { lat, lon } = response.data[0];
                     setPosition([parseFloat(lat), parseFloat(lon)]);
+                    setResults(response.data);
                     setError(null);
+                    setTempAddress('')
                 } else {
-                    setError('Address not found');
+                    setError('No address was found');
                 }
             } catch (err) {
                 setError('Geocoding failed');
@@ -58,12 +74,20 @@ const Sitemap = () => {
         geocodeAddress();
     }, [address]);
 
+    const handleSelect = (place) => {
+        setPosition([parseFloat(place.lat), parseFloat(place.lon)]);
+     //   setResults([]); // clear after selecting
+        setAddress(place.display_name); // fill input with chosen address
+    };
+
+    useEffect(() => {
+        document.title = "Map"
+    }, []);
+
 
     return (
         <div style={{display: 'flex', flexDirection: 'column', minHeight: '100vh', alignItems: 'center'}}>
             <div style={{ width: '100%', position: 'relative' }}>
-                {loading && <div style={{ position: 'absolute', zIndex: 1000, background: 'white', padding: '10px' }}>Loading...</div>}
-                {error && <div style={{ position: 'absolute', zIndex: 1000, background: 'red', color: 'white', padding: '10px' }}>{error}</div>}
                 <MapContainer
                     center={position}
                     zoom={13}
@@ -78,6 +102,41 @@ const Sitemap = () => {
                         </Popup>
                     </Marker>
                 </MapContainer>
+            </div>
+            {loading && <p style={{margin:'10px'}}>Loading...</p>}
+            {error && <p style={{margin:'10px', textAlign:'center'}}>{error}</p>}
+            <div className={['support-page', 'idea-container'].join(' ')}>
+                {results.length > 0 && (<div style={{ padding: "5px", maxWidth: "400px", marginTop:'10px' }}>
+                        <p>Found addresses</p>
+                        <ul >
+                            {results.map((place, i) => (
+                                <li
+                                    key={i}
+                                    style={{ cursor: "pointer", margin: "4px 0" }}
+                                    onClick={() => handleSelect(place)}>
+                                    {place.display_name}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>)}
+
+                <div style={{ maxWidth:'600px', margin: '10px', gap:'10px', display: 'flex', alignItems: 'center' }}>
+                    <input
+                        type="text"
+                        value={tempAddress}
+                        onChange={(e) => setTempAddress(e.target.value)}
+                        placeholder="Enter Edinburgh address"
+                        className={'button-bg'}
+                        style={{ padding: '10px', width:'80%' }}
+                    />
+                    <button
+                        onClick={() => setAddress(tempAddress)}
+                        className={'submit-button'}
+                        disabled={(loading || !tempAddress)}>
+                        Search
+                    </button>
+                </div>
+
             </div>
         </div>
 

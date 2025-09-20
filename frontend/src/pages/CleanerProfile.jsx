@@ -1224,17 +1224,13 @@ const CleanerProfile = () => {
                 setColor('darkred')
             }
             else {
-                setMyOrders(prev => {
-                    const map = new Map(prev.map(item => [item.id, item])); // old items
-                    job.forEach(item => map.set(item.id, item));    // add/replace new
-                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
-                });
+                const jobList = myOrders.filter(item => item.orderId !== order.orderId);
 
                 data = {cleanerEmail: order.cleanerEmail, cleanerName: order.cleaner, client: order.customer, duration: order.duration, amount: order.estimatedAmount, orderId: order.orderId};
                 response = await api.post('/api/income', data);
                 const { success } = response.data;
                 if (!success) {
-                    setMyMesage('Error occured while creating income record. Please try again');
+                    setMyMesage('Income data still processing');
                     setColor('darkred')
                 }
                 else {
@@ -1244,17 +1240,18 @@ const CleanerProfile = () => {
                     setHistoryIds(ids)
                 }
 
+                setTimeout(() => setMyOrders(jobList), 4000)
+
             }
 
         } catch (error) {
             console.log(error);
-            setMyMesage('Error occured. Please try again');
+            setMyMesage('Error occured. Please try again after page reload');
             setColor('darkred')
         } finally {
+            setSubmitting(false);
             const resetMessage = () => {
                 setMyMesage(null)
-                setSubmitting(false);
-                setIdForUpdate('')
             }
             setTimeout(() => resetMessage(), 4000);
         }
@@ -1264,7 +1261,6 @@ const CleanerProfile = () => {
     const startJob = async (e) => {
         e.preventDefault();
         if (!order) return;
-        count++
         let data = {email: order.cleanerEmail, orderId: order.orderId};
         setSubmitting(true);
         setColor('green');
