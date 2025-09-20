@@ -1109,15 +1109,13 @@ const Checkout = () => {
         }
 
         let addresses = ["Select Address"];
-        if (postcode !== null && postcode !== undefined) {
-            addresses = ["Select Address"];
-            const cleanedPostcode = postcode.replace(/\s/g, "").toUpperCase();
-            const normalPostcode =  cleanedPostcode.slice(0, -3) + " " + cleanedPostcode.slice(-3);
-            for (let i = 0; i < edinburghPostcodes.length; i++) {
-                if (normalPostcode === edinburghPostcodes[i].postcode) {
-                    addresses.push(...edinburghPostcodes[i].addresses);
-                    break;
-                }
+        const cleanedPostcode = postcode?.replace(/\s/g, "")?.toUpperCase();
+        const normalPostcode =  cleanedPostcode?.slice(0, -3) + " " + cleanedPostcode?.slice(-3);
+        addresses = ["Select Address"];
+        for (let i = 0; i < edinburghPostcodes.length; i++) {
+            if (normalPostcode === edinburghPostcodes[i].postcode) {
+                addresses.push(...edinburghPostcodes[i].addresses);
+                break;
             }
         }
 
@@ -1137,6 +1135,7 @@ const Checkout = () => {
                 addresses: addresses,
                 rugRooms: endOfTenancyServices,
                 rugSizes: sizeBasedPricing,
+                postcode: normalPostcode,
             });
         }
         else {
@@ -1153,6 +1152,7 @@ const Checkout = () => {
                 room: endOfTenancyServices,
                 onSubscription: false,
                 addresses: addresses,
+                postcode: normalPostcode,
             });
         }
        setSelectedDate(null)
@@ -2270,7 +2270,7 @@ const Checkout = () => {
                     minimumPrice: formData.minimumEstimate,
                     cleanerWage: 0,
                     address: formData.address,
-                    postcode: postcode,
+                    postcode: formData.postcode,
                     phone: formData.phone,
                 };
 

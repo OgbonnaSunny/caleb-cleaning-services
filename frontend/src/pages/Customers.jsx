@@ -20,6 +20,7 @@ const Customers = () => {
     const [emailSuccess, setEmailSuccess] = useState('');
     const [loadingEmail, setLoadingEmail] = useState(false);
     const [role, setRole] = useState('Support');
+    const [noCustomers, setNoCustomers] = useState(false);
 
     const customers = [
         {
@@ -84,6 +85,7 @@ const Customers = () => {
 
     useEffect(() => {
         if (searchDatabase.length <= 0 || searchTerm.length <= 0) {
+            setNoCustomers(false);
             setPageCount(pre => pre + 1);
         }
 
@@ -97,7 +99,7 @@ const Customers = () => {
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
                 if (!loading) {
-                    setPageCount(prev => prev + 1);
+              //      setPageCount(prev => prev + 1);
                 }
             }
         };
@@ -124,6 +126,7 @@ const Customers = () => {
     }
 
     useEffect(() => {
+      //  if(noCustomers) return
         setLoading(true);
         api.get('/api/users/all-customer-booking')
             .then(response => {
@@ -133,8 +136,9 @@ const Customers = () => {
                     customers.forEach(item => map.set(item.id, item));    // add/replace new
                     return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                 });
-                if (customers.length <= 0) {
+                if (customers.length <= 0  ) {
                     setMessage('No customers found.');
+                    setNoCustomers(true);
                 }
 
             })
