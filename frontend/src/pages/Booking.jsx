@@ -104,8 +104,8 @@ const Booking = () => {
 
                     <h3 className={'help-text'}  style={{color:'navy', marginTop:'30px'}}>4. WHAT WE DO</h3>
                     <p>4.1. We operate an online platform, or on our App (collectively referred to as the “Flymax Platform”) through which customers can book an Fly cleaner for the provision of cleaning services, by submitting a booking request.<br/>
-                        4.2. We, Fly cleaner, do not offer the cleaning service itself. We are merely a third-party facilitator of the contracts between the customer and the eMopper.
-                        Accordingly, Fly cleaner can receive and confirm customer’s requests for cleaning services, issue invoices on behalf of the eMopper and pass on payments to the Fly cleaner.
+                        4.2. We, Fly cleaner, do not offer the cleaning service itself. We are merely a third-party facilitator of the contracts between the customer and the Fly Cleaner.
+                        Accordingly, Fly cleaner can receive and confirm customer’s requests for cleaning services, issue invoices on behalf of the Fly Cleaner and pass on payments to the Fly cleaner.
                     </p>
 
                     <h3 className={'help-text'} style={{color:'navy', marginTop:'30px'}}>5.  OUR CONTRACT WITH YOU</h3>
@@ -116,7 +116,7 @@ const Booking = () => {
 
                         5.3. We are also responsible for taking your bookings and making it available for Fly cleaner, and for dealing with payments made by you in relation to those bookings. This contractual agreement is made on these Booking Terms and Conditions.<br/>
 
-                        5.4. The contract between you and the Fly cleaner (“Cleaning Agreement”) sets out the provisions of the service you book via the eMop platform. The service you book is the responsibility of the Fly cleaner who provides it. We act as booking agent for eMoppers; therefore, we are not responsible or liable for the actual service that is booked through the Fly cleaner platform.<br/>
+                        5.4. The contract between you and the Fly cleaner (“Cleaning Agreement”) sets out the provisions of the service you book via the Fly Cleaner platform. The service you book is the responsibility of the Fly cleaner who provides it. We act as booking agent for Fly Cleaners; therefore, we are not responsible or liable for the actual service that is booked through the Fly cleaner platform.<br/>
 
                         5.5. We only operate in the UK. Our website is solely for the promotion of our products in the UK. Unfortunately, we do not accept requests from outside the UK.<br/>
 
@@ -125,7 +125,7 @@ const Booking = () => {
 
                     <h3 className={'help-text'} style={{color:'navy', marginTop:'30px'}}>6. THE PLATFORM</h3>
                     <p>
-                        6.1. The Fly cleaner platform allows you, the Customer, to book and pay for cleaning services undertaken by eMoppers. The service is provided by our Fly cleaners, and not by us.<br/>
+                        6.1. The Fly cleaner platform allows you, the Customer, to book and pay for cleaning services undertaken by Fly Cleaners. The service is provided by our Fly cleaners, and not by us.<br/>
 
                         6.2. The service shown on the Fly cleaner platform is subject to availability and the images on the Fly cleaner platform are for illustrative purposes only. We ask our Fly cleaner to ensure that they provide the service in accordance with the description on our platform. It is each Fly cleaners' responsibility to ensure that he or she provides the service not only in accordance with the description, but also in accordance with our standards and materials provided during the Fly cleaners enrolment.
                     </p>
@@ -134,13 +134,13 @@ const Booking = () => {
                     <p>
                         7.1. We may ask you to provide a valid proof of identity in a form reasonably acceptable to us upon request.<br/>
 
-                        7.2. You may make a booking only under your name. If you make a booking under another person’s name, this person is responsible for contacting eMop regarding the service booked and all possible issues.<br/>
+                        7.2. You may make a booking only under your name. If you make a booking under another person’s name, this person is responsible for contacting Fly Cleaner regarding the service booked and all possible issues.<br/>
 
-                        7.3. Once registered on the eMop platform, you can select the service you require, the location, and the time. When you enter these details we will notify you of the estimated cost and the estimated time required to carryout the service. If you would like to go ahead, you may then submit the Order (“Order”) to confirm your request.<br/>
+                        7.3. Once registered on the Fly Cleaner platform, you can select the service you require, the location, and the time. When you enter these details we will notify you of the estimated cost and the estimated time required to carryout the service. If you would like to go ahead, you may then submit the Order (“Order”) to confirm your request.<br/>
 
-                        7.4. When you submit your Order for Service, we will send you an email acknowledging receipt of that service (“Order Confirmation”). Please note that the service is only confirmed when you receive the Order Confirmation. The contract between you and the eMopper will be formed only when you receive the Order Confirmation.<br/>
+                        7.4. When you submit your Order for Service, we will send you an email acknowledging receipt of that service (“Order Confirmation”). Please note that the service is only confirmed when you receive the Order Confirmation. The contract between you and the Fly Cleaner will be formed only when you receive the Order Confirmation.<br/>
 
-                        7.5. You must treat an eMopper courteously and lawfully and ensure that the location in which he/she provides the service is safe, and that an appropriate working environment is supplied for the eMopper, in compliance with all applicable laws and regulations.<br/>
+                        7.5. You must treat a Fly Cleaner courteously and lawfully and ensure that the location in which he/she provides the service is safe, and that an appropriate working environment is supplied for the Fly Cleaner, in compliance with all applicable laws and regulations.<br/>
 
                         7.6. We strongly advise that you exercise caution and common sense to protect your personal safety and property, as you would when interacting with any person whom you do not know. Whilst we have undertaken a Basic Disclosure and Barring Service check (DBS), an identity check based on identifying documents, and a check for adverse financial history such as bankruptcy, it is your responsibility to keep yourself safe by having all personal or sentimental possessions locked away.
                     </p>
@@ -153,7 +153,7 @@ const Booking = () => {
 
                         8.2. Prices are based on the specified hourly rate, which depends on factors such as booking date and time.<br/>
 
-                        8.3. Prices include VAT where applicable, unless it is stated otherwise on the relevant page in relation to the service on the eMop platform.<br/>
+                        8.3. Prices include VAT where applicable, unless it is stated otherwise on the relevant page in relation to the service on the Fly Cleaner platform.<br/>
 
                         8.4. Any currency conversion costs, or other charges incurred in making a payment will be borne by you in addition to the price due to us.<br/>
                     </p>
@@ -166,17 +166,17 @@ const Booking = () => {
 
                         8.7. Fly cleaner holds the estimated amount on your card after the booking has been placed so as to ensure payment will be provided after the service is completed.<br/>
 
-                        8.8. Payment for the service will be made after your cleaning has been completed, and you will be charged based on the actual time an eMopper spent in your premises, cleaning. The amount payable will be rounded up to the next minute and will be based on the rate shown to you on the website when you made your booking. You will be responsible for protecting the confidentiality of your username and any password or other security information used by you to access this payment facility and/or the eMop platform.<br/>
+                        8.8. Payment for the service will be made after your cleaning has been completed, and you will be charged based on the actual time a Fly Cleaner spent in your premises, cleaning. The amount payable will be rounded up to the next minute and will be based on the rate shown to you on the website when you made your booking. You will be responsible for protecting the confidentiality of your username and any password or other security information used by you to access this payment facility and/or the Fly Cleaner platform.<br/>
 
                         8.9. We take reasonable care to provide a functioning payment facility at all times, but cannot guarantee continuous, uninterrupted or secure access to such payment facility, nor can we guarantee that the facility is virus or error free. We also try to ensure that your payments are processed promptly, but it is often difficult to predict the amount of time needed to complete processing because it is dependent on many factors outside our control, such as delays in the banking system or in card networks. Access to our payment facility may be occasionally restricted to allow for repairs, maintenance or the introduction of new facilities or services. We will attempt to provide reasonable notice of any scheduled interruptions and will do what we can to restore the facility as soon as reasonably possible.<br/>
 
                         8.10. By accepting these Booking Terms and Conditions:<br/>
                         <p style={{marginLeft:'30px'}}>
-                            8.10.1. In accordance with the Strong Customer Authentication Regulation (SCA), you are giving eMop, via Stripe, permission to charge your on-file credit card, debit card, or other approved methods of payment for fees that you owe eMop. The payment initiation is for ‘one-off’ payments only and will be determined by the actual time incurred in the provision of the service (in other words, the actual time it took to carryout the service).<br/>
+                            8.10.1. In accordance with the Strong Customer Authentication Regulation (SCA), you are giving Fly Cleaner, via Stripe, permission to charge your on-file credit card, debit card, or other approved methods of payment for fees that you owe Fly Cleaner. The payment initiation is for ‘one-off’ payments only and will be determined by the actual time incurred in the provision of the service (in other words, the actual time it took to carryout the service).<br/>
 
                             8.10.2. All information that you provide in connection with a purchase or transaction or other monetary transaction interaction with the service must be accurate, complete, and current.<br/>
 
-                            8.10.3. You agree to pay all charges incurred by eMoppers or eMop at the prices in effect when such charges are incurred
+                            8.10.3. You agree to pay all charges incurred by Fly Cleaners at the prices in effect when such charges are incurred
                         </p>
                     </p>
 
@@ -195,7 +195,7 @@ const Booking = () => {
 
                         10.2.2. We are responsible for dealing with payments made by you in relation to your bookings.<br/>
 
-                        10.2.3. We are responsible for vetting our Fly cleaners and ensuring they have appropriate insurance. We ensure that eMoppers have appropriate professional insurance.<br/>
+                        10.2.3. We are responsible for vetting our Fly cleaners and ensuring they have appropriate insurance. We ensure that Fly Cleaners have appropriate professional insurance.<br/>
 
                         10.2.4. We also undertake a Basic Disclosure and Barring Service check (DBS), an identity check based on identifying documents, and a check for adverse financial history such as bankruptcy.<br/>
 
@@ -220,11 +220,11 @@ const Booking = () => {
 
                     <h3 className={'help-text'} style={{color:'navy', marginTop:'30px'}}>13. COMPLAINTS</h3>
                     <p>
-                        13.1. If you would like to make a complaint or provide negative feedback about one of our eMoppers or the service generally, please contact us as soon as possible. We’ll then contact the eMopper and try to resolve any issues on your behalf.<br/>
+                        13.1. If you would like to make a complaint or provide negative feedback about one of our Fly Cleaners or the service generally, please contact us as soon as possible. We’ll then contact the Fly Cleaner and try to resolve any issues on your behalf.<br/>
 
                         13.2. If you are unhappy with the service received from an Fly cleaner, then in the first instance you should speak to the Fly cleaner yourself to try to resolve the issue.<br/>
 
-                        13.2. If you are unable to resolve the issue with the Fly cleaner then please let us know and we will try to resolve the issue. If we are unable to resolve the issue following contact with the eMopper, you may arrange for the re-performance of the disputed/complained about aspect of the service by an alternative eMopper, at no additional cost to you.
+                        13.2. If you are unable to resolve the issue with the Fly cleaner then please let us know and we will try to resolve the issue. If we are unable to resolve the issue following contact with the Fly Cleaner, you may arrange for the re-performance of the disputed/complained about aspect of the service by an alternative Fly Cleaner, at no additional cost to you.
 
 
                     </p>
