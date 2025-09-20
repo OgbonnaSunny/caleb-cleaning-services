@@ -269,7 +269,6 @@ const BookingList = () => {
                 .then(res => {
                     const { booking } = res.data;
                     if (approvedBookings?.length <= 0 && booking?.length <= 0) {
-                        setFinishJobs(true)
                         setMessage("No booking for approval found for today");
                         return;
                     }
@@ -278,6 +277,9 @@ const BookingList = () => {
                         booking.forEach(item => map.set(item.id, item));
                         return Array.from(map.values()).sort((a, b) => a.id - b.id);
                     })
+                    if (booking?.length <= 0) {
+                        setFinishJobs(true)
+                    }
                 })
                 .catch(err => {
                     console.log(err);
