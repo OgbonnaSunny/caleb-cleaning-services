@@ -7,7 +7,7 @@ import {
     FaBars, FaPen, FaArrowRight, FaArrowCircleRight, FaArrowCircleLeft, FaCommentDots, FaPhone, FaUser
 } from 'react-icons/fa';
 import api from './api.js';
-import { useNavigate } from 'react-router-dom'
+import {data, useNavigate} from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { isToday, differenceInDays, differenceInHours  } from 'date-fns';
@@ -22,6 +22,8 @@ import { format } from 'date-fns';
 import {all} from "axios";
 import globals from "globals";
 import {MdKeyboardArrowRight} from "react-icons/md";
+import {hr} from "date-fns/locale";
+import {number} from "yup";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
@@ -209,7 +211,7 @@ const CleanerProfile = () => {
     const [myMesage, setMyMesage] = useState('');
     const [page, setPage] = useState(10);
     const [submitting, setSubmitting] = useState(false);
-    const [order, setOrder] = useState({});
+    const [order, setorder] = useState({});
     const [color, setColor] = useState('green');
     const [historyMessage, setHistoryMessage] = useState('');
     const [dateToggle, setDateToggle] = useState(false);
@@ -233,6 +235,12 @@ const CleanerProfile = () => {
     const [name, setName] = useState('');
     const [orderEnded, setOrderEnded] = useState(false);
     const [detailsId, setDetailsId] = useState(null);
+    const [timeInSeconds, setTimeInSeconds] = useState(0);
+    const [emailMessage, setEmailMessage] = useState(null);
+    const [loadingEmail, setLoadingEmail] = useState(false);
+    const [timers, setTimers] = useState({});
+    const [jobInProgress, setJobInProgress] = useState(false);
+    const [activeId, setActiveId] = useState(null);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -364,6 +372,46 @@ const CleanerProfile = () => {
         return fullName;
     }
 
+    function startCountdown(durationInSeconds, order) {
+        let remaining = durationInSeconds;
+
+        const interval = setInterval(() => {
+            if (remaining <= 0) {
+                clearInterval(interval);
+                return;
+            }
+
+            remaining--;
+            setJobInProgress(true);
+            setorder(order)
+            setActiveId(order.orderId)
+
+            const hours = Math.floor(remaining / 3600);
+            const minutes = Math.floor((remaining % 3600) / 60);
+            const seconds = remaining % 60;
+
+            // Format to HH:MM:SS
+            const formatted =
+                String(hours).padStart(2, "0") + ":" +
+                String(minutes).padStart(2, "0") + ":" +
+                String(seconds).padStart(2, "0");
+
+            setTimers(prev => ({
+                ...prev,
+                [order.orderId]: formatted,
+            }));
+
+        }, 1000);
+    }
+
+    const initiateCountdown = (order) => {
+        const jobHour = Number(order?.startHour);
+        const jobMinute = Number(order?.startMinute);
+        const jobTime = (jobHour * 60 * 60) + (jobMinute * 60);
+        startCountdown(jobTime, order);
+
+    }
+
     const getPostcode = (postcode) => {
         if (!postcode) {return;}
         const cleanedPostcode = postcode?.replace(/\s/g, "").toUpperCase();
@@ -469,7 +517,7 @@ const CleanerProfile = () => {
 
     function CallButton({ phoneNumber }) {
         return (
-            <div style={{width:'20px', alignSelf:'end', display:'flex', alignItems:'center'}}>
+            <div style={{width:'20px', alignSelf:'end', display:'flex', alignItems:'center', marginRight:'12px'}}>
                 <p>
                     <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
                         <label style={{color:'blue', fontSize:'medium'}}>Call</label>
@@ -1189,6 +1237,7 @@ const CleanerProfile = () => {
                 const userData = {email: email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/my-orders', userData);
                 const jobList = acceptResponse.data.booking;
+                const time = acceptResponse.data?.time;
 
                 if (jobList.length <= 0 && myOrders.length <= 0) {
                     setMessage('You do not have active job');
@@ -1199,6 +1248,16 @@ const CleanerProfile = () => {
                         jobList.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
+                    if (time?.length > 0) {
+                        const timeElapsed = Number(time[0]?.minutes_diff);
+                        for (const order of jobList) {
+                            if (order.orderId === time[0]?.orderId) {
+                                const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
+                                startCountdown(totalTime, order)
+                                break;
+                            }
+                        }
+                    }
                 }
                 if (jobList.length <= 0) {
                     setOrderEnded(true);
@@ -1284,6 +1343,7 @@ const CleanerProfile = () => {
                     job.forEach(item => map.set(item.id, item));    // add/replace new
                     return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                 });
+                initiateCountdown(order);
             }
 
         } catch (error) {
@@ -1292,7 +1352,7 @@ const CleanerProfile = () => {
             setColor('darkred')
         } finally {
             setSubmitting(false);
-            setOrder(null);
+            setorder(null);
             const resetMessage = () => {
                 setMyMesage(null);
             }
@@ -1300,7 +1360,68 @@ const CleanerProfile = () => {
         }
     }
 
+    useEffect(() => {
+        for (const order of myOrders) {
+            let hour = Number(order.startHour);
+            let minute = Number(order.startMinute);
+            if (isNaN(hour) || isNaN(minute)) continue;
+            if (hour?.toString()?.length <= 1) {
+                hour = '0' + hour;
+            }
+            if (minute?.toString()?.length <= 1) {
+                minute = '0' + minute;
+            }
+
+            const newTime = `${hour}:${minute}:00`;
+            setTimers(prev => ({
+                ...prev,
+                [order.orderId]: newTime,
+            }));
+        }
+
+    }, [myOrders]);
+
     const MyOrders = () => {
+
+        const handleOrder = async (order) => {
+            if (order?.stage === 'email') {
+                setIdForUpdate(order.orderId);
+                setorder(order);
+                return;
+            }
+            var data = {
+                to: order?.email,
+                text: "A Fly Cleaner is on the way to your property. Please make your property accessible",
+                subject: "Cleaning service"
+            };
+            setLoadingEmail(true);
+            var succeeded = false;
+            try {
+                var response = await api.post('/api/send-email-to-customer', data);
+                const { message, success} =  response.data;
+                setEmailMessage(message);
+                succeeded = success;
+                if (success) {
+                    data = {email: order.cleanerEmail, orderId: order.orderId};
+                    response = await api.post('/api/booking/update-stage', data);
+                    const { job, message, success } = response.data;
+                    setMyOrders(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        job.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+                    if (!success) {
+                        setEmailMessage(message);
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoadingEmail(false);
+                setTimeout(() => setEmailMessage(null), 4000)
+            }
+
+        }
 
         const renderWithTime = (date) => {
             const diff = differenceInHours(new Date(date), new Date());
@@ -1310,11 +1431,28 @@ const CleanerProfile = () => {
             return false;
         }
 
-        const getPostcode = (postcode) => {
-            if (postcode === '' || postcode === null || postcode === undefined) {
-                return 'EH66JN';
+        const notify = async (e) => {
+            e.preventDefault()
+            var data = {
+                to: order?.email,
+                text: "A Fly Cleaner is on the way to your property. Please make your property accessible",
+                subject: "Cleaning service"
+            };
+            setLoadingEmail(true);
+            setSubmitting(true);
+            try {
+                var response = await api.post('/api/send-email-to-customer', data);
+                const { message } =  response.data;
+                setEmail(message);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoadingEmail(false);
+                setSubmitting(false);
+                if (succeeded) {
+                    setTimeout(() => setEmailMessage(''), 4000)
+                }
             }
-            return postcode.toString().toUpperCase();
         }
 
 
@@ -1333,8 +1471,14 @@ const CleanerProfile = () => {
                             {myOrders.map(order => (
                                 <div key={order.orderId} style={{border:'dashed', padding:'10px', borderRadius:'10px'}} >
                                     <p style={{textAlign:'center'}}>{order.orderId}</p>
-
                                     <p style={{fontSize:'medium', textAlign:'center'}} >{getTime(order.startTime)}</p>
+                                    {(order?.stage === 'email' && order.orderId !== idForUpdate) &&
+                                        <h2
+                                            style={activeId === order.orderId ?
+                                            {textAlign:'center', color:'darkred'} :
+                                            {textAlign:'center', color:'blue'} }>{timers[order.orderId]}
+                                        </h2>
+                                    }
 
                                     <div className={'new-order-container'}>
                                         <FaUser  className={'icon-small'} />
@@ -1342,7 +1486,7 @@ const CleanerProfile = () => {
                                         <FaHome size={20} style={{width:'30px', alignSelf:'end', marginBottom:'7px'}}  onClick={() => navigate('/sitemap', {state: {address: order.address}})}/>
                                     </div>
 
-                                    <div className={'new-order-container'}>
+                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center', marginRight:'10px'}}>
                                         <FaPhone  className={'icon-small'} />
                                         <p>{order.phone}</p>
                                         <CallButton phoneNumber={order.phone} />
@@ -1408,8 +1552,15 @@ const CleanerProfile = () => {
                                             <div className={'new-order-container'}>
                                                 <h3 style={{textAlign:'center'}}>Job update</h3>
                                                 <FaTimes size={20} style={{width:'30px', marginLeft:'15px', color:'black', alignSelf:'end'}}
-                                                         onClick={() => {setIdForUpdate(''); setOrder({})}} />
+                                                         onClick={() => {setIdForUpdate(''); setorder({})}} />
                                             </div>
+
+                                            <h2
+                                                style={activeId === order.orderId ?
+                                                    {textAlign:'center', color:'darkred'} :
+                                                    {textAlign:'center', color:'blue'} }>{timers[order.orderId]}
+                                            </h2>
+
                                             <p className={'order-container'} style={{ textAlign:'start'}}>
                                                 It is very important that you only press START when you arrive at client's place or press FINISH only when the job is done.
                                             </p>
@@ -1434,13 +1585,16 @@ const CleanerProfile = () => {
                                             </div>
                                         </div>
                                     }
+                                    {loadingEmail && <p style={{margin:'10px', textAlign:'center'}}>sending email...</p>}
+
+                                    {emailMessage && <p style={{margin:'10px', textAlign:'center'}}>{emailMessage}</p>}
+
                                     {order.orderId !== idForUpdate &&
-                                        <button className={(idForUpdate === order.orderId || idForUpdate !== '') ? 'back-button' : 'next-button'}
-                                                                  disabled={(idForUpdate === order.orderId || idForUpdate !== ''
-                                                                      || historyIds.includes(order.orderId)) ? true : false}
-                                                                  onClick={() => {setIdForUpdate(order.orderId); setOrder(order)}}>
-                                         Begin or finish this job
-                                    </button>
+                                        <button className={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== null && order?.orderId !== activeId)) ? 'back-button' : 'next-button'}
+                                                disabled={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== null && order?.orderId !== activeId))}
+                                                onClick={() => handleOrder(order)}>
+                                            {order?.stage !== 'email' ? "Notify Client" : order?.beginTime === null ? "Start this job" : "finsish this job"}
+                                        </button>
                                     }
 
                                 </div>
@@ -2069,10 +2223,7 @@ const CleanerProfile = () => {
                     }
                 })
                 .catch(error => {
-                    if (error.response.status === 401 && (user1.email === null || user1.email === undefined)) {
-                        setSuccessMessage('User with the specified username not found');
-                        return;
-                    }
+                    console.log(error);
                     setSuccessMessage('Error fetching profile data')
                 })
                 .finally(() => {

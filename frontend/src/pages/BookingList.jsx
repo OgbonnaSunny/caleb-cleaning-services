@@ -574,7 +574,7 @@ const BookingList = () => {
             if (success) {
                 setApprovedIds(prev => [...prev, booking.orderId]);
                 const prevOrder = approvedBookings.filter(book => book.orderId !== booking.orderId);
-                setTimeout(() => setApprovedBookings(prevOrder), 2000);
+                setTimeout(() => setApprovedBookings(prevOrder), 1000);
             }
         } catch (error) {
             console.error(error)
@@ -598,7 +598,7 @@ const BookingList = () => {
                     <div className="grid-container">
                         {jobs.map(booking  => (
                             <div key={booking.id} className="service-card">
-                                <h3 style={{textAlign:'center'}}>{renderName(booking.customer)}</h3>
+                                <h3 style={{textAlign:'start'}}>{renderName(booking.customer)}</h3>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                     <FaMapMarkerAlt className="icon-small"/>
                                     <p>{booking.address}</p>

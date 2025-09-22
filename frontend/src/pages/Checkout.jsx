@@ -591,6 +591,8 @@ const Checkout = () => {
         rugRooms: [],
         rugSizes: [],
         personel: 1,
+        startHour: 0,
+        startMinute: 0,
 
     }
 
@@ -838,7 +840,7 @@ const Checkout = () => {
             newErrors['time'] = null;
         }
         else {
-
+            setAdjustLower(true)
             const time = `${formData.hourText}:${formData.minuteText}`;
             setFormData({...formData, date: date, minimumEstimate: 67, time: time, sessionTime: session });
             newErrors['time'] = null;
@@ -958,7 +960,7 @@ const Checkout = () => {
             }
 
         }
-        return time;
+        return {time: time, hour: hour, minute: minute};
     }
 
     const handleStarterChange = (e) => {
@@ -1109,9 +1111,9 @@ const Checkout = () => {
         }
 
         let addresses = ["Select Address"];
+        addresses = ["Select Address"];
         const cleanedPostcode = postcode?.replace(/\s/g, "")?.toUpperCase();
         const normalPostcode =  cleanedPostcode?.slice(0, -3) + " " + cleanedPostcode?.slice(-3);
-        addresses = ["Select Address"];
         for (let i = 0; i < edinburghPostcodes.length; i++) {
             if (normalPostcode === edinburghPostcodes[i].postcode) {
                 addresses.push(...edinburghPostcodes[i].addresses);
@@ -1420,9 +1422,11 @@ const Checkout = () => {
             totalAmount: price,
             addictions: newAdded,
             bookingEmpty: false,
-            duration: timeText,
+            duration: timeText?.time,
             durationQty: allTime,
             nature: currentNature,
+            startHour: timeText?.hour,
+            startMinute: timeText?.minute,
         });
     }
 
@@ -1590,8 +1594,10 @@ const Checkout = () => {
             totalAmount: price,
             choresPrevPrice: totalPrice,
             bookingEmpty: false,
-            duration: allTime,
+            duration: allTime?.time,
             durationQty: allMinutes,
+            startHour: allTime?.hour,
+            startMinute: allTime?.minute,
         });
     }
 
@@ -1651,8 +1657,10 @@ const Checkout = () => {
             chores: allChores,
             totalAmount: price,
             choresPrevPrice: totalPrice,
-            duration: allTime,
+            duration: allTime?.time,
             durationQty: allMinutes,
+            startHour: allTime?.hour,
+            startMinute: allTime?.minute,
         });
     }
 
@@ -2195,6 +2203,7 @@ const Checkout = () => {
         fetchData()
     }
 
+
     function PaymentHome() {
         const stripe = useStripe();
         const elements = useElements();
@@ -2220,9 +2229,10 @@ const Checkout = () => {
             if (success) {
                 setFormData(data);
                 setCurrentStep(0);
-                return;
             }
-            setCurrentStep(currentStep - 1);
+            else {
+                setCurrentStep(currentStep - 1);
+            }
         }
 
         const updateBookingOnDatabase =  async () => {
@@ -2270,7 +2280,7 @@ const Checkout = () => {
                     minimumPrice: formData.minimumEstimate,
                     cleanerWage: 0,
                     address: formData.address,
-                    postcode: formData.postcode,
+                    postcode: postcode,
                     phone: formData.phone,
                 };
 
@@ -2284,8 +2294,8 @@ const Checkout = () => {
                     customerEmail: formData.email,
                     payment: formData.totalAmount,
                     startTime: `${formData.date} ${formData.hourText}:${formData.minuteText}:00`,
-                    startHour: formData.hour,
-                    startMinute: formData.minute,
+                    startHour: formData.startHour,
+                    startMinute: formData.startMinute,
                 };
 
                 await api.post('/api/booking', orderData);
@@ -2341,7 +2351,6 @@ const Checkout = () => {
                 else if (paymentIntent) {
                     if (paymentIntent.status === "succeeded") {
                         updateBookingOnDatabase();
-                        setSuccess(true);
                         setPaymentMessage("Payment successful!");
                         setCurrentStep( currentStep + 1);
                     }
@@ -2368,11 +2377,15 @@ const Checkout = () => {
         }, [elements]);
 
         useEffect(() => {
+            const reset = () => {
+                if (currentStep === 0) return;
+                setFormData(data);
+                setCurrentStep(0);
+            }
             if (success) {
-                setTimeout(() => {setFormData(data); setCurrentStep(1)}, 5000)
+                setTimeout(() => reset(), 4000)
             }
         }, [success]);
-
 
         return (
             <form onSubmit={handlePayment}
