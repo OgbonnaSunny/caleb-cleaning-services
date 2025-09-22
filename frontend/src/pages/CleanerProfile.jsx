@@ -383,8 +383,8 @@ const CleanerProfile = () => {
 
             remaining--;
             setJobInProgress(true);
-            setorder(order)
-            setActiveId(order.orderId)
+            setorder(order);
+            setActiveId(order.orderId);
 
             const hours = Math.floor(remaining / 3600);
             const minutes = Math.floor((remaining % 3600) / 60);
@@ -1307,6 +1307,10 @@ const CleanerProfile = () => {
                 }
 
                 setTimeout(() => setMyOrders(jobList), 4000)
+
+                setJobInProgress(false);
+                setorder({});
+                setActiveId(null);
 
             }
 
