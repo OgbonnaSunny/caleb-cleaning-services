@@ -1253,7 +1253,12 @@ const CleanerProfile = () => {
                         for (const order of jobList) {
                             if (order.orderId === time[0]?.orderId) {
                                 const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
-                                startCountdown(totalTime, order)
+                                if (totalTime > 0) {
+                                    startCountdown(totalTime, order);
+                                }
+                                else {
+                                    startCountdown(1, order);
+                                }
                                 break;
                             }
                         }
@@ -1307,6 +1312,13 @@ const CleanerProfile = () => {
                 }
 
                 setTimeout(() => setMyOrders(jobList), 4000)
+
+                const formatted = '00:00:00';
+
+                setTimers(prev => ({
+                    ...prev,
+                    [order.orderId]: formatted,
+                }));
 
                 setJobInProgress(false);
                 setorder({});
@@ -1574,15 +1586,15 @@ const CleanerProfile = () => {
                                             {submitting && <p>Loading...</p>}
 
                                             <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px'}}>
-                                                <button disabled={(submitting || order?.beginTime !== null)}
+                                                <button disabled={(submitting || order?.beginTime !== null || jobInProgress)}
                                                         onClick={startJob}
-                                                        className={(submitting || order?.beginTime !== null) ?
+                                                        className={(submitting || order?.beginTime !== null || jobInProgress) ?
                                                             'back-button' : 'next-button'}>
                                                     START
                                                 </button>
-                                                <button disabled={(submitting || order?.beginTime === null)}
+                                                <button disabled={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress)}
                                                         onClick={finishJob}
-                                                        className={(submitting || order?.beginTime === null) ?
+                                                        className={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress) ?
                                                             'back-button' : 'next-button'}>
                                                     FINISH
                                                 </button>
@@ -1594,8 +1606,8 @@ const CleanerProfile = () => {
                                     {emailMessage && <p style={{margin:'10px', textAlign:'center'}}>{emailMessage}</p>}
 
                                     {order.orderId !== idForUpdate &&
-                                        <button className={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== null && order?.orderId !== activeId)) ? 'back-button' : 'next-button'}
-                                                disabled={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== null && order?.orderId !== activeId))}
+                                        <button className={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId)) ? 'back-button' : 'next-button'}
+                                                disabled={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId))}
                                                 onClick={() => handleOrder(order)}>
                                             {order?.stage !== 'email' ? "Notify Client" : order?.beginTime === null ? "Start this job" : "finsish this job"}
                                         </button>
