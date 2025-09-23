@@ -87,17 +87,17 @@ const CleanerProfile = () => {
 
     const cleanerData = {
         personal: {
-            firstName: 'Sarah',
-            lastName: 'Jones',
-            phone: '+44 770 1234 567',
+            firstName: '',
+            lastName: '',
+            phone: '',
             password: '',
             newPassword: '',
             confirmPassword: '',
             oldPassword: '',
             nationalInsurance: '',
-            address: 'Buckingham Palace',
-            bio: 'A good cleaner',
-            email:'sarah@gmail.com',
+            address: '',
+            bio: '',
+            email:'',
             emergencyContact: {
                 category: 'Martha Caleb',
                 relationship: 'Spouse',
@@ -154,7 +154,12 @@ const CleanerProfile = () => {
                 review: 'Smart and nice cleaning service. Sarah was Professional, detailed and friendly. Only reason for 4 stars instead of 5 is that she arrived 15 minutes late, but she made up for it by staying later to finish everything.',
                 time: '4 months ago'
             },
-        ]
+        ],
+        bank: {
+            accountName: '',
+            accountNumber: '',
+            sortCode: ''
+        }
     };
 
     const preferredAreas = [
@@ -2013,6 +2018,7 @@ const CleanerProfile = () => {
                                     </div>
                                 ))}
                             </div>
+                            <p style={{margin:'15px'}}>For more FAQs, visit <Link style={{color:'blue'}} to={'/help'}>help</Link>.</p>
                         </section>
                     )}
 
@@ -2246,6 +2252,13 @@ const CleanerProfile = () => {
                         setValue('availability', user?.available);
                         setValue('notifications', user?.notification);
 
+                        setValue('bank', {
+                            ...getValues().bank,
+                            accountNumber: user?.accountNumber,
+                            accountName: user?.accountName,
+                            sortCode: user?.sortCode,
+                        })
+
                         const active = user?.isActive;
                         if (active > 0) {
                             setIsActive(true);
@@ -2276,6 +2289,8 @@ const CleanerProfile = () => {
     const [runCounter, setRunCounter] = useState(0);
 
     const SettingsPage = () => {
+        const [bankMessage, setBankMessage] = useState('');
+        const [loading, setLoading] = useState(false);
 
         const handlePreferredAreaChange = (area) => {
             const currentAreas = getValues().work.preferredAreas
@@ -2420,6 +2435,41 @@ const CleanerProfile = () => {
             }
 
         };
+
+        useEffect(() => {
+            setTimeout(() => setBankMessage(''), 5000);
+        }, [bankMessage])
+
+        const editBankDetails = async (e) => {
+            e.preventDefault();
+             if (!getValues().bank?.sortCode
+                 || !getValues().bank?.accountNumber
+                 || !getValues().bank?.accountName
+                 || !getValues().personal?.password) {
+                 setBankMessage('Fill all the required fields to proceed')
+                 return;
+             }
+             setLoading(true);
+             const data = {
+                 email: getValues().personal?.email,
+                 accountName: getValues().bank?.accountName ,
+                 accountNumber: getValues().bank?.accountNumber,
+                 sortCode: getValues().bank?.sortCode,
+                 password: getValues().personal?.password
+             }
+             try {
+                 const response = await api.post('/api/users/bank-details', data)
+                 const {success, message} = response.data;
+                 setBankMessage(message);
+                 if (success) {
+
+                 }
+             } catch (error) {
+                 console.log(error);
+             }finally {
+                 setLoading(false);
+             }
+        }
 
         const handleDataForUpdate = (data) => {
             setDataForUpdate(data);
@@ -2896,6 +2946,87 @@ const CleanerProfile = () => {
                         </div>
                     );
 
+                case 'Add or change bank details':
+                    return (
+                        <div className="tab-content">
+                            <h3>Bank details
+                                {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Add or change bank details')} style={{width:'20px', marginLeft:'2px'}} />
+                                    : dataForUpdate === 'Add or change bank details' ?
+                                        <FaTimes style={{width:'20px', marginLeft:'2px'}} onClick={() => handleDataForUpdate('')} /> : null }
+                            </h3>
+                            {dataForUpdate === 'Add or change bank details' &&  <div className='form-group'>
+                                <div className={'form-group'}>
+                                    <label>Password</label>
+                                    <input
+                                        type="password"
+                                        {...register('personal.password', {
+                                            required: "Please enter your password",
+                                        })}
+                                        className={'button-bg'}
+                                    />
+                                    {errors.personal?.password && <span className="error-message">{errors?.personal?.password?.message}</span>}
+                                </div>
+
+                                <div style={{marginTop:'10px'}} className='form-group'>
+                                    <label>Account holder name</label>
+                                    <input
+                                        type="text"
+                                        {...register('bank.accountName', {
+                                            required: "Account holder name is required",
+                                        })}
+                                        className={'button-bg'}
+                                    />
+                                    {errors.bank?.accountName && <span className="error-message">{errors?.bank?.accountName?.message}</span>}
+                                </div>
+
+                                <div style={{marginTop:'10px'}} className='form-group'>
+                                    <label>Account number</label>
+                                    <input
+                                        type="number"
+                                        {...register('bank.accountNumber', {
+                                            required: "Account number is required",
+                                            minLength: {
+                                                value: 8,
+                                                message: "Must be exactly 8 digits"
+                                            },
+                                            maxLength: {
+                                                value: 8,
+                                                message: "Must be exactly 8 digits"
+                                            }
+                                        })}
+                                        className={'button-bg'}
+                                    />
+                                    {errors?.bank?.accountNumber && <span className="error-message">{errors?.bank?.accountNumber?.message}</span>}
+                                </div>
+
+                                <div style={{marginTop:'10px'}} className='form-group'>
+                                    <label>Sort code</label>
+                                    <input
+                                        type="number"
+                                        {...register('bank.sortCode', {
+                                            required: "Sort code is required",
+                                            minLength: {
+                                                value: 6,
+                                                message: "Must be a minimum of 6 digits"
+                                            },
+                                            maxLength: {
+                                                value: 8,
+                                                message: "Must be a maximum of  8 digits"
+                                            }
+                                        })}
+                                        className={'button-bg'}
+                                    />
+                                    {errors?.bank?.sortCode && <span className="error-message">{errors?.bank?.sortCode?.message}</span>}
+                                </div>
+
+                                {loading && <p style={{margin:"10px"}}>Loading...</p>}
+
+                                {bankMessage && <p style={{margin:'10px'}}>{bankMessage}</p>}
+
+                            </div> }
+
+                        </div>
+                    )
                 default:
                     return null;
             }
@@ -2917,34 +3048,44 @@ const CleanerProfile = () => {
                     >
                         Update Info
                     </button>
+
                     <button
                         className={activeTab3 === 'work' ? 'active' : ''}
                         onClick={() => setActiveTab3('work')}
                     >
                         Work Preferences
                     </button>
+
                     <button
                         className={activeTab3 === 'availability' ? 'active' : ''}
                         onClick={() => setActiveTab3('availability')}
                     >
                         Availability
                     </button>
+
                     <button
                         className={activeTab3 === 'notifications' ? 'active' : ''}
                         onClick={() => setActiveTab3('notifications')}
                     >
                         Notifications
                     </button>
+
+                    <button
+                        className={activeTab3 === 'Add or change bank details' ? 'active' : ''}
+                        onClick={() => setActiveTab3('Add or change bank details')}
+                    >
+                        Add or change bank details
+                    </button>
+
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={activeTab3 === 'Add or change bank details' ? editBankDetails : onSubmit}>
                     {renderTabContent()}
-
                     <div className="form-actions">
-                        <button className={(isLoading || dataForUpdate.length <= 0) ? 'back-button' : 'next-button'}
-                                type="button" disabled={(isLoading || dataForUpdate.length <= 0)}
-                                onClick={onSubmit}
-                        >
+                        <button
+                            type="submit"
+                            className={(isLoading || dataForUpdate.length <= 0) ? 'back-button' : 'next-button'}
+                            disabled={(isLoading || dataForUpdate.length <= 0)}>
                             {isLoading ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>
@@ -3030,6 +3171,27 @@ const CleanerProfile = () => {
             );
         };
 
+        const Compensations = () => {
+
+            return (
+                <div className="documentation-page">
+                    <h3 style={{margin:'15px', textDecoration:'underline'}}>Payment rates</h3>
+                    <h3 style={{margin:'15px', textDecoration:'underline'}}>Compensations</h3>
+                    <h3 style={{margin:'15px', textDecoration:'underline'}}>One-off-fees</h3>
+                    <h3 style={{margin:'15px', textDecoration:'underline'}}>Penalty fees</h3>
+                </div>
+            )
+        }
+
+        const Videos = () => {
+
+            return(
+                <div className="documentation-page">
+                    <label style={{margin:'15px'}}>No videos available</label>
+                </div>
+            )
+        }
+
         return (
             <div className="documentation-page">
                 <Helmet>
@@ -3041,15 +3203,37 @@ const CleanerProfile = () => {
                         onClick={() => setActiveTab('Guildelines')}>
                         Guildelines
                     </button>
+
                     <button
                         className={activeTab === 'Safety' ? 'active' : ''}
                         onClick={() => setActiveTab('Safety')}>
                         Safety
                     </button>
+
+                    <button
+                        className={activeTab === 'Fees and compensations' ? 'active' : ''}
+                        onClick={() => setActiveTab('Fees and compensations')}>
+                        Fees and compensations
+                    </button>
+
+                    <button
+                        className={activeTab === 'Videos' ? 'active' : ''}
+                        onClick={() => setActiveTab('Videos')}>
+                        Videos
+                    </button>
+
+                    <button
+                        className={activeTab === 'Service agreements' ? 'active' : ''}
+                        onClick={() => setActiveTab('Service agreements')}>
+                        Service agreements
+                    </button>
+
                 </nav>
 
                 {activeTab ===  'Guildelines' && <Guidelines />}
                 {activeTab === 'Safety' && <Safety />}
+                {activeTab === 'Fees and compensations' && <Compensations />}
+                {activeTab === 'Videos' && <Videos />}
             </div>
         )
 

@@ -1,5 +1,15 @@
 import React, { useState, useEffect} from "react";
-import {FaBroom, FaCheck, FaClock, FaCommentDots, FaMapMarkerAlt, FaRegStar, FaStar, FaUserTie} from "react-icons/fa";
+import {
+    FaBroom,
+    FaCheck,
+    FaClock,
+    FaCommentDots,
+    FaMapMarkerAlt,
+    FaRegStar,
+    FaStar,
+    FaTimes,
+    FaUserTie
+} from "react-icons/fa";
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from "react-router-dom";
 import api from './api.js'
@@ -194,6 +204,8 @@ const ProfilePage = ({ emailFromProile }) => {
     const [loadingMore, setLoadingMore] = useState(false);
     const [pageCount, setPageCount] = useState(0);
     const [page, setPage] = useState(10);
+    const [user, setUser] = useState({});
+    const [documents, setDocuments] = useState([]);
 
 
     useEffect(() => {
@@ -328,6 +340,7 @@ const ProfilePage = ({ emailFromProile }) => {
                      if (speciaties) {
                          setSpecialties(speciaties);
                      }
+                     setUser(user);
                  }
                  else {
                      setSuccessMessage('Error updating user');
@@ -409,6 +422,14 @@ const ProfilePage = ({ emailFromProile }) => {
         }
     }, [email, pageCount]);
 
+    const handleDocs = (cleaner) => {
+        setDocuments([])
+        setDocuments(prev => [...prev, {title:"Photo", img: cleaner?.photo_path}]);
+        setDocuments(prev => [...prev, {title: "ID", img: cleaner?.identify_path}]);
+        setDocuments(prev => [...prev, {title:"National insurance", img: cleaner?.ni_path}]);
+        setDocuments(prev => [...prev, {title: "Proof of address", img: cleaner?.addressProof_path}])
+    }
+
     return (
         <div style={{display:'flex', flexDirection:'column', minHeight: '100vh'}}>
             {isLoading && <div className="raise-progress-bar-container">
@@ -437,22 +458,47 @@ const ProfilePage = ({ emailFromProile }) => {
                     </div>
                 </div>
 
-                <div className="profile-tabs">
+                <div className={emailFromProile ? "profile-menu" : "profile-tabs"}>
+
                     <button
                         className={`tab-btn ${activeTab2 === 'about' ? 'active' : ''}`}
                         onClick={() => setActiveTab2('about')}>
                         About
                     </button>
+
+                    {emailFromProile &&  <button
+                        className={`tab-btn ${activeTab2 === 'My Info' ? 'active' : ''}`}
+                        onClick={() => setActiveTab2('My Info')}>
+                        My Info
+                    </button> }
+
+                    {emailFromProile &&  <button
+                        className={`tab-btn ${activeTab2 === 'Bank Details' ? 'active' : ''}`}
+                        onClick={() => setActiveTab2('Bank Details')}>
+                        Bank Details
+                    </button> }
+
+                    {emailFromProile &&  <button
+                        className={`tab-btn ${activeTab2 === 'Documents' ? 'active' : ''}`}
+                        onClick={() => {
+                            handleDocs(user);
+                            setActiveTab2('Documents');
+                        }}>
+                        Documents
+                    </button> }
+
                     <button
                         className={`tab-btn ${activeTab2 === 'services' ? 'active' : ''}`}
                         onClick={() => setActiveTab2('services')}>
                         Services
                     </button>
+
                     <button
                         className={`tab-btn ${activeTab2 === 'reviews' ? 'active' : ''}`}
                         onClick={() => setActiveTab2('reviews')}>
-                        Reviews
+                        reviews
                     </button>
+
                 </div>
 
                 <div className="tab-content">
@@ -565,7 +611,7 @@ const ProfilePage = ({ emailFromProile }) => {
                         </div>)}
 
                     {activeTab2 === 'reviews' &&
-                        <div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', flexDirection:'column'}}>
                             {!loadingReviews ? <div>
                                 {reviewList.length > 0 && <div className="reviews-section">
                                 <h2>Customer Reviews</h2>
@@ -636,6 +682,64 @@ const ProfilePage = ({ emailFromProile }) => {
                                 {reviewList.length <= 0 && <p>No review for {firstName} {lastName} yet </p> }
                             </div>  : <p>Loading reviews...</p>}
                             {loadingMore && <p>Loading...</p>}
+                        </div>
+                    }
+
+                    {(activeTab2 === 'My Info' && emailFromProile) &&
+                        <div style={{display: 'flex', flexDirection:'column'}}>
+                            <label style={{margin:'10px'}}>First Name <br/>
+                                <strong style={{fontSize:'x-large'}}>
+                                    {user?.firstName?.charAt(0)?.toUpperCase()+user?.firstName?.slice(1)}
+                                </strong>
+                            </label>
+
+                            <label style={{margin:'10px'}}>Last Name <br/>
+                                <strong style={{fontSize:'x-large'}}>
+                                    {user?.lastName?.charAt(0)?.toUpperCase()+user?.lastName?.slice(1)}
+                                </strong>
+                            </label>
+
+                            <label style={{margin:'10px'}}>Phone <br/>
+                                <p>{user?.phone}</p>
+                            </label>
+
+                            <label style={{margin:'10px'}}>Email <br/>
+                                <p>{user?.email}</p>
+                            </label>
+
+                            <label style={{margin:'10px'}}>My address <br/>
+                                <p>{user?.address}</p>
+                            </label>
+                        </div>
+                    }
+
+                    {(activeTab2 === 'Bank Details' && emailFromProile) &&
+                        <div style={{display: 'flex', flexDirection:'column'}}>
+                            <label style={{margin:'10px'}}>Account holder name <br/>
+                                <strong style={{fontSize:'large'}}>
+                                    {user?.accountName}
+                                </strong>
+                            </label>
+
+                            <label style={{margin:'10px'}}>Account number <br/>
+                                <strong style={{fontSize:'large'}}>
+                                    {user?.accountNumber}
+                                </strong>
+                            </label>
+
+                            <label style={{margin:'10px'}}>Sort code <br/>
+                                <p>{user?.sortCode}</p>
+                            </label>
+                        </div>
+                    }
+                    {(activeTab2 === 'Documents' && emailFromProile) &&
+                        <div className={'grid-container'}>
+                            {documents.map((doc, index ) => (
+                                <div key={index}>
+                                    <h3 style={{textAlign:'center'}}>{doc.title}</h3>
+                                    <img src={doc.img}/>
+                                </div>
+                            ))}
                         </div>
                     }
                 </div>
