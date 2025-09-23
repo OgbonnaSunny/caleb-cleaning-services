@@ -283,21 +283,18 @@ const CleanerProfile = () => {
         }
     }
 
-    const formatDate = (date) => {
-        if (date = null || date === undefined) return;
-        const dateTime = new Date(date);
-        const options = {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hourCycle: 'h23',
-        }
-        if (date.toString().length > 0) {
-            return Intl.DateTimeFormat('en-US', options).format(dateTime).toString();
-        }
-        return date;
+    const formatDate = (time) => {
+        if (time = null || time === undefined) return;
+        const date = new Date(time); // parses ISO string into local time
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // months are 0-based
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+
     }
 
     const getTime = (date) => {
@@ -470,9 +467,12 @@ const CleanerProfile = () => {
                 else {
                     setNewOrders(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
-                        orders.booking.forEach(item => map.set(item.id, item));    // add/replace new
+                        orders?.booking?.forEach(item => map.set(item.id, item));    // add/replace new
                         return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
                     });
+                }
+                if (orders?.booking?.length <= 0) {
+                    setOrderEnded(true);
                 }
 
             } catch (error) {
@@ -505,6 +505,9 @@ const CleanerProfile = () => {
                     }
                     if (activeMenu === 'History') {
                         setHistoryPageCount(prev => prev + 1)
+                    }
+                    if (activeMenu === 'Finance') {
+                        setFinancePageCount(prev => prev + 1)
                     }
                 }
             }
@@ -1669,9 +1672,24 @@ const CleanerProfile = () => {
         }
     }, [historyPageCount, activeMenu]);
 
-    function timeAgo(date) {
-        const now = new Date();
-        const prevDate = new Date(date);
+    function getDuration(start, end) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        let diffMs = Math.abs(endDate - startDate);
+
+        // Convert to hours and minutes
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        diffMs -= hours * 1000 * 60 * 60;
+
+        const minutes = Math.floor(diffMs / (1000 * 60));
+
+        return `${hours}h ${minutes}m`;
+    }
+
+    function timeAgo(endDate, currentDate) {
+        const now = new Date(currentDate);
+        const prevDate = new Date(endDate);
         const seconds = Math.floor((now - prevDate) / 1000);
 
         let interval = Math.floor(seconds / 31536000);
@@ -1783,7 +1801,7 @@ const CleanerProfile = () => {
                                         </div>
                                     </div>
 
-                                    <div className={'new-order-container'}>
+                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                                         <FaPhone  className={'icon-small'} />
                                         <p style={{fontSize:'medium'}} >{order.phone}</p>
                                         <CallButton phoneNumber={order.phone} />
@@ -1823,7 +1841,7 @@ const CleanerProfile = () => {
 
                                     <div className={'order-container'}>
                                         <h4 style={{width:'50%'}}>Duration</h4>
-                                        <h3 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h3>
+                                        <h3 style={{textAlign:'end'}}>{getDuration(order?.actualStartTime, order?.actualStopTime)}</h3>
                                     </div>
 
                                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
@@ -1854,8 +1872,8 @@ const CleanerProfile = () => {
 
                                     <div className={'order-container'}>
                                         <FaClock onClick={() => {setDateToggle(!dateToggle); updateHistoryIds(order.id)}} style={{width:'30px'}} size={20}/>
-                                        {!historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{timeAgo(order.completedDate)}</h3>}
-                                        {historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{getTime(order.completedDate)}</h3>}
+                                        {!historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{timeAgo(order?.actualStopTime, order?.time)}</h3>}
+                                        {historyIds.includes(order.id) && <h3 style={{textAlign:'end'}}>{getTime(order.actualStopTime)}</h3>}
                                     </div>
                                 </div>
                             ))}
@@ -3062,6 +3080,19 @@ const CleanerProfile = () => {
                         {topNavItems.map((item, index) => (
                             <div key={`top-${index}`} className="nav-order-item"
                                  onClick={() => {
+                                     switch (item) {
+                                         case 'New':
+                                             setNewOrders([]);
+                                             setPageCount(0);
+                                             break;
+                                         case  'Jobs':
+                                             setMyOrders([]);
+                                             setMyPageCount(0);
+                                             break;
+                                         case 'History':
+                                             setJobHistory([]);
+                                             setHistoryPageCount(0);
+                                     }
                                      setOrderEnded(false);
                                      setActiveMenu(item);
                                  }}>
