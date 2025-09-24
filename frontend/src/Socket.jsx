@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
-    const URL = import.meta.env.VITE_API_URL;
+    const URL = import.meta.env.VITE_BACKEND_URL;
     const socketRef = useRef(null);
     const [socket, setSocket] = useState(null);
 

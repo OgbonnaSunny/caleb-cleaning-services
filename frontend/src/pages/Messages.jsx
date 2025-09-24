@@ -169,38 +169,38 @@ export default function Messages() {
 
     // Listen for incoming messages
     useEffect(() => {
-        if (!socket || !sender) { return; }
-        socket.on('receive_message', (data) => {
+        if (!sender) { return; }
+        socket?.on('receive_message', (data) => {
             if ((data.sender === sender && data.receiver === receiver) ||
                 (data.sender === receiver && data.receiver === sender)) {
                 setMessagesList(prev => [...prev, data]);
-                socket.emit("message_delivered", { receiver: receiver });
+                socket?.emit("message_delivered", { receiver: receiver });
             }
 
         }, [sender, receiver]);
 
         return () => {
-            socket.off("receive_message");
+            socket?.off("receive_message");
         };
 
     }, [sender, receiver, socket]);
 
     useEffect(() => {
-        if (!socket || !sender) return;
+        if (!sender) return;
 
         const handleConnect = () => {
 
-            socket.emit("register_user", { email: sender });
+            socket?.emit("register_user", { email: sender });
 
-            socket.emit("message_delivered", { receiver: sender });
+            socket?.emit("message_delivered", { receiver: sender });
 
         };
 
-        socket.on("connect", handleConnect);
+        socket?.on("connect", handleConnect);
 
         // cleanup when component unmounts or sender changes
         return () => {
-            socket.off("connect", handleConnect);
+            socket?.off("connect", handleConnect);
         };
     }, [socket, sender]);
 
@@ -257,12 +257,10 @@ export default function Messages() {
             receiverName: receiverName,
             senderReplyName: senderReplyName
         }
-        console.log('message-before',message);
-        if (!sender || !receiver || !senderName || !receiverName || !chatMessage || !socket) { return; }
+        if (!sender || !receiver || !senderName || !receiverName || !chatMessage) { return; }
         socket?.emit('send_message', message);
         setChatMessage('');
         setReply(null);
-        console.log('message-after',message);
     };
 
     const handleChatMessage = (e) => {
