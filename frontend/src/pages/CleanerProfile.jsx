@@ -1353,7 +1353,7 @@ const CleanerProfile = () => {
     const startJob = async (e) => {
         e.preventDefault();
         if (!order) return;
-        let data = {email: order.cleanerEmail, orderId: order.orderId};
+        let data = {email: order?.cleanerEmail, orderId: order?.orderId};
         setSubmitting(true);
         setColor('green');
         try {
@@ -1501,7 +1501,7 @@ const CleanerProfile = () => {
             setLoadingRequest(true);
             try {
                 const data = { email: order?.cleanerEmail, orderId: order?.orderId, ot: ot }
-                const response = await api.post('/api/booking/ot-request')
+                const response = await api.post('/api/booking/ot-request', data)
                 const {success, message, booking, time } =  response.data;
                 setRequestMessage(message)
                 if (success) {
@@ -1512,16 +1512,9 @@ const CleanerProfile = () => {
                     });
                     if (time?.length > 0) {
                         const timeElapsed = Number(time[0]?.minutes_diff);
-                        console.log(timeElapsed);
-                        for (const order of jobList) {
-                            if (order.orderId === time[0]?.orderId) {
-                                const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
-                                if (totalTime > 0) {
-                                    startCountdown(totalTime, order);
-                                }
-                                else {
-                                    startCountdown(1, order);
-                                }
+                        for (const order of booking) {
+                            if (order.orderId === order?.orderId) {
+                                startCountdown(1, order);
                                 break;
                             }
                         }
@@ -1641,7 +1634,7 @@ const CleanerProfile = () => {
                                             />
                                             <button onClick={() => requestOT(order)}
                                                     disabled={!ot || ot < 20}
-                                                    className={(ot >= 20) ? 'submit-button' : 'back-button' }>
+                                                     className={(ot >= 20 || order?.extra === null) ? 'submit-button' : 'back-button' }>
                                                 Request
                                             </button>
                                         </div>

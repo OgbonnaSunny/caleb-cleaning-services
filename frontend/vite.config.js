@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
   // Configuration values
   const env = loadEnv(mode, process.cwd(), '');
   const isProduction = mode === 'production';
-  const backendUrl = isProduction ? env.VITE_API_URL : env.API_URL;
+  const backendUrl = isProduction ? env.VITE_API_URL : env.BACKEND_API_URL;
 
   return {
     plugins: [
