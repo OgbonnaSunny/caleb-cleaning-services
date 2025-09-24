@@ -10,7 +10,7 @@ import api from './api.js';
 import {data, useNavigate} from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
-import { isToday, differenceInDays, differenceInHours  } from 'date-fns';
+import {isToday, differenceInDays, differenceInHours, differenceInMinutes} from 'date-fns';
 import { Link } from 'react-router-dom';
 import LOGO from "../images/logo4.png";
 import { Helmet } from 'react-helmet';
@@ -1258,6 +1258,7 @@ const CleanerProfile = () => {
                     });
                     if (time?.length > 0) {
                         const timeElapsed = Number(time[0]?.minutes_diff);
+                        console.log(timeElapsed);
                         for (const order of jobList) {
                             if (order.orderId === time[0]?.orderId) {
                                 const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
@@ -1406,6 +1407,9 @@ const CleanerProfile = () => {
     }, [myOrders]);
 
     const MyOrders = () => {
+        const [detailsId, setDetailsId] = useState(null);
+        const [otId, setOtId] = useState(null);
+        const [ot, setOt] = useState(null);
 
         const handleOrder = async (order) => {
             if (order?.stage === 'email') {
@@ -1421,7 +1425,15 @@ const CleanerProfile = () => {
             setLoadingEmail(true);
             var succeeded = false;
             try {
-                var response = await api.post('/api/send-email-to-customer', data);
+                let response = await api.post('/api/booking/check-pending-order', {email: order?.cleanerEmail});
+                const { jobs } = response.data;
+                if (jobs?.length) {
+                    setEmailMessage('You have an on-going job. Please finish the job before notifying a client');
+                    return;
+                }
+
+                response = await api.post('/api/send-email-to-customer', data);
+
                 const { message, success} =  response.data;
                 setEmailMessage(message);
                 succeeded = success;
@@ -1465,7 +1477,8 @@ const CleanerProfile = () => {
             setLoadingEmail(true);
             setSubmitting(true);
             try {
-                var response = await api.post('/api/send-email-to-customer', data);
+                let response = await api.post('/api/booking/check-pending-order', data);
+                 response = await api.post('/api/send-email-to-customer', data);
                 const { message } =  response.data;
                 setEmail(message);
             } catch (error) {
@@ -1477,6 +1490,25 @@ const CleanerProfile = () => {
                     setTimeout(() => setEmailMessage(''), 4000)
                 }
             }
+        }
+
+        const timeToNotify = (order) => {
+            const now = new Date(order?.time);
+            const startTime = new Date(order?.startTime);
+            const hours = Math.abs(differenceInHours(now, startTime)) <= 2;
+            return hours || order?.stage === 'email';
+        }
+
+        const showExtension = (order) => {
+            const timeStarted = order?.beginTime;
+            if (!timeStarted) return false;
+            const hour = order?.startHour;
+            const minute = order?.startMinute;
+            const time = order?.time;
+            const totalMinutes = (hour * 60) + minute;
+            const diff = differenceInMinutes(new Date(time), new Date(timeStarted));
+
+            return diff > totalMinutes;
         }
 
 
@@ -1521,7 +1553,10 @@ const CleanerProfile = () => {
                                         <p><span style={{fontWeight:'bold'}} >{getPostcode(order.postcode)}</span> {order.address}</p>
                                     </div>
 
-                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                    <div style={{
+                                        display:'flex',
+                                        justifyContent:'center',
+                                        alignItems:'center'}}>
                                         <p style={{width:'40%'}}>Dirt Level</p>
                                         <p style={{textAlign:'end'}}><span style={order.nature === 'Light'? {color:'Green', fontWeight:'bold'}:
                                             order.nature === "Medium" ? {color:'blue', fontWeight:'bold'} : {color:'red', fontWeight:'bold'}  }>
@@ -1529,11 +1564,58 @@ const CleanerProfile = () => {
                                         </p>
                                     </div>
 
-                                    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                                    <div style={{display:'flex',
+                                        justifyContent:'center',
+                                        alignItems:'center'}}>
                                         <p style={{width:'20%'}}>Tarif</p>
                                         <p style={{textAlign:'end'}}>{order.plan}</p>
                                     </div>
 
+                                    {showExtension(order) &&  <div style={{display:'flex', flexDirection:'column'}}>
+                                        <div style={{
+                                            display:'flex',
+                                            alignItems:'center',
+                                            marginBottom:'5px',
+                                            marginTop:'10px'}}>
+                                            <h3 style={{textAlign:'start'}}>Time extension</h3>
+                                            <MdKeyboardArrowRight
+                                                size={40}
+                                                style={{width:'40px', alignSelf:'end'}}
+                                                onClick={() => {
+                                                    if (otId?.length > 0 && order.orderId !== otId) return;
+                                                    if (otId === null || otId === undefined) {
+                                                        setOtId(order.orderId);
+                                                        return;
+                                                    }
+                                                    setOtId(null);
+                                                }}
+                                                className={otId === order.orderId ? 'rotate-down' : 'rotate-up'}
+                                            />
+                                        </div>
+
+                                        {order?.orderId === otId &&  <div style={{
+                                            display:'flex',
+                                            alignItems:'center',
+                                            marginBottom:'5px',
+                                            marginTop:'5px',
+                                            gap:'10px'
+                                        }}>
+                                            <input
+                                                className={'button-bg'}
+                                                placeholder={'time in minutes'}
+                                                type={'number'}
+                                                value={ot}
+                                                onChange={(e) => setOt(e.target.value)}
+                                                style={{
+                                                    padding:'10px',
+                                                    textAlign:'center',
+                                                }}
+                                            />
+                                            <button disabled={!ot || ot < 20} className={ot >= 20 ? 'submit-button' : 'back-button' }>Request</button>
+                                        </div>
+                                        }
+
+                                    </div> }
 
                                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
                                         <h3 style={{textAlign:'start'}}>Details</h3>
@@ -1613,14 +1695,16 @@ const CleanerProfile = () => {
 
                                     {emailMessage && <p style={{margin:'10px', textAlign:'center'}}>{emailMessage}</p>}
 
-                                    {order.orderId !== idForUpdate &&
-                                        <button className={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId)) ? 'back-button' : 'next-button'}
+                                    {timeToNotify(order) && <div>
+                                            {order.orderId !== idForUpdate &&
+                                            <button
+                                                className={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId)) ? 'back-button' : 'next-button'}
                                                 disabled={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId))}
                                                 onClick={() => handleOrder(order)}>
-                                            {order?.stage !== 'email' ? "Notify Client" : order?.beginTime === null ? "Start this job" : "finsish this job"}
-                                        </button>
-                                    }
-
+                                                {order?.stage !== 'email' ? "Notify Client" : order?.beginTime === null ? "Start this job" : "finsish this job"}
+                                            </button>
+                                            }
+                                        </div>}
                                 </div>
                             ))}
                         </div>

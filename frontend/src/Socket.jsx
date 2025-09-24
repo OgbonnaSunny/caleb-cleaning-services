@@ -10,6 +10,7 @@ export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
+        console.log('connected to socket', URL);
         const s = io(URL, {
             transports: ["websocket", "polling"], // force fallback if needed
         });
