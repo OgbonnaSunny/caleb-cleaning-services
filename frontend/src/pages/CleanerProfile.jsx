@@ -34,6 +34,7 @@ const CleanerProfile = () => {
 
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
     const companyName =  "Fly Cleaner";
+    console.log(companyEmail);
 
     const bookData = {
         id: 0,
