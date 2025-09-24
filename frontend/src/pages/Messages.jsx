@@ -261,7 +261,7 @@ export default function Messages() {
         socket?.emit('send_message', message);
         setChatMessage('');
         setReply(null);
-        console.log(message);
+        console.log('message',message);
     };
 
     const handleChatMessage = (e) => {
