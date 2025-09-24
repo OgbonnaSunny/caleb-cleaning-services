@@ -176,7 +176,7 @@ export default function Messages() {
                 setMessagesList(prev => [...prev, data]);
                 socket.emit("message_delivered", { receiver: receiver });
             }
-            console.log(data)
+
         }, [sender, receiver]);
 
         return () => {
@@ -248,6 +248,7 @@ export default function Messages() {
     }, [socket, prevReceiver, prevSender]);
 
     const sendMessage = () => {
+        console.log('sent')
         if (!socket) { return; }
         if (!sender || !receiver || !senderName || !receiverName || !chatMessage) { return; }
         socket.emit('send_message', {
@@ -261,6 +262,7 @@ export default function Messages() {
         });
         setChatMessage('');
         setReply(null);
+        console.log('receive_message');
     };
 
     const handleChatMessage = (e) => {
