@@ -176,6 +176,7 @@ export default function Messages() {
                 setMessagesList(prev => [...prev, data]);
                 socket.emit("message_delivered", { receiver: receiver });
             }
+            console.log(data)
         }, [sender, receiver]);
 
         return () => {
