@@ -257,13 +257,10 @@ export default function Messages() {
             receiverName: receiverName,
             senderReplyName: senderReplyName
         }
-        console.log(message);
-        if (!socket) { return; }
-        if (!sender || !receiver || !senderName || !receiverName || !chatMessage) { return; }
+        if (!sender || !receiver || !senderName || !receiverName || !chatMessage || !socket) { return; }
         socket?.emit('send_message', message);
         setChatMessage('');
         setReply(null);
-        console.log('receive_message');
     };
 
     const handleChatMessage = (e) => {

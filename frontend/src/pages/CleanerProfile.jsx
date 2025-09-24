@@ -34,7 +34,6 @@ const CleanerProfile = () => {
 
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
     const companyName =  "Fly Cleaner";
-    console.log(companyEmail);
 
     const bookData = {
         id: 0,
@@ -537,6 +536,7 @@ const CleanerProfile = () => {
     }
 
     const NewOrders = ({ active }) => {
+        const [detailsId, setDetailsId] = useState(null);
 
         return (
             <div className={'support-page'}>
@@ -1411,6 +1411,15 @@ const CleanerProfile = () => {
         const [detailsId, setDetailsId] = useState(null);
         const [otId, setOtId] = useState(null);
         const [ot, setOt] = useState(null);
+        const [loadingEmail, setLoadingEmail] = useState(false);
+        const [emailMessage, setEmailMessage] = useState(null);
+        const [loadingRequest, setLoadingRequest] = useState(false);
+        const [requestMessage, setRequestMessage] = useState(null);
+
+        useEffect(() => {
+            setTimeout(() => setRequestMessage(null), 5000);
+
+        }, [requestMessage]);
 
         const handleOrder = async (order) => {
             if (order?.stage === 'email') {
@@ -1468,31 +1477,6 @@ const CleanerProfile = () => {
             return false;
         }
 
-        const notify = async (e) => {
-            e.preventDefault()
-            var data = {
-                to: order?.email,
-                text: "A Fly Cleaner is on the way to your property. Please make your property accessible",
-                subject: "Cleaning service"
-            };
-            setLoadingEmail(true);
-            setSubmitting(true);
-            try {
-                let response = await api.post('/api/booking/check-pending-order', data);
-                 response = await api.post('/api/send-email-to-customer', data);
-                const { message } =  response.data;
-                setEmail(message);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoadingEmail(false);
-                setSubmitting(false);
-                if (succeeded) {
-                    setTimeout(() => setEmailMessage(''), 4000)
-                }
-            }
-        }
-
         const timeToNotify = (order) => {
             const now = new Date(order?.time);
             const startTime = new Date(order?.startTime);
@@ -1512,6 +1496,45 @@ const CleanerProfile = () => {
             return diff > totalMinutes;
         }
 
+        const requestOT = async (order) => {
+            if (loadingRequest) {return;}
+            setLoadingRequest(true);
+            try {
+                const data = { email: order?.cleanerEmail, orderId: order?.orderId, ot: ot }
+                const response = await api.post('/api/booking/ot-request')
+                const {success, message, booking, time } =  response.data;
+                setRequestMessage(message)
+                if (success) {
+                    setMyOrders(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        booking.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+                    if (time?.length > 0) {
+                        const timeElapsed = Number(time[0]?.minutes_diff);
+                        console.log(timeElapsed);
+                        for (const order of jobList) {
+                            if (order.orderId === time[0]?.orderId) {
+                                const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
+                                if (totalTime > 0) {
+                                    startCountdown(totalTime, order);
+                                }
+                                else {
+                                    startCountdown(1, order);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.log(error);
+                setRequestMessage('Error occured while sending request');
+            } finally {
+                setLoadingRequest(false);
+            }
+        }
 
         return (
             <div className={'support-page'}>
@@ -1594,6 +1617,10 @@ const CleanerProfile = () => {
                                             />
                                         </div>
 
+                                        {loadingRequest && <p style={{margin:'10px'}}>Sending request...</p>}
+
+                                        {requestMessage && <p style={{margin:'10px'}}>{requestMessage}</p>}
+
                                         {order?.orderId === otId &&  <div style={{
                                             display:'flex',
                                             alignItems:'center',
@@ -1612,7 +1639,11 @@ const CleanerProfile = () => {
                                                     textAlign:'center',
                                                 }}
                                             />
-                                            <button disabled={!ot || ot < 20} className={ot >= 20 ? 'submit-button' : 'back-button' }>Request</button>
+                                            <button onClick={() => requestOT(order)}
+                                                    disabled={!ot || ot < 20}
+                                                    className={(ot >= 20) ? 'submit-button' : 'back-button' }>
+                                                Request
+                                            </button>
                                         </div>
                                         }
 
@@ -1838,6 +1869,7 @@ const CleanerProfile = () => {
         const [rating, setRating] = useState(1);
         const [bgColor, setBgColor] = useState('red');
         const [bookingIdForReview, setBookingIdForReview] = useState(-1);
+        const [detailsId, setDetailsId] = useState(null);
 
         const handleReviewChange = (e) => {
             e.preventDefault();
