@@ -248,10 +248,7 @@ export default function Messages() {
     }, [socket, prevReceiver, prevSender]);
 
     const sendMessage = () => {
-        console.log('sent')
-        if (!socket) { return; }
-        if (!sender || !receiver || !senderName || !receiverName || !chatMessage) { return; }
-        socket.emit('send_message', {
+        const message = {
             sender: sender,
             senderName: senderName,
             text: chatMessage,
@@ -259,7 +256,11 @@ export default function Messages() {
             receiver: receiver,
             receiverName: receiverName,
             senderReplyName: senderReplyName
-        });
+        }
+        console.log(message);
+        if (!socket) { return; }
+        if (!sender || !receiver || !senderName || !receiverName || !chatMessage) { return; }
+        socket?.emit('send_message', message);
         setChatMessage('');
         setReply(null);
         console.log('receive_message');
