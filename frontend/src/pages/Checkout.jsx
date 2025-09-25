@@ -939,7 +939,7 @@ const Checkout = () => {
         const minute = Number(totalTime)%60;
 
         hour = (Number(totalTime) - Number(minute)) / 60;
-        let time;
+        /*let time;
         if (minute <= 0 && hour > 0) {
             time = `${hour}h`;
         }
@@ -959,7 +959,8 @@ const Checkout = () => {
                 time = `${hour}h 0${minute}m`;
             }
 
-        }
+        }*/
+        const time = String(hour).padStart(2, '0') + "h" + " " + String(minute).padStart(2, '0') + "m";
         return {time: time, hour: hour, minute: minute};
     }
 

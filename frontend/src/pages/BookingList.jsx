@@ -7,12 +7,12 @@ import {
     FaUserTie,
     FaCalendarAlt,
     FaHome, FaTimes,
-    FaMapMarkerAlt, FaClock, FaCheckCircle, FaTimesCircle, FaUser, FaPhone
+    FaMapMarkerAlt, FaClock, FaCheckCircle, FaTimesCircle, FaUser, FaPhone, FaEnvelope, FaSearch
 } from "react-icons/fa";
 import {MdAdd, MdKeyboardArrowRight} from "react-icons/md";
 import Bookings from "./Bookings.jsx";
 import api from "./api.js";
-import {differenceInDays, format, isToday} from "date-fns";
+import {differenceInDays, differenceInMinutes, format, isToday} from "date-fns";
 import booking from "./Booking.jsx";
 
 const BookingList = () => {
@@ -38,13 +38,20 @@ const BookingList = () => {
     const [finishTodayJobs, setFinishTodayJobs] = useState(false);
     const [finishRecentJobs, setFinishRecentJobs] = useState(false);
     const [finishScheduleJobs, setFinishScheduleJobs] = useState(false);
-    const [detailsId, setDetailsId] = useState(null);
+    const [finishAllJobs, setFinishAllJobs] = useState(false);
+    const [allJobs, setAllJobs] = useState([]);
+    const [searchDatabase, setSearchDatabase] = useState('');
+    const [extensionList, setExtensionList] = useState([]);
+    const [extendCount, setExtendCount] = useState(0);
+    const [totalOT, setTotalOT] = useState(0);
+    const [approveExtension, setApproveExtension] = useState(false);
 
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
         {id: 2, category: 'Today', title: ['Today\' Booking']},
         {id: 3, category: 'Recent', title: ['Recent Booking']},
         {id: 4, category: 'Schedule', title: ['Today \' Schedule']},
+        {id: 5, category: 'All', title: ['All Booking']},
     ];
 
     useEffect(() => {
@@ -292,6 +299,64 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
+        setMessage('');
+        if (activeBottomMenu === 'All' && !loading && !finishAllJobs) {
+            setLoading(true);
+            let offset = 0;
+            if (allJobs.length > 0) {
+                const jobs = allJobs;
+                jobs.sort((a, b) => a.id - b.id);
+                offset = jobs[jobs.length -1].id;
+            }
+            const data = {limit: page, offset: offset};
+            api.post('/api/booking/all-booking-admin', data)
+                .then(res => {
+                    const { booking } = res.data;
+                    if (allJobs?.length <= 0 && booking?.length <= 0) {
+                        setMessage("No booking at the moment");
+                        return;
+                    }
+                    setAllJobs(prev => {
+                        const map = new Map(prev.map(item => [item.id, item]));
+                        booking.forEach(item => map.set(item.id, item));
+                        return Array.from(map.values()).sort((a, b) => b.id - a.id);
+                    })
+                    if (booking?.length <= 0) {
+                        setFinishAllJobs(true)
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setMessage("Error while fetching booking");
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+    }, [activeBottomMenu, pageCount]);
+
+    useEffect(() => {
+        api.get('/api/booking/ot-list')
+            .then(res => {
+                const { booking } = res.data;
+                setExtensionList([]);
+                setExtensionList(prev => {
+                    const map = new Map(prev.map(item => [item.id, item]));
+                    booking.forEach(item => map.set(item.id, item));
+                    return Array.from(map.values()).sort((a, b) => b.id - a.id);
+                })
+                let allOT = 0;
+                for (const book of booking) {
+                    allOT = allOT + book?.extra;
+                }
+                setTotalOT(allOT);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [extendCount]);
+
+    useEffect(() => {
         if (approvalMessage !== null) {
             setTimeout(() => setApprovalMessage(null), 5000);
         }
@@ -299,7 +364,7 @@ const BookingList = () => {
 
     function CallButton({ phoneNumber }) {
         return (
-            <div style={{width:'50%'}}>
+            <div style={{width:'50px'}}>
                 <p>
                     <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
                         Call
@@ -317,6 +382,26 @@ const BookingList = () => {
         }
         return time;
     }
+
+    const getPostcode = (postcode) => {
+        if (!postcode) {return;}
+        const cleanedPostcode = postcode?.replace(/\s/g, "").toUpperCase();
+        const normalPostcode =  cleanedPostcode?.slice(0, -3) + " " + cleanedPostcode?.slice(-3);
+        return normalPostcode;
+    }
+
+    useEffect(() => {
+        function setWatcher(watch = true) {
+            setInterval(() => {
+                setExtendCount(prev => prev + 1);
+                if (!watch) {
+                    clearInterval();
+                }
+
+            }, 60000);
+        }
+        setWatcher();
+    }, []);
 
     const TodayBookings = ({ todayBooking, message }) => {
         if (todayBooking?.length <= 0) {
@@ -585,6 +670,7 @@ const BookingList = () => {
     }
 
     const ApproveJob = ({ jobs, message, notice }) => {
+        const [detailsId, setDetailsId] = useState(null);
         if (notice) {
             return <p style={{textAlign:'center'}}>{notice}</p>;
         }
@@ -674,17 +760,305 @@ const BookingList = () => {
         );
     }
 
+    const search = async (e) => {
+        e.preventDefault()
+        if (loading) return;
+        setLoading(true);
+        setAllJobs([]);
+        try {
+            const res = await api.post('/api/booking/serach-booking-admin', {orderId: searchDatabase})
+            const { booking } = res.data;
+            console.log(booking);
+            if (booking?.length <= 0) {
+                setMessage("No booking matching your order id");
+                return;
+            }
+            setAllJobs(prev => {
+                const map = new Map(prev.map(item => [item.id, item]));
+                booking.forEach(item => map.set(item.id, item));
+                return Array.from(map.values()).sort((a, b) => b.id - a.id);
+            })
+        } catch (error) {
+            console.log(error);
+            setMessage("Error while fetching data");
+        } finally {
+            setLoading(false);
+        }
+
+    }
+
+    useEffect(() => {
+        if (searchDatabase?.length <= 0) {
+            setFinishAllJobs(false);
+            setAllJobs([]);
+            setPageCount(prev => prev + 1);
+        }
+    }, [searchDatabase]);
+
+    const handleExtension = (e) => {
+        e.preventDefault();
+        if (extensionList.length <= 0) return;
+        setAllJobs([]);
+        setApproveExtension(true);
+        setAllJobs(extensionList);
+        if (activeBottomMenu !== "All") {
+            setActiveBottomMenu('All');
+            setTitle("All Booking");
+        }
+
+    }
+
+    useEffect(() => {
+        if (activeBottomMenu !== "All") {
+            setApproveExtension(false);
+        }
+    }, [activeBottomMenu]);
+
+    const AllJobs = ({ all, message, notice, approve = false }) => {
+        const [detailsId, setDetailsId] = useState(null);
+        const [id, setId] = useState(null);
+
+        if (all?.length <= 0) {
+            return <p style={{margin:'20px'}}>{message ? message : "No booking at the moment"}</p>;
+        }
+
+        function jobProgress(booking) {
+            const hour = booking?.startHour;
+            const minute = booking?.startMinute;
+            const timeInMins = (Number(hour) * 60) + minute;
+            if (booking?.actualStartTime !== null && !booking?.actualStopTime) {
+                const diffInMins = Math.abs(differenceInMinutes(new Date(), new Date(booking?.actualStartTime)));
+                if (diffInMins <= timeInMins) {
+                    return {color: "green", message: "This job is in progress"};
+                }
+                if (diffInMins > timeInMins) {
+                    return {color: "red", message: "This job's duration has been extended"};
+                }
+
+            }
+            if (booking?.actualStartTime && booking?.actualStopTime) {
+                return {color: "blue", message: "This job has been done"};
+            }
+            return {color: "grey", message: "This job has not been done"};
+        }
+
+        async function approveOT(order) {
+            if (loadingApproval) {return;}
+            setLoadingApproval(true);
+            const data = {email: order?.cleanerEmail, orderId: order?.orderId}
+            try {
+                const response = await api.post(`/api/booking/approve-ot`, data);
+                const {booking, success } = response.data;
+                if (success) {
+                    setApprovalMessage('Successfully approved');
+                    setAllJobs(prev => {
+                        const map = new Map(prev.map(item => [item.id, item]));
+                        booking.forEach(item => map.set(item.id, item));
+                        return Array.from(map.values()).sort((a, b) => b.id - a.id);
+                    })
+                }
+                else {
+                    setApprovalMessage('Failed to approve extension. Try again');
+                }
+
+
+            } catch (error) {
+                console.log(error);
+                setApprovalMessage("Error couured")
+            } finally {
+                setLoadingApproval(false);
+            }
+        }
+
+        return (
+            <div>
+                <div className="cleaning-schedule card">
+                    <div className="grid-container">
+                        {all.map(booking  => (
+                            <div key={booking.id} className="service-card">
+                                <h4 style={{textAlign:'center', marginTop:'5px'}}>{booking?.orderId}</h4>
+
+                                <div style={{display:'flex', alignItems:'center', marginTop:'10px'}}>
+                                    <h4 style={{color: jobProgress(booking).color}}>{jobProgress(booking).message}</h4>
+                                    <div style={{
+                                        alignSelf:'end',
+                                        width:'20px',
+                                        height:'20px',
+                                        borderRadius:'50%',
+                                        backgroundColor: jobProgress(booking).color,
+                                    }}>
+                                    </div>
+                                </div>
+
+                                <div style={{display:'flex', alignItems:'center', marginTop:'10px'}}>
+                                    <h3 style={{textAlign:'start'}}>Client details</h3>
+                                    <MdKeyboardArrowRight
+                                        size={50}
+                                        style={{width:'40px', alignSelf:'end', marginBottom:'15px'}}
+                                        onClick={() => {
+                                            if (id?.length > 0 && booking.id !== id) return;
+                                            if (id === null || id === undefined) {
+                                                setId(booking.id);
+                                                return;
+                                            }
+                                            setId(null);
+                                        }}
+                                        className={id === booking.id ? 'rotate-down' : 'rotate-up'}
+                                    />
+                                </div>
+                                {id === booking.id &&
+                                    <div>
+                                        <h3 style={{textAlign:'start'}}>{renderName(booking.customer)}</h3>
+                                        <div style={{display:'flex', justifyContent:'center', alignItems:'baseline', marginRight:'10px'}}>
+                                            <FaPhone  className={'icon-small'} />
+                                            <p>{booking.phone}</p>
+                                            <CallButton phoneNumber={booking.phone} />
+                                        </div>
+                                        <div style={{display:'flex', justifyContent:'center', alignItems:'baseline', marginRight:'10px'}}>
+                                            <FaEnvelope  className={'icon-small'} />
+                                            <p>{booking.email}</p>
+                                        </div>
+                                        <div style={{display:'flex', justifyContent:'center', alignItems:'baseline'}}>
+                                            <FaMapMarkerAlt className={'icon-small'}  />
+                                            <p><span style={{fontWeight:'bold'}} >{getPostcode(booking.postcode)}</span> {booking.address}</p>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <FaClock className="icon-small" />
+                                            <p> {getTime(booking.startTime)}</p>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <p>Amount</p>
+                                            <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <p>Duration</p>
+                                            <h4 style={{textAlign:'end'}}>{formatDuration(booking.duration)}</h4>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <h4>{booking.plan}</h4>
+                                            <p style={booking.nature === 'Light' ? {color:'green', textAlign:'end'} :
+                                                booking.nature === 'Medium' ? {color:'lightpink', textAlign:'end'}: {color:'red', textAlign:'end'}}>
+                                                {booking.nature}
+                                            </p>
+                                        </div>
+                                    </div>}
+
+                                <div style={{display:'flex', alignItems:'center', marginTop:'10px'}}>
+                                    <h3 style={{textAlign:'start', color:'darkred'}}>Job details</h3>
+                                    <MdKeyboardArrowRight
+                                        size={50}
+                                        style={{width:'40px', alignSelf:'end', marginBottom:'15px'}}
+                                        onClick={() => {
+                                            if (detailsId?.length > 0 && booking.orderId !== detailsId) return;
+                                            if (detailsId === null || detailsId === undefined) {
+                                                setDetailsId(booking.orderId);
+                                                return;
+                                            }
+                                            setDetailsId(null);
+                                        }}
+                                        className={detailsId === booking.orderId ? 'rotate-down' : 'rotate-up'}
+                                    />
+                                </div>
+                                {detailsId === booking.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
+                                    {booking.booking.map((book, index) => (
+                                        <div key={index} className={'order-container'}>
+                                            <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
+                                            <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
+                                        </div>
+                                    ))}
+                                </div>}
+
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection:'column',
+                                    alignItems: 'center',
+                                    justifyContent:'space-between',
+                                    padding:'10px'
+                                }}>
+                                    <h3  style={{textAlign:'start', color:'darkorchid'}}>Cleaner details</h3>
+                                    <div style={{marginLeft:'10px'}}>
+                                        <ul>
+                                            <li>{booking.cleaner}</li>
+                                            <li>{booking.cleanerEmail}</li>
+                                            {booking?.actualStartTime && <li>Job started at {format(new Date(booking?.actualStartTime), 'yyyy-MM-dd hh:mm')}</li>}
+                                            {booking?.actualStopTime && <li>Job ended at {format(new Date(booking?.actualStopTime), 'yyyy-MM-dd hh:mm')}</li>}
+                                            {booking?.extra && <li>Requested an extension of {booking?.extra} mins</li>}
+                                        </ul>
+                                        <div style={{
+                                            display:'flex',
+                                            justifyContent:'center',
+                                            alignItems:'baseline',
+                                            marginRight:'10px'
+                                        }}>
+                                            <ul><li> {booking.cleanerPhone} </li></ul>
+                                            <CallButton phoneNumber={booking.cleanerPhone} />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {approve &&
+                                    <div style={{display: 'flex', flexDirection:'column'}}>
+                                        {loadingApproval && <p style={{margin:'10px'}}>Loading...</p>}
+                                        {approvalMessage && <p style={{margin:'15px'}}>{approvalMessage}</p>}
+                                        <h4 style={{marginBottom:'15px'}}>{booking?.extra} mins duration extension for approval</h4>
+                                        <button
+                                            onClick={() => approveOT(booking)}
+                                            disabled={(loadingApproval || booking?.extraApproval === 'yes' || !booking?.extra)}
+                                            className={(loadingApproval || booking?.extraApproval === 'yes' || !booking?.extra) ? 'back-button' : 'submit-button'}>
+                                            Approve
+                                        </button>
+                                    </div>
+                                }
+
+                            </div>
+                        ))}
+                    </div>
+                    {loading && (<p>Loading data...</p>)}
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="sticky-nav-container">
             <nav  className='top-order-nav'>
                 <div className="nav-order-content">
-                    <div style={{display:'flex', flexDirection:'row', marginLeft:'20px', marginRight:'20px', alignItems:'center'}}>
-                        <div style={{ display:'flex', alignItems: 'center', gap:'10px' }}>
-                            <img src={LOGO} className={'logo-icon'}/>
-                            <h2 style={{textAlign:'start'}}>{title}</h2>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                        <div style={{display:'flex', flexDirection:'row', marginLeft:'20px', marginRight:'20px', alignItems:'baseline'}}>
+                            <div style={{ display:'flex', alignItems: 'center', gap:'10px'}}>
+                                <img src={LOGO} className={'logo-icon'}/>
+                                <h2 className={'experience-text'} style={{textAlign:'start'}}>{title}</h2>
+                            </div>
+                            {totalOT > 0 && <strong onClick={handleExtension} style={{
+                                alignSelf:'end',
+                                width:'60%',
+                                marginRight:'13px',
+                                fontSize:'small',
+                                color:'red',
+                                marginBottom:'15px',
+                                }}>
+                                    {totalOT} mins for approval
+                                </strong>}
                         </div>
-                    </div>
+                        {activeBottomMenu === "All" && <div style={{
+                                flexFlow: "1",
+                                maxWidth:'1200px',
+                                display:'flex',
+                                alignItems:'center'
+                            }} className="search-bar" >
+                                <input
+                                    type="text"
+                                    placeholder="search using order number..."
+                                    value={searchDatabase}
+                                    className={'button-bg'}
+                                    style={{width:'90%'}}
+                                    onChange={(e) => setSearchDatabase(e.target.value)}
+                                />
+                                <FaSearch onClick={searchDatabase?.length > 0 ? search : null } style={{width:'40px'}}  />
 
+                            </div>}
+                    </div>
                 </div>
             </nav>
 
@@ -693,6 +1067,7 @@ const BookingList = () => {
                 {activeBottomMenu === "Recent" && <Recent last7DaysBooking={recentBookings} message={message} /> }
                 {activeBottomMenu === "Schedule" && <Schedule todaySchedule={todaySchedule} message={message} />}
                 {activeBottomMenu === "Jobs" && <ApproveJob jobs={approvedBookings} message={message} notice={approvalMessage} />}
+                {activeBottomMenu === "All" && <AllJobs all={allJobs} message={message} approve={approveExtension} />}
             </main>
 
             <nav  className='bottom-order-nav'>

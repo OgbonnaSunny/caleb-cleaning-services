@@ -241,11 +241,14 @@ const CleanerProfile = () => {
     const [orderEnded, setOrderEnded] = useState(false);
     const [detailsId, setDetailsId] = useState(null);
     const [timeInSeconds, setTimeInSeconds] = useState(0);
+    const [timers, setTimers] = useState({});
     const [emailMessage, setEmailMessage] = useState(null);
     const [loadingEmail, setLoadingEmail] = useState(false);
-    const [timers, setTimers] = useState({});
     const [jobInProgress, setJobInProgress] = useState(false);
     const [activeId, setActiveId] = useState(null);
+    const [requestMessage, setRequestMessage] = useState(null);
+
+    const [loadingRequest, setLoadingRequest] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -1228,6 +1231,27 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
+        for (const order of myOrders) {
+            let hour = Number(order.startHour);
+            let minute = Number(order.startMinute);
+            if (isNaN(hour) || isNaN(minute)) continue;
+            if (hour?.toString()?.length <= 1) {
+                hour = '0' + hour;
+            }
+            if (minute?.toString()?.length <= 1) {
+                minute = '0' + minute;
+            }
+
+            const newTime = `${hour}:${minute}:00`;
+            setTimers(prev => ({
+                ...prev,
+                [order.orderId]: newTime,
+            }));
+        }
+
+    }, [myOrders]);
+
+    useEffect(() => {
         const myOders = async () => {
             if (email === null || email === undefined || orderEnded) {
                 return;
@@ -1259,7 +1283,6 @@ const CleanerProfile = () => {
                     });
                     if (time?.length > 0) {
                         const timeElapsed = Number(time[0]?.minutes_diff);
-                        console.log(timeElapsed);
                         for (const order of jobList) {
                             if (order.orderId === time[0]?.orderId) {
                                 const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
@@ -1386,88 +1409,64 @@ const CleanerProfile = () => {
         }
     }
 
-    useEffect(() => {
-        for (const order of myOrders) {
-            let hour = Number(order.startHour);
-            let minute = Number(order.startMinute);
-            if (isNaN(hour) || isNaN(minute)) continue;
-            if (hour?.toString()?.length <= 1) {
-                hour = '0' + hour;
-            }
-            if (minute?.toString()?.length <= 1) {
-                minute = '0' + minute;
+    const handleOrder = async (order) => {
+        if (order?.stage === 'email') {
+            setIdForUpdate(order.orderId);
+            setorder(order);
+            return;
+        }
+        var data = {
+            to: order?.email,
+            text: "A Fly Cleaner is on the way to your property. Please make your property accessible",
+            subject: "Cleaning service"
+        };
+        setLoadingEmail(true);
+        var succeeded = false;
+        try {
+            let response = await api.post('/api/booking/check-pending-order', {email: order?.cleanerEmail});
+            const { jobs } = response.data;
+            if (jobs?.length) {
+                setEmailMessage('You have an on-going job. Please finish the job before notifying a client');
+                return;
             }
 
-            const newTime = `${hour}:${minute}:00`;
-            setTimers(prev => ({
-                ...prev,
-                [order.orderId]: newTime,
-            }));
+            response = await api.post('/api/send-email-to-customer', data);
+
+            const { message, success} =  response.data;
+            setEmailMessage(message);
+            succeeded = success;
+            if (success) {
+                data = {email: order.cleanerEmail, orderId: order.orderId};
+                response = await api.post('/api/booking/update-stage', data);
+                const { job, message, success } = response.data;
+                setMyOrders(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    job.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+                if (!success) {
+                    setEmailMessage(message);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoadingEmail(false);
+            setTimeout(() => setEmailMessage(null), 4000)
         }
 
-    }, [myOrders]);
+    }
 
     const MyOrders = () => {
-        const [detailsId, setDetailsId] = useState(null);
         const [otId, setOtId] = useState(null);
+        const [detailsId, setDetailsId] = useState(null);
         const [ot, setOt] = useState(null);
-        const [loadingEmail, setLoadingEmail] = useState(false);
-        const [emailMessage, setEmailMessage] = useState(null);
-        const [loadingRequest, setLoadingRequest] = useState(false);
-        const [requestMessage, setRequestMessage] = useState(null);
+
 
         useEffect(() => {
             setTimeout(() => setRequestMessage(null), 5000);
 
         }, [requestMessage]);
-
-        const handleOrder = async (order) => {
-            if (order?.stage === 'email') {
-                setIdForUpdate(order.orderId);
-                setorder(order);
-                return;
-            }
-            var data = {
-                to: order?.email,
-                text: "A Fly Cleaner is on the way to your property. Please make your property accessible",
-                subject: "Cleaning service"
-            };
-            setLoadingEmail(true);
-            var succeeded = false;
-            try {
-                let response = await api.post('/api/booking/check-pending-order', {email: order?.cleanerEmail});
-                const { jobs } = response.data;
-                if (jobs?.length) {
-                    setEmailMessage('You have an on-going job. Please finish the job before notifying a client');
-                    return;
-                }
-
-                response = await api.post('/api/send-email-to-customer', data);
-
-                const { message, success} =  response.data;
-                setEmailMessage(message);
-                succeeded = success;
-                if (success) {
-                    data = {email: order.cleanerEmail, orderId: order.orderId};
-                    response = await api.post('/api/booking/update-stage', data);
-                    const { job, message, success } = response.data;
-                    setMyOrders(prev => {
-                        const map = new Map(prev.map(item => [item.id, item])); // old items
-                        job.forEach(item => map.set(item.id, item));    // add/replace new
-                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
-                    });
-                    if (!success) {
-                        setEmailMessage(message);
-                    }
-                }
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoadingEmail(false);
-                setTimeout(() => setEmailMessage(null), 4000)
-            }
-
-        }
 
         const renderWithTime = (date) => {
             const diff = differenceInHours(new Date(date), new Date());
@@ -1502,8 +1501,8 @@ const CleanerProfile = () => {
             try {
                 const data = { email: order?.cleanerEmail, orderId: order?.orderId, ot: ot }
                 const response = await api.post('/api/booking/ot-request', data)
-                const {success, message, booking, time } =  response.data;
-                setRequestMessage(message)
+                const { success, message, booking, time } =  response.data;
+                setRequestMessage(message);
                 if (success) {
                     setMyOrders(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
@@ -1588,6 +1587,10 @@ const CleanerProfile = () => {
                                         <p style={{textAlign:'end'}}>{order.plan}</p>
                                     </div>
 
+                                    {loadingRequest && <p style={{margin:'10px'}}>Sending request...</p>}
+
+                                    {requestMessage && <p style={{margin:'10px'}}>{requestMessage}</p>}
+
                                     {showExtension(order) &&  <div style={{display:'flex', flexDirection:'column'}}>
                                         <div style={{
                                             display:'flex',
@@ -1609,10 +1612,6 @@ const CleanerProfile = () => {
                                                 className={otId === order.orderId ? 'rotate-down' : 'rotate-up'}
                                             />
                                         </div>
-
-                                        {loadingRequest && <p style={{margin:'10px'}}>Sending request...</p>}
-
-                                        {requestMessage && <p style={{margin:'10px'}}>{requestMessage}</p>}
 
                                         {order?.orderId === otId &&  <div style={{
                                             display:'flex',
@@ -1707,7 +1706,7 @@ const CleanerProfile = () => {
                                                             'back-button' : 'next-button'}>
                                                     START
                                                 </button>
-                                                <button disabled={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress)}
+                                                <button disabled={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress || order?.completed)}
                                                         onClick={finishJob}
                                                         className={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress) ?
                                                             'back-button' : 'next-button'}>
@@ -1956,7 +1955,7 @@ const CleanerProfile = () => {
 
                                     <div className={'order-container'}>
                                         <h4 style={{width:'50%'}}>Duration</h4>
-                                        <h3 style={{textAlign:'end'}}>{getDuration(order?.actualStartTime, order?.actualStopTime)}</h3>
+                                        <h3 style={{textAlign:'end'}}>{order?.duration}</h3>
                                     </div>
 
                                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>

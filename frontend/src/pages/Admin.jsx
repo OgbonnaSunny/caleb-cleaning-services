@@ -13,7 +13,7 @@ import {
     FaBars,
     FaTimes,
     FaCommentDots,
-    FaBookmark
+    FaBookmark, FaClock
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'
 
@@ -515,6 +515,8 @@ const Admin = () => {
 
     const [areaCovered, setAreaCovered] = useState(0);
     const [jobCount, setJobCount] = useState(0);
+    const [extendCount, setExtendCount] = useState(0);
+    const [totalOT, setTotalOT] = useState(0);
 
     const [email, setEmail] = useState(companyEmail);
     const [socket, setSocket] = useState(socket1);
@@ -527,13 +529,41 @@ const Admin = () => {
         { title: "Today's Expenses", value: `£${expense}`, change: `${expenseChange}`, icon: <FaPoundSign />, trend: `${expenseTrend}` },
         { title: "This Month's Expenses", value: `£${monthExpense}`, change: `${monthExpenseChange}`, icon: <FaPoundSign />, trend: `${monthExpenseTrend}` },
         { title: "Active Cleaners", value: `${activeCleaners}`, change: `${activeCleanerChange}`, icon: <FaUserTie />, trend: `${activeCleanersTrend}` },
-        { title: "Areas Covered", value: `${areaCovered}`, change: "+0%", icon: <FaMapMarkerAlt />, trend: 'neutral' }
+        { title: "Areas Covered", value: `${areaCovered}`, change: "+0%", icon: <FaMapMarkerAlt />, trend: 'neutral' },
+        { title: "Current Time Extensions", value: `${totalOT} mins`, change: "+0%", icon: <FaClock />, trend: 'neutral' }
     ];
-
 
     useEffect(() => {
         document.title = 'Admin';
     })
+
+    useEffect(() => {
+        api.get('/api/booking/ot-list')
+            .then(res => {
+                const { booking } = res.data;
+                let allOT = 0;
+                for (const book of booking) {
+                    allOT = allOT + book?.extra;
+                }
+                setTotalOT(allOT);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [extendCount]);
+
+    useEffect(() => {
+        function setWatcher(watch = true) {
+            setInterval(() => {
+                setExtendCount(prev => prev + 1);
+                if (!watch) {
+                    clearInterval();
+                }
+
+            }, 60000);
+        }
+        setWatcher();
+    }, []);
 
     const trendLevel = (previous, current) => {
         let trend = Number(current) - Number(previous);
