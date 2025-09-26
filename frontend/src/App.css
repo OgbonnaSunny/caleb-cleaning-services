@@ -2343,8 +2343,17 @@ button {
   color: #7f8c8d;
 }
 
+.back-button2 {
+  background: #c21433;
+  color: #e7ebeb;
+}
+
 .back-button:hover {
   background: #bdc3c7;
+}
+
+.back-button2:hover {
+  background: #4d0545;
 }
 
 

@@ -2204,7 +2204,6 @@ const Checkout = () => {
         fetchData()
     }
 
-
     function PaymentHome() {
         const stripe = useStripe();
         const elements = useElements();

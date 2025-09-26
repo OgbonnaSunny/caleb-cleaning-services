@@ -1023,7 +1023,7 @@ const BookingList = () => {
                                     ))}
                                 </div>}
 
-                                <div style={{
+                                {(booking?.cleaner && booking.cleanerEmail) &&  <div style={{
                                     display: 'flex',
                                     flexDirection:'column',
                                     alignItems: 'center',
@@ -1050,7 +1050,7 @@ const BookingList = () => {
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> }
 
                                 {(approve && booking?.extraApproval === 'no' && booking?.extra) &&
                                     <div style={{display: 'flex', flexDirection:'column'}}>

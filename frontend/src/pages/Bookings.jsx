@@ -18,6 +18,8 @@ import {
 import api from './api.js'
 import { useNavigate } from 'react-router-dom';
 import {differenceInDays, format, isToday} from 'date-fns';
+import DatePicker from "react-datepicker";
+import {MdKeyboardArrowDown, MdKeyboardArrowRight, MdKeyboardArrowUp} from "react-icons/md";
 
 
 const Bookings = ( {cancellable =  false, user, history = false }) => {
@@ -61,6 +63,9 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [activeIdForCancellation, setActiveIdForCancellation] = useState(null);
     const [finishedActive, setFinishedActive] = useState(false);
     const [finishedHistory, setFinishedHistory] = useState(false);
+    const [booking, setBooking] = useState(null);
+    const [cancelId, setCancelId] = useState(null);
+    const [detailsId, setDetailsId] = useState(null);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -221,7 +226,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             const clientHeight = window.innerHeight;
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loading) {
+                if (!loading && !booking) {
                     setPageCount(prev => prev + 1);
                 }
             }
@@ -230,7 +235,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [loading]);
+    }, [loading, booking]);
 
     useEffect(() => {
 
@@ -386,13 +391,410 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         return format(new Date(date), "EEE do MMM, yyyy h:mm a");
     }
 
+    const Reschedule = ({ booking }) => {
+        if (!booking) { return; }
+
+        const data = {
+            dayName: '',
+            monthName: '',
+            yearName: new Date().getFullYear(),
+            starter:'',
+            plan: 'One-Off',
+            planType:'',
+            rate: 29,
+            date: '',
+            time: '09:00',
+            hour: 9,
+            hourText: '09',
+            minuteText: '00',
+            minute: 0,
+            startTime: '',
+            nature: 'Light',
+            natureActive: [false, false, false],
+            room: [],
+            appliance: [],
+            options: [],
+            booking: [],
+            totalAmount: 0,
+            duration: '',
+            addictions: [],
+            errandTime:'0',
+            erranTimeInMinutes: 0,
+            cashBack:'Cashback up to £25',
+            weekly1:'No',
+            weekly2:'No',
+            monthly: 3,
+            check: false,
+            key: false,
+            pets: false,
+            upholstery: false,
+            chores: [],
+            choresPrevPrice: 0,
+            show: false,
+            show2: false,
+            questionIds: [],
+            questionIds2: [],
+            minimumEstimate: 87,
+            showInfo1: false,
+            showInfo2: false,
+            showInfo3: false,
+            showInfo4: false,
+            bookingEmpty: false,
+            addresses: ['Select addres', "1 Princes Street", "10 Royal Mile", "15 North Bridge", "20 St Giles Street", "25 High Street"],
+            customer: '',
+            firstName: '',
+            lastName: '',
+            phone: '',
+            address: '',
+            email: '',
+            postcode: '',
+            authorization: false,
+            policy: false,
+            disableThisDay: false,
+            standardOnly: true,
+            onSubscription: false,
+            durationQty: 0,
+            urgent: false,
+            sessionTime:'',
+            showRugs: false,
+            rugRooms: [],
+            rugSizes: [],
+            personel: 1,
+            startHour: 0,
+            startMinute: 0,
+
+        }
+        const [selectedDate, setSelectedDate] = useState(null);
+        const [formData, setFormData] = useState(data);
+        const [errors, setErrors] = useState({});
+        const [adjustLower, setAdjustLower] = useState(true);
+        const [minimumHour, setMinimumHour] = useState(0);
+        const [minimumMinute, setMinimumMinute] = useState(0);
+        const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
+        const [time, setTime] = useState('');
+
+
+        const isSameOrAfter = (date, baseDate = new Date()) => {
+            const d1 = new Date(date.setHours(0, 0, 0, 0));
+            const d2 = new Date(baseDate.setHours(0, 0, 0, 0));
+            return d1 >= d2;
+        };
+
+        const filterDate = (date) => {
+            // Enable only today and future dates
+            return isSameOrAfter(date);
+        };
+
+        const addHour = () => {
+            let hours = formData.hour;
+            let minuteText = formData.minuteText;
+            let time;
+            if (hours >= 23) return;
+            hours += 1;
+
+            let hour;
+            if (hours.toString().length <= 1) {
+                hour =  `0${hours}`;
+                time = `${hour}:${minuteText}`;
+            }
+            else {
+                hour = hours.toString();
+                time = `${hour}:${minuteText}`;
+            }
+            setFormData({...formData, hourText: hour, hour: hours, time: time });
+        }
+
+        const removeHour = () => {
+            let hours = formData.hour - 1;
+            if (!adjustLower) {
+                if (hours < minimumHour) return;
+            }
+            const thisHour = new Date().getHours();
+            let minimumHours = thisHour + 4;
+            let minuteText = formData.minuteText;
+            let time;
+
+            const thisDay = isToday(formData.date)
+            const daysDiff = differenceInDays(new Date(formData.date), new Date());
+
+            if (thisDay) {
+                if (hours < minimumHours) {
+                    hours = minimumHours;
+                }
+                if (hours < 9) {
+                    hours = 9;
+                }
+            }
+            else {
+                if (daysDiff <= 0) {
+                    if (hours < 9) {
+                        hours = 9;
+                    }
+                }
+                else {
+                    if (hours <= 0) {
+                        hours = 1;
+                    }
+                }
+            }
+
+            let hour;
+            if (hours.toString().length <= 1) {
+                hour =  `0${hours}`;
+                time = `${hour}:${minuteText}`;
+
+            }
+            else {
+                hour = hours.toString();
+                time = `${hour}:${minuteText}`;
+            }
+
+            setFormData({...formData, hourText: hour, hour: hours, time: time });
+
+        }
+
+        const addMinute = () => {
+            let minutes = formData.minute;
+            let hourText = formData.hourText;
+            let hour;
+            if (minutes === 30) {
+                return
+            }
+            minutes =  formData.minute + 30;
+            let minute = minutes.toString();
+            let time = `${hourText}:${minute}`;
+
+            setFormData({...formData, minuteText: minute, minute: minutes, time: time });
+        }
+
+        const removeMinute = () => {
+            let minutes = formData.minute;
+            let hourText = formData.hourText;
+            let time;
+            if (minutes === 0) {
+                return
+            }
+            minutes =  formData.minute - 30;
+            if (!adjustLower) {
+                if (minutes < minimumMinute) return;
+            }
+
+            let minute = `0${minutes}`;
+            time = `${hourText}:${minute}`;
+
+            setFormData({...formData, minuteText: minute, minute: minutes, time: time });
+        }
+
+        const disableThisday = (date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today to midnight
+            return date > today; // Disables today and all past dates
+        };
+
+        const enableThisday = (date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today to midnight
+            return date >= today;
+        }
+
+        async function rescheduleBooking(e) {
+            e.preventDefault();
+            if (loading) return;
+            const newErrors = {};
+            if (!formData.date.trim()) newErrors.date = 'Please select date';
+
+            if (!formData.time.trim()) newErrors.time = 'Please select time';
+
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors);
+                return;
+            }
+
+            setLoading(true);
+
+            const bookDate = `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`;
+
+            let data = {orderId: booking?.orderId, time: bookDate};
+
+            try {
+                let response = await api.post('/api/booking/update-time', data);
+                const { booking } = response.data;
+                setAllBookingData(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    booking.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+
+                const cleanerEmail = booking?.cleanerEmail
+                if (cleanerEmail) {
+                    data = {
+                        to: cleanerEmail,
+                        text: `Your job with order id: ${booking?.orderId} has  been rescheduled to ${bookDate}. If this date is convenient for you, please re-accept the job and kindly note that this job will be made available to other employees if you do not accept it after 1 hour.`,
+                    };
+                    response = await api.post('/api/send-reschedule-email', data);
+                }
+                setMessage('Successfully updated')
+
+            } catch (error) {
+                console.log(error);
+                setMessage('Error occured');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        const handleDateChange = (selectedDate) => {
+            const newErrors = errors;
+            const now = isToday(selectedDate)
+            let time;
+            let hourText = '';
+            const date =  format(selectedDate, 'yyyy-MM-dd');
+            const session = format(new Date(), 'yyyy-MM-dd hh:mm:ss');
+            if (now) {
+                const hour = new Date().getHours();
+                let newHour = hour + 4;
+
+                let minutesToBeUse = 0;
+                let minuteText = '';
+                const minute = new Date().getMinutes();
+                if (minute > 5) {
+                    minutesToBeUse = 30;
+                    minuteText = `${minutesToBeUse}`
+                    if (minute > 30) {
+                        newHour++;
+                        minuteText = '00';
+                        minutesToBeUse = 0;
+                    }
+                }
+                else {
+                    minuteText = '00';
+                }
+
+                if (newHour < 9) {
+                    newHour = 9;
+                }
+                if (newHour.toString().length <= 1) {
+                    time = `0${newHour}:${minuteText}`;
+                    hourText = `0${newHour}`;
+                }
+                else {
+                    time = `${newHour}:${minuteText}`;
+                    hourText = newHour.toString();
+                }
+                setAdjustLower(false)
+                setMinimumHour(newHour)
+                setMinimumMinute(minutesToBeUse)
+
+                setFormData({...formData,
+                    hour: newHour,
+                    hourText: hourText,
+                    date: date,
+                    time: time,
+                    minute: minutesToBeUse,
+                    minuteText: minuteText,
+                });
+                setSelectedDate(new Date(selectedDate).setHours(0, 0, 0, 0));
+                newErrors['time'] = null;
+            }
+            else {
+                setAdjustLower(true)
+                const time = `${formData.hourText}:${formData.minuteText}`;
+                setFormData({...formData, date: date, time: time});
+                newErrors['time'] = null;
+            }
+            newErrors['date'] = null;
+            setErrors(newErrors);
+        }
+
+        useEffect(() => {
+            const hours = new Date().getHours();
+            let disable = false;
+            if (hours > 16) {
+                disable = true;
+                setMinDate(new Date(Date.now() + 86400000))
+            }
+            setFormData({...formData, disableThisDay: disable});
+        }, []);
+
+        useEffect(() => {
+            const time = new Date(selectedDate).setHours(formData.hour, formData.minute, 0, 0);
+            const date = new Date(time).toLocaleTimeString([],{
+                hour: '2-digit',
+                minute: '2-digit'
+            } );
+            setTime(date);
+        }, [formData.hour, formData.minute, selectedDate, formData.date])
+
+       return (
+           <div className={'support-page'}>
+               <div style={{display:'flex', alignItems: 'center', gap:'10px'}}>
+                   <h3>Choose a new date</h3>
+                    <FaTimes onClick={() => setBooking(null)} size={30} style={{width:'40px', alignSelf:'end'}} />
+               </div>
+               <div className={'date-time-container'} style={{marginTop:'20px'}}>
+                   <div style={{backgroundColor:'white', paddingRight:'30px', maxWidth:'300px'}}>
+                       <label style={{textAlign:'center'}} htmlFor="deliveryDate">Choose date</label>
+                       <DatePicker
+                           selected={formData.date}
+                           type={'date'}
+                           name={'date'}
+                           onChange={(date) => handleDateChange(date)}
+                           dateFormat="yyyy-MM-dd"
+                           placeholderText="Select a date"
+                           inline
+                           minDate={minDate}
+                           filterDate={formData.disableThisDay ? filterDate : undefined}
+                           dayClassName={(date) => {
+                               const selected = formData.date === format(new Date(date), 'yyyy-MM-dd');
+                               return selected ? 'selected-day' : undefined;
+                           }}
+                       />
+                       {errors.date && <span className="error-message">{errors.date}</span>}
+                       {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
+                   </div>
+
+                   <div  style={{ flexDirection:'column', alignItems:'center', maxWidth:'200px', marginTop:'20px', justifyContent:'space-around'}}>
+                       <label>Choose time</label>
+                       <div  style={{display:'flex', flexDirection:'row', width:'80px', alignSelf:'center'}}>
+                           <MdKeyboardArrowUp size={60}  style={{marginLeft:'12px'}} onClick={addHour} />
+                           <MdKeyboardArrowUp size={60} onClick={addMinute} />
+                       </div>
+                       <div className={'time-container'} style={{display:'flex', flexDirection:'row',
+                           justifyContent:'center', width:'100px', padding:'10px'}}>
+                           <h2  style={{textAlign:'end'}}>{formData.hourText}</h2>
+                           <h2  style={{textAlign:'center'}}>:</h2>
+                           <h2  style={{textAlign:'start'}}>{formData.minuteText}</h2>
+                       </div>
+
+                       <div style={{display:'flex', flexDirection:'row', width:'80px', alignSelf:'center' }}>
+                           <MdKeyboardArrowDown  size={60} style={{marginLeft:'12px'}} onClick={removeHour} />
+
+                           <MdKeyboardArrowDown  size={60} onClick={removeMinute} />
+                       </div>
+                       <p>24-hour format</p>
+                       {time && <p>{time}</p>}
+                       {errors.time && <span className="error-message">{errors.time}</span>}
+                   </div>
+               </div>
+               {loading && <p style={{margin:'10px'}}>Loading...</p>}
+               {message && <p style={{margin:'10px'}}>{message}</p>}
+               <button
+                   disabled={loading}
+                   onClick={rescheduleBooking}
+                   style={{marginTop:'10px'}}
+                   className={'submit-button'}>
+                   Reschedule
+               </button>
+           </div>
+       );
+    }
+
     return (
         <div className={'support-page'} style={{
             display: 'flex',
             flexDirection: 'column',
         }}>
-            {user === 'client' &&
-                <div>
+            {(user === 'client' && !booking) && <div>
                     {!history && (<div>
                         <div className="recent-bookings card">
                             {allBookingData.length > 0 &&  <div className="card-body">
@@ -438,13 +840,83 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                                 </p>
                                             </div>
                                             {(cancelledMessage && activeIdForCancellation === booking.orderId) && <p>{cancelledMessage}</p>}
-                                            <button onClick={() => cancelBooking(booking.orderId)} className="btn btn-primary"
-                                                    style={(booking.status === 'confirmed' || booking.status === 'cancelled' || cancelledIds.includes(booking.orderId) || loading) ? {borderRadius:'30px', backgroundColor:'grey', color:'black', marginTop:'6px'} :
-                                                        !cancellable ? {borderRadius:'30px', backgroundColor:'green', color:'white', marginTop:'6px'} :
-                                                            {borderRadius:'30px', backgroundColor:'red', color:'white', marginTop:'6px'}}
-                                                    disabled={(booking.status === 'confirmed' || booking.status === 'cancelled' || loading || cancelledIds.includes(booking.orderId))}>
-                                                {cancellable ? 'Cancel booking' : 'Assign cleaner'}
-                                            </button>
+
+                                            <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
+                                                <h3 style={{textAlign:'start'}}>My Job</h3>
+                                                <MdKeyboardArrowRight
+                                                    size={40}
+                                                    style={{width:'40px', alignSelf:'end'}}
+                                                    onClick={() => {
+                                                        if (detailsId?.length > 0 && booking.orderId !== detailsId) return;
+                                                        if (detailsId === null || detailsId === undefined) {
+                                                            setDetailsId(booking.orderId);
+                                                            return;
+                                                        }
+                                                        setDetailsId(null);
+                                                    }}
+                                                    className={detailsId === booking.orderId ? 'rotate-down' : 'rotate-up'}
+                                                />
+                                            </div>
+
+                                            {detailsId === booking.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
+                                                {booking.booking.map((book, index) => (
+                                                    <div key={index} className={'order-container'}>
+                                                        <p style={{width:'60%', textAlign:'start'}}>{book.room}</p>
+                                                        <p style={{textAlign:'end', width:'30%'}}>{book.count}</p>
+                                                    </div>
+                                                ))}
+                                            </div>}
+
+                                            {cancelId === booking.orderId &&  <div className="price-container">
+                                                <p style={{margin:'10px'}}>
+                                                    Are you sure you want to cancel this booking? This cannot be undone and it may attract a fee according to our cancellation policy.
+                                                </p>
+                                                <div style={{gap:'10px'}} className={'form-actions'}>
+                                                    <button className={'back-button2'}
+                                                            onClick={() => cancelBooking(booking.orderId)}>
+                                                        Yes
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setCancelId(null)}
+                                                        className={'next-button'}>No
+                                                    </button>
+                                                </div>
+                                            </div> }
+
+                                            {cancelId === null &&  <div style={{display:'flex', flexDirection: 'column'}}>
+                                                <button onClick={() => setCancelId(booking.orderId)} className="btn btn-primary"
+                                                        style={(
+                                                            booking.status === 'confirmed' ||
+                                                            booking.status === 'cancelled' ||
+                                                            cancelledIds.includes(booking.orderId) ||
+                                                            loading) ? {
+                                                                borderRadius:'30px',
+                                                                backgroundColor:'grey',
+                                                                color:'black',
+                                                                marginTop:'6px'} :
+                                                            !cancellable ?
+                                                                {
+                                                                    borderRadius:'30px',
+                                                                    backgroundColor:'green',
+                                                                    color:'white', marginTop:'6px'} :
+                                                                {
+                                                                    borderRadius:'30px',
+                                                                    backgroundColor:'red',
+                                                                    color:'white', marginTop:'6px'
+                                                                }}
+                                                        disabled={(
+                                                            booking.status === 'confirmed' ||
+                                                            booking.status === 'cancelled' ||
+                                                            loading ||
+                                                            cancelledIds.includes(booking.orderId))}>
+                                                    {cancellable ? 'I Want To Cancel' : 'Assign cleaner'}
+                                                </button>
+
+                                                <button  onClick={() => setBooking(booking)} style={{marginTop:'20px', borderRadius:'30px'}}
+                                                        className={'submit-button'}>I Want To Reschedule
+                                                </button>
+                                            </div>}
+
                                         </div>
                                     ))}
                                 </div>
@@ -517,8 +989,8 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         </div>
                         {(!loading && clientHistory.length <= 0) && <div style={{marginLeft:'30px'}}><p>{historyMessage}</p></div>}
                     </div>)}
-                </div>
-            }
+                </div>}
+            <Reschedule booking={booking} />
             {user === 'admin' && <div>
                 <div className="recent-bookings card">
                     <div className="card-header">

@@ -1477,6 +1477,7 @@ const CleanerProfile = () => {
         }
 
         const timeToNotify = (order) => {
+            if (order?.rescheduled) return false;
             const now = new Date(order?.time);
             const startTime = new Date(order?.startTime);
             const hours = Math.abs(differenceInHours(now, startTime)) <= 2;
@@ -1639,7 +1640,7 @@ const CleanerProfile = () => {
                                         </div>
                                         }
 
-                                    </div> }
+                                    </div>}
 
                                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
                                         <h3 style={{textAlign:'start'}}>Details</h3>
@@ -1677,8 +1678,7 @@ const CleanerProfile = () => {
                                         <h3 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h3>
                                     </div>
 
-                                    {order.orderId === idForUpdate &&
-                                        <div className="price-container">
+                                    {order.orderId === idForUpdate && <div className="price-container">
                                             <div className={'new-order-container'}>
                                                 <h3 style={{textAlign:'center'}}>Job update</h3>
                                                 <FaTimes size={20} style={{width:'30px', marginLeft:'15px', color:'black', alignSelf:'end'}}
@@ -1713,8 +1713,8 @@ const CleanerProfile = () => {
                                                     FINISH
                                                 </button>
                                             </div>
-                                        </div>
-                                    }
+                                        </div>}
+
                                     {loadingEmail && <p style={{margin:'10px', textAlign:'center'}}>sending email...</p>}
 
                                     {emailMessage && <p style={{margin:'10px', textAlign:'center'}}>{emailMessage}</p>}
@@ -1729,6 +1729,18 @@ const CleanerProfile = () => {
                                             </button>
                                             }
                                         </div>}
+
+                                    {order?.rescheduled &&
+                                        <div className={'price-container'}>
+                                            <p>This job has been rescheduled. You have to accept this job again</p>
+                                            <button
+                                                disabled={acceptedJobIds.includes(order.orderId)}
+                                                onClick={ () => acceptOrder(order)}
+                                                className={acceptedJobIds.includes(order.orderId) ? 'back-button' : 'next-button'}>
+                                                Accept
+                                            </button>
+                                        </div>
+                                    }
                                 </div>
                             ))}
                         </div>
