@@ -45,6 +45,9 @@ const BookingList = () => {
     const [extendCount, setExtendCount] = useState(0);
     const [totalOT, setTotalOT] = useState(0);
     const [approveExtension, setApproveExtension] = useState(false);
+    const [updateCount, setUpdateCount] = useState(0);
+    const [idleCount, setIdleCount] = useState(0);
+    const [filter, setFilter] = useState('');
 
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
@@ -85,6 +88,7 @@ const BookingList = () => {
             setFinishTodayJobs(false);
             setFinishRecentJobs(false);
             setFinishScheduleJobs(false);
+            setFilter('');
     }, [activeBottomMenu]);
 
     useEffect(() => {
@@ -355,6 +359,54 @@ const BookingList = () => {
                 console.log(err);
             })
     }, [extendCount]);
+
+    useEffect(() => {
+        if (loading || updateCount <= 0) { return; }
+        setLoading(true);
+        api.get('/api/booking/job-updates')
+            .then(res => {
+                const { booking } = res.data;
+                if (booking?.length <= 0) {
+                    setMessage("No job is in progress for now");
+                    return;
+                }
+                setAllJobs(prev => {
+                    const map = new Map(prev.map(item => [item.id, item]));
+                    booking.forEach(item => map.set(item.id, item));
+                    return Array.from(map.values()).sort((a, b) => b.id - a.id);
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    }, [updateCount]);
+
+    useEffect(() => {
+        if (loading || idleCount <= 0) { return; }
+        setLoading(true);
+        api.get('/api/booking/idle-jobs')
+            .then(res => {
+                const { booking } = res.data;
+                if (booking?.length <= 0) {
+                    setMessage("No idle job. All jobs are either in progress or completed");
+                    return;
+                }
+                setAllJobs(prev => {
+                    const map = new Map(prev.map(item => [item.id, item]));
+                    booking.forEach(item => map.set(item.id, item));
+                    return Array.from(map.values()).sort((a, b) => b.id - a.id);
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    }, [idleCount]);
 
     useEffect(() => {
         if (approvalMessage !== null) {
@@ -797,14 +849,17 @@ const BookingList = () => {
 
     const handleExtension = (e) => {
         e.preventDefault();
-        if (extensionList.length <= 0) return;
         setAllJobs([]);
         setApproveExtension(true);
         setAllJobs(extensionList);
+        if (extensionList.length <= 0) {
+            setMessage("No time extension  request available at this time");
+        }
         if (activeBottomMenu !== "All") {
             setActiveBottomMenu('All');
             setTitle("All Booking");
         }
+        setFilter('OT');
 
     }
 
@@ -997,7 +1052,7 @@ const BookingList = () => {
 
                                 </div>
 
-                                {approve &&
+                                {(approve && booking?.extraApproval === 'no' && booking?.extra) &&
                                     <div style={{display: 'flex', flexDirection:'column'}}>
                                         {loadingApproval && <p style={{margin:'10px'}}>Loading...</p>}
                                         {approvalMessage && <p style={{margin:'15px'}}>{approvalMessage}</p>}
@@ -1030,35 +1085,130 @@ const BookingList = () => {
                                 <img src={LOGO} className={'logo-icon'}/>
                                 <h2 className={'experience-text'} style={{textAlign:'start'}}>{title}</h2>
                             </div>
-                            {totalOT > 0 && <strong onClick={handleExtension} style={{
+                            {totalOT > 0 && <strong style={{
                                 alignSelf:'end',
                                 width:'60%',
                                 marginRight:'13px',
                                 fontSize:'small',
                                 color:'red',
                                 marginBottom:'15px',
-                                }}>
-                                    {totalOT} mins for approval
-                                </strong>}
+                            }}>{totalOT} mins for approval</strong>}
                         </div>
-                        {activeBottomMenu === "All" && <div style={{
-                                flexFlow: "1",
-                                maxWidth:'1200px',
-                                display:'flex',
-                                alignItems:'center'
-                            }} className="search-bar" >
-                                <input
-                                    type="text"
-                                    placeholder="search using order number..."
-                                    value={searchDatabase}
-                                    className={'button-bg'}
-                                    style={{width:'90%'}}
-                                    onChange={(e) => setSearchDatabase(e.target.value)}
-                                />
-                                <FaSearch onClick={searchDatabase?.length > 0 ? search : null } style={{width:'40px'}}  />
 
-                            </div>}
+                        {activeBottomMenu === 'All' &&  <div style={{
+                            display:'flex',
+                            justifyContent:'space-evenly',
+                            alignItems:'center',
+                            marginBottom:'15px'
+                        }}>
+                            <div style={{
+                                display:'flex',
+                                justifyContent:'center',
+                                flexDirection:'column',
+                                width:'25%',
+                                alignItems:'center'
+                            }}
+                                 onClick={() => {
+                                     setApproveExtension(false);
+                                     setAllJobs([]);
+                                     setUpdateCount(prev => prev + 1 );
+                                     setFilter('Updates')
+                                 }}>
+                                <div style={{
+                                    width:'20px',
+                                    height:'20px',
+                                    borderRadius:'50%',
+                                    backgroundColor: 'yellowgreen',
+                                }}>
+                                </div>
+                                <label style={filter === 'Updates' ? {color: 'yellowgreen', textDecoration:'underline'} : {color: 'yellowgreen', textDecoration:'none'}}>Updates</label>
+                            </div>
+
+                            <div style={{
+                                display:'flex',
+                                justifyContent:'center',
+                                flexDirection:'column',
+                                width:'25%',
+                                alignItems:'center'
+                            }}
+                                 onClick={handleExtension}>
+                                <div style={{
+                                    width:'20px',
+                                    height:'20px',
+                                    borderRadius:'50%',
+                                    backgroundColor: 'red',
+                                }}>
+                                </div>
+                                <label style={filter === 'OT' ? {color: 'red', textDecoration:'underline'} : {color: 'red', textDecoration:'none'}}>OT</label>
+                            </div>
+
+                            <div style={{
+                                display:'flex',
+                                justifyContent:'center',
+                                flexDirection:'column',
+                                alignItems:'center', width:'25%'
+                            }}
+                                 onClick={() => {
+                                     setApproveExtension(false);
+                                     setFinishAllJobs(false);
+                                     setAllJobs([]);
+                                     setIdleCount(prev => prev + 1);
+                                     setFilter('Idle');
+                                 }}>
+                                <div style={{
+                                    width:'20px',
+                                    height:'20px',
+                                    borderRadius:'50%',
+                                    backgroundColor: 'grey',
+                                }}>
+                                </div>
+                                <label style={filter === 'Idle' ? {color: 'grey', textDecoration:'underline'} : {color: 'grey', textDecoration:'none'}}>Idle</label>
+                            </div>
+
+                            <div style={{
+                                display:'flex',
+                                flexDirection:'column',
+                                ustifyContent:'center',
+                                width:'25%',
+                                alignItems:'center'
+                            }}
+                                 onClick={() => {
+                                     setApproveExtension(false);
+                                     setFinishAllJobs(false);
+                                     setAllJobs([]);
+                                     setPageCount(prevState => prevState + 1);
+                                     setFilter('Reset');
+                                 }}>
+                                <div style={{
+                                    width:'20px',
+                                    height:'20px',
+                                    borderRadius:'50%',
+                                    backgroundColor: 'indigo',
+                                }}>
+                                </div>
+                                <label style={filter === 'Reset' ? {color: 'indigo', textDecoration:'underline'} : {color: 'indigo', textDecoration:'none'}}>Reset</label>
+                            </div>
+                        </div> }
+
+                        {activeBottomMenu === "All" && <div style={{
+                            flexFlow: "1",
+                            maxWidth:'1200px',
+                            display:'flex',
+                            alignItems:'center'
+                        }} className="search-bar" >
+                            <input
+                                type="text"
+                                placeholder="search using order number..."
+                                value={searchDatabase}
+                                className={'button-bg'}
+                                style={{width:'90%'}}
+                                onChange={(e) => setSearchDatabase(e.target.value)}
+                            />
+                            <FaSearch onClick={searchDatabase?.length > 0 ? search : null } style={{width:'40px'}}  />
+
+                        </div>}
                     </div>
+
                 </div>
             </nav>
 
