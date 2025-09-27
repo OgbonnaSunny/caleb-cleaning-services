@@ -1732,7 +1732,11 @@ const CleanerProfile = () => {
 
                                     {order?.rescheduled &&
                                         <div className={'price-container'}>
-                                            <p>This job has been rescheduled. You have to accept this job again</p>
+                                            <p>
+                                                This job has been rescheduled. You have to accept this job again.
+                                                Please note that this job will become available for other employees
+                                                after 1 hour if you do not accept it.
+                                            </p>
                                             <button
                                                 disabled={acceptedJobIds.includes(order.orderId)}
                                                 onClick={ () => acceptOrder(order)}
