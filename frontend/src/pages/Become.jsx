@@ -391,7 +391,7 @@ const Become = () => {
         }
         if (formData.receivedCode !== code.replace(/\s+/g, '')) {
             setError('Code is invalid');
-      //      return false;
+            return false;
         }
         return true;
     }
