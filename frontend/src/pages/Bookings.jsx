@@ -16,13 +16,25 @@ import {
     FaStar, FaRegStar, FaUserTie, FaUser
 } from 'react-icons/fa';
 import api from './api.js'
-import { useNavigate } from 'react-router-dom';
-import {differenceInDays, format, isToday} from 'date-fns';
+import {Link, useNavigate} from 'react-router-dom';
+import {differenceInCalendarDays, differenceInDays, differenceInMinutes, format, isToday} from 'date-fns';
 import DatePicker from "react-datepicker";
 import {MdKeyboardArrowDown, MdKeyboardArrowRight, MdKeyboardArrowUp} from "react-icons/md";
+import {loadStripe} from "@stripe/stripe-js";
+import {
+    CardCvcElement,
+    CardExpiryElement,
+    CardNumberElement,
+    Elements,
+    useElements,
+    useStripe
+} from "@stripe/react-stripe-js";
 
 
 const Bookings = ( {cancellable =  false, user, history = false }) => {
+    const STRIPE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
+    const stripePromise = loadStripe(STRIPE_KEY);
+
     const navigate = useNavigate();
     const bookings = [
         { id: 1, postcode: "G10AS", cleanerEmail:'ogbonnasundaycy@gmail.com', cleaner: 'Sunday Ogbonna', customer: "Sarah Johnson", address: "25 Park Lane, London", date: '3 months ago', time: "Today, 10:00 AM", nature: 'Light', plan: "One-off", status: "confirmed", duration: "2h 45m", estimatedAmount: 45.76 },
@@ -31,6 +43,77 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         { id: 4, postcode: "G10AS", cleanerEmail:'ogbonnasundaycy@gmail.com', cleaner: 'Samantha Bay',  customer: "David Smith", address: "33 Baker Street", date:'1 year ago', time: "Tomorrow, 9:00 AM", nature: 'Medium', plan: "One-off", status: "confirmed", duration: "3h 55m", estimatedAmount: 95.12  },
         { id: 5, postcode: "B10AS", cleanerEmail:'hjj@gmail.com', cleaner: 'June Far', customer: "Lisa Taylor", address: "18 Oxford Street", date:'3 weeks ago', time: "Tomorrow, 11:00 AM", nature: 'Heavy', plan: "One-off", status: "cancelled", duration: "4h 05m", estimatedAmount: 25.06  }
     ];
+
+    const data = {
+        dayName: '',
+        monthName: '',
+        yearName: new Date().getFullYear(),
+        starter:'',
+        plan: 'One-Off',
+        planType:'',
+        rate: 29,
+        date: '',
+        time: '09:00',
+        hour: 9,
+        hourText: '09',
+        minuteText: '00',
+        minute: 0,
+        startTime: '',
+        nature: 'Light',
+        natureActive: [false, false, false],
+        room: [],
+        appliance: [],
+        options: [],
+        booking: [],
+        totalAmount: 0,
+        duration: '',
+        addictions: [],
+        errandTime:'0',
+        erranTimeInMinutes: 0,
+        cashBack:'Cashback up to £25',
+        weekly1:'No',
+        weekly2:'No',
+        monthly: 3,
+        check: false,
+        key: false,
+        pets: false,
+        upholstery: false,
+        chores: [],
+        choresPrevPrice: 0,
+        show: false,
+        show2: false,
+        questionIds: [],
+        questionIds2: [],
+        minimumEstimate: 87,
+        showInfo1: false,
+        showInfo2: false,
+        showInfo3: false,
+        showInfo4: false,
+        bookingEmpty: false,
+        addresses: ['Select addres', "1 Princes Street", "10 Royal Mile", "15 North Bridge", "20 St Giles Street", "25 High Street"],
+        customer: '',
+        firstName: '',
+        lastName: '',
+        phone: '',
+        address: '',
+        email: '',
+        postcode: '',
+        authorization: false,
+        policy: false,
+        disableThisDay: false,
+        standardOnly: true,
+        onSubscription: false,
+        durationQty: 0,
+        urgent: false,
+        sessionTime:'',
+        showRugs: false,
+        rugRooms: [],
+        rugSizes: [],
+        personel: 1,
+        startHour: 0,
+        startMinute: 0,
+
+    }
 
     const [allBookingData, setAllBookingData] = useState([]);
     const [allBookingDataCopy, setAllBookingDataCopy] = useState([]);
@@ -96,7 +179,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             api.post('/api/booking/customer-active-order', data)
                 .then((response) => {
                     const { booking } = response.data;
-                    if ( booking && booking.length > 0) {
+                    if (booking?.length > 0) {
                         setAllBookingData(prev => {
                             const map = new Map(prev.map(item => [item.id, item])); // old items
                             booking.forEach(item => map.set(item.id, item));    // add/replace new
@@ -127,16 +210,18 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             try {
                 let offset = 0;
                 if (clientHistory.length > 0) {
-                    offset = clientHistory[clientHistory.length - 1].id;
+                    const jobs = clientHistory;
+                    jobs.sort((a, b) => a.id - b.id);
+                    offset = jobs[jobs.length - 1].id;
                 }
                 const data = {email: email, limit: page, offset: offset};
                 const response = await api.post('/api/booking/client-history', data);
                 const { booking } = response.data;
-                if ( booking && booking.length > 0) {
+                if (booking?.length > 0) {
                     setClientHistory(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
                         booking.forEach(item => map.set(item.id, item));    // add/replace new
-                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id).reverse(); // convert back to array
                     });
 
                 }
@@ -358,121 +443,78 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         return fullName;
     }
 
+    function getFee(booking) {
+        let fee = 50.00;
+        const amount = Number(booking.estimatedAmount);
+        if (amount <= 160) {
+            fee = (amount * 0.3).toFixed(2);
+        }
+        return fee;
+    }
+
     const getTime = (date) => {
-        const invalidDate = isNaN(new Date(date).getTime());
-        if (invalidDate) {
-            return new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+        const parsed = new Date(date);
+
+        if (isNaN(parsed.getTime())) {
+            return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
-        const now = isToday(new Date(date));
-        if (now) {
-            return 'Today'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+
+        if (isToday(parsed)) {
+            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
-        const diff = differenceInDays(new Date(date), new Date());
+
+        const diff = differenceInCalendarDays(parsed, new Date());
+
         if (diff === 1) {
-            return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
         if (diff === 2) {
-            return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
-        return format(new Date(date), "EEE do MMM, yyyy h:mm a");
+        return format(parsed, "EEE do MMM, yyyy h:mm a");
     }
+
 
     const Reschedule = ({ booking }) => {
         if (!booking) { return; }
+        const cleanerEmail = booking?.cleanerEmail;
+        const amount = Math.round(getFee(booking) * 100);
 
-        const data = {
-            dayName: '',
-            monthName: '',
-            yearName: new Date().getFullYear(),
-            starter:'',
-            plan: 'One-Off',
-            planType:'',
-            rate: 29,
-            date: '',
-            time: '09:00',
-            hour: 9,
-            hourText: '09',
-            minuteText: '00',
-            minute: 0,
-            startTime: '',
-            nature: 'Light',
-            natureActive: [false, false, false],
-            room: [],
-            appliance: [],
-            options: [],
-            booking: [],
-            totalAmount: 0,
-            duration: '',
-            addictions: [],
-            errandTime:'0',
-            erranTimeInMinutes: 0,
-            cashBack:'Cashback up to £25',
-            weekly1:'No',
-            weekly2:'No',
-            monthly: 3,
-            check: false,
-            key: false,
-            pets: false,
-            upholstery: false,
-            chores: [],
-            choresPrevPrice: 0,
-            show: false,
-            show2: false,
-            questionIds: [],
-            questionIds2: [],
-            minimumEstimate: 87,
-            showInfo1: false,
-            showInfo2: false,
-            showInfo3: false,
-            showInfo4: false,
-            bookingEmpty: false,
-            addresses: ['Select addres', "1 Princes Street", "10 Royal Mile", "15 North Bridge", "20 St Giles Street", "25 High Street"],
-            customer: '',
-            firstName: '',
-            lastName: '',
-            phone: '',
-            address: '',
-            email: '',
-            postcode: '',
-            authorization: false,
-            policy: false,
-            disableThisDay: false,
-            standardOnly: true,
-            onSubscription: false,
-            durationQty: 0,
-            urgent: false,
-            sessionTime:'',
-            showRugs: false,
-            rugRooms: [],
-            rugSizes: [],
-            personel: 1,
-            startHour: 0,
-            startMinute: 0,
-
-        }
+        const [processing, setProcessing] = useState(false);
+        const [paymentIntentId, setPaymentIntentId] = useState(null);
+        const [clientSecret, setClientSecret] = useState(null);
         const [selectedDate, setSelectedDate] = useState(null);
-        const [formData, setFormData] = useState(data);
+
         const [errors, setErrors] = useState({});
         const [adjustLower, setAdjustLower] = useState(true);
         const [minimumHour, setMinimumHour] = useState(0);
         const [minimumMinute, setMinimumMinute] = useState(0);
-        const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
+        const [formData, setFormData] = useState(data);
+        const [count, setCount] = useState(0);
         const [time, setTime] = useState('');
+        const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
+        const [message, setMessage] = useState('');
 
+        useEffect(() => {
+            const hours = new Date().getHours();
+            let disable = false;
+            if (hours > 16) {
+                disable = true;
+                setMinDate(new Date(Date.now() + 86400000))
+            }
+            setFormData({...formData, disableThisDay: disable});
+        }, []);
+
+        useEffect(() => {
+            const time = new Date(selectedDate).setHours(formData.hour, formData.minute, 0, 0);
+            const date = new Date(time).toLocaleTimeString([],{
+                hour: '2-digit',
+                minute: '2-digit'
+            } );
+            setTime(date);
+        }, [formData.hour, formData.minute, selectedDate, formData.date, clientSecret])
 
         const isSameOrAfter = (date, baseDate = new Date()) => {
             const d1 = new Date(date.setHours(0, 0, 0, 0));
@@ -597,52 +639,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             return date >= today;
         }
 
-        async function rescheduleBooking(e) {
-            e.preventDefault();
-            if (loading) return;
-            const newErrors = {};
-            if (!formData.date.trim()) newErrors.date = 'Please select date';
-
-            if (!formData.time.trim()) newErrors.time = 'Please select time';
-
-            if (Object.keys(newErrors).length > 0) {
-                setErrors(newErrors);
-                return;
-            }
-
-            setLoading(true);
-
-            const bookDate = `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`;
-
-            let data = {orderId: booking?.orderId, time: bookDate};
-
-            try {
-                let response = await api.post('/api/booking/update-time', data);
-                const { booking } = response.data;
-                setAllBookingData(prev => {
-                    const map = new Map(prev.map(item => [item.id, item])); // old items
-                    booking.forEach(item => map.set(item.id, item));    // add/replace new
-                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
-                });
-
-                const cleanerEmail = booking?.cleanerEmail
-                if (cleanerEmail) {
-                    data = {
-                        to: cleanerEmail,
-                        text: `Your job with order id: ${booking?.orderId} has  been rescheduled to ${bookDate}. If this date is convenient for you, please re-accept the job and kindly note that this job will be made available to other employees if you do not accept it after 1 hour.`,
-                    };
-                    response = await api.post('/api/send-reschedule-email', data);
-                }
-                setMessage('Successfully updated')
-
-            } catch (error) {
-                console.log(error);
-                setMessage('Error occured');
-            } finally {
-                setLoading(false);
-            }
-        }
-
         const handleDateChange = (selectedDate) => {
             const newErrors = errors;
             const now = isToday(selectedDate)
@@ -706,32 +702,284 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             setErrors(newErrors);
         }
 
-        useEffect(() => {
-            const hours = new Date().getHours();
-            let disable = false;
-            if (hours > 16) {
-                disable = true;
-                setMinDate(new Date(Date.now() + 86400000))
+        async function rescheduleBooking(e) {
+            e?.preventDefault();
+            if (processing) return;
+            const newErrors = {};
+            if (!formData.date.trim()) newErrors.date = 'Please select date';
+
+            if (!formData.time.trim()) newErrors.time = 'Please select time';
+
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors);
+                return;
             }
-            setFormData({...formData, disableThisDay: disable});
+
+            setProcessing(true);
+
+            const bookDate = `${format(formData.date, 'EEEE, d MMMM yyyy')} ${formData.time}`;
+
+            let data = {orderId: booking?.orderId, time: bookDate, to: booking?.email};
+
+            try {
+                let response = await api.post('/api/booking/update-time', data);
+                const { booking } = response.data;
+                setAllBookingData(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    booking.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+
+                if (cleanerEmail) {
+                    data = {
+                        to: cleanerEmail,
+                        text: `Your job with order id: ${booking?.orderId} has  been rescheduled to ${bookDate}. If this date is convenient for you, please re-accept the job and kindly note that this job will be made available to other employees if you do not accept it after 1 hour.`,
+                    };
+                    response = await api.post('/api/send-reschedule-email', data);
+                }
+                setMessage('Your job\'s  date is successfully updated')
+
+            } catch (error) {
+                console.log(error);
+                setMessage('Error occured');
+            } finally {
+                setProcessing(false);
+            }
+        }
+
+        useEffect(() => {
+            if (selectedDate) {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth" // or "auto"
+                });
+            }
+        }, [selectedDate, message]);
+
+        const fetchData = async (e) => {
+            e.preventDefault();
+            if (processing || amount <= 0) return;
+            setProcessing(true);
+            try {
+                // 1. Create customer or return customerId if already exists - note we send {email} as object
+                const createResponse = await api.post('/api/create-customer', { email: booking?.email} );
+                const { customerId } = createResponse.data;
+
+                // create payement intent
+                const paymentIntent = await api.post('/api/create-payment-intent', {
+                    amount: amount, // note amount must be in pence. 100 pence = 1 pound
+                    currency: 'gbp',
+                    customerId: customerId
+                });
+                setClientSecret(paymentIntent.data.clientSecret);
+                setPaymentIntentId(paymentIntent.data.paymentIntentId);
+
+            } catch (error) {
+                setMessage("Something went wrong!");
+                console.log(error.message);
+            }
+            finally {
+                setProcessing(false);
+
+            }
+        };
+
+        function PaymentHome({ clientSecret, paymentIntentId }) {
+            if (!clientSecret || !paymentIntentId) return;
+
+            const [error, setError] = useState(null);
+            const [mounted, setMounted] = useState({
+                number: false,
+                expiry: false,
+                cvc: false,
+            });
+            const [pay, setPay] = useState(false);
+            const [key, setKey] = useState(Date.now());
+            const [processing, setProcessing] = useState(false);
+
+            const stripe = useStripe();
+            const elements = useElements();
+            const elementOptions = {
+                disableLink: true,
+                showIcon: true,
+                iconStyle: 'solid',
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#424770',
+                        letterSpacing: '0.025em',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#9e2146',   //className="form-group"
+                    },
+                },
+            };
+            const cardNumber = elements?.getElement(CardNumberElement);
+            cardNumber?.update({
+                showIcon: true,
+                iconStyle: 'solid'
+            });
+            const emailData = {
+                to: booking?.email,
+                text: "Your reschedule is successfull",
+                subject: "Cleaning service"
+            };
+
+            const handlePayment = async (e) => {
+                e.preventDefault();
+                if (!stripe || !elements || processing) return;
+
+                const allMounted = mounted.number && mounted.expiry && mounted.cvc;
+                if (!allMounted) {
+                    setError("Card element is not ready. Try again.");
+                    return;
+                }
+
+                const cardElement = elements?.getElement(CardNumberElement);
+                if (!cardElement) {
+                    setError("Card element is not ready. Try again.");
+                    return;
+                }
+
+                setProcessing(true);
+
+                try {
+                    const { error: stripeError, paymentIntent } =
+                        await stripe?.confirmCardPayment(clientSecret, {
+                            payment_method: { card: elements?.getElement(CardNumberElement),
+                                billing_details: { name: booking?.customer } },
+                        });
+
+                    if (stripeError) {
+                        setError(stripeError.message);
+                    }
+                    else if (paymentIntent) {
+                        if (paymentIntent.status === "succeeded") {
+                            rescheduleBooking()
+                        }
+                    }
+
+                } catch (error) {
+                    setError("Payment failed!. Please try Again!");
+                } finally {
+                    setProcessing(false);
+                }
+
+
+            };
+
+            useEffect(() => {
+                /* const cardNumber = elements?.getElement(CardNumberElement);
+                 if (cardNumber) {
+                     cardNumber.update({
+                         showIcon: true,
+                         iconStyle: 'solid'
+                     });
+                 }*/
+
+            }, [elements]);
+
+            return (
+                <form style={{marginTop:'15px', marginBottom:'20px'}} onSubmit={handlePayment}>
+                    <div style={{maxWidth:"1000px"}}>
+                        <h2 style={{color:'blue', paddingLeft:'10px'}}>Payment details</h2>
+                        <p style={{paddingLeft:'15px', paddingRight:'5px'}}>
+                            Please note that your payement details are securely
+                            stored and managed by  <Link style={{color:'blue'}} to={'https://stripe.com'}>stripe</Link>.
+                        </p>
+                        <div className="stripe-card-form">
+                            <div className="price-container">
+                                <h3 style={{color:'navy', marginBottom:'5px', textAlign:'end'}}>Powered by Stripe</h3>
+                                <div className="form-row" style={{display: 'block', justifyContent: 'space-between'}}>
+                                    <label>Card number</label>
+                                    <CardNumberElement
+                                        options={elementOptions}
+                                        className="stripe-card-element"
+                                        key={key}
+                                        onReady={() =>
+                                            setMounted((prev) => ({ ...prev, number: true }))
+                                        }
+                                    />
+                                </div>
+                                <div className="form-row" style={{ display: 'flex', width: '100%', flexDirection: 'row'}} >
+                                    <div   style={{ flex: '1 1 auto', width: '60%' }}>
+                                        <label>Expiration date</label>
+                                        <CardExpiryElement
+                                            options={elementOptions}
+                                            className="stripe-card-element"
+                                            onReady={() =>
+                                                setMounted((prev) => ({ ...prev, expiry: true }))
+                                            }
+                                        />
+                                    </div>
+
+                                    <div style={{ flex: '0 0 auto', width: '30%' }}>
+                                        <label>CVC</label>
+                                        <CardCvcElement
+                                            options={elementOptions}
+                                            className="stripe-card-element"
+                                            onReady={() =>
+                                                setMounted((prev) => ({ ...prev, cvc: true }))
+                                            }
+                                        />
+                                    </div>
+
+                                </div>
+                                {error && <p className={'error-message'}>{error}</p>}
+                            </div>
+                        </div>
+                        <div style={{margin:'15px', gap:'10px'}} className="form-actions">
+                            <button  disabled={(processing || !stripe)}
+                                    type="submit"
+                                     style={{color:'white'}}
+                                    className={(!stripe || !elements || processing) ? "back-button" : "submit-button"}>
+                                {processing ? 'Processing...' : 'Reschedule'}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            );
+        }
+
+        function PaymentPlatform() {
+
+            return(
+                <div style={{display:'flex', flexDirection:'column'}} >
+                    <Elements stripe={stripePromise}>
+                        <PaymentHome clientSecret={clientSecret} paymentIntentId={paymentIntentId} />
+                    </Elements>
+                </div>
+            );
+        }
+
+        useEffect(() => {
+            if (count === 0) {
+                window.scrollTo({top:'0', behavior:'smooth'});
+                setCount(count + 1);
+            }
+
         }, []);
 
-        useEffect(() => {
-            const time = new Date(selectedDate).setHours(formData.hour, formData.minute, 0, 0);
-            const date = new Date(time).toLocaleTimeString([],{
-                hour: '2-digit',
-                minute: '2-digit'
-            } );
-            setTime(date);
-        }, [formData.hour, formData.minute, selectedDate, formData.date])
-
        return (
-           <div className={'support-page'}>
+           <div style={{display:'flex', flexDirection:'column'}}>
                <div style={{display:'flex', alignItems: 'center', gap:'10px'}}>
-                   <h3>Choose a new date</h3>
-                    <FaTimes onClick={() => setBooking(null)} size={30} style={{width:'40px', alignSelf:'end'}} />
+                   <h3>Reschedule for a new date</h3>
+                    <FaTimes onClick={() => {
+                        setBooking(null);
+                        setPaymentIntentId(null);
+                        setClientSecret(null);
+                    }} size={30} style={{width:'40px', alignSelf:'end'}} />
                </div>
-               <div className={'date-time-container'} style={{marginTop:'20px'}}>
+
+               {cleanerEmail && <p style={{margin:'15px', fontSize:'large'}}>
+                   Please note that rescheduling this job will attract a non refundable
+                   <strong style={{color:'red', fontSize:'large'}}> £{getFee(booking)}</strong> fee.
+               </p> }
+
+               {!clientSecret &&   <div className={'date-time-container'} style={{marginTop:'20px'}}>
                    <div style={{backgroundColor:'white', paddingRight:'30px', maxWidth:'300px'}}>
                        <label style={{textAlign:'center'}} htmlFor="deliveryDate">Choose date</label>
                        <DatePicker
@@ -775,16 +1023,40 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                        {time && <p>{time}</p>}
                        {errors.time && <span className="error-message">{errors.time}</span>}
                    </div>
-               </div>
-               {loading && <p style={{margin:'10px'}}>Loading...</p>}
-               {message && <p style={{margin:'10px'}}>{message}</p>}
-               <button
-                   disabled={loading}
+               </div> }
+
+               <PaymentPlatform />
+
+               {(processing && !cleanerEmail) && <p style={{margin:'10px'}}>Loading...</p>}
+               {message  && <p style={{margin:'10px'}}>{message}</p>}
+               {(cleanerEmail && !clientSecret) && <div style={{display:'flex', flexDirection:'column'}}>
+                       <div style={{gap:'10px'}} className={'form-actions'}>
+                           <button className={(!formData.date || !formData.time || processing) ? 'back-button' : 'back-button2' }
+                                   disabled={processing}
+                                   style={{color:'white'}}
+                                   onClick={fetchData}>
+                               {processing ? 'Loading...' : 'Proceed'}
+                           </button>
+                           <button
+                               disabled={processing}
+                               onClick={() => {
+                                   setBooking(null);
+                                   setClientSecret(null);
+                                   setPaymentIntentId(null);
+                               }}
+                               className={'next-button'}>Cancel
+                           </button>
+                       </div>
+                   </div>}
+               {!cleanerEmail &&  <button
+                   disabled={processing}
                    onClick={rescheduleBooking}
                    style={{marginTop:'10px'}}
                    className={'submit-button'}>
                    Reschedule
                </button>
+               }
+
            </div>
        );
     }
@@ -869,7 +1141,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
                                             {cancelId === booking.orderId &&  <div className="price-container">
                                                 <p style={{margin:'10px'}}>
-                                                    Are you sure you want to cancel this booking? This cannot be undone and it may attract a fee according to our cancellation policy.
+                                                    Are you sure you want to cancel this booking? This cannot be undone and it will attract a non refundable <strong style={{color:'red'}}> £{getFee(booking)}</strong> fee.
                                                 </p>
                                                 <div style={{gap:'10px'}} className={'form-actions'}>
                                                     <button className={'back-button2'}

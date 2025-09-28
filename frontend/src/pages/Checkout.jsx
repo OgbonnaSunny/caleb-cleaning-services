@@ -63,7 +63,6 @@ import useBackButtonInterceptor from "./useBackButtonInterceptor.js";
 
 const Checkout = () => {
     const STRIPE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
-   // const stripePromise = loadStripe('pk_test_51RhdyVQNUBqNulPTRgAGcLgdBJZZQPNfRkXoXwnQUGhZxPN8CFIz5PI2gGzKr3vLDa2GZVpyVDEMYuolsSKIeNU200wT5VRLe0');
     const stripePromise = loadStripe(STRIPE_KEY);
     const location = useLocation();
     const code = location.state?.postcode;
@@ -2219,7 +2218,7 @@ const Checkout = () => {
 
         const emailData = {
             to: formData.email,
-            text: "Your booking has been successfully placed. We will send you cleaner detais as soon as a cleaner is available. Thanks for choosing Fly Cleaner!",
+            text: "Your booking has been successfully placed. We will let you know when cleaner is on the way to your property. Thanks for choosing Fly Cleaner!",
             subject: "Cleaning service"
         };
 

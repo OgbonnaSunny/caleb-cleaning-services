@@ -12,7 +12,7 @@ import {
 import {MdAdd, MdKeyboardArrowRight} from "react-icons/md";
 import Bookings from "./Bookings.jsx";
 import api from "./api.js";
-import {differenceInDays, differenceInMinutes, format, isToday} from "date-fns";
+import {differenceInCalendarDays, differenceInDays, differenceInMinutes, format, isToday} from "date-fns";
 import booking from "./Booking.jsx";
 
 const BookingList = () => {
@@ -120,39 +120,27 @@ const BookingList = () => {
     }
 
     const getTime = (date) => {
-        const invalidDate = isNaN(new Date(date).getTime());
-        if (invalidDate) {
-            return new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+        const parsed = new Date(date);
+
+        if (isNaN(parsed.getTime())) {
+            return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
-        const now = isToday(new Date(date));
-        if (now) {
-            return 'Today'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+
+        if (isToday(parsed)) {
+            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
-        const diff = differenceInDays(new Date(date), new Date());
+
+        const diff = differenceInCalendarDays(parsed, new Date());
+
         if (diff === 1) {
-            return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
         if (diff === 2) {
-            return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
-        return format(new Date(date), 'EE, yyyy-MM-dd') + " "+ new Date(date).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        return format(parsed, "EEE do MMM, yyyy h:mm a");
     }
 
     useEffect(() => {
@@ -961,8 +949,7 @@ const BookingList = () => {
                                         className={id === booking.id ? 'rotate-down' : 'rotate-up'}
                                     />
                                 </div>
-                                {id === booking.id &&
-                                    <div>
+                                {id === booking.id && <div>
                                         <h3 style={{textAlign:'start'}}>{renderName(booking.customer)}</h3>
                                         <div style={{display:'flex', justifyContent:'center', alignItems:'baseline', marginRight:'10px'}}>
                                             <FaPhone  className={'icon-small'} />
@@ -1052,8 +1039,10 @@ const BookingList = () => {
 
                                 </div> }
 
-                                {(approve && booking?.extraApproval === 'no' && booking?.extra) &&
-                                    <div style={{display: 'flex', flexDirection:'column'}}>
+                                {(approve && booking?.extraApproval === 'no' && booking?.extra) && <div style={{
+                                        display: 'flex',
+                                        flexDirection:'column'
+                                    }}>
                                         {loadingApproval && <p style={{margin:'10px'}}>Loading...</p>}
                                         {approvalMessage && <p style={{margin:'15px'}}>{approvalMessage}</p>}
                                         <h4 style={{marginBottom:'15px'}}>{booking?.extra} mins duration extension for approval</h4>
@@ -1063,8 +1052,9 @@ const BookingList = () => {
                                             className={(loadingApproval || booking?.extraApproval === 'yes' || !booking?.extra) ? 'back-button' : 'submit-button'}>
                                             Approve
                                         </button>
-                                    </div>
-                                }
+                                    </div>}
+
+                                {booking?.rescheduleRecord === 1 && <p style={{marginTop:'15px'}}>Note! This job was rescheduled</p>}
 
                             </div>
                         ))}

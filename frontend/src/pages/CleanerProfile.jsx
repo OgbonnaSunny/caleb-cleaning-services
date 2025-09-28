@@ -10,7 +10,7 @@ import api from './api.js';
 import {data, useNavigate} from 'react-router-dom'
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
-import {isToday, differenceInDays, differenceInHours, differenceInMinutes} from 'date-fns';
+import {isToday, differenceInDays, differenceInHours, differenceInMinutes, differenceInCalendarDays} from 'date-fns';
 import { Link } from 'react-router-dom';
 import LOGO from "../images/logo4.png";
 import { Helmet } from 'react-helmet';
@@ -306,36 +306,27 @@ const CleanerProfile = () => {
     }
 
     const getTime = (date) => {
-        const invalidDate = isNaN(new Date(date).getTime());
-        if (invalidDate) {
-            return new Date().toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+        const parsed = new Date(date);
+
+        if (isNaN(parsed.getTime())) {
+            return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
-        const now = isToday(new Date(date));
-        if (now) {
-            return 'Today'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+
+        if (isToday(parsed)) {
+            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
-        const diff = differenceInDays(new Date(date), new Date());
+
+        const diff = differenceInCalendarDays(parsed, new Date());
+
         if (diff === 1) {
-            return 'Tomorrow'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
         if (diff === 2) {
-            return '2 days time'+ " "+ new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
-        return format(new Date(date), "EEE do MMM, yyyy h:mm a");
+        return format(parsed, "EEE do MMM, yyyy h:mm a");
     }
 
     const formatDuration = (time) => {
@@ -1548,8 +1539,8 @@ const CleanerProfile = () => {
                                     {(order?.stage === 'email' && order.orderId !== idForUpdate) &&
                                         <h2
                                             style={activeId === order.orderId ?
-                                            {textAlign:'center', color:'darkred'} :
-                                            {textAlign:'center', color:'blue'} }>{timers[order.orderId]}
+                                                {textAlign:'center', color:'darkred'} :
+                                                {textAlign:'center', color:'blue'} }>{timers[order.orderId]}
                                         </h2>
                                     }
 
@@ -1634,7 +1625,7 @@ const CleanerProfile = () => {
                                             />
                                             <button onClick={() => requestOT(order)}
                                                     disabled={!ot || ot < 20}
-                                                     className={(ot >= 20 || order?.extra === null) ? 'submit-button' : 'back-button' }>
+                                                    className={(ot >= 20 || order?.extra === null) ? 'submit-button' : 'back-button' }>
                                                 Request
                                             </button>
                                         </div>
@@ -1679,72 +1670,69 @@ const CleanerProfile = () => {
                                     </div>
 
                                     {order.orderId === idForUpdate && <div className="price-container">
-                                            <div className={'new-order-container'}>
-                                                <h3 style={{textAlign:'center'}}>Job update</h3>
-                                                <FaTimes size={20} style={{width:'30px', marginLeft:'15px', color:'black', alignSelf:'end'}}
-                                                         onClick={() => {setIdForUpdate(''); setorder({})}} />
-                                            </div>
+                                        <div className={'new-order-container'}>
+                                            <h3 style={{textAlign:'center'}}>Job update</h3>
+                                            <FaTimes size={20} style={{width:'30px', marginLeft:'15px', color:'black', alignSelf:'end'}}
+                                                     onClick={() => {setIdForUpdate(''); setorder({})}} />
+                                        </div>
 
-                                            <h2
-                                                style={activeId === order.orderId ?
-                                                    {textAlign:'center', color:'darkred'} :
-                                                    {textAlign:'center', color:'blue'} }>{timers[order.orderId]}
-                                            </h2>
+                                        <h2
+                                            style={activeId === order.orderId ?
+                                                {textAlign:'center', color:'darkred'} :
+                                                {textAlign:'center', color:'blue'} }>{timers[order.orderId]}
+                                        </h2>
 
-                                            <p className={'order-container'} style={{ textAlign:'start'}}>
-                                                It is very important that you only press START when you arrive at client's place or press FINISH only when the job is done.
-                                            </p>
+                                        <p className={'order-container'} style={{ textAlign:'start'}}>
+                                            It is very important that you only press START when you arrive at client's place or press FINISH only when the job is done.
+                                        </p>
 
-                                            {myMesage && <p style={{color: color, textAlign:'center', margin:'10px'}}>{myMesage}</p>}
+                                        {myMesage && <p style={{color: color, textAlign:'center', margin:'10px'}}>{myMesage}</p>}
 
-                                            {submitting && <p>Loading...</p>}
+                                        {submitting && <p>Loading...</p>}
 
-                                            <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px'}}>
-                                                <button disabled={(submitting || order?.beginTime !== null || jobInProgress)}
-                                                        onClick={startJob}
-                                                        className={(submitting || order?.beginTime !== null || jobInProgress) ?
-                                                            'back-button' : 'next-button'}>
-                                                    START
-                                                </button>
-                                                <button disabled={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress || order?.completed)}
-                                                        onClick={finishJob}
-                                                        className={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress) ?
-                                                            'back-button' : 'next-button'}>
-                                                    FINISH
-                                                </button>
-                                            </div>
-                                        </div>}
+                                        <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px'}}>
+                                            <button disabled={(submitting || order?.beginTime !== null || jobInProgress)}
+                                                    onClick={startJob}
+                                                    className={(submitting || order?.beginTime !== null || jobInProgress) ?
+                                                        'back-button' : 'next-button'}>
+                                                START
+                                            </button>
+                                            <button disabled={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress || order?.completed)}
+                                                    onClick={finishJob}
+                                                    className={(submitting || order?.beginTime === null || activeId !== order.orderId || !jobInProgress) ?
+                                                        'back-button' : 'next-button'}>
+                                                FINISH
+                                            </button>
+                                        </div>
+                                    </div>}
 
                                     {loadingEmail && <p style={{margin:'10px', textAlign:'center'}}>sending email...</p>}
 
                                     {emailMessage && <p style={{margin:'10px', textAlign:'center'}}>{emailMessage}</p>}
 
                                     {timeToNotify(order) && <div>
-                                            {order.orderId !== idForUpdate &&
+                                        {order.orderId !== idForUpdate &&
                                             <button
                                                 className={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId)) ? 'back-button' : 'next-button'}
                                                 disabled={(idForUpdate === order.orderId || idForUpdate !== '' || loadingEmail || (jobInProgress && activeId !== order.orderId))}
                                                 onClick={() => handleOrder(order)}>
                                                 {order?.stage !== 'email' ? "Notify Client" : order?.beginTime === null ? "Start this job" : "finsish this job"}
                                             </button>
-                                            }
-                                        </div>}
+                                        }
+                                    </div>}
 
-                                    {order?.rescheduled &&
-                                        <div className={'price-container'}>
-                                            <p>
-                                                This job has been rescheduled. You have to accept this job again.
-                                                Please note that this job will become available for other employees
-                                                after 1 hour if you do not accept it.
-                                            </p>
-                                            <button
-                                                disabled={acceptedJobIds.includes(order.orderId)}
-                                                onClick={ () => acceptOrder(order)}
-                                                className={acceptedJobIds.includes(order.orderId) ? 'back-button' : 'next-button'}>
-                                                Accept
-                                            </button>
-                                        </div>
-                                    }
+                                    {order?.rescheduled === 1 && <div className={'price-container'}>
+                                        <p>
+                                            This job has been rescheduled. You have to accept this job again.
+                                            Please note that this job will become available for other employees
+                                            after 1 hour if you do not accept it.
+                                        </p>
+                                        <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
+                                                onClick={() => acceptOrder(order.orderId)}
+                                                className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'next-button'}>
+                                            {acceptedJobIds.includes(order.orderId) ?  "Accepted" : "Accept this job"}
+                                        </button>
+                                    </div>}
                                 </div>
                             ))}
                         </div>
@@ -1768,7 +1756,9 @@ const CleanerProfile = () => {
             try {
                 let offset = 0;
                 if (jobHistory.length > 0) {
-                    offset = jobHistory[jobHistory.length - 1].id;
+                    const jobs = jobHistory;
+                    jobs.sort((a, b) => a.id - b.id);
+                    offset = jobs[jobs.length - 1].id;
                 }
                 const data = {email: email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/history', data);
@@ -1780,7 +1770,7 @@ const CleanerProfile = () => {
                     setJobHistory(prev => {
                         const map = new Map(prev.map(item => [item.id, item])); // old items
                         jobList.forEach(item => map.set(item.id, item));    // add/replace new
-                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id).reverse(); // convert back to array
                     });
                 }
                 if (jobList?.length <= 0) {
