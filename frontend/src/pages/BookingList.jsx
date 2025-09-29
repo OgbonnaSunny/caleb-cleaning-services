@@ -14,6 +14,7 @@ import Bookings from "./Bookings.jsx";
 import api from "./api.js";
 import {differenceInCalendarDays, differenceInDays, differenceInMinutes, format, isToday} from "date-fns";
 import booking from "./Booking.jsx";
+import {date} from "yup";
 
 const BookingList = () => {
     const [title, setTitle] = useState('Jobs For Approval');
@@ -48,6 +49,10 @@ const BookingList = () => {
     const [updateCount, setUpdateCount] = useState(0);
     const [idleCount, setIdleCount] = useState(0);
     const [filter, setFilter] = useState('');
+    const [email, setEmail] = useState('');
+    const [schedules, setSchedules] = useState({});
+    const [loadingSchedules, setLoadingSchedules] = useState(false);
+    const [allEmails, setAllEmails] = useState([]);
 
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
@@ -121,7 +126,7 @@ const BookingList = () => {
 
     const getTime = (date) => {
         const parsed = new Date(date);
-
+      //  console.log(parsed);
         if (isNaN(parsed.getTime())) {
             return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
@@ -401,6 +406,31 @@ const BookingList = () => {
             setTimeout(() => setApprovalMessage(null), 5000);
         }
     }, [approvalMessage])
+
+    useEffect(() => {
+        if (!email || loadingSchedules) {
+            return;
+        }
+        setLoadingSchedules(true);
+        const data = {email: email };
+        api.post('/api/booking/cleaner-schedules', data)
+            .then((response) => {
+                const { booking } = response.data;
+                setSchedules(prev => ({
+                    ...prev,
+                    [email]: booking
+                }))
+                console.log(booking);
+            })
+            .catch((error) => {
+                console.log(error);
+                setMessage("Error while fetching booking data.");
+            })
+            .finally(() => {
+                setLoadingSchedules(false);
+                setEmail('');
+            })
+    }, [email])
 
     function CallButton({ phoneNumber }) {
         return (
@@ -774,6 +804,31 @@ const BookingList = () => {
                                         </div>
                                     ))}
                                 </div>}
+
+                                <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
+                                    <h3 style={{textAlign:'start'}}>Check job schedules</h3>
+                                    <button
+                                        onClick={() => {setEmail(booking.cleanerEmail);}}
+                                         disabled={loadingSchedules}
+                                        className={loadingSchedules ? 'back-button' : 'submit-button'}
+                                        style={{width:'80px', alignSelf:'end'}}>
+                                        Check
+                                    </button>
+                                </div>
+                                {(loadingSchedules && email === booking.cleanerEmail) && <p style={{margin:'15px'}}>Loading...</p>}
+                                {(!loadingSchedules && schedules[booking.cleanerEmail]?.length <= 0 ) && <p>No job schedules found for {booking?.cleaner}</p>}
+                                {schedules[booking.cleanerEmail]?.length > 0 &&
+                                    <div style={{display: 'flex', flexDirection:'column'}}>
+                                        <p>Schedules for <strong>{booking.cleaner}</strong></p>
+                                        {schedules[booking.cleanerEmail]?.map((schedule, index) => (
+                                            <div key={schedule?.orderId} style={{border:'dashed', padding:'10px'}}>
+                                                <p style={{textAlign:'center'}}>{index + 1}</p>
+                                                <p>{schedule?.address}</p>
+                                                <p>{getTime(schedule?.startTime)}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                }
 
                                 <div style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent:'space-between', padding:'10px'}}>
                                     <h4 style={{marginLeft:'10px'}}>Cleaner Details</h4>

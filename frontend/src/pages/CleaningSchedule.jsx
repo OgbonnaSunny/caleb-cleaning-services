@@ -21,7 +21,7 @@ const CleaningSchedule = () => {
     const [message, setMessage] = useState(null);
     const [pageCount, setPageCount] = useState(0);
     const [scheduleJobs, setScheduleJobs] = useState([]);
-    const [isToday, setIsToday] = useState(true);
+    const [today, setToday] = useState(true);
     const [count, setCount] = useState(0);
 
     useEffect(() => {
@@ -78,7 +78,7 @@ const CleaningSchedule = () => {
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = window.innerHeight;
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loading && isToday) {
+                if (!loading && today) {
                     setPageCount(prev => prev + 1);
                 }
             }
@@ -157,7 +157,7 @@ const CleaningSchedule = () => {
                         className="experience-text">View All
                     </button> }
                     {scheduleJobs.length > 0 &&
-                        <h3 onClick={() => setIsToday(!isToday)}
+                        <h3 onClick={() => setToday(!today)}
                             style={{
                                 color:'red', width:'10%',
                                 textAlign:'center',
@@ -169,7 +169,7 @@ const CleaningSchedule = () => {
                         </h3>
                     }
                 </div>
-                {(todaySchedule.length > 0 && isToday) && <div className="card-body"><div className="schedule-container">
+                {(todaySchedule.length > 0 && today) && <div className="card-body"><div className="schedule-container">
                             {todaySchedule.map((item, index) => (
                             <div key={index} className="stats-card">
                                 <h3 style={{margin:'10px'}}>{item?.orderId}</h3>
@@ -189,7 +189,7 @@ const CleaningSchedule = () => {
                         ))}
                         </div></div> }
 
-                {!isToday && <div className="card-body"><div className="schedule-container">
+                {!today && <div className="card-body"><div className="schedule-container">
                             {scheduleJobs.map((item, index) => (
                                 <div key={index} className="stats-card">
                                     <h3 style={{margin:'10px'}}>{item?.orderId}</h3>
@@ -209,9 +209,9 @@ const CleaningSchedule = () => {
                                 </div>))}
                         </div></div>}
 
-                {(!loading && todaySchedule.length <= 0 && isToday) && (<p>{message}</p>)}
+                {(!loading && todaySchedule.length <= 0 && today) && (<p>{message}</p>)}
 
-                {(loading && isToday) && (<p>Loading data...</p>)}
+                {(loading && today) && (<p>Loading data...</p>)}
             </div>
         </div>
     );
