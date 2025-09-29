@@ -443,11 +443,29 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         return fullName;
     }
 
-    function getFee(booking) {
+    function getFee(booking, time) {
         let fee = 50.00;
         const amount = Number(booking.estimatedAmount);
+        const today = isToday(new Date(booking?.time));
+        const bookedToday = isToday(new Date(booking?.created_at))
         if (amount <= 160) {
-            fee = (amount * 0.3).toFixed(2);
+            if (today && bookedToday) {
+                if (time <= 3) {
+                    fee = (amount * 0.3).toFixed(2);
+                }
+                else {
+                    fee = (amount * 0.25).toFixed(2);
+                }
+
+            }
+            else {
+                if (time <= 5) {
+                    fee = (amount * 0.3).toFixed(2);
+                }
+                else {
+                    fee = (amount * 0.25).toFixed(2);
+                }
+            }
         }
         return fee;
     }
@@ -476,17 +494,72 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         return format(parsed, "EEE do MMM, yyyy h:mm a");
     }
 
+    const [paymentIntentId, setPaymentIntentId] = useState(null);
+    const [clientSecret, setClientSecret] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const [timeSpent, setTimeSpent] = useState(null);
+    const [orderId, setOrderId] = useState(null);
+    const [cancelling, setCancelling] = useState(false);
 
-    const Reschedule = ({ booking }) => {
+    useEffect(() => {
+        if (!orderId) {return;}
+        setTimeSpent(null);
+        api.post(`/api/booking/check-time-spent`, {orderId: orderId})
+            .then(response => {
+                setTimeSpent(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                setOrderId(null);
+            })
+    }, [orderId]);
+
+    const Reschedule = ({ booking, timeElapsed, cancelling = false }) => {
         if (!booking) { return; }
-        const cleanerEmail = booking?.cleanerEmail;
-        const amount = Math.round(getFee(booking) * 100);
 
-        const [processing, setProcessing] = useState(false);
-        const [paymentIntentId, setPaymentIntentId] = useState(null);
-        const [clientSecret, setClientSecret] = useState(null);
+        if (!timeElapsed) {
+            return <p style={{margin:'20px', textAlign:'center'}}>Loading...</p>
+        }
+        const fee = getFee(booking, timeElapsed);
+
+        if (cancelling) {
+            return (
+                <div style={{display:'flex', flexDirection:'column'}}>
+                    <div style={{display:'flex', alignItems: 'center', gap:'10px'}}>
+                        <h3>Cancel this booking?</h3>
+                        <FaTimes onClick={() => {
+                            setBooking(null);
+                            setCancelId(null);
+                            setCancelling(false);;
+                        }} size={30} style={{width:'40px', alignSelf:'end'}} />
+                    </div>
+                    <p style={{margin:'10px'}}>
+                    Are you sure you want to cancel this booking? This cannot be undone and it will attract a non refundable <strong style={{color:'red'}}> £{fee}</strong> fee.
+                </p>
+                    <div style={{gap:'10px'}} className={'form-actions'}>
+                        <button className={'back-button2'}
+                            onClick={() => cancelBooking(booking.orderId)}>
+                            Yes
+                        </button>
+                        <button
+                            onClick={() => {
+                            setCancelId(null);
+                            setBooking(null);
+                            setCancelling(false);
+                        }}
+                        className={'next-button'}>No
+                    </button>
+                </div>
+            </div>);
+        }
+
+
+        const amount = Math.round(fee * 100);
+        const cleanerEmail = booking.cleanerEmail;
+
         const [selectedDate, setSelectedDate] = useState(null);
-
         const [errors, setErrors] = useState({});
         const [adjustLower, setAdjustLower] = useState(true);
         const [minimumHour, setMinimumHour] = useState(0);
@@ -929,6 +1002,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
                                 </div>
                                 {error && <p className={'error-message'}>{error}</p>}
+                                {message && <p style={{margin:'15px'}}>{message}</p>}
                             </div>
                         </div>
                         <div style={{margin:'15px', gap:'10px'}} className="form-actions">
@@ -976,7 +1050,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
                {cleanerEmail && <p style={{margin:'15px', fontSize:'large'}}>
                    Please note that rescheduling this job will attract a non refundable
-                   <strong style={{color:'red', fontSize:'large'}}> £{getFee(booking)}</strong> fee.
+                   <strong style={{color:'red', fontSize:'large'}}> £{fee}</strong> fee.
                </p> }
 
                {!clientSecret &&   <div className={'date-time-container'} style={{marginTop:'20px'}}>
@@ -1139,24 +1213,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                                 ))}
                                             </div>}
 
-                                            {cancelId === booking.orderId &&  <div className="price-container">
-                                                <p style={{margin:'10px'}}>
-                                                    Are you sure you want to cancel this booking? This cannot be undone and it will attract a non refundable <strong style={{color:'red'}}> £{getFee(booking)}</strong> fee.
-                                                </p>
-                                                <div style={{gap:'10px'}} className={'form-actions'}>
-                                                    <button className={'back-button2'}
-                                                            onClick={() => cancelBooking(booking.orderId)}>
-                                                        Yes
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setCancelId(null)}
-                                                        className={'next-button'}>No
-                                                    </button>
-                                                </div>
-                                            </div> }
-
                                             {cancelId === null &&  <div style={{display:'flex', flexDirection: 'column'}}>
-                                                <button onClick={() => setCancelId(booking.orderId)} className="btn btn-primary"
+                                                <button onClick={() => {
+                                                    setCancelId(booking.orderId);
+                                                    setOrderId(booking.orderId);
+                                                    setCancelling(true);
+                                                    setBooking(booking);
+                                                }} className="btn btn-primary"
                                                         style={(
                                                             booking.status === 'confirmed' ||
                                                             booking.status === 'cancelled' ||
@@ -1184,7 +1247,12 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                                     {cancellable ? 'I Want To Cancel' : 'Assign cleaner'}
                                                 </button>
 
-                                                <button  onClick={() => setBooking(booking)} style={{marginTop:'20px', borderRadius:'30px'}}
+                                                <button  onClick={() => {
+                                                    setBooking(booking);
+                                                    setOrderId(booking.orderId);
+                                                    setCancelling(false);
+                                                }}
+                                                         style={{marginTop:'20px', borderRadius:'30px'}}
                                                         className={'submit-button'}>I Want To Reschedule
                                                 </button>
                                             </div>}
@@ -1262,7 +1330,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         {(!loading && clientHistory.length <= 0) && <div style={{marginLeft:'30px'}}><p>{historyMessage}</p></div>}
                     </div>)}
                 </div>}
-            <Reschedule booking={booking} />
+            <Reschedule booking={booking}  timeElapsed={timeSpent} cancelling={cancelling} />
             {user === 'admin' && <div>
                 <div className="recent-bookings card">
                     <div className="card-header">

@@ -78,7 +78,7 @@ const CleaningSchedule = () => {
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = window.innerHeight;
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loading) {
+                if (!loading && isToday) {
                     setPageCount(prev => prev + 1);
                 }
             }
@@ -210,7 +210,8 @@ const CleaningSchedule = () => {
                         </div></div>}
 
                 {(!loading && todaySchedule.length <= 0 && isToday) && (<p>{message}</p>)}
-                {loading && (<p>Loading data...</p>)}
+
+                {(loading && isToday) && (<p>Loading data...</p>)}
             </div>
         </div>
     );

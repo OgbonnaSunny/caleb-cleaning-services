@@ -71,7 +71,6 @@ const Navigation = () => {
     const [showNav, setShowNav] = useState(true);
     const [role, setRole] = useState('none');
 
-
     useEffect(() => {
         const checUser = () => {
             const currentUser = JSON.parse(localStorage.getItem('user'));
