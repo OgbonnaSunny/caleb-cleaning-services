@@ -1004,6 +1004,7 @@ const Checkout = () => {
             setInterceptMode(true);
         }
         else {
+            setFormData(data);
             setInterceptMode(false);
         }
     }, [currentStep]);
@@ -2126,7 +2127,7 @@ const Checkout = () => {
             const { customerId } = createResponse.data;
 
             // create payement intent
-            const amount = Number(formData.totalAmount) * 100; // converting to pence
+            const amount = Math.round(Number(formData.totalAmount) * 100); // converting to pence
             const paymentIntent = await api.post('/api/create-payment-intent', {
                 amount: amount, // note amount must be in pence. 100 pence = 1 pound
                 currency: 'gbp',

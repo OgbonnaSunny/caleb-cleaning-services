@@ -236,7 +236,7 @@ const BookingList = () => {
                offset = todaySchedule[setTodaySchedule.length - 1].id;
            }
            const data = {limit: page, offset: offset};
-           api.post('/api/booking/today-schedule', data)
+           api.post('/api/booking/all-schedule', data)
                .then(res => {
                    const { booking } = res.data;
                    if (!booking || booking.length <= 0) {
@@ -700,8 +700,9 @@ const BookingList = () => {
                                     <button
                                         disabled={(assignedIds.includes(item.orderId) || manageIds === item.orderId)}
                                         onClick={() => setManageIds(item.orderId)}
-                                        className={(manageIds === item.orderId || manageIds !== -1 || assignedIds.includes(item.orderId)) ? 'back-button' : "submit-button"}>
-                                        {item.accepted ? "View Cleaner Detail" : "Manage Schedule"}
+                                        className={(manageIds === item.orderId || manageIds !== -1 || assignedIds.includes(item.orderId)) ?
+                                            'back-button' : "submit-button"}>
+                                        {item.accepted === 1 ? "View Cleaner Detail" : "Manage Schedule"}
                                     </button>
                                 </div>
                             ))}

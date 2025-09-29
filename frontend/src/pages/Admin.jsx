@@ -517,6 +517,7 @@ const Admin = () => {
     const [jobCount, setJobCount] = useState(0);
     const [extendCount, setExtendCount] = useState(0);
     const [totalOT, setTotalOT] = useState(0);
+    const [updateCount, setUpdateCount] = useState(0);
 
     const [email, setEmail] = useState(companyEmail);
     const [socket, setSocket] = useState(socket1);
@@ -555,10 +556,11 @@ const Admin = () => {
     useEffect(() => {
         function setWatcher(watch = true) {
             setInterval(() => {
-                setExtendCount(prev => prev + 1);
                 if (!watch) {
                     clearInterval();
                 }
+                setExtendCount(prev => prev + 1);
+                setUpdateCount(prev => prev + 1);
 
             }, 60000);
         }
@@ -670,7 +672,7 @@ const Admin = () => {
             }
         }
         fetchData();
-    })
+    }, [updateCount])
 
     useEffect(() => {
         if (!socket) { return; }
