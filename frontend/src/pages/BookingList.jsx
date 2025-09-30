@@ -52,7 +52,10 @@ const BookingList = () => {
     const [email, setEmail] = useState('');
     const [schedules, setSchedules] = useState({});
     const [loadingSchedules, setLoadingSchedules] = useState(false);
-    const [allEmails, setAllEmails] = useState([]);
+    const [editId, setEditId] = useState(null);
+    const [booking, setBooking] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const [clickCount, setClickCount] = useState(0);
 
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
@@ -228,6 +231,7 @@ const BookingList = () => {
     }, [activeBottomMenu, pageCount]);
 
     useEffect(() => {
+        if (booking) return;
         setMessage('');
        if (activeBottomMenu === 'Schedule' && !loading && !finishScheduleJobs) {
            setLoading(true);
@@ -584,6 +588,30 @@ const BookingList = () => {
         );
     }
 
+    const revoke = async (e) => {
+        e.preventDefault();
+        if (processing) {
+            return;
+        }
+        setProcessing(true);
+        try {
+            const data = { orderId: booking.orderId };
+            const response = await api.post('/api/booking/revoke-job', data);
+            const {success, message} = response.data;
+            setMessage(message);
+            if (success) {
+                setAssignedIds(prev => [...prev, booking.orderId]);
+            }
+
+        } catch (error) {
+            console.log(error);
+            setMessage("Error occured")
+        } finally {
+            setProcessing(false);
+            setClickCount(0);
+        }
+    }
+
     const Cleaner = ({ booking }) => {
         if (role === 'Support') {
             setManageIds(-1)
@@ -625,11 +653,24 @@ const BookingList = () => {
             }
         }
 
-        if (booking.accepted) {
+        if (booking.accepted && manageIds === booking.orderId) {
             return (
-                <div style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
-                    <div style={{display: 'flex', flexDirection:'column', alignItems: 'center', padding:'10px'}}>
-                        <p style={{display:'flex', alignItems:'center', justifyContent:'space-evenly'}}>Cleaner Details  <FaTimes size={20} style={{ width:'30px'}} onClick={() => setManageIds(-1)} /></p>
+                <div style={{
+                    display: 'flex',
+                    flexDirection:'column',
+                    alignItems: 'center'}}>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection:'column',
+                        alignItems: 'center',
+                        padding:'10px'
+                    }}>
+                        <p style={{
+                            display:'flex',
+                            alignItems:'center',
+                            justifyContent:'space-evenly'
+                        }}>
+                            Cleaner Details  <FaTimes size={20} style={{ width:'30px'}} onClick={() => setManageIds(-1)} /></p>
                         <ul style={{marginLeft:'10px'}}>
                             <li>{booking.cleaner}</li>
                             <li>{booking.cleanerEmail}</li>
@@ -664,7 +705,7 @@ const BookingList = () => {
                         type={'submit'} className={(loadingData || assignedIds.includes(booking.orderId)) ? "back-button" : 'submit-button'}>
                         {assignedIds.includes(booking.orderId) ? "Job assigned" : " Assign job"}
                     </button>
-                    <FaTimes size={30} style={{ width:'40px'}} onClick={() => setManageIds(-1)} />
+                    <FaTimes size={30} style={{ width:'40px'}} onClick={() => setEditId(null)} />
                 </div>
             </form>
         )
@@ -696,14 +737,89 @@ const BookingList = () => {
                                         <p style={{marginLeft:'10px'}}>{item.plan} <strong>{formatDuration(item.duration)}</strong></p>
                                         <h3 style={{marginLeft:'10px', textAlign:'end', width:'40%'}}>£{item.estimatedAmount}</h3>
                                     </div>
-                                    {manageIds === item.orderId && <Cleaner booking={item}/>}
-                                    <button
-                                        disabled={(assignedIds.includes(item.orderId) || manageIds === item.orderId)}
-                                        onClick={() => setManageIds(item.orderId)}
-                                        className={(manageIds === item.orderId || manageIds !== -1 || assignedIds.includes(item.orderId)) ?
-                                            'back-button' : "submit-button"}>
-                                        {item.accepted === 1 ? "View Cleaner Detail" : "Manage Schedule"}
-                                    </button>
+
+                                    {booking === item &&
+                                        <div style={{
+                                            display:'flex',
+                                            flexDirection:'column',
+                                            border:'dashed',
+                                            padding:'10px',
+                                            marginTop:'10px'}}>
+                                            <p>You can either remove this job from the current cleaner that this job
+                                                is assigned to and make it available to all cleaners or assign this job to a particular cleaner.
+                                                {item.accepted === 1 && <label> You could also view cleaner details.</label>}
+                                            </p>
+
+                                            {editId === item.orderId && <Cleaner booking={booking}/>}
+
+                                            {processing && <p style={{margin:'15px'}}>Loading...</p>}
+
+                                            {message && <p style={{margin:'15px'}}>{message}</p>}
+
+                                            {clickCount > 0 &&
+                                                <p style={{margin:'15px', color:'darkred'}}>
+                                                    Are you sure you want to revoke this job. This cannot be undone.
+                                                    If you are sure that  you want to revoke this job, click the 'Proceed'.
+                                                    <FaTimes size={30}
+                                                             style={{ width:'20px',height:'15px', color:'black', marginLeft:'15px'}}
+                                                             onClick={() => {
+                                                                 setClickCount(0);
+                                                             }} />
+
+                                                    <label onClick={revoke} style={{color:'red', marginLeft:'10px'}}>Proceed</label>
+                                                </p>
+                                            }
+
+                                            <div style={{gap:'10px'}} className={'form-actions'}>
+                                                <button
+                                                    style={{color:'white'}}
+                                                    disabled={manageIds === item.orderId || editId === item.orderId || item.accepted === 0}
+                                                    onClick={() => setManageIds(item.orderId)}
+                                                    className={(manageIds === item.orderId || editId === item.orderId || item.accepted === 0) ?
+                                                        'back-button' : "submit-button"}>
+                                                    View
+                                                </button>
+                                                <button  onClick={() => setEditId(item.orderId)}
+                                                         disabled={manageIds === item.orderId || editId === item.orderId}
+                                                         style={{color:'white'}}
+                                                         className={manageIds === item.orderId ? 'back-button' : 'next-button' }>
+                                                    Assign
+                                                </button>
+                                                <button
+                                                    style={{color:'white'}}
+                                                    onClick={() => setClickCount(prev => prev + 1)}
+                                                    disabled={(manageIds === item.orderId || editId === item.orderId || item.accepted === 0
+                                                        || assignedIds.includes(item.orderId) || clickCount > 0)}
+                                                    className={(manageIds === item.orderId || editId === item.orderId
+                                                        || item.accepted === 0 || assignedIds.includes(item.orderId) || clickCount > 0) ?
+                                                        'back-button' : "submit-button"}>
+                                                    Revoke
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div style={{
+                                        display:'flex',
+                                        alignItems:'center',
+                                        justifyContent:'space-evenly',
+                                        margin:'10px'}}>
+                                        <button style={{margin:'10px'}}
+                                                className={booking !== null ? 'back-button' :'next-button' }
+                                                disabled={booking !== null}
+                                                onClick={() => setBooking(item)}>
+                                            Manage Booking
+                                        </button>
+                                        {booking === item &&
+                                            <FaTimes size={30}
+                                                     style={{ width:'40px'}}
+                                                     onClick={() => {
+                                                         if (manageIds === item.orderId || editId === item.orderId) return;
+                                                         setBooking(null);
+                                                         setClickCount(0);
+                                                         setMessage('');
+                                                     }} />
+                                        }
+                                    </div>
                                 </div>
                             ))}
                         </div>
