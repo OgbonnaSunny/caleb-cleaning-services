@@ -40,6 +40,7 @@ const Admin = () => {
         {id: 8, category: 'Messages', link: '/messagelist', icon: FaCommentDots },
         {id: 9, category: 'Send news letters', link: '/newsletters', icon: FaEnvelope },
         {id: 10, category: 'Send blogs', link: '/blogs', icon: FaFileAlt },
+        {id: 11, category: 'Cleaner income', link: '/income', icon: FaPoundSign },
     ]
 
     const edinburghDistricts = [
@@ -518,6 +519,7 @@ const Admin = () => {
     const [extendCount, setExtendCount] = useState(0);
     const [totalOT, setTotalOT] = useState(0);
     const [updateCount, setUpdateCount] = useState(0);
+    const [newJobs, setNewJobs] = useState(0);
 
     const [email, setEmail] = useState(companyEmail);
     const [socket, setSocket] = useState(socket1);
@@ -531,7 +533,8 @@ const Admin = () => {
         { title: "This Month's Expenses", value: `£${monthExpense}`, change: `${monthExpenseChange}`, icon: <FaPoundSign />, trend: `${monthExpenseTrend}` },
         { title: "Active Cleaners", value: `${activeCleaners}`, change: `${activeCleanerChange}`, icon: <FaUserTie />, trend: `${activeCleanersTrend}` },
         { title: "Areas Covered", value: `${areaCovered}`, change: "+0%", icon: <FaMapMarkerAlt />, trend: 'neutral' },
-        { title: "Current Time Extensions", value: `${totalOT} mins`, change: "+0%", icon: <FaClock />, trend: 'neutral' }
+        { title: "Current Time Extensions", value: `${totalOT} mins`, change: "+0%", icon: <FaClock />, trend: 'neutral' },
+        { title: "New Booking", value: `${newJobs} new jobs`, change: "+0%", icon: <FaCalendarAlt />, trend: 'neutral' }
     ];
 
     useEffect(() => {
@@ -667,6 +670,10 @@ const Admin = () => {
                     setJobCount(bookingApproval[0].approvals)
                 }
 
+                response = await api.get('/api/booking/no-income-jobs')
+
+                setNewJobs(response.data?.booking?.length);
+
             } catch (error) {
                 console.log(error)
             }
@@ -732,6 +739,7 @@ const Admin = () => {
                                         to={link.link} style={link.link === activeLink ?
                                         {color:'green'} : {color: ""}}>
                                         {link.category}
+                                        {(link.category === 'Bookings' && newJobs > 0) && <small style={{color:'blue', paddingLeft:'5px'}}>[{newJobs} new jobs]</small>}
                                         {link.category === 'Messages' && <small style={{color:'red', paddingLeft:'5px'}}>({messageCount})</small>}
                                     </Link>
                                 </div>

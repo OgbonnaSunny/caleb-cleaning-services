@@ -624,11 +624,6 @@ const BookingList = () => {
         const [message, setMessage] = useState('');
         const [loadingData, setLoadingData] = useState(false);
 
-        useEffect(() => {
-            if (message !== null) {
-                setTimeout(() => setMessage(null), 3000);
-            }
-        }, [message]);
 
         const handleSubmit = async (e) => {
             e.preventDefault();
@@ -705,7 +700,10 @@ const BookingList = () => {
                         type={'submit'} className={(loadingData || assignedIds.includes(booking.orderId)) ? "back-button" : 'submit-button'}>
                         {assignedIds.includes(booking.orderId) ? "Job assigned" : " Assign job"}
                     </button>
-                    <FaTimes size={30} style={{ width:'40px'}} onClick={() => setEditId(null)} />
+                    <FaTimes size={30} style={{ width:'40px'}} onClick={() => {
+                        setEditId(null);
+                        setMessage('');
+                    }} />
                 </div>
             </form>
         )
