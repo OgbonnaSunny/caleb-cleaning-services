@@ -184,11 +184,14 @@ const Income = () => {
                     const { booking } = response.data;
                     setMessage("Successfully added icome");
                     if (booking?.length > 0) {
-                        setBuffer(prev => {
-                            const map = new Map(prev.map(item => [item.id, item]));
-                            booking.forEach(item => map.set(item.id, item));
-                            return Array.from(map.values()).sort((a, b) => a.id - b.id);
-                        })
+                        setTimeout(() => {
+                            setBuffer(prev => {
+                                const map = new Map(prev.map(item => [item.id, item]));
+                                booking.forEach(item => map.set(item.id, item));
+                                return Array.from(map.values()).sort((a, b) => a.id - b.id);
+                            })
+                        }, 2000)
+
                     }
 
                 } catch (error) {
