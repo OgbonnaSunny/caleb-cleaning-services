@@ -420,7 +420,15 @@ const CleanerProfile = () => {
     const initiateCountdown = (order) => {
         const jobHour = Number(order?.startHour);
         const jobMinute = Number(order?.startMinute);
-        const jobTime = (jobHour * 60 * 60) + (jobMinute * 60);
+        let jobTime = (jobHour * 60 * 60) + (jobMinute * 60);
+        const personel = order?.personel;
+        const email1 = order?.cleanerEmail;
+        const email2 = order?.cleanerEmail2;
+        if (personel > 1) {
+            if (email1 !== email2) {
+                jobTime = Math.round(jobTime / 2);
+            }
+        }
         startCountdown(jobTime, order);
 
     }
