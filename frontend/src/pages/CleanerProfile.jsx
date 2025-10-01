@@ -1337,7 +1337,15 @@ const CleanerProfile = () => {
                         const timeElapsed = Number(time[0]?.minutes_diff);
                         for (const order of jobList) {
                             if (order.orderId === time[0]?.orderId) {
-                                const totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
+                                const personel = order?.personel;
+                                const email1 = order?.cleanerEmail;
+                                const email2 = order?.cleanerEmail2;
+                                let totalTime = ((Number(order?.startHour) * 60) + Number(order?.startMinute) - timeElapsed) * 60;
+                                if (personel > 1) {
+                                    if (email1 !== email2) {
+                                        totalTime = Math.round(totalTime / 2);
+                                    }
+                                }
                                 if (totalTime > 0) {
                                     startCountdown(totalTime, order);
                                 }
