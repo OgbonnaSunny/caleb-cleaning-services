@@ -387,9 +387,6 @@ const Income = () => {
                                         <ul>
                                             <li>{booking.cleaner}</li>
                                             <li>{booking.cleanerEmail}</li>
-                                            {booking?.actualStartTime && <li>Job started at {format(new Date(booking?.actualStartTime), 'yyyy-MM-dd hh:mm')}</li>}
-                                            {booking?.actualStopTime && <li>Job ended at {format(new Date(booking?.actualStopTime), 'yyyy-MM-dd hh:mm')}</li>}
-                                            {booking?.extra && <li>Requested an extension of {booking?.extra} mins</li>}
                                         </ul>
                                         <div style={{
                                             display:'flex',
@@ -400,6 +397,28 @@ const Income = () => {
                                             <ul><li> {booking.cleanerPhone} </li></ul>
                                             <CallButton phoneNumber={booking.cleanerPhone} />
                                         </div>
+
+                                        {booking?.cleanerEmail2 && <div style={{marginLeft:'10px'}}>
+                                                <ul>
+                                                    <li>{booking.cleaner}</li>
+                                                    <li>{booking.cleanerEmail}</li>
+                                                </ul>
+                                                <div style={{
+                                                    display:'flex',
+                                                    justifyContent:'center',
+                                                    alignItems:'baseline',
+                                                    marginRight:'10px'
+                                                }}>
+                                                    <ul><li> {booking?.cleanerPhone2} </li></ul>
+                                                    <CallButton phoneNumber={booking?.cleanerPhone2} />
+                                                </div>
+                                            </div>}
+
+                                        <ul style={{marginTop:'15px'}}>
+                                            {booking?.actualStartTime && <li>Job started at {format(new Date(booking?.actualStartTime), 'yyyy-MM-dd hh:mm')}</li>}
+                                            {booking?.actualStopTime && <li>Job ended at {format(new Date(booking?.actualStopTime), 'yyyy-MM-dd hh:mm')}</li>}
+                                            {booking?.extra && <li>Requested an extension of {booking?.extra} mins</li>}
+                                        </ul>
                                     </div>
 
                                 </div> }
@@ -477,7 +496,12 @@ const Income = () => {
                                     backgroundColor: 'red',
                                 }}>
                                 </div>
-                                <label style={!newActive ? {textDecoration:'underline'} : {textDecoration:'none'}}>Old Jobs</label>
+                                <label style={
+                                    !newActive ?
+                                        {textDecoration:'underline'}
+                                        : {textDecoration:'none'}}>
+                                    Idle/Active Jobs
+                                </label>
                             </div>
 
                         </div>
