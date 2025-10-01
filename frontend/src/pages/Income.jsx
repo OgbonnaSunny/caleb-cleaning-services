@@ -400,8 +400,8 @@ const Income = () => {
 
                                         {booking?.cleanerEmail2 && <div style={{marginLeft:'10px'}}>
                                                 <ul>
-                                                    <li>{booking.cleaner}</li>
-                                                    <li>{booking.cleanerEmail}</li>
+                                                    <li>{booking.cleaner2}</li>
+                                                    <li>{booking.cleanerEmail2}</li>
                                                 </ul>
                                                 <div style={{
                                                     display:'flex',
