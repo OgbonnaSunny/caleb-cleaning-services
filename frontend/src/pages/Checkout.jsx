@@ -2240,6 +2240,8 @@ const Checkout = () => {
                 let response = await api.get('/api/order-id')
                 const { orderId } = response.data;
 
+                let personel = 1;
+
                 const revenue = {
                     customer: `${formData.firstName} ${formData.lastName}`,
                     payment: formData.totalAmount,
@@ -2284,6 +2286,10 @@ const Checkout = () => {
                     phone: formData.phone,
                 };
 
+                if (formData.startHour > 5) {
+                    personel = 2;
+                }
+
                 const orderData = {
                     orderId: orderId,
                     booking: JSON.stringify(booking),
@@ -2296,6 +2302,7 @@ const Checkout = () => {
                     startTime: `${formData.date} ${formData.hourText}:${formData.minuteText}:00`,
                     startHour: formData.startHour,
                     startMinute: formData.startMinute,
+                    personel: personel,
                 };
 
                 await api.post('/api/booking', orderData);

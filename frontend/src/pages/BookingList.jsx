@@ -15,6 +15,7 @@ import api from "./api.js";
 import {differenceInCalendarDays, differenceInDays, differenceInMinutes, format, isToday} from "date-fns";
 import booking from "./Booking.jsx";
 import {date} from "yup";
+import Income from "./Income.jsx";
 
 const BookingList = () => {
     const [title, setTitle] = useState('Jobs For Approval');
@@ -56,6 +57,7 @@ const BookingList = () => {
     const [booking, setBooking] = useState(null);
     const [processing, setProcessing] = useState(false);
     const [clickCount, setClickCount] = useState(0);
+
 
     const bottomNavItems = [
         {id: 1, category: 'Jobs', title: 'Jobs For Approval'},
@@ -945,12 +947,21 @@ const BookingList = () => {
                                     </div>
                                 }
 
-                                <div style={{display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent:'space-between', padding:'10px'}}>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection:'column',
+                                    alignItems: 'center',
+                                    justifyContent:'space-between',
+                                    padding:'10px'
+                                }}>
                                     <h4 style={{marginLeft:'10px'}}>Cleaner Details</h4>
                                     <ul style={{marginLeft:'10px'}}>
                                         <li>{booking.cleaner}</li>
                                         <li>{booking.cleanerEmail}</li>
                                         <li>{booking.cleanerPhone} </li>
+                                        {booking?.cleaner2 && <li style={{marginTop:'15px'}}>{booking.cleaner2}</li>}
+                                        {booking?.cleanerEmail2 && <li>{booking.cleanerEmail2}</li> }
+                                        {booking?.cleanerPhone2 && <li>{booking.cleanerPhone2}</li>}
                                     </ul>
 
                                 </div>
@@ -1030,9 +1041,14 @@ const BookingList = () => {
     const AllJobs = ({ all, message, notice, approve = false }) => {
         const [detailsId, setDetailsId] = useState(null);
         const [id, setId] = useState(null);
+        const [otId, setotId] = useState(null);
 
         if (all?.length <= 0) {
-            return <p style={{margin:'20px'}}>{message ? message : "No booking at the moment"}</p>;
+            return <p style={{margin:'20px'}}>
+                {message ? message :
+                    "No booking at the moment"
+                }
+            </p>;
         }
 
         function jobProgress(booking) {
@@ -1055,32 +1071,98 @@ const BookingList = () => {
             return {color: "grey", message: "This job has not been done"};
         }
 
-        async function approveOT(order) {
-            if (loadingApproval) {return;}
-            setLoadingApproval(true);
-            const data = {email: order?.cleanerEmail, orderId: order?.orderId}
-            try {
-                const response = await api.post(`/api/booking/approve-ot`, data);
-                const {booking, success } = response.data;
-                if (success) {
-                    setApprovalMessage('Successfully approved');
-                    setAllJobs(prev => {
-                        const map = new Map(prev.map(item => [item.id, item]));
-                        booking.forEach(item => map.set(item.id, item));
-                        return Array.from(map.values()).sort((a, b) => b.id - a.id);
-                    })
-                }
-                else {
-                    setApprovalMessage('Failed to approve extension. Try again');
-                }
+        const IncomeForOT = ({ booking }) => {
+            const [loadingData, setLoadingData] = useState(false);
+            const [income, setIncome] = useState(0);
 
 
-            } catch (error) {
-                console.log(error);
-                setApprovalMessage("Error couured")
-            } finally {
-                setLoadingApproval(false);
+            async function approveOT(order) {
+
+
+                try {
+
+
+
+                } catch (error) {
+                    console.log(error);
+                    setApprovalMessage("Error couured")
+                } finally {
+                    setLoadingApproval(false);
+                }
             }
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                if (loadingApproval) {return;}
+
+                if (income <= 0) {
+                    setApprovalMessage("Please enter income");
+                    return;
+                }
+                setLoadingApproval(true);
+                try {
+                    let data = {email: booking?.cleanerEmail, orderId: booking?.orderId}
+                    const response = await api.post(`/api/booking/approve-ot`, data);
+                    const {booking, success } = response.data;
+
+                    data = { orderId: booking.orderId, income: income };
+                    await api.post('/api/booking/add-income', data);
+
+                    if (success) {
+                        setApprovalMessage('Successfully approved');
+                        setAllJobs(prev => {
+                            const map = new Map(prev.map(item => [item.id, item]));
+                            booking.forEach(item => map.set(item.id, item));
+                            return Array.from(map.values()).sort((a, b) => b.id - a.id);
+                        })
+                    }
+                    else {
+                        setApprovalMessage('Failed to approve extension. Try again');
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                    setApprovalMessage("Error occured")
+                } finally {
+                    setLoadingApproval(false);
+                }
+            }
+
+            return (
+                <form style={{display: 'flex', flexDirection:'column',
+                    alignItems: 'center', justifyContent:'space-evenly', padding:'10px', border:'dashed', gap:'10px'}}
+                      onSubmit={handleSubmit} className={'form-group'}>
+                    <h4 style={{marginBottom:'15px'}}>{booking?.extra} mins duration extension for approval</h4>
+                    <input
+                        type="number"
+                        name="email"
+                        value={income}
+                        onChange={(e) => setIncome(e.target.value)}
+                        placeholder="Enter cleaner income"
+                        className="button-bg"
+                        style={{padding:'10px'}}
+                        required={true}
+                    />
+
+                    <div style={{
+                        display:'flex',
+                        justifyContent:'space-evenly',
+                        alignItems:'center',
+                        gap:'10px',
+                        margin:'10px'
+                    }}>
+                        <button
+                            disabled={loadingApproval}
+                            style={{border:'none', flexFlow:'1'}}
+                            type={'submit'} className={loadingApproval ? "back-button" : 'submit-button'}>
+                            {booking?.income ? "Update income" : " Add income"}
+                        </button>
+                        <FaTimes size={30} style={{ width:'40px'}} onClick={() => {
+                            setotId(null);
+                        }} />
+                    </div>
+                </form>
+            )
         }
 
         return (
@@ -1119,6 +1201,7 @@ const BookingList = () => {
                                         className={id === booking.id ? 'rotate-down' : 'rotate-up'}
                                     />
                                 </div>
+
                                 {id === booking.id && <div>
                                         <h3 style={{textAlign:'start'}}>{renderName(booking.customer)}</h3>
                                         <div style={{display:'flex', justifyContent:'center', alignItems:'baseline', marginRight:'10px'}}>
@@ -1142,6 +1225,17 @@ const BookingList = () => {
                                             <p>Amount</p>
                                             <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
                                         </div>
+                                        {booking?.income && <div style={{
+                                            display: 'flex',
+                                            ustifyContent:
+                                                'space-between',
+                                            alignItems: 'baseline'
+                                        }}>
+                                                <p>Cleaner income</p>
+                                                <h4 style={{
+                                                textAlign:'end'
+                                            }}>£{booking?.income}</h4>
+                                            </div> }
                                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                             <p>Duration</p>
                                             <h4 style={{textAlign:'end'}}>{formatDuration(booking.duration)}</h4>
@@ -1171,6 +1265,7 @@ const BookingList = () => {
                                         className={detailsId === booking.orderId ? 'rotate-down' : 'rotate-up'}
                                     />
                                 </div>
+
                                 {detailsId === booking.orderId && <div style={{marginBottom:'15px'}} className={'price-container'}>
                                     {booking.booking.map((book, index) => (
                                         <div key={index} className={'order-container'}>
@@ -1192,9 +1287,6 @@ const BookingList = () => {
                                         <ul>
                                             <li>{booking.cleaner}</li>
                                             <li>{booking.cleanerEmail}</li>
-                                            {booking?.actualStartTime && <li>Job started at {format(new Date(booking?.actualStartTime), 'yyyy-MM-dd hh:mm')}</li>}
-                                            {booking?.actualStopTime && <li>Job ended at {format(new Date(booking?.actualStopTime), 'yyyy-MM-dd hh:mm')}</li>}
-                                            {booking?.extra && <li>Requested an extension of {booking?.extra} mins</li>}
                                         </ul>
                                         <div style={{
                                             display:'flex',
@@ -1205,24 +1297,49 @@ const BookingList = () => {
                                             <ul><li> {booking.cleanerPhone} </li></ul>
                                             <CallButton phoneNumber={booking.cleanerPhone} />
                                         </div>
+
+                                        <ul style={{marginLeft:'15px'}}>
+                                            {booking?.cleaner2 && <li>{booking.cleaner2}</li>}
+                                            {booking?.cleanerEmail2 && <li>{booking.cleanerEmail2}</li>}
+                                        </ul>
+                                        {booking?.cleanerPhone2 &&
+                                            <div style={{
+                                            display:'flex',
+                                            justifyContent:'center',
+                                            alignItems:'baseline',
+                                            marginRight:'10px'
+                                        }}>
+                                            <ul><li> {booking.cleanerPhone2} </li></ul>
+                                            <CallButton phoneNumber={booking.cleanerPhone2} />
+                                        </div> }
+
+                                        <ul style={{marginTop:'15px'}}>
+                                            {booking?.actualStartTime && <li>Job started at {format(new Date(booking?.actualStartTime), 'yyyy-MM-dd hh:mm')}</li>}
+                                            {booking?.actualStopTime && <li>Job ended at {format(new Date(booking?.actualStopTime), 'yyyy-MM-dd hh:mm')}</li>}
+                                            {booking?.extra && <li>Requested an extension of {booking?.extra} mins</li>}
+                                        </ul>
                                     </div>
 
                                 </div> }
 
-                                {(approve && booking?.extraApproval === 'no' && booking?.extra) && <div style={{
+                                {(approve && booking?.extraApproval === 'no' && booking?.extra) &&
+                                    <div style={{
                                         display: 'flex',
                                         flexDirection:'column'
                                     }}>
                                         {loadingApproval && <p style={{margin:'10px'}}>Loading...</p>}
                                         {approvalMessage && <p style={{margin:'15px'}}>{approvalMessage}</p>}
-                                        <h4 style={{marginBottom:'15px'}}>{booking?.extra} mins duration extension for approval</h4>
+                                        {otId === booking.orderId && <IncomeForOT booking={booking} />}
                                         <button
-                                            onClick={() => approveOT(booking)}
-                                            disabled={(loadingApproval || booking?.extraApproval === 'yes' || !booking?.extra)}
-                                            className={(loadingApproval || booking?.extraApproval === 'yes' || !booking?.extra) ? 'back-button' : 'submit-button'}>
+                                            onClick={() => setotId(booking.orderId)}
+                                            disabled={(loadingApproval || booking?.extraApproval === 'yes' ||
+                                                !booking?.extra || booking?.orderId === otId)}
+                                            className={(loadingApproval || booking?.extraApproval === 'yes' ||
+                                                !booking?.extra || booking?.orderId === otId) ? 'back-button' : 'submit-button'}>
                                             Approve
                                         </button>
-                                    </div>}
+                                    </div>
+                                }
 
                                 {booking?.rescheduleRecord === 1 && <p style={{marginTop:'15px'}}>Note! This job was rescheduled</p>}
 

@@ -247,6 +247,7 @@ const CleanerProfile = () => {
     const [jobInProgress, setJobInProgress] = useState(false);
     const [activeId, setActiveId] = useState(null);
     const [requestMessage, setRequestMessage] = useState(null);
+    const [personel, setPersonel] = useState(1);
 
     const [loadingRequest, setLoadingRequest] = useState(false);
 
@@ -400,6 +401,22 @@ const CleanerProfile = () => {
         }, 1000);
     }
 
+    useEffect(() => {
+        function startNewOrderCountdown(update = true) {
+
+            const interval = setInterval(() => {
+                if (!update) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                setPageCount(prev => prev + 1);
+
+            }, 10000);
+        }
+        startNewOrderCountdown();
+    }, []);
+
     const initiateCountdown = (order) => {
         const jobHour = Number(order?.startHour);
         const jobMinute = Number(order?.startMinute);
@@ -415,12 +432,12 @@ const CleanerProfile = () => {
         return normalPostcode;
     }
 
-    const acceptOrder = async (orderId) => {
+    const acceptOrder = async (orderId, personel = 1) => {
         if (acceptingOrders) {
             return
         }
         setAcceptingOrders(true);
-        const cleanerData =  { cleanerName: cleanerName, cleanerEmail: email, cleanerPhone: phoneNumber, orderId: orderId };
+        const cleanerData =  { cleanerName: cleanerName, cleanerEmail: email, cleanerPhone: phoneNumber, orderId: orderId, personel: personel };
         try {
             const acceptResponse = await api.post('/api/booking/accept-order', cleanerData)
             const { success } =  acceptResponse.data;
@@ -439,55 +456,36 @@ const CleanerProfile = () => {
         }
         finally {
             setAcceptingOrders(false);
+            setPersonel(1);
         }
     }
 
     useEffect(() => {
+        if (!isActive) return;
         const fetchOrders = async () => {
-            if (orderEnded) return;
+            if (isLoading) return;
 
-            if (newOrders.length > 0) {
-                setLoadingMore(true);
-            }
-            else {
+            if (pageCount === 0) {
                 setIsLoading(true)
             }
             try {
-                let offset = 0;
-                if (newOrders.length > 0) {
-                    offset = newOrders[newOrders.length - 1].id
-                }
-                const data = {limit: page, offset: offset};
-                const newOrderResponse = await api.post('api/booking/new', data);
+                const newOrderResponse = await api.get('api/booking/new');
                 const orders = await newOrderResponse.data;
-                if (orders?.booking?.length <= 0 && newOrders.length <= 0) {
-                    setMessage('No new orders yet.');
-                }
-                else {
-                    setNewOrders(prev => {
-                        const map = new Map(prev.map(item => [item.id, item])); // old items
-                        orders?.booking?.forEach(item => map.set(item.id, item));    // add/replace new
-                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
-                    });
-                }
                 if (orders?.booking?.length <= 0) {
-                    setOrderEnded(true);
+                    setMessage('No new orders yet.');
+                    return;
                 }
-
+                setNewOrders(orders?.booking);
             } catch (error) {
                 console.log(error);
-                setNewOrders([])
                 setMessage('Error fetching new orders.')
             }
             finally {
                 setIsLoading(false)
-                setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoading && activeMenu === 'New' && !orderEnded) {
-            fetchOrders();
-        }
-    }, [pageCount, activeMenu, isActive, orderEnded]);
+        fetchOrders();
+    }, [pageCount, isActive]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -540,9 +538,13 @@ const CleanerProfile = () => {
                         <p style={{textAlign:'center'}}>Loading data...</p>
                     </div>
                     : (newOrders.length <= 0 || newOrders === null) ?
-                        <div style={{display:'flex', minHeight:'100vh', justifyContent:'center'}}>
+                        <div style={{
+                            display:'flex',
+                            minHeight:'100vh',
+                            justifyContent:'center'
+                        }}>
                             <p style={{textAlign:'center'}}>{message}</p>
-                        </div> : (active !== null && active === true) ?
+                        </div> : active === true ?
                             <div className="grid-container">
                                 {newOrders.map(order => (
                                     <div key={order.orderId}  className={'stat-card'}>
@@ -610,9 +612,68 @@ const CleanerProfile = () => {
                                             </div>}
 
                                         {(acceptingOrders && acceptedJobIds.includes(order.orderId)) && <p>Load...</p>}
-                                        <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
-                                                onClick={() => acceptOrder(order.orderId)}
-                                                className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'next-button'}>
+
+                                        {order?.personal > 1 && <div style={{
+                                                display:'flex',
+                                                alignItems:'center'
+                                            }}>
+                                                <FaUser size={20} style={{width:'40px'}} />
+                                                <h3 style={{alignSelf:'end', width:'50px', textAlign:'end'}}>x2</h3>
+                                            </div>}
+
+                                        {(order?.personel > 1 && order?.cleanerEmail) && <div style={{
+                                            display:'flex',
+                                            alignItems:'center'
+                                        }}>
+                                               <FaUserTie size={20} style={{width:'40px'}} />
+                                               <h3 style={{alignSelf:'end', width:'50px', textAlign:'end'}}>1</h3>
+                                            </div>}
+
+                                        {personel > 1 && <div style={{
+                                            display:'flex',
+                                            flexDirection:'column'
+                                        }}>
+                                            <div style={{display:'flex', alignItems:'center'}}>
+                                                <p style={{margin:'15px'}}>
+                                                    This job is for two employees. Can you do one or both parts?
+                                                </p>
+                                                <FaTimes size={20} style={{
+                                                    width:'40px',
+                                                    alignSelf:'end'
+                                                }} onClick={() => {setPersonel(1)}} />
+                                            </div>
+
+                                            <div style={{gap:'10px'}} className={'form-actions'}>
+                                                <button
+                                                    style={{color:'white'}}
+                                                    onClick={() => acceptOrder(order.orderId, 2)}
+                                                    disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
+                                                    className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'submit-button'}>
+                                                    Both part
+                                                </button>
+                                                <button
+                                                    style={{color:'white'}}
+                                                    disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId))}
+                                                    onClick={() => acceptOrder(order.orderId, 1)}
+                                                    className={(acceptingOrders || acceptedJobIds.includes(order.orderId)) ? 'back-button' : 'submit-button'}>
+                                                    One part
+                                                </button>
+                                            </div>
+                                        </div>}
+
+                                        <button disabled={(acceptingOrders || acceptedJobIds.includes(order.orderId) || personel > 1)}
+                                                onClick={() => {
+                                                    if (order?.personel > 1 && !order?.cleanerEmail) {
+                                                        setPersonel(2);
+                                                        return;
+                                                    }
+                                                    acceptOrder(order.orderId, 1)
+                                                }}
+                                                style={{color:'white'}}
+                                                className={(
+                                                    acceptingOrders ||
+                                                    acceptedJobIds.includes(order.orderId) ||
+                                                    personel > 1) ? 'back-button' : 'next-button'}>
                                             {acceptedJobIds.includes(order.orderId) ?  "Accepted" : "Accept this job"}
                                         </button>
                                     </div>
