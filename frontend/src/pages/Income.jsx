@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import {differenceInCalendarDays, differenceInMinutes, format, isToday} from "date-fns";
 import api from "./api.js";
 import {MdKeyboardArrowRight} from "react-icons/md";
-import {FaClock, FaCommentDots, FaEnvelope, FaMapMarkerAlt, FaPhone, FaTimes} from "react-icons/fa";
+import {FaClock, FaCommentDots, FaEnvelope, FaMapMarkerAlt, FaPhone, FaSearch, FaTimes} from "react-icons/fa";
 import LOGO from "../images/logo4.png";
 import ProfilePage from "./CleanerProfilePage.jsx";
 
@@ -16,6 +16,36 @@ const Income = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [newActive, setNewActive] = useState(true);
+    const [page, setPage] = useState(10);
+    const [pageCount, setPageCount] = useState(0);
+    const [searchDatabase, setSearchDatabase] = useState('');
+
+    useEffect(() => {
+        if (window.innerWidth > 768) {
+            setPage(20);
+            return;
+        }
+        setPage(10);
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (newActive !== null) { return; }
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (!loading) {
+                    setPageCount(prev => prev + 1);
+                }
+            }
+
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loading]);
 
     function CallButton({ phoneNumber }) {
         return (
@@ -96,7 +126,7 @@ const Income = () => {
                 let responspnse = await api.get('/api/booking/no-income-jobs')
                 let { booking } = responspnse.data;
                 console.log(booking);
-                if (newActive) {
+                if (newActive === true) {
                     setBuffer(prev => {
                         const map = new Map(prev.map(item => [item.id, item]));
                         booking.forEach(item => map.set(item.id, item));
@@ -114,7 +144,7 @@ const Income = () => {
 
                 responspnse = await api.get('/api/booking/income-jobs')
                 const oldBooking = responspnse.data.booking;
-                if (!newActive) {
+                if (newActive === false) {
                     setBuffer(prev => {
                         const map = new Map(prev.map(item => [item.id, item]));
                         oldBooking.forEach(item => map.set(item.id, item));
@@ -152,6 +182,69 @@ const Income = () => {
         }
         update()
     }, [])
+
+    useEffect(() => {
+        if (newActive !== null || loading) return;
+        setLoading(true);
+        let offset = 0;
+        if (buffer.length > 0) {
+            offset = buffer[buffer.length - 1].id;
+        }
+        const data = {limit: page, offset: offset };
+        api.post('/api/booking/old-income-jobs', data)
+            .then(response => {
+                const { booking } = response.data;
+                if (booking.length <= 0) {
+                    setMessage('No old booking found');
+                    return;
+                }
+                setBuffer(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    booking.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                setMessage('Something went wrong');
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+    }, [pageCount]);
+
+    const search = async (e) => {
+        e.preventDefault()
+        if (loading || !searchDatabase) return;
+        setLoading(true);
+        setBuffer([]);
+        try {
+            const res = await api.post('/api/booking/search-income-jobs', {orderId: searchDatabase})
+            const { booking } = res.data;
+            if (booking?.length <= 0) {
+                setMessage("No booking matching your order id");
+                return;
+            }
+            setBuffer(prev => {
+                const map = new Map(prev.map(item => [item.id, item]));
+                booking.forEach(item => map.set(item.id, item));
+                return Array.from(map.values()).sort((a, b) => b.id - a.id);
+            })
+        } catch (error) {
+            console.log(error);
+            setMessage("Error while fetching data");
+        } finally {
+            setLoading(false);
+        }
+
+    }
+
+    useEffect(() => {
+        if (searchDatabase?.length <= 0) {
+            setBuffer([]);
+            setPageCount(prev => prev + 1);
+        }
+    }, [searchDatabase]);
 
     const AllJobs = ({ all, message }) => {
         if (all?.length <= 0) {
@@ -236,6 +329,9 @@ const Income = () => {
         }
 
         function jobProgress(booking) {
+            if (booking?.completed === 1) {
+                return {color: "blue", message: "This job is completed."};
+            }
             if (booking?.income) {
                 return {color: "green", message: "Income has been allocated to this job"};
             }
@@ -435,7 +531,7 @@ const Income = () => {
                             </div>
                         ))}
                     </div>
-                    {loading && (<p>Loading data...</p>)}
+                    {loading && (<p>Loading...</p>)}
                 </div>
             </div>
         );
@@ -475,7 +571,7 @@ const Income = () => {
                                     backgroundColor: 'yellowgreen',
                                 }}>
                                 </div>
-                                <label style={newActive ? {textDecoration:'underline'} : {textDecoration:'none'}}>New Jobs</label>
+                                <label style={newActive === true ? {textDecoration:'underline'} : {textDecoration:'none'}}>New Jobs</label>
                             </div>
 
                             <div style={{
@@ -497,15 +593,59 @@ const Income = () => {
                                 }}>
                                 </div>
                                 <label style={
-                                    !newActive ?
+                                    newActive === false ?
                                         {textDecoration:'underline'}
                                         : {textDecoration:'none'}}>
-                                    Idle/Active Jobs
+                                    Active Jobs
+                                </label>
+                            </div>
+
+                            <div style={{
+                                display:'flex',
+                                justifyContent:'center',
+                                flexDirection:'column',
+                                width:'25%',
+                                alignItems:'center'
+                            }}
+                                 onClick={() => {
+                                     setNewActive(null);
+                                     setBuffer([]);
+                                     setPageCount(prev => prev + 1);
+                                 }}>
+                                <div style={{
+                                    width:'20px',
+                                    height:'20px',
+                                    borderRadius:'50%',
+                                    backgroundColor: 'blue',
+                                }}>
+                                </div>
+                                <label style={
+                                    newActive === null ?
+                                        {textDecoration:'underline'}
+                                        : {textDecoration:'none'}}>
+                                    Old Jobs
                                 </label>
                             </div>
 
                         </div>
                     </div>
+                    {newActive === null && <div style={{
+                        flexFlow: "1",
+                        maxWidth:'1200px',
+                        display:'flex',
+                        alignItems:'center'
+                    }} className="search-bar" >
+                        <input
+                            type="text"
+                            placeholder="search using order number..."
+                            value={searchDatabase}
+                            className={'button-bg'}
+                            style={{width:'90%'}}
+                            onChange={(e) => setSearchDatabase(e.target.value)}
+                        />
+                        <FaSearch onClick={searchDatabase?.length > 0 ? search : null } style={{width:'40px'}}  />
+
+                    </div>}
                 </div>
             </nav>
 
