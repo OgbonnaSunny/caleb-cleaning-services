@@ -2286,10 +2286,6 @@ const Checkout = () => {
                     phone: formData.phone,
                 };
 
-                if (formData.startHour > 5) {
-                    personel = 2;
-                }
-
                 const orderData = {
                     orderId: orderId,
                     booking: JSON.stringify(booking),

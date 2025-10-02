@@ -259,15 +259,18 @@ const Income = () => {
         const [loadingData, setLoadingData] = useState(false);
 
         const Cleaner = ({ booking }) => {
-            const [income, setIncome] = useState(0);
-            const data = { orderId: booking.orderId, income: income };
+            const [income, setIncome] = useState(null);
+            const [personel, setPersonel] = useState(null);
+
+            const data = { orderId: booking.orderId, income: income, personel: personel };
 
             const handleSubmit = async (e) => {
                 e.preventDefault();
                 if (loadingData) {
                     return;
                 }
-                if (income <= 0) {
+
+                if (income <= 0 || income === null) {
                     setMessage("Please enter income");
                     return;
                 }
@@ -310,6 +313,17 @@ const Income = () => {
                         style={{padding:'10px'}}
                         required={true}
                     />
+
+                    <input
+                        type="number"
+                        name="personel"
+                        value={personel}
+                        onChange={(e) => setPersonel(e.target.value)}
+                        placeholder="Enter number of cleaners"
+                        className="button-bg"
+                        style={{padding:'10px', marginTop:'15px'}}
+                    />
+
                     {message && <p style={{margin:'10px'}}>{message}</p>}
                     {loadingData && <p style={{margin:'10px'}}>Loading...</p>}
                     <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px', margin:'10px'}}>
@@ -536,7 +550,6 @@ const Income = () => {
             </div>
         );
     }
-
 
     return (
         <div className="sticky-nav-container">

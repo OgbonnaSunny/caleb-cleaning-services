@@ -626,7 +626,6 @@ const BookingList = () => {
         const [message, setMessage] = useState('');
         const [loadingData, setLoadingData] = useState(false);
 
-
         const handleSubmit = async (e) => {
             e.preventDefault();
             if (loadingData) {
@@ -693,6 +692,7 @@ const BookingList = () => {
                     style={{padding:'10px'}}
                     required={true}
                 />
+
                 {message && <p style={{margin:'10px'}}>{message}</p>}
                 {loadingData && <p style={{margin:'10px'}}>Loading...</p>}
                 <div style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', gap:'10px', margin:'10px'}}>
