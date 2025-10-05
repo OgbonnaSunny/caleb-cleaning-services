@@ -206,6 +206,7 @@ const ProfilePage = ({ emailFromProile }) => {
     const [page, setPage] = useState(10);
     const [user, setUser] = useState({});
     const [documents, setDocuments] = useState([]);
+    const [docInView, setDocInView] = useState(null);
 
 
     useEffect(() => {
@@ -431,7 +432,11 @@ const ProfilePage = ({ emailFromProile }) => {
     }
 
     return (
-        <div style={{display:'flex', flexDirection:'column', minHeight: '100vh'}}>
+        <div style={{
+            display:'flex',
+            flexDirection:'column',
+            minHeight: '100vh',
+        }}>
             {isLoading && <div className="raise-progress-bar-container">
                 <div className="progress-bar-container">
                     <div className="spinner"></div>
@@ -733,13 +738,26 @@ const ProfilePage = ({ emailFromProile }) => {
                         </div>
                     }
                     {(activeTab2 === 'Documents' && emailFromProile) &&
-                        <div className={'grid-container'}>
-                            {documents.map((doc, index ) => (
-                                <div key={index}>
-                                    <h3 style={{textAlign:'center'}}>{doc.title}</h3>
-                                    <img src={doc.img}/>
+                        <div style={{display: 'flex', flexDirection:'column'}}>
+                            {docInView === null &&  <div className={'grid-container'}>
+                                {documents.map((doc, index ) => (
+                                    <div key={index}
+                                         onClick={() => setDocInView({title: doc.title, image: doc.img})}>
+                                        <h3 style={{textAlign:'center'}}>{doc.title}</h3>
+                                        <img style={{height:'300px', borderRadius:'10px'}} src={doc.img}/>
+                                    </div>
+                                ))}
+                            </div>}
+
+                            {docInView !== null &&
+                                <div style={{display: 'flex', flexDirection:'column', justifyContent:'center'}}>
+                                    <div style={{display:'flex', alignItems:'center'}}>
+                                        <h3 style={{textAlign:'center'}}>{docInView?.title}</h3>
+                                        <FaTimes size={20} style={{width:'40px'}} onClick={() => setDocInView(null)}/>
+                                    </div>
+                                    <img style={{maxWidth:'100%', height:'500px', alignSelf:'center', borderRadius:'10px'}} src={docInView?.image}/>
                                 </div>
-                            ))}
+                            }
                         </div>
                     }
                 </div>

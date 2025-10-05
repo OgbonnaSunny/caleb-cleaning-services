@@ -1399,9 +1399,15 @@ const Locations = () => {
       }}>
 
         <section className="location-banner">
-          <div className="container">
+          <div style={{display: 'flex', flexDirection: 'column', marginBottom:'20%'}}>
             <h1 className={'location-header'}>Our Cleaner Locations</h1>
-            <h4 style={{ color:'blue', maxWidth:'500px', textAlign:'justify', marginTop:'10px', backgroundColor:'transparent'}}>
+            <h4 style={{
+              padding:'10px',
+              color:'rebeccapurple',
+              maxWidth:'500px',
+              textAlign:'left',
+              backgroundColor:'transparent'
+            }}>
               Get professional home and office cleaning in Edinburgh and the surrounding areas. Search for a local cleaner,
               book the service and they will arrive at your location shortly. Our cleaners have extensive experience and
               skills to satisfy all your cleaning needs. Enter your postcode to find a cleaner near you.

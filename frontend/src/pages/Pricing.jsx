@@ -2014,11 +2014,17 @@ const Pricing = () => {
         flexDirection: 'column',
         minHeight: '100vh' // Ensures it takes at least full viewport height
       }}>
-        {error && <label style={{width:'400px', height:'50px', textAlign:'center'}} className={['slide-in', 'error-label'].join(' ')} >{error}</label>}
+        {error && <label style={{
+          width:'400px',
+          height:'50px',
+          textAlign:'center'
+        }}
+                         className={['slide-in', 'error-label'].join(' ')} >{error}</label>
+        }
 
         <section className={'price-banner'} style={{marginBottom:'30px'}} >
-          <div className="container" style={{marginBottom:'30px',  display:'block'}}>
-            <h2 style={{color:'navy', textAlign:'center'}}>Choose a Cleaning type!</h2>
+          <div className="container" style={{display:'flex', flexDirection:'column'}}>
+            <h2 style={{color:'navy', textAlign:'center', alignSelf:'center',marginTop:'20%'}}>Choose a Cleaning type!</h2>
             <div className="word-scroller-container" style={{marginTop:'20px'}}>
               <FaArrowLeft onClick={scrollLeft} style={{color:'navy'}} />
               <div className="words-container" ref={scrollContainerRef}>

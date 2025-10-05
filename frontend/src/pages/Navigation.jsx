@@ -205,7 +205,12 @@ const Navigation = () => {
     }
 
     return (
-        <div  style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
+        <div  style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(5,80,54,0.65)',
+        }} >
             {showNav &&
                 <nav className="navbar">
                     <div style={{display:'block'} }>
