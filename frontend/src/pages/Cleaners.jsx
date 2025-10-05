@@ -267,7 +267,13 @@ const Cleaners = () => {
             flexDirection: 'column',
             minHeight: '100vh',
         }} className="support-page">
-            <div ref={docRef} style={{display:'flex', flexDirection: 'row',alignItems: 'center', justifyContent:'flex-start', gap:'10px'}}>
+            <div ref={docRef}
+                 style={{
+                     display:'flex',
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent:'flex-start',
+                     gap:'10px'}}>
                 <img src={LOGO} className={'logo-icon'}/>
                 <h1 className="page-title">Cleaners Management</h1>
             </div>

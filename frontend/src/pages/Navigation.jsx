@@ -209,7 +209,7 @@ const Navigation = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(5,80,54,0.65)',
+            backgroundColor: 'rgba(245, 255, 250, 0.75)',
         }} >
             {showNav &&
                 <nav className="navbar">
