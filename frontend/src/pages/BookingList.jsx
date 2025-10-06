@@ -1033,6 +1033,7 @@ const BookingList = () => {
     }
 
     useEffect(() => {
+        setMessage('');
         if (activeBottomMenu !== "All") {
             setApproveExtension(false);
         }

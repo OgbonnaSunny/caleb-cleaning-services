@@ -551,6 +551,10 @@ const Income = () => {
         );
     }
 
+    useEffect(() => {
+        setMessage('');
+    }, [newActive]);
+
     return (
         <div className="sticky-nav-container">
             <nav  className='top-order-nav'>
