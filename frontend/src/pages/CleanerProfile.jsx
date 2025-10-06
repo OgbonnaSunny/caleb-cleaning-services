@@ -2765,9 +2765,8 @@ const CleanerProfile = () => {
             }
             setEnabled(check);
             try {
-                Notification.requestPermission();
-                return;
                 const subscribe = await subscribeUser(email, send);
+                return;
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
                 console.log(subscribe);
             } catch (error) {
