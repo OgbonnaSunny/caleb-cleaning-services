@@ -568,7 +568,7 @@ const CleanerProfile = () => {
 
                                         <div className={'new-order-container'}>
                                             <FaPhone  className={'icon-small'} />
-                                            <p>{order.phone}</p>
+                                            <p style={{fontSize:'medium'}}>{order.phone}</p>
                                             <CallButton phoneNumber={order.phone} />
                                         </div>
 
@@ -578,19 +578,19 @@ const CleanerProfile = () => {
                                         </div>
 
                                         <div className={'new-order-container'}>
-                                            <p style={{textAlign:'start', maxWidth:'20%'}}>Tarif</p>
-                                            <p style={{textAlign:'end',fontWeight:'900'}}>{order.plan}</p>
+                                            <p style={{textAlign:'start', maxWidth:'20%', fontSize:'medium'}}>Tarif</p>
+                                            <p style={{textAlign:'end',fontWeight:'900', fontSize:'medium'}}>{order.plan}</p>
                                         </div>
 
 
                                         <div className={'new-order-container'}>
-                                            <p style={{marginLeft:'10px'}}>Estimated duration</p>
-                                            <h4 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h4>
+                                            <p style={{ fontSize:'medium'}}>Estimated duration</p>
+                                            <h4 style={{textAlign:'end', fontSize:'medium'}}>{formatDuration(order.duration)}</h4>
                                         </div>
 
                                         <div className={'new-order-container'}>
-                                            <p style={{flex:'1', marginLeft:'10px'}}>Estimated Amount</p>
-                                            <h4 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h4>
+                                            <p style={{flex:'1', fontSize:'medium'}}>Estimated Amount</p>
+                                            <h4 style={{textAlign:'end', flex:'1', fontSize:'medium'}}>£{Number(order.estimatedAmount).toFixed(2)}</h4>
                                         </div>
 
                                         <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
@@ -1743,7 +1743,7 @@ const CleanerProfile = () => {
 
                                     <div className={'order-container'}>
                                         <p style={{flex:'1'}}>Estimated Amount</p>
-                                        <h3 style={{textAlign:'end', flex:'1'}}>£{order.estimatedAmount}</h3>
+                                        <h3 style={{textAlign:'end', flex:'1'}}>£{Number(order.estimatedAmount).toFixed(2)}</h3>
                                     </div>
 
                                     {order.orderId === idForUpdate && <div className="price-container">

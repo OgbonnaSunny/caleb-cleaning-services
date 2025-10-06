@@ -259,8 +259,8 @@ const Income = () => {
         const [loadingData, setLoadingData] = useState(false);
 
         const Cleaner = ({ booking }) => {
-            const [income, setIncome] = useState(null);
-            const [personel, setPersonel] = useState(null);
+            const [income, setIncome] = useState(0);
+            const [personel, setPersonel] = useState(1);
 
             const data = { orderId: booking.orderId, income: income, personel: personel };
 

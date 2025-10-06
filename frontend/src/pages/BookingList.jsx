@@ -840,7 +840,13 @@ const BookingList = () => {
         setLoadingApproval(true);
         setApprovedMessage(null)
         try {
-            const response = await api.post('/api/booking/approval-booking', {orderId: booking.orderId, cleanerEmail: booking.cleanerEmail , cleanerName: booking.cleaner })
+            const response = await api.post('/api/booking/approval-booking', {
+                orderId: booking.orderId,
+                cleanerEmail: booking.cleanerEmail ,
+                cleanerName: booking.cleaner,
+                cleanerEmail2: booking?.cleanerEmail2 ,
+                cleanerName2: booking?.cleaner2
+            })
             const { success, message} = response.data;
             setApprovedMessage(message)
             if (success) {
@@ -884,6 +890,12 @@ const BookingList = () => {
                                     <p>Amount</p>
                                     <h4 style={{textAlign:'end'}}>£{booking.estimatedAmount}</h4>
                                 </div>
+
+                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                    <p>Income</p>
+                                    <h4 style={{textAlign:'end'}}>£{booking?.income}</h4>
+                                </div>
+
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
                                     <p>Duration</p>
                                     <h4 style={{textAlign:'end'}}>{formatDuration(booking.duration)}</h4>
@@ -968,8 +980,10 @@ const BookingList = () => {
                                 {loadingApproval && <p>loading...</p>}
                                 {approvedMessage && <p>{approvedMessage}</p>}
                                 <button
-                                    disabled={(loadingApproval || approvedIds.includes(booking.orderId))} onClick={() => approve(booking)}
-                                    style={{marginTop:'10px'}} className={(loadingApproval || approvedIds.includes(booking.orderId)) ? 'back-button' : 'submit-button' }>
+                                    disabled={(loadingApproval || approvedIds.includes(booking.orderId))}
+                                    onClick={() => approve(booking)}
+                                    style={{marginTop:'10px'}}
+                                    className={(loadingApproval || approvedIds.includes(booking.orderId)) ? 'back-button' : 'submit-button' }>
                                     Approve
                                 </button>
                             </div>
