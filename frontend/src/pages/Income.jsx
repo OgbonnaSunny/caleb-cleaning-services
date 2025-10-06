@@ -262,7 +262,7 @@ const Income = () => {
             const [income, setIncome] = useState(0);
             const [personel, setPersonel] = useState(1);
 
-            const data = { orderId: booking.orderId, income: income, personel: personel };
+            const data = { orderId: booking.orderId, income: income, personel: personel, address: booking.address };
 
             const handleSubmit = async (e) => {
                 e.preventDefault();

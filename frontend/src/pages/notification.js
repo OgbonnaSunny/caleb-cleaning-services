@@ -5,7 +5,7 @@ import axios from "axios";
 const publicVapidKey = import.meta.env.VITE_NOTIFY_KEY; // From Step 1
 
 
-export async function subscribeUser({ email }) {
+export async function subscribeUser(email, send = 1) {
     if (!email) { return false; }
 
     // 1️⃣ Check if browser supports notifications & service workers
@@ -37,7 +37,7 @@ export async function subscribeUser({ email }) {
     });
 
 
-    const response = await  api.post('/api/notify-subscription', {email: email, sub: JSON.stringify(newSubscription)});
+    const response = await  api.post('/api/notify-sub', {email: email, sub: JSON.stringify(newSubscription), send: send});
 
     console.log("User successfully subscribed!");
 

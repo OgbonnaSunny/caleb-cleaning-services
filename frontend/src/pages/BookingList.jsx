@@ -845,7 +845,7 @@ const BookingList = () => {
                 cleanerEmail: booking.cleanerEmail ,
                 cleanerName: booking.cleaner,
                 cleanerEmail2: booking?.cleanerEmail2 ,
-                cleanerName2: booking?.cleaner2
+                cleanerName2: booking?.cleaner2,
             })
             const { success, message} = response.data;
             setApprovedMessage(message)

@@ -24,6 +24,7 @@ import globals from "globals";
 import {MdKeyboardArrowRight} from "react-icons/md";
 import {hr} from "date-fns/locale";
 import {number} from "yup";
+import { subscribeUser } from './notification.js';
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
@@ -248,6 +249,7 @@ const CleanerProfile = () => {
     const [activeId, setActiveId] = useState(null);
     const [requestMessage, setRequestMessage] = useState(null);
     const [personel, setPersonel] = useState(1);
+    const [enabled, setEnabled] = useState(JSON.parse(localStorage.getItem("notifications")) || false);
 
     const [loadingRequest, setLoadingRequest] = useState(false);
 
@@ -337,6 +339,28 @@ const CleanerProfile = () => {
             return `${times[0]} ${times[1]}`;
         }
         return time;
+    }
+
+    const getTwoEmpDuration = (order) => {
+        let hour = Number(order?.startHour);
+        let minute = Number(order?.startMinute);
+        const totalMinutes = (hour * 60) + minute;
+        const onePart = Math.floor(totalMinutes / 2);
+        minute = onePart % 60;
+        hour = (onePart - minute) / 60;
+
+        if (hour >  0 && minute > 0) {
+            return `${String(hour).padStart(2, '0')}h ${String(minute).padStart(2, '0')}m`;
+        }
+
+        if (minute <= 0 && hour > 0) {
+            return String(hour).padStart(2, "0")+"h";
+        }
+
+        if (hour <= 0 && minute > 0) {
+            return String(minute).padStart(2, "0")+"m";
+        }
+
     }
 
     useEffect(() => {
@@ -585,12 +609,31 @@ const CleanerProfile = () => {
 
                                         <div className={'new-order-container'}>
                                             <p style={{ fontSize:'medium'}}>Estimated duration</p>
-                                            <h4 style={{textAlign:'end', fontSize:'medium'}}>{formatDuration(order.duration)}</h4>
+                                            <h4 style={{
+                                                textAlign:'end',
+                                                fontSize:'medium'
+                                            }}>
+                                                {order?.personel <= 1 ? formatDuration(order.duration) :
+                                                    order?.cleanerEmail === order.cleanerEmail2 ?
+                                                        formatDuration(order.duration) :
+                                                        getTwoEmpDuration(order)}
+                                            </h4>
+
                                         </div>
 
                                         <div className={'new-order-container'}>
-                                            <p style={{flex:'1', fontSize:'medium'}}>Estimated Amount</p>
-                                            <h4 style={{textAlign:'end', flex:'1', fontSize:'medium'}}>£{Number(order.estimatedAmount).toFixed(2)}</h4>
+                                            <p style={{fontSize:'medium'}}>Estimated Amount</p>
+                                            <h4 style={{
+                                                textAlign:'end',
+                                                fontSize:'medium'
+                                            }}>£{order?.personel <= 1 ?
+                                                Number(order.estimatedAmount).toFixed(2) :
+                                                order?.cleanerEmail === order.cleanerEmail2 ?
+                                                    Number(order.estimatedAmount).toFixed(2) :
+                                                    (Number(order.estimatedAmount) / 2).toFixed(2)
+                                            }
+
+                                            </h4>
                                         </div>
 
                                         <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
@@ -1530,7 +1573,6 @@ const CleanerProfile = () => {
         const [detailsId, setDetailsId] = useState(null);
         const [ot, setOt] = useState(null);
 
-
         useEffect(() => {
             setTimeout(() => setRequestMessage(null), 5000);
 
@@ -1736,14 +1778,34 @@ const CleanerProfile = () => {
                                         ))}
                                     </div>}
 
-                                    <div className={'order-container'}>
-                                        <p style={{width:'70%'}}>Estimated time</p>
-                                        <h3 style={{textAlign:'end'}}>{formatDuration(order.duration)}</h3>
+
+                                    <div className={'new-order-container'}>
+                                        <p style={{ fontSize:'medium'}}>Estimated duration</p>
+                                        <h4 style={{
+                                            textAlign:'end',
+                                            fontSize:'medium'
+                                        }}>
+                                            {order?.personel <= 1 ? formatDuration(order.duration) :
+                                                order?.cleanerEmail === order.cleanerEmail2 ?
+                                                    formatDuration(order.duration) :
+                                                    getTwoEmpDuration(order)}
+                                        </h4>
+
                                     </div>
 
-                                    <div className={'order-container'}>
-                                        <p style={{flex:'1'}}>Estimated Amount</p>
-                                        <h3 style={{textAlign:'end', flex:'1'}}>£{Number(order.estimatedAmount).toFixed(2)}</h3>
+                                    <div className={'new-order-container'}>
+                                        <p style={{fontSize:'medium'}}>Estimated Amount</p>
+                                        <h4 style={{
+                                            textAlign:'end',
+                                            fontSize:'medium'
+                                        }}>£{order?.personel <= 1 ?
+                                            Number(order.estimatedAmount).toFixed(2) :
+                                            order?.cleanerEmail === order.cleanerEmail2 ?
+                                                Number(order.estimatedAmount).toFixed(2) :
+                                                (Number(order.estimatedAmount) / 2).toFixed(2)
+                                        }
+
+                                        </h4>
                                     </div>
 
                                     {order.orderId === idForUpdate && <div className="price-container">
@@ -1946,6 +2008,7 @@ const CleanerProfile = () => {
         const [bookingIdForReview, setBookingIdForReview] = useState(-1);
         const [detailsId, setDetailsId] = useState(null);
 
+
         const handleReviewChange = (e) => {
             e.preventDefault();
             setReview(e.target.value);
@@ -2031,14 +2094,33 @@ const CleanerProfile = () => {
                                         </button>
                                     </div>}
 
-                                    <div className={'order-container'}>
-                                        <h4 style={{width:'50%'}}>Amount</h4>
-                                        <h3 style={{textAlign:'end'}}>£{order.estimatedAmount}</h3>
+                                    <div className={'new-order-container'}>
+                                        <p style={{ fontSize:'medium'}}>Estimated duration</p>
+                                        <h4 style={{
+                                            textAlign:'end',
+                                            fontSize:'medium'
+                                        }}>
+                                            {order?.personel <= 1 ? formatDuration(order.duration) :
+                                                order?.cleanerEmail === order.cleanerEmail2 ?
+                                                    formatDuration(order.duration) :
+                                                    getTwoEmpDuration(order)}
+                                        </h4>
+
                                     </div>
 
-                                    <div className={'order-container'}>
-                                        <h4 style={{width:'50%'}}>Duration</h4>
-                                        <h3 style={{textAlign:'end'}}>{order?.duration}</h3>
+                                    <div className={'new-order-container'}>
+                                        <p style={{fontSize:'medium'}}>Estimated Amount</p>
+                                        <h4 style={{
+                                            textAlign:'end',
+                                            fontSize:'medium'
+                                        }}>£{order?.personel <= 1 ?
+                                            Number(order.estimatedAmount).toFixed(2) :
+                                            order?.cleanerEmail === order.cleanerEmail2 ?
+                                                Number(order.estimatedAmount).toFixed(2) :
+                                                (Number(order.estimatedAmount) / 2).toFixed(2)
+                                        }
+
+                                        </h4>
                                     </div>
 
                                     <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
@@ -2483,6 +2565,7 @@ const CleanerProfile = () => {
     const SettingsPage = () => {
         const [bankMessage, setBankMessage] = useState('');
         const [loading, setLoading] = useState(false);
+        const [emailNotify, setEmailNotify] = useState(true);
 
         const handlePreferredAreaChange = (area) => {
             const currentAreas = getValues().work.preferredAreas
@@ -2666,6 +2749,30 @@ const CleanerProfile = () => {
         const handleDataForUpdate = (data) => {
             setDataForUpdate(data);
             setSuccessMessage('')
+        }
+
+        const handleNotify = async (e) => {
+            e.preventDefault();
+            if (loading) return;
+            setLoading(true);
+            let send = 1;
+            const check = e.target.checked;
+            if (check === true) {
+                send = 1;
+            }
+            else {
+                send = 0;
+            }
+            setEnabled(check);
+            try {
+                const subscribe = await subscribeUser(email, send);
+                localStorage.setItem("notifications", JSON.stringify(subscribe));
+                console.log(subscribe);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
         }
 
         const renderTabContent = () => {
@@ -3082,18 +3189,37 @@ const CleanerProfile = () => {
                                 : dataForUpdate === 'Notification Preferences' ?
                                 <FaTimes style={{width:'20px'}} onClick={() => handleDataForUpdate('')} /> : null }
                             </h2>
-                            {dataForUpdate === 'Notification Preferences' && <div>
-                                <div className="form-group">
+                            {dataForUpdate === 'Notification Preferences' &&
+                                <div style={{display: 'flex', flexDirection: 'column'}}>
+                                    <div className="form-group">
+                                        <div className="checkbox-label">
+                                            <label style={{marginTop: '5px'}}>Enable Notifications</label>
+
+                                            <label className="switch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={enabled}
+                                                    onChange={handleNotify}
+                                                />
+                                                <span className="slider"></span>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
                                     <div className="checkbox-label">
                                         <input
                                             type="checkbox"
-                                            {...register("notifications.emailNotifications")}
+                                            checked={true}
+                                            disabled={!enabled}
+                                            onChange={() => setEmailNotify(true)}
                                         />
                                         <label style={{marginTop:'5px'}}>Email Notifications</label>
                                     </div>
                                 </div>
 
-                                <div className="form-group">
+                                   <div style={{display:'none'}} className="form-group">
                                     <div className="checkbox-label">
                                         <input
                                             type="checkbox"
@@ -3104,36 +3230,39 @@ const CleanerProfile = () => {
                                     </div>
                                 </div>
 
-                                <div className="form-group">
+                                   <div className="form-group">
                                     <div className="checkbox-label">
                                         <input
                                             type="checkbox"
+                                            disabled={!enabled}
                                             {...register("notifications.jobAlerts")}
                                         />
                                         <label style={{marginTop:'5px'}}>New Job Alerts</label>
                                     </div>
                                 </div>
 
-                                <div className="form-group">
+                                   <div className="form-group">
                                     <div className="checkbox-label">
                                         <input
                                             type="checkbox"
+                                            disabled={!enabled}
                                             {...register("notifications.reminderAlerts")}
                                         />
                                         <label style={{marginTop:'5px'}}>Booking Reminders</label>
                                     </div>
                                 </div>
 
-                                <div className="form-group">
+                                  <div className="form-group">
                                     <div className="checkbox-label">
                                         <input
                                             type="checkbox"
+                                            disabled={!enabled}
                                             {...register("notifications.ratingNotifications")}
                                         />
                                         <label style={{marginTop:'5px'}}>Customer Rating Notifications</label>
                                     </div>
                                 </div>
-                            </div>}
+                             </div>}
 
                         </div>
                     );
