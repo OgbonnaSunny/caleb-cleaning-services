@@ -182,6 +182,8 @@ const Navigation = () => {
     }, []);
 
     const handleAuth = () => {
+        navigate('/cleanerprofile');
+        return;
       const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
           window.open('/logout', '_blank');
