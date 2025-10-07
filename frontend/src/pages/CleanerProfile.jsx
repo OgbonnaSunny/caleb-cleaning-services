@@ -3248,11 +3248,11 @@ const CleanerProfile = () => {
                                             <div  className="checkbox-label">
                                                 <label style={{
                                                     marginTop: '5px',
-                                                    width:"200px",
-                                                    fontSize:'medium',
+                                                    width:"100px",
+                                                    fontSize:'large',
                                                     fontWeight:'bold'
                                                 }}>{enabled ? "Disable" : "Enable"}</label>
-                                                <label className="switch">
+                                                <label style={{alignSelf:'end'}} className="switch">
                                                     <input
                                                         type="checkbox"
                                                         disabled={disabled}
