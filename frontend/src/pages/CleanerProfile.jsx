@@ -508,6 +508,7 @@ const CleanerProfile = () => {
                     return;
                 }
                 setNewOrders(orders?.booking);
+                console.log(orders.booking);
             } catch (error) {
                 console.log(error);
                 setMessage('Error fetching new orders.')
@@ -636,6 +637,22 @@ const CleanerProfile = () => {
                                             </h4>
                                         </div>
 
+                                        {order?.personel > 1 && <div style={{
+                                            display:'flex',
+                                            alignItems:'baseline'
+                                        }}>
+                                            <FaUser size={20} style={{width:'40px'}} />
+                                            <h3 style={{textAlign:'end', fontSize:'medium'}}>x2</h3>
+                                        </div>}
+
+                                        {order?.personel <= 1 &&
+                                            <div style={{
+                                                display:'flex',
+                                                alignItems:'baseline'}}>
+                                                <FaUserTie size={20} style={{width:'40px'}} />
+                                                <h3 style={{ textAlign:'end', fontSize:'medium'}}>x1</h3>
+                                            </div>}
+
                                         <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
                                             <h3 style={{textAlign:'start'}}>Details</h3>
                                             <MdKeyboardArrowRight
@@ -664,21 +681,6 @@ const CleanerProfile = () => {
 
                                         {(acceptingOrders && acceptedJobIds.includes(order.orderId)) && <p>Load...</p>}
 
-                                        {order?.personal > 1 && <div style={{
-                                                display:'flex',
-                                                alignItems:'center'
-                                            }}>
-                                                <FaUser size={20} style={{width:'40px'}} />
-                                                <h3 style={{alignSelf:'end', width:'50px', textAlign:'end'}}>x2</h3>
-                                            </div>}
-
-                                        {(order?.personel > 1 && order?.cleanerEmail) && <div style={{
-                                            display:'flex',
-                                            alignItems:'center'
-                                        }}>
-                                               <FaUserTie size={20} style={{width:'40px'}} />
-                                               <h3 style={{alignSelf:'end', width:'50px', textAlign:'end'}}>1</h3>
-                                            </div>}
 
                                         {personel > 1 && <div style={{
                                             display:'flex',
@@ -2560,6 +2562,7 @@ const CleanerProfile = () => {
                             ratingNotifications: response.data?.rating,
                             smsNotifications: response.data?.sms,
                         });
+                        setEnabled(response.data?.enabled);
 
                     }
                 })
@@ -2793,15 +2796,9 @@ const CleanerProfile = () => {
             setLoading(true);
             let send = 1;
             const check = e.target.checked;
-            if (check === true) {
-                send = 1;
-            }
-            else {
-                send = 0;
-            }
 
             try {
-                const subscribe = await subscribeUser(email, send);
+                const subscribe = await subscribeUser(email, check);
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
                 setEnabled(subscribe);
             } catch (error) {

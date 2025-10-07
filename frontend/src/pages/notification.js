@@ -5,7 +5,7 @@ import axios from "axios";
 const publicVapidKey = import.meta.env.VITE_NOTIFY_KEY; // From Step 1
 
 
-export async function subscribeUser(email, send = 1) {
+export async function subscribeUser(email, send = true) {
     if (!email) { return false; }
 
     // 1️⃣ Check if browser supports notifications & service workers
@@ -20,7 +20,8 @@ export async function subscribeUser(email, send = 1) {
     // 3️⃣ Check if user already subscribed
     const existingSubscription = await registration.pushManager.getSubscription();
     if (existingSubscription) {
-        return true;
+        const response = await  api.post('/api/notify-sub', {email: email, sub: JSON.stringify(existingSubscription), send: send});
+        return response.data;
     }
 
     // 4️⃣ Ask for permission if not granted
