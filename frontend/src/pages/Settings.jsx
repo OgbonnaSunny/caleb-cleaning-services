@@ -16,6 +16,8 @@ import {
 } from 'react-icons/fa';
 import api from './api.js'
 import LOGO from "../images/logo4.png";
+import {subscribeUser} from "./notification.js";
+import customer from "./Customer.jsx";
 
 const Settings = () => {
     const mainAdmin = import.meta.env.VITE_COMPANY_EMAIL
@@ -46,6 +48,14 @@ const Settings = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [changes, setChanges] = useState(false);
+    const [emailNotify, setEmailNotify] = useState(true);
+    const [disabled, setDisabled] = useState(false);
+    const [support, setSupport] = useState(true);
+    const [enabled, setEnabled] = useState(JSON.parse(localStorage.getItem("notifications")) || false);
+    const [reminder, setReminder] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const [sms, setSms] = useState(false);
+
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -86,6 +96,60 @@ const Settings = () => {
             setLoading(false);
             setChanges(false);
         })
+
+    };
+
+    useEffect(() => {
+        if (!("Notification" in window)) {
+            setSupport(false);
+        }
+    }, []);
+
+    const handleNotify = async (e) => {
+        e.preventDefault();
+        if (loading) return;
+        setLoading(true);
+        let send = 1;
+        const check = e.target.checked;
+
+        try {
+            const subscribe = await subscribeUser(currentUser, check);
+            localStorage.setItem("notifications", JSON.stringify(subscribe));
+            setEnabled(subscribe);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        if (loading) return;
+        setLoading(true);
+        const data = {
+            jobAlert: alert,
+            reminder: reminder,
+            rating: false,
+            sms: false,
+            email: currentUser
+        };
+
+        try {
+            const  response = await api.post('/api/notify-update', data);
+            const { success } = response.data;
+            if (success) {
+                setMessage('Profile updated successfully');
+            }
+            else {
+                setMessage('Profile update not successful');
+            }
+        } catch (error) {
+            console.error(error.response.data);
+            setMessage('Profile update failed');
+        } finally {
+            setIsLoading(false);
+        }
 
     };
 
@@ -141,6 +205,31 @@ const Settings = () => {
                 console.log(err);
             })
     }, []);
+
+    useEffect(() => {
+        const fetchCleanerData = () => {
+            if (!currentUser) {
+                return;
+            }
+            setLoading(true);
+
+            api.post('/api/notify-record', {email: currentUser})
+                .then(response => {
+                    if (response.data) {
+                        setReminder(response.data?.reminder);
+                        setEnabled(response.data?.enabled);
+                        setAlert(response.data?.jobAlert)
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        };
+        fetchCleanerData();
+    }, [currentUser]);
 
     const EditAdmin = ({ admin }) => {
         const formData = {password: '', email: admin.email, role: admin.roles};
@@ -533,40 +622,90 @@ const Settings = () => {
                         <form onSubmit={handleSubmit} className="settings-form">
                             <div className="form-section">
                                 <h2 className="section-title">Notification Settings</h2>
-                                <div className="form-group checkbox-group">
-                                    <label style={{display:'flex', alignItems: 'center'}}>
+                                <div className="form-group">
+                                    <label className="custom-checkbox" style={{color:'blue'}}>
                                         <input
                                             type="checkbox"
-                                            name="notificationEnabled"
-                                            checked={formData.notificationEnabled}
-                                            onChange={readOnly ? null : handleInputChange}
+                                            checked={true}
+                                            disabled={true}
+                                            onChange={() => setEmailNotify(true)}
+                                            className="hidden-checkbox"
                                         />
-                                        <span>Enable Notifications</span>
+                                        <span className="checkbox-custom"></span>
+                                        Email Notifications
                                     </label>
                                 </div>
                                 {formData.notificationEnabled && (<>
-                                        <div className="form-group checkbox-group">
-                                            <label style={{display:'flex', alignItems: 'center'}}>
-                                                <input
-                                                    type="checkbox"
-                                                    name="notificationEmail"
-                                                    checked={formData.notificationEmail}
-                                                    onChange={readOnly ? null : handleInputChange}
-                                                />
-                                                <span>Email Notifications</span>
-                                            </label>
+                                    <div style={{display: 'flex', flexDirection: 'column'}}>
+
+                                        <div style={{maxWidth:'500px'}} className="price-container">
+                                            {!support && <label style={{margin:'10px'}}>This browser does not support notification</label>}
+                                            <div className="form-group">
+                                                <div  className="checkbox-label">
+                                                    <label style={{
+                                                        marginTop: '5px',
+                                                        width:"100px",
+                                                        fontSize:'large',
+                                                        fontWeight:'bold'
+                                                    }}>{enabled ? "Disable" : "Enable"}</label>
+                                                    <label style={{alignSelf:'end'}} className="switch">
+                                                        <input
+                                                            type="checkbox"
+                                                            disabled={disabled}
+                                                            checked={enabled}
+                                                            onChange={handleNotify}
+                                                        />
+                                                        <span className="slider"></span>
+                                                    </label>
+
+                                                </div>
+                                            </div>
+
+                                            <div style={{display:'none'}} className="form-group">
+                                                <div className="checkbox-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={(!enabled || readOnly)}
+                                                        onChange={() => setSms(!sms)}
+                                                        checked={sms}
+                                                    />
+                                                    <label style={{marginTop:'5px'}}>SMS Notifications</label>
+
+                                                </div>
+                                            </div>
+
+                                            <div className="form-group">
+                                                <div className="checkbox-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={(!enabled || readOnly)}
+                                                        checked={alert}
+                                                        onChange={() => setAlert(!alert)}
+                                                    />
+                                                    <label style={{marginTop:'5px'}}>New Job Alerts</label>
+                                                </div>
+                                            </div>
+
+                                            <div className="form-group">
+                                                <div className="checkbox-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={(!enabled || readOnly)}
+                                                        onChange={() => setReminder(!reminder)}
+                                                        checked={reminder}
+                                                    />
+                                                    <label style={{marginTop:'5px'}}>Booking Reminders</label>
+                                                </div>
+                                            </div>
+
+                                            <button
+                                                onClick={onSubmit}
+                                                style={{color:'white', padding:'12px'}}
+                                                className={(!enabled || !support) ? 'back-button' : 'next-button'} type="button">
+                                                {loading ? 'Saving...' : 'Save'}
+                                            </button>
                                         </div>
-                                        <div className="form-group checkbox-group">
-                                            <label style={{display:'flex', alignItems: 'center'}}>
-                                                <input
-                                                    type="checkbox"
-                                                    name="notificationSMS"
-                                                    checked={formData.notificationSMS}
-                                                    onChange={readOnly ? null : handleInputChange}
-                                                />
-                                                <span>SMS Notifications</span>
-                                            </label>
-                                        </div>
+                                    </div>
                                     </>)}
                             </div>
 

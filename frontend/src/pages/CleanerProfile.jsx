@@ -336,6 +336,7 @@ const CleanerProfile = () => {
         if (order?.personel <= 1 || ((order?.cleanerEmail === order?.cleanerEmail2) && order?.cleanerEmail !== null)) {
             return order?.duration;
         }
+
         let hour = Number(order?.startHour);
         let minute = Number(order?.startMinute);
         const totalMinutes = (hour * 60) + minute;
@@ -3272,8 +3273,8 @@ const CleanerProfile = () => {
                                             </div>
                                         </div>
                                     </div>
-
-                             </div>}
+                                </div>
+                            }
 
                         </div>
                     );
