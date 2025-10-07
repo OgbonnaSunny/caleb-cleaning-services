@@ -2791,10 +2791,10 @@ const CleanerProfile = () => {
             else {
                 send = 0;
             }
+            setEnabled(check);
             try {
                 const subscribe = await subscribeUser(email, send);
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
-                setEnabled(subscribe);
             } catch (error) {
                 console.error(error);
             } finally {
