@@ -332,35 +332,33 @@ const CleanerProfile = () => {
         return format(parsed, "EEE do MMM, yyyy h:mm a");
     }
 
-    const formatDuration = (time) => {
-        if (time === null || time === undefined || time.toString().length <= 0) {return }
-        const times = time.split(':');
-        if (times.length > 1) {
-            return `${times[0]} ${times[1]}`;
+    const formatDuration = (order) => {
+        if (order?.personel <= 1 || ((order?.cleanerEmail === order?.cleanerEmail2) && order?.cleanerEmail !== null)) {
+            return order?.duration;
         }
-        return time;
-    }
-
-    const getTwoEmpDuration = (order) => {
         let hour = Number(order?.startHour);
         let minute = Number(order?.startMinute);
         const totalMinutes = (hour * 60) + minute;
         const onePart = Math.floor(totalMinutes / 2);
-        minute = onePart % 60;
-        hour = (onePart - minute) / 60;
+        const timeInMinute = onePart % 60;
+        const timeInHour = (onePart - timeInMinute) / 60;
 
-        if (hour >  0 && minute > 0) {
-            return `${String(hour).padStart(2, '0')}h ${String(minute).padStart(2, '0')}m`;
+        if (timeInHour > 0 && timeInMinute <= 0) {
+            return `${String(timeInHour).padStart(2, '0')}h`;
+        }
+        if (timeInMinute > 0 && timeInHour <= 0) {
+            return `${String(timeInMinute).padStart(2, '0')}m`;
         }
 
-        if (minute <= 0 && hour > 0) {
-            return String(hour).padStart(2, "0")+"h";
-        }
+        return `${String(timeInHour).padStart(2, '0')}h ${String(timeInMinute).padStart(2, '0')}m`;
 
-        if (hour <= 0 && minute > 0) {
-            return String(minute).padStart(2, "0")+"m";
-        }
+    }
 
+    const getPay = (order) => {
+        if (order?.personel <= 1 || ((order?.cleanerEmail === order?.cleanerEmail2) && order?.cleanerEmail !== null)) {
+            return order?.estimatedAmount;
+        }
+        return (order?.estimatedAmount / 2).toFixed(2);
     }
 
     useEffect(() => {
@@ -508,7 +506,6 @@ const CleanerProfile = () => {
                     return;
                 }
                 setNewOrders(orders?.booking);
-                console.log(orders.booking);
             } catch (error) {
                 console.log(error);
                 setMessage('Error fetching new orders.')
@@ -614,10 +611,7 @@ const CleanerProfile = () => {
                                                 textAlign:'end',
                                                 fontSize:'medium'
                                             }}>
-                                                {order?.personel <= 1 ? formatDuration(order.duration) :
-                                                    order?.cleanerEmail === order.cleanerEmail2 ?
-                                                        formatDuration(order.duration) :
-                                                        getTwoEmpDuration(order)}
+                                                {formatDuration(order)}
                                             </h4>
 
                                         </div>
@@ -627,21 +621,14 @@ const CleanerProfile = () => {
                                             <h4 style={{
                                                 textAlign:'end',
                                                 fontSize:'medium'
-                                            }}>£{order?.personel <= 1 ?
-                                                Number(order.estimatedAmount).toFixed(2) :
-                                                order?.cleanerEmail === order.cleanerEmail2 ?
-                                                    Number(order.estimatedAmount).toFixed(2) :
-                                                    (Number(order.estimatedAmount) / 2).toFixed(2)
-                                            }
-
-                                            </h4>
+                                            }}>£{getPay(order)}</h4>
                                         </div>
 
                                         {order?.personel > 1 && <div style={{
                                             display:'flex',
                                             alignItems:'baseline'
                                         }}>
-                                            <FaUser size={20} style={{width:'40px'}} />
+                                            <FaUserTie size={20} style={{width:'40px'}} />
                                             <h3 style={{textAlign:'end', fontSize:'medium'}}>x2</h3>
                                         </div>}
 
@@ -1786,12 +1773,7 @@ const CleanerProfile = () => {
                                         <h4 style={{
                                             textAlign:'end',
                                             fontSize:'medium'
-                                        }}>
-                                            {order?.personel <= 1 ? formatDuration(order.duration) :
-                                                order?.cleanerEmail === order.cleanerEmail2 ?
-                                                    formatDuration(order.duration) :
-                                                    getTwoEmpDuration(order)}
-                                        </h4>
+                                        }}>{formatDuration(order)}</h4>
 
                                     </div>
 
@@ -1800,13 +1782,7 @@ const CleanerProfile = () => {
                                         <h4 style={{
                                             textAlign:'end',
                                             fontSize:'medium'
-                                        }}>£{order?.personel <= 1 ?
-                                            Number(order.estimatedAmount).toFixed(2) :
-                                            order?.cleanerEmail === order.cleanerEmail2 ?
-                                                Number(order.estimatedAmount).toFixed(2) :
-                                                (Number(order.estimatedAmount) / 2).toFixed(2)
-                                        }
-
+                                        }}>£{getPay(order)}
                                         </h4>
                                     </div>
 
@@ -2102,12 +2078,8 @@ const CleanerProfile = () => {
                                             textAlign:'end',
                                             fontSize:'medium'
                                         }}>
-                                            {order?.personel <= 1 ? formatDuration(order.duration) :
-                                                order?.cleanerEmail === order.cleanerEmail2 ?
-                                                    formatDuration(order.duration) :
-                                                    getTwoEmpDuration(order)}
+                                            {formatDuration(order)}
                                         </h4>
-
                                     </div>
 
                                     <div className={'new-order-container'}>
@@ -2115,13 +2087,7 @@ const CleanerProfile = () => {
                                         <h4 style={{
                                             textAlign:'end',
                                             fontSize:'medium'
-                                        }}>£{order?.personel <= 1 ?
-                                            Number(order.estimatedAmount).toFixed(2) :
-                                            order?.cleanerEmail === order.cleanerEmail2 ?
-                                                Number(order.estimatedAmount).toFixed(2) :
-                                                (Number(order.estimatedAmount) / 2).toFixed(2)
-                                        }
-
+                                        }}>£{getPay(order)}
                                         </h4>
                                     </div>
 
