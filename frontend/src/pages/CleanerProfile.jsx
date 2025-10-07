@@ -3251,7 +3251,7 @@ const CleanerProfile = () => {
                                                     width:"200px",
                                                     fontSize:'medium',
                                                     fontWeight:'bold'
-                                                }}>Enable Notifications</label>
+                                                }}>{enabled ? "Disable" : "Enable"}</label>
                                                 <label className="switch">
                                                     <input
                                                         type="checkbox"
