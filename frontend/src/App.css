@@ -7033,7 +7033,7 @@ tr:hover {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
+  width: 50px;
   height: 34px;
 }
 
@@ -7070,6 +7070,10 @@ tr:hover {
 
 input:checked + .slider {
   background-color: #2196F3;
+}
+
+input:disabled + .slider {
+  background-color: #283036;
 }
 
 input:checked + .slider:before {

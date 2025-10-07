@@ -2582,6 +2582,8 @@ const CleanerProfile = () => {
         const [bankMessage, setBankMessage] = useState('');
         const [loading, setLoading] = useState(false);
         const [emailNotify, setEmailNotify] = useState(true);
+        const [disabled, setDisabled] = useState(false);
+        const [support, setSupport] = useState(true);
 
         const handlePreferredAreaChange = (area) => {
             const currentAreas = getValues().work.preferredAreas
@@ -2743,6 +2745,12 @@ const CleanerProfile = () => {
             setTimeout(() => setBankMessage(''), 5000);
         }, [bankMessage])
 
+        useEffect(() => {
+            if (!("Notification" in window)) {
+                setSupport(false);
+            }
+        }, []);
+
         const editBankDetails = async (e) => {
             e.preventDefault();
              if (!getValues().bank?.sortCode
@@ -2791,10 +2799,11 @@ const CleanerProfile = () => {
             else {
                 send = 0;
             }
-            setEnabled(check);
+
             try {
                 const subscribe = await subscribeUser(email, send);
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
+                setEnabled(subscribe);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -2809,7 +2818,7 @@ const CleanerProfile = () => {
                 case 'personal':
                     return (
                         <div className="tab-content">
-                            <h2>Personal Information Update</h2>
+                            <h2 className={'experience-text'}>Personal Information Update</h2>
                             <div className="form-group">
                                 <label>First Name
                                     {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('firstName')} style={{width:'20px'}} />
@@ -2958,7 +2967,7 @@ const CleanerProfile = () => {
 
                             </div>
 
-                            <h3>Emergency Contact
+                            <h3 className={'experience-text'}>Emergency Contact
                                 {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('emergency contact')} style={{width:'20px'}} />
                                     : dataForUpdate === 'emergency contact' ?
                                         <FaTimes style={{width:'20px'}} onClick={() => handleDataForUpdate('')} /> : null }
@@ -3005,7 +3014,7 @@ const CleanerProfile = () => {
                 case 'work':
                     return (
                         <div className="tab-content">
-                            <h2>Work Preferences</h2>
+                            <h2 className={'experience-text'}>Work Preferences</h2>
 
                             <div className="form-group">
                                 <label>Experience
@@ -3169,7 +3178,7 @@ const CleanerProfile = () => {
                 case 'availability':
                     return (
                         <div className="tab-content">
-                            <h2>Availability
+                            <h2 className={'experience-text'}>Availability
                                 {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Availability')} style={{width:'20px'}} />
                                     : dataForUpdate === 'Availability' ?
                                         <FaTimes style={{width:'20px'}} onClick={() => handleDataForUpdate('')} /> : null }
@@ -3211,88 +3220,96 @@ const CleanerProfile = () => {
                 case 'notifications':
                     return (
                         <div className="tab-content">
-                            <h2>Notification Preferences
-                                {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Notification Preferences')} style={{width:'20px'}} />
+                            <h2 className={'experience-text'}>Notification Preferences
+                                {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Notification Preferences')} style={{width:'20px', marginLeft:'5px'}} />
                                 : dataForUpdate === 'Notification Preferences' ?
-                                <FaTimes style={{width:'20px'}} onClick={() => handleDataForUpdate('')} /> : null }
+                                <FaTimes style={{width:'20px', marginLeft:'5px'}} onClick={() => handleDataForUpdate('')} /> : null }
                             </h2>
                             {dataForUpdate === 'Notification Preferences' &&
                                 <div style={{display: 'flex', flexDirection: 'column'}}>
                                     <div className="form-group">
-                                        <div  className="checkbox-label">
-                                            <label style={{
-                                                marginTop: '5px',
-                                                width:"200px",
-                                                fontSize:'medium',
-                                                fontWeight:'bold'
-                                            }}>Enable Notifications</label>
-                                            <label className="switch">
+                                        <label className="custom-checkbox" style={{color:'blue'}}>
+                                            <input
+                                                type="checkbox"
+                                                checked={true}
+                                                disabled={true}
+                                                onChange={() => setEmailNotify(true)}
+                                                className="hidden-checkbox"
+                                            />
+                                            <span className="checkbox-custom"></span>
+                                            Email Notifications
+                                        </label>
+                                    </div>
+
+
+                                    <div style={{maxWidth:'500px'}} className="price-container">
+                                        {!support && <label style={{margin:'10px'}}>This browser does not support notification</label>}
+                                        <div className="form-group">
+                                            <div  className="checkbox-label">
+                                                <label style={{
+                                                    marginTop: '5px',
+                                                    width:"200px",
+                                                    fontSize:'medium',
+                                                    fontWeight:'bold'
+                                                }}>Enable Notifications</label>
+                                                <label className="switch">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={disabled}
+                                                        checked={enabled}
+                                                        onChange={handleNotify}
+                                                    />
+                                                    <span className="slider"></span>
+                                                </label>
+
+                                            </div>
+                                        </div>
+
+                                        <div style={{display:'none'}} className="form-group">
+                                            <div className="checkbox-label">
                                                 <input
                                                     type="checkbox"
-                                                    checked={enabled}
-                                                    onChange={handleNotify}
+                                                    {...register("notifications.smsNotifications")}
                                                 />
-                                                <span className="slider"></span>
-                                            </label>
+                                                <label style={{marginTop:'5px'}}>SMS Notifications</label>
 
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <div className="checkbox-label">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={!enabled}
+                                                    {...register("notifications.jobAlerts")}
+                                                />
+                                                <label style={{marginTop:'5px'}}>New Job Alerts</label>
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <div className="checkbox-label">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={!enabled}
+                                                    {...register("notifications.reminderAlerts")}
+                                                />
+                                                <label style={{marginTop:'5px'}}>Booking Reminders</label>
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <div className="checkbox-label">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={!enabled}
+                                                    {...register("notifications.ratingNotifications")}
+                                                />
+                                                <label style={{marginTop:'5px'}}>Customer Rating Notifications</label>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
-                                        <div className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            checked={true}
-                                            disabled={!enabled}
-                                            onChange={() => setEmailNotify(true)}
-                                        />
-                                        <label style={{marginTop:'5px'}}>Email Notifications</label>
-                                    </div>
-                                    </div>
-
-                                   <div style={{display:'none'}} className="form-group">
-                                    <div className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            {...register("notifications.smsNotifications")}
-                                        />
-                                        <label style={{marginTop:'5px'}}>SMS Notifications</label>
-
-                                    </div>
-                                </div>
-
-                                   <div className="form-group">
-                                    <div className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            disabled={!enabled}
-                                            {...register("notifications.jobAlerts")}
-                                        />
-                                        <label style={{marginTop:'5px'}}>New Job Alerts</label>
-                                    </div>
-                                </div>
-
-                                   <div className="form-group">
-                                    <div className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            disabled={!enabled}
-                                            {...register("notifications.reminderAlerts")}
-                                        />
-                                        <label style={{marginTop:'5px'}}>Booking Reminders</label>
-                                    </div>
-                                </div>
-
-                                  <div className="form-group">
-                                    <div className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            disabled={!enabled}
-                                            {...register("notifications.ratingNotifications")}
-                                        />
-                                        <label style={{marginTop:'5px'}}>Customer Rating Notifications</label>
-                                    </div>
-                                </div>
                              </div>}
 
                         </div>
@@ -3301,7 +3318,7 @@ const CleanerProfile = () => {
                 case 'Edit bank details':
                     return (
                         <div className="tab-content">
-                            <h3>Bank details
+                            <h3 className={'experience-text'}>Bank details
                                 {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Edit bank details')} style={{width:'20px', marginLeft:'2px'}} />
                                     : dataForUpdate === 'Edit bank details' ?
                                         <FaTimes style={{width:'20px', marginLeft:'2px'}} onClick={() => handleDataForUpdate('')} /> : null }
