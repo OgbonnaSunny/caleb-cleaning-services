@@ -125,10 +125,10 @@ const CleanerProfile = () => {
         },
         notifications: {
             emailNotifications: true,
-            smsNotifications: true,
-            jobAlerts: true,
-            reminderAlerts: true,
-            ratingNotifications: true
+            smsNotifications: false,
+            jobAlerts: false,
+            reminderAlerts: false,
+            ratingNotifications: false
         },
         review: [
             {id: 1,
@@ -2502,7 +2502,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchCleanerData = () => {
-            if (email === null || email === undefined || email === '') {
+            if (!email) {
                 return;
             }
             setIsLoading(true);
@@ -2524,7 +2524,6 @@ const CleanerProfile = () => {
                         });
                         setValue('work', user?.workExperience);
                         setValue('availability', user?.available);
-                        setValue('notifications', user?.notification);
 
                         setValue('bank', {
                             ...getValues().bank,
@@ -2549,6 +2548,23 @@ const CleanerProfile = () => {
                 })
                 .finally(() => {
                     setIsLoading(false);
+                })
+
+            api.post('/api/notify-record', {email: email})
+                .then(response => {
+                    if (response.data) {
+                        setValue('notifications', {
+                            ...getValues(),
+                            jobAlerts: response.data?.jobAlert,
+                            reminderAlerts: response.data?.reminder,
+                            ratingNotifications: response.data?.rating,
+                            smsNotifications: response.data?.sms,
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
                 })
         };
         fetchCleanerData();
@@ -2640,7 +2656,13 @@ const CleanerProfile = () => {
                     break;
 
                 case 'notifications':
-                    data = {notification: JSON.stringify(getValues().notifications), email: getValues().personal.email};
+                    data = {
+                        jobAlert: getValues().notifications.jobAlerts,
+                        reminder: getValues().notifications.reminderAlerts,
+                        rating: getValues().notifications.ratingNotifications,
+                        sms: getValues().notifications.smsNotifications,
+                        email: getValues().personal.email
+                    };
                     break;
             }
             if (activeTab3 === 'personal') {
@@ -2693,14 +2715,20 @@ const CleanerProfile = () => {
             }
 
             try {
-                const response = await api.post('/api/users/update', data)
+                let response;
+                if (activeTab3 !== 'notifications') {
+                    response = await api.post('/api/users/update', data);
+                }
+                else {
+                    response = await api.post('/api/notify-update', data);
+                }
                 const { success } = response.data;
                 if (success) {
                     setSuccessMessage('Profile updated successfully');
                     setBgColor('green')
                 }
                 else {
-                    setSuccessMessage('Something went wrong!');
+                    setSuccessMessage('Profile update not successful');
                 }
             } catch (error) {
                 console.error(error.response.data);
@@ -2763,12 +2791,10 @@ const CleanerProfile = () => {
             else {
                 send = 0;
             }
-            setEnabled(check);
             try {
                 const subscribe = await subscribeUser(email, send);
-                return;
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
-                console.log(subscribe);
+                setEnabled(subscribe);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -3193,9 +3219,13 @@ const CleanerProfile = () => {
                             {dataForUpdate === 'Notification Preferences' &&
                                 <div style={{display: 'flex', flexDirection: 'column'}}>
                                     <div className="form-group">
-                                        <div className="checkbox-label">
-                                            <label style={{marginTop: '5px'}}>Enable Notifications</label>
-
+                                        <div  className="checkbox-label">
+                                            <label style={{
+                                                marginTop: '5px',
+                                                width:"200px",
+                                                fontSize:'medium',
+                                                fontWeight:'bold'
+                                            }}>Enable Notifications</label>
                                             <label className="switch">
                                                 <input
                                                     type="checkbox"
@@ -3209,7 +3239,7 @@ const CleanerProfile = () => {
                                     </div>
 
                                     <div className="form-group">
-                                    <div className="checkbox-label">
+                                        <div className="checkbox-label">
                                         <input
                                             type="checkbox"
                                             checked={true}
@@ -3218,7 +3248,7 @@ const CleanerProfile = () => {
                                         />
                                         <label style={{marginTop:'5px'}}>Email Notifications</label>
                                     </div>
-                                </div>
+                                    </div>
 
                                    <div style={{display:'none'}} className="form-group">
                                     <div className="checkbox-label">
@@ -3268,77 +3298,79 @@ const CleanerProfile = () => {
                         </div>
                     );
 
-                case 'Add or change bank details':
+                case 'Edit bank details':
                     return (
                         <div className="tab-content">
                             <h3>Bank details
-                                {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Add or change bank details')} style={{width:'20px', marginLeft:'2px'}} />
-                                    : dataForUpdate === 'Add or change bank details' ?
+                                {dataForUpdate === '' ? <FaPen onClick={() => handleDataForUpdate('Edit bank details')} style={{width:'20px', marginLeft:'2px'}} />
+                                    : dataForUpdate === 'Edit bank details' ?
                                         <FaTimes style={{width:'20px', marginLeft:'2px'}} onClick={() => handleDataForUpdate('')} /> : null }
                             </h3>
-                            {dataForUpdate === 'Add or change bank details' &&  <div className='form-group'>
-                                <div className={'form-group'}>
-                                    <label>Password</label>
-                                    <input
-                                        type="password"
-                                        {...register('personal.password', {
-                                            required: "Please enter your password",
-                                        })}
-                                        className={'button-bg'}
-                                    />
-                                    {errors.personal?.password && <span className="error-message">{errors?.personal?.password?.message}</span>}
-                                </div>
+                            {dataForUpdate === 'Edit bank details' &&  <div className='form-group'>
+                                <div className="grid-container">
+                                    <div style={{marginTop:'10px'}} className={'form-group'}>
+                                        <label>Password</label>
+                                        <input
+                                            type="password"
+                                            {...register('personal.password', {
+                                                required: "Please enter your password",
+                                            })}
+                                            className={'button-bg'}
+                                        />
+                                        {errors.personal?.password && <span className="error-message">{errors?.personal?.password?.message}</span>}
+                                    </div>
 
-                                <div style={{marginTop:'10px'}} className='form-group'>
-                                    <label>Account holder name</label>
-                                    <input
-                                        type="text"
-                                        {...register('bank.accountName', {
-                                            required: "Account holder name is required",
-                                        })}
-                                        className={'button-bg'}
-                                    />
-                                    {errors.bank?.accountName && <span className="error-message">{errors?.bank?.accountName?.message}</span>}
-                                </div>
+                                    <div style={{marginTop:'10px'}} className='form-group'>
+                                        <label>Account holder name</label>
+                                        <input
+                                            type="text"
+                                            {...register('bank.accountName', {
+                                                required: "Account holder name is required",
+                                            })}
+                                            className={'button-bg'}
+                                        />
+                                        {errors.bank?.accountName && <span className="error-message">{errors?.bank?.accountName?.message}</span>}
+                                    </div>
 
-                                <div style={{marginTop:'10px'}} className='form-group'>
-                                    <label>Account number</label>
-                                    <input
-                                        type="number"
-                                        {...register('bank.accountNumber', {
-                                            required: "Account number is required",
-                                            minLength: {
-                                                value: 8,
-                                                message: "Must be exactly 8 digits"
-                                            },
-                                            maxLength: {
-                                                value: 8,
-                                                message: "Must be exactly 8 digits"
-                                            }
-                                        })}
-                                        className={'button-bg'}
-                                    />
-                                    {errors?.bank?.accountNumber && <span className="error-message">{errors?.bank?.accountNumber?.message}</span>}
-                                </div>
+                                    <div style={{marginTop:'10px'}} className='form-group'>
+                                        <label>Account number</label>
+                                        <input
+                                            type="number"
+                                            {...register('bank.accountNumber', {
+                                                required: "Account number is required",
+                                                minLength: {
+                                                    value: 8,
+                                                    message: "Must be exactly 8 digits"
+                                                },
+                                                maxLength: {
+                                                    value: 8,
+                                                    message: "Must be exactly 8 digits"
+                                                }
+                                            })}
+                                            className={'button-bg'}
+                                        />
+                                        {errors?.bank?.accountNumber && <span className="error-message">{errors?.bank?.accountNumber?.message}</span>}
+                                    </div>
 
-                                <div style={{marginTop:'10px'}} className='form-group'>
-                                    <label>Sort code</label>
-                                    <input
-                                        type="number"
-                                        {...register('bank.sortCode', {
-                                            required: "Sort code is required",
-                                            minLength: {
-                                                value: 6,
-                                                message: "Must be a minimum of 6 digits"
-                                            },
-                                            maxLength: {
-                                                value: 8,
-                                                message: "Must be a maximum of  8 digits"
-                                            }
-                                        })}
-                                        className={'button-bg'}
-                                    />
-                                    {errors?.bank?.sortCode && <span className="error-message">{errors?.bank?.sortCode?.message}</span>}
+                                    <div style={{marginTop:'10px'}} className='form-group'>
+                                        <label>Sort code</label>
+                                        <input
+                                            type="number"
+                                            {...register('bank.sortCode', {
+                                                required: "Sort code is required",
+                                                minLength: {
+                                                    value: 6,
+                                                    message: "Must be a minimum of 6 digits"
+                                                },
+                                                maxLength: {
+                                                    value: 8,
+                                                    message: "Must be a maximum of  8 digits"
+                                                }
+                                            })}
+                                            className={'button-bg'}
+                                        />
+                                        {errors?.bank?.sortCode && <span className="error-message">{errors?.bank?.sortCode?.message}</span>}
+                                    </div>
                                 </div>
 
                                 {loading && <p style={{margin:"10px"}}>Loading...</p>}
@@ -3393,15 +3425,15 @@ const CleanerProfile = () => {
                     </button>
 
                     <button
-                        className={activeTab3 === 'Add or change bank details' ? 'active' : ''}
-                        onClick={() => setActiveTab3('Add or change bank details')}
+                        className={activeTab3 === 'Edit bank details' ? 'active' : ''}
+                        onClick={() => setActiveTab3('Edit bank details')}
                     >
-                        Add or change bank details
+                        Edit bank details
                     </button>
 
                 </div>
 
-                <form onSubmit={activeTab3 === 'Add or change bank details' ? editBankDetails : onSubmit}>
+                <form onSubmit={activeTab3 === ' Edit bank details' ? editBankDetails : onSubmit}>
                     {renderTabContent()}
                     <div className="form-actions">
                         <button
