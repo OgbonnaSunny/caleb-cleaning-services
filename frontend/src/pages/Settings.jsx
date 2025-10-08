@@ -637,8 +637,9 @@ const Settings = () => {
                                 </div>
                                 {formData.notificationEnabled && (<>
                                     <div style={{display: 'flex', flexDirection: 'column'}}>
-
                                         <div style={{maxWidth:'500px'}} className="price-container">
+                                            <h3 className={'experience-text'} style={{margin:'15px', textAlign:'center'}}>Browser notifications</h3>
+
                                             {!support && <label style={{margin:'10px'}}>This browser does not support notification</label>}
                                             <div className="form-group">
                                                 <div  className="checkbox-label">
@@ -697,6 +698,8 @@ const Settings = () => {
                                                     <label style={{marginTop:'5px'}}>Booking Reminders</label>
                                                 </div>
                                             </div>
+
+                                            {message && <p style={{marginBottom:'10px'}}>{message}</p>}
 
                                             <button
                                                 onClick={onSubmit}

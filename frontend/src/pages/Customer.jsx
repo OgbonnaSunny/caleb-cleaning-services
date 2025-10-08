@@ -33,6 +33,7 @@ import Oven from "../images/oven.png";
 import {object} from "yup";
 import { FiLogOut } from "react-icons/fi";
 import { useSocket } from "../Socket.jsx";
+import {subscribeUser} from "./notification.js";
 
 
 const Customer = () => {
@@ -82,6 +83,14 @@ const Customer = () => {
     const [dataForUpdate, setDataForUpdate] = useState('');
     const [billing, setBilling] = useState(0);
     const [messageCount, setMessageCount] = useState(0);
+
+    const [emailNotify, setEmailNotify] = useState(true);
+    const [disabled, setDisabled] = useState(false);
+    const [support, setSupport] = useState(true);
+    const [enabled, setEnabled] = useState(JSON.parse(localStorage.getItem("notifications")) || false);
+    const [reminder, setReminder] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const [sms, setSms] = useState(false);
 
     const bottomNavItems = [
         {id: 1, category: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
@@ -142,6 +151,31 @@ const Customer = () => {
         }
 
     }, [])
+
+    useEffect(() => {
+        const fetchCleanerData = () => {
+            if (!email) {
+                return;
+            }
+            setLoading(true);
+
+            api.post('/api/notify-record', {email: email})
+                .then(response => {
+                    if (response.data) {
+                        setReminder(response.data?.reminder);
+                        setEnabled(response.data?.enabled);
+                        setAlert(response.data?.jobAlert)
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        };
+        fetchCleanerData();
+    }, [email]);
 
     const handleNewOrder = () => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -398,8 +432,56 @@ const Customer = () => {
                 })
         };
 
+        const handleNotify = async (e) => {
+            e.preventDefault();
+            if (loading) return;
+            setLoading(true);
+            let send = 1;
+            const check = e.target.checked;
+
+            try {
+                const subscribe = await subscribeUser(email, check);
+                localStorage.setItem("notifications", JSON.stringify(subscribe));
+                setEnabled(subscribe);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        const onSubmit = async (e) => {
+            e.preventDefault();
+            if (loading) return;
+            setLoading(true);
+            const data = {
+                jobAlert: alert,
+                reminder: reminder,
+                rating: false,
+                sms: false,
+                email: email
+            };
+
+            try {
+                const  response = await api.post('/api/notify-update', data);
+                const { success } = response.data;
+                if (success) {
+                    setMessage('Profile updated successfully');
+                }
+                else {
+                    setMessage('Profile update not successful');
+                }
+            } catch (error) {
+                console.error(error.response.data);
+                setMessage('Profile update failed');
+            } finally {
+                setIsLoading(false);
+            }
+
+        };
+
         return (
-            <>
+            <div className="support-page">
                 <form onSubmit={changePassword} className="support-page">
                     <label>Change password
                         {dataForUpdate === '' ? <FaPen onClick={() => setDataForUpdate('password')} style={{width:'20px'}} />
@@ -447,11 +529,108 @@ const Customer = () => {
                         <button type={'submit'} className="submit-button">Submit</button>
                     </div> }
                 </form>
-                <label style={{marginTop:'20%', textAlign:'center'}}  >
-                    <FiLogOut onClick={logout} size={40} />
+
+                <label
+                    onClick={logout}
+                    style={{
+                    marginTop:'20px',
+                    textAlign:'center',
+                    display:'flex',
+                    flexDirection:'column'
+                }}>
+                    <FiLogOut size={40} />
                     Sign Out
                 </label>
-            </>
+
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <h3 className={'page-title'}  style={{marginTop:'40px', textAlign:'center', textDecoration:'underline'}}>Notifications</h3>
+                    <div className="form-group">
+                        <label className="custom-checkbox" style={{color:'blue'}}>
+                            <input
+                                type="checkbox"
+                                checked={true}
+                                disabled={true}
+                                onChange={() => setEmailNotify(true)}
+                                className="hidden-checkbox"
+                            />
+                            <span className="checkbox-custom"></span>
+                            Email Notifications
+                        </label>
+                    </div>
+
+                    <div style={{maxWidth:'500px', margin:'auto'}} className="price-container">
+                        <h3 className={'experience-text'} style={{margin:'15px', textAlign:'center'}}>Browser notifications</h3>
+
+                        {!support && <label style={{margin:'10px'}}>This browser does not support notification</label>}
+                        <div className="form-group">
+                            <div  className="checkbox-label">
+                                <label style={{
+                                    marginTop: '5px',
+                                    width:"100px",
+                                    fontSize:'large',
+                                    fontWeight:'bold'
+                                }}>{enabled ? "Disable" : "Enable"}</label>
+                                <label style={{alignSelf:'end'}} className="switch">
+                                    <input
+                                        type="checkbox"
+                                        disabled={disabled}
+                                        checked={enabled}
+                                        onChange={handleNotify}
+                                    />
+                                    <span className="slider"></span>
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <div style={{display:'none'}} className="form-group">
+                            <div className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    disabled={(!enabled || readOnly)}
+                                    onChange={() => setSms(!sms)}
+                                    checked={sms}
+                                />
+                                <label style={{marginTop:'5px'}}>SMS Notifications</label>
+
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    disabled={!enabled}
+                                    checked={alert}
+                                    onChange={() => setAlert(!alert)}
+                                />
+                                <label style={{marginTop:'5px'}}>New Booking Alerts</label>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    disabled={!enabled}
+                                    onChange={() => setReminder(!reminder)}
+                                    checked={reminder}
+                                />
+                                <label style={{marginTop:'5px'}}>Booking Reminders</label>
+                            </div>
+                        </div>
+
+                        {message && <p style={{margin:'10px'}}>{message}</p>}
+
+                        <button
+                            onClick={onSubmit}
+                            style={{color:'white', padding:'12px'}}
+                            className={(!enabled || !support) ? 'back-button' : 'next-button'} type="button">
+                            {loading ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+            </div>
         )
     }
 
@@ -512,11 +691,23 @@ const Customer = () => {
                             onClick={() => navigate('/help')}>
                             FAQs
                         </button>
-                        <div style={{width:'10%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
+                        <div style={{
+                            width:'10%',
+                            marginRight:'10px',
+                            display:'flex',
+                            justifyContent:'flex-start',
+                            color:'red',
+                            alignItems:'center'
+                        }}>
                             <FaCommentDots
                                 size={25}
                                 style={{color:'black'}}
-                                onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
+                                onClick={() => navigate('/messages', {state: {
+                                    receiver: companyEmail,
+                                        receiverName: companyName,
+                                        sender: email,
+                                        senderName: name}})
+                            }
                             />
                             {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
                         </div>
