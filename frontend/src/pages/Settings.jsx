@@ -666,7 +666,7 @@ const Settings = () => {
                                                 <div className="checkbox-label">
                                                     <input
                                                         type="checkbox"
-                                                        disabled={(!enabled || readOnly)}
+                                                        disabled={(!enabled || !support)}
                                                         onChange={() => setSms(!sms)}
                                                         checked={sms}
                                                     />
@@ -679,7 +679,7 @@ const Settings = () => {
                                                 <div className="checkbox-label">
                                                     <input
                                                         type="checkbox"
-                                                        disabled={(!enabled || readOnly)}
+                                                        disabled={(!enabled || !support)}
                                                         checked={alert}
                                                         onChange={() => setAlert(!alert)}
                                                     />
@@ -691,7 +691,7 @@ const Settings = () => {
                                                 <div className="checkbox-label">
                                                     <input
                                                         type="checkbox"
-                                                        disabled={(!enabled || readOnly)}
+                                                        disabled={(!enabled || !support)}
                                                         onChange={() => setReminder(!reminder)}
                                                         checked={reminder}
                                                     />
