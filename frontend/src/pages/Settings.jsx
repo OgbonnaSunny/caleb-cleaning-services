@@ -641,6 +641,9 @@ const Settings = () => {
                                             <h3 className={'experience-text'} style={{margin:'15px', textAlign:'center'}}>Browser notifications</h3>
 
                                             {!support && <label style={{margin:'10px'}}>This browser does not support notification</label>}
+
+                                            {loading && <p style={{margin:'15px'}}>loading...</p>}
+
                                             <div className="form-group">
                                                 <div  className="checkbox-label">
                                                     <label style={{
