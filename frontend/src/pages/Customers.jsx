@@ -5,8 +5,11 @@ import api from './api.js';
 import LOGO from "../images/logo4.png";
 import { format } from 'date-fns';
 import {number} from "yup";
+import {useNavigate} from "react-router-dom";
 
 const Customers = () => {
+    const navigate = useNavigate();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDatabase, setSearchDatabase] = useState('');
     const [allCustomers, setAllCustomers] = useState([]);
