@@ -242,6 +242,12 @@ const Customers = () => {
         }
     }, [])
 
+    const goToClientProfile = (email, client) => {
+        localStorage.setItem('client', JSON.stringify(client));
+        localStorage.setItem('clientEmail', JSON.stringify(email));
+        navigate('/customer');
+    }
+
 
     return (
         <div style={{
@@ -327,8 +333,9 @@ const Customers = () => {
                                     </div>
                                 }
                                 {role !== 'Support' && <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'space-evenly'}} >
-                                    <FaEnvelope onClick={(id === -1 || id === null) ? () => setId(customer.id) : null} size={20} style={{width:'50%'}} />
+                                    <FaEnvelope onClick={(id === -1 || id === null) ? () => setId(customer.id) : null} size={20} style={{width:'30%'}} />
                                     <CallButton phoneNumber={customer.phone}   />
+                                    <FaUserTie onClick={() => goToClientProfile(customer.email, customer.customer)} size={30} style={{width:'30px', color:'dodgerblue', marginRight: '3%'}} />
                                 </div>}
                             </div>
                         ))
