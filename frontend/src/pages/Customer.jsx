@@ -153,6 +153,12 @@ const Customer = () => {
     }, [])
 
     useEffect(() => {
+        if (!("Notification" in window)) {
+            setSupport(false);
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchCleanerData = () => {
             if (!email) {
                 return;
@@ -378,6 +384,8 @@ const Customer = () => {
         const [errors, setErrors] = useState({});
         const [successMessage, setSuccessMessage] = useState(null);
         const [loading, setLoading] = useState(false);
+        const [processing, setProcessing] = useState(false);
+        const [notifyMessage, setNotifyMessage] = useState('');
 
         const changePassword = async (e) => {
             e.preventDefault();
@@ -434,8 +442,8 @@ const Customer = () => {
 
         const handleNotify = async (e) => {
             e.preventDefault();
-            if (loading) return;
-            setLoading(true);
+            if (processing) return;
+            setProcessing(true);
             let send = 1;
             const check = e.target.checked;
 
@@ -443,10 +451,17 @@ const Customer = () => {
                 const subscribe = await subscribeUser(email, check);
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
                 setEnabled(subscribe);
+                if (subscribe) {
+                    setNotifyMessage('Notification permission is successfull');
+                }
+                else {
+                    setNotifyMessage('Failed to get notification permission');
+                }
             } catch (error) {
                 console.error(error);
+                setNotifyMessage('Error getting notification permission');
             } finally {
-                setLoading(false);
+                setProcessing(false);
             }
         }
 
@@ -569,11 +584,11 @@ const Customer = () => {
                                     width:"100px",
                                     fontSize:'large',
                                     fontWeight:'bold'
-                                }}>{enabled ? "Disable" : "Enable"}</label>
+                                }}>{enabled ? "Enabled" : "Disabled"}</label>
                                 <label style={{alignSelf:'end'}} className="switch">
                                     <input
                                         type="checkbox"
-                                        disabled={disabled}
+                                        disabled={(disabled || !support)}
                                         checked={enabled}
                                         onChange={handleNotify}
                                     />
@@ -587,7 +602,6 @@ const Customer = () => {
                             <div className="checkbox-label">
                                 <input
                                     type="checkbox"
-                                    disabled={(!enabled || readOnly)}
                                     onChange={() => setSms(!sms)}
                                     checked={sms}
                                 />
@@ -596,11 +610,15 @@ const Customer = () => {
                             </div>
                         </div>
 
+                        {processing && <p style={{margin:'16px'}}>Processing...</p>}
+
+                        {notifyMessage && <p style={{margin:'16px'}}>{notifyMessage}</p>}
+
                         <div className="form-group">
                             <div className="checkbox-label">
                                 <input
                                     type="checkbox"
-                                    disabled={!enabled}
+                                    disabled={(!enabled || !support)}
                                     checked={alert}
                                     onChange={() => setAlert(!alert)}
                                 />
@@ -612,7 +630,7 @@ const Customer = () => {
                             <div className="checkbox-label">
                                 <input
                                     type="checkbox"
-                                    disabled={!enabled}
+                                    disabled={(!enabled || !support)}
                                     onChange={() => setReminder(!reminder)}
                                     checked={reminder}
                                 />

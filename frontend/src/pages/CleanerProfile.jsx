@@ -2554,6 +2554,8 @@ const CleanerProfile = () => {
         const [emailNotify, setEmailNotify] = useState(true);
         const [disabled, setDisabled] = useState(false);
         const [support, setSupport] = useState(true);
+        const [processing, setProcessing] = useState(false);
+        const [notifyMessage, setNotifyMessage] = useState('');
 
         const handlePreferredAreaChange = (area) => {
             const currentAreas = getValues().work.preferredAreas
@@ -2759,8 +2761,8 @@ const CleanerProfile = () => {
 
         const handleNotify = async (e) => {
             e.preventDefault();
-            if (loading) return;
-            setLoading(true);
+            if (processing) return;
+            setProcessing(true);
             let send = 1;
             const check = e.target.checked;
 
@@ -2768,10 +2770,17 @@ const CleanerProfile = () => {
                 const subscribe = await subscribeUser(email, check);
                 localStorage.setItem("notifications", JSON.stringify(subscribe));
                 setEnabled(subscribe);
+                if (subscribe) {
+                    setNotifyMessage('Notification permission is successfull');
+                }
+                else {
+                    setNotifyMessage('Failed to get notification permission');
+                }
             } catch (error) {
                 console.error(error);
+                setNotifyMessage('Error getting notification permission');
             } finally {
-                setLoading(false);
+                setProcessing(false);
             }
         }
 
@@ -3205,7 +3214,6 @@ const CleanerProfile = () => {
                                         </label>
                                     </div>
 
-
                                     <div style={{maxWidth:'500px'}} className="price-container">
                                         <h3 className={'experience-text'} style={{margin:'15px', textAlign:'center'}}>Browser notifications</h3>
 
@@ -3217,11 +3225,11 @@ const CleanerProfile = () => {
                                                     width:"100px",
                                                     fontSize:'large',
                                                     fontWeight:'bold'
-                                                }}>{enabled ? "Disable" : "Enable"}</label>
+                                                }}>{enabled ? "Enabled" : "Disabled"}</label>
                                                 <label style={{alignSelf:'end'}} className="switch">
                                                     <input
                                                         type="checkbox"
-                                                        disabled={disabled}
+                                                        disabled={(disabled || !support)}
                                                         checked={enabled}
                                                         onChange={handleNotify}
                                                     />
@@ -3230,6 +3238,10 @@ const CleanerProfile = () => {
 
                                             </div>
                                         </div>
+
+                                        {processing && <p style={{margin:'16px'}}>Processing...</p>}
+
+                                        {notifyMessage && <p style={{margin:'16px'}}>{notifyMessage}</p>}
 
                                         <div style={{display:'none'}} className="form-group">
                                             <div className="checkbox-label">
@@ -3246,7 +3258,7 @@ const CleanerProfile = () => {
                                             <div className="checkbox-label">
                                                 <input
                                                     type="checkbox"
-                                                    disabled={!enabled}
+                                                    disabled={(!enabled || !support)}
                                                     {...register("notifications.jobAlerts")}
                                                 />
                                                 <label style={{marginTop:'5px'}}>New Job Alerts</label>
@@ -3257,7 +3269,7 @@ const CleanerProfile = () => {
                                             <div className="checkbox-label">
                                                 <input
                                                     type="checkbox"
-                                                    disabled={!enabled}
+                                                    disabled={(!enabled || !support)}
                                                     {...register("notifications.reminderAlerts")}
                                                 />
                                                 <label style={{marginTop:'5px'}}>Booking Reminders</label>
@@ -3268,7 +3280,7 @@ const CleanerProfile = () => {
                                             <div className="checkbox-label">
                                                 <input
                                                     type="checkbox"
-                                                    disabled={!enabled}
+                                                    disabled={(!enabled || !support)}
                                                     {...register("notifications.ratingNotifications")}
                                                 />
                                                 <label style={{marginTop:'5px'}}>Customer Rating Notifications</label>

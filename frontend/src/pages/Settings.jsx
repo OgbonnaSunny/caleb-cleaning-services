@@ -55,6 +55,8 @@ const Settings = () => {
     const [reminder, setReminder] = useState(false);
     const [alert, setAlert] = useState(false);
     const [sms, setSms] = useState(false);
+    const [processing, setProcessing] = useState(false);
+    const [notifyMessage, setNotifyMessage] = useState('');
 
 
     const handleInputChange = (e) => {
@@ -107,8 +109,8 @@ const Settings = () => {
 
     const handleNotify = async (e) => {
         e.preventDefault();
-        if (loading) return;
-        setLoading(true);
+        if (processing) return;
+        setProcessing(true);
         let send = 1;
         const check = e.target.checked;
 
@@ -116,10 +118,17 @@ const Settings = () => {
             const subscribe = await subscribeUser(currentUser, check);
             localStorage.setItem("notifications", JSON.stringify(subscribe));
             setEnabled(subscribe);
+            if (subscribe) {
+                setNotifyMessage('Notification permission is successfull');
+            }
+            else {
+                setNotifyMessage('Failed to get notification permission');
+            }
         } catch (error) {
             console.error(error);
+            setNotifyMessage('Error getting notification permission');
         } finally {
-            setLoading(false);
+            setProcessing(false);
         }
     }
 
@@ -649,7 +658,7 @@ const Settings = () => {
                                                         width:"100px",
                                                         fontSize:'large',
                                                         fontWeight:'bold'
-                                                    }}>{enabled ? "Disable" : "Enable"}</label>
+                                                    }}>{enabled ? "Enabled" : "Disabled"}</label>
                                                     <label style={{alignSelf:'end'}} className="switch">
                                                         <input
                                                             type="checkbox"
@@ -659,9 +668,11 @@ const Settings = () => {
                                                         />
                                                         <span className="slider"></span>
                                                     </label>
-
                                                 </div>
                                             </div>
+
+                                            {processing && <p style={{margin:'15px'}}>Processing...</p>}
+                                            {notifyMessage && <p style={{margin:'16px'}}>{notifyMessage}</p>}
 
                                             <div style={{display:'none'}} className="form-group">
                                                 <div className="checkbox-label">
@@ -705,8 +716,8 @@ const Settings = () => {
                                             <button
                                                 onClick={onSubmit}
                                                 style={{color:'white', padding:'12px'}}
-                                                disabled={(loading || !support)}
-                                                className={(!enabled || !support || loading) ? 'back-button' : 'next-button'} type="button">
+                                                disabled={(processing || !support || loading)}
+                                                className={(!enabled || !support || processing || loading) ? 'back-button' : 'next-button'} type="button">
                                                 {loading ? 'Saving...' : 'Save'}
                                             </button>
                                         </div>
