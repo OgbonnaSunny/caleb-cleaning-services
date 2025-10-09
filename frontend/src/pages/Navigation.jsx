@@ -182,8 +182,8 @@ const Navigation = () => {
     }, []);
 
     const handleAuth = () => {
-      navigate('/customer');
-      return
+     // navigate('/customer');
+     // return
       const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
           window.open('/logout', '_blank');
