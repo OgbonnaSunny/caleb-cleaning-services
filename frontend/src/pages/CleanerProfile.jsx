@@ -1975,8 +1975,9 @@ const CleanerProfile = () => {
     }
 
     const goToClientProfile = (email, client) => {
-
-        window.open(`/customer?client=${encodeURIComponent(client)}&email=${encodeURIComponent(email)}`, "_blank");
+        localStorage.setItem('client', JSON.stringify(client));
+        localStorage.setItem('clientEmail', JSON.stringify(email));
+        navigate('/customer');
     }
 
     const History = () => {
@@ -2568,8 +2569,8 @@ const CleanerProfile = () => {
         fetchCleanerData();
     }, [email]);
 
-    const SettingsPage = ({ loading }) => {
-        if (loading === true) {
+    const SettingsPage = ({ loadingFiles }) => {
+        if (loadingFiles === true) {
             return <p style={{margin:'16px'}}>Loading setting...</p>
         }
         const [bankMessage, setBankMessage] = useState('');

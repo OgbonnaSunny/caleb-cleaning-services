@@ -11,7 +11,7 @@ import {
     FaPoundSign,
     FaQuestionCircle, FaUserCircle,
     FaUserTie,
-    FaEnvelope, FaCommentDots, FaPen, FaTimes, FaPhone,
+    FaEnvelope, FaCommentDots, FaPen, FaTimes, FaPhone, FaStar, FaRegStar,
 } from "react-icons/fa";
 import api from "./api.js";
 import { FaCalendarCheck} from 'react-icons/fa';
@@ -91,6 +91,10 @@ const Customer = () => {
     const [reminder, setReminder] = useState(false);
     const [alert, setAlert] = useState(false);
     const [sms, setSms] = useState(false);
+    const [review, setReview] = useState('Post');
+
+    const [client, setClient] = useState(null);
+    const [clientEmail, setClientEmail] = useState(null);
 
     const bottomNavItems = [
         {id: 1, category: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
@@ -187,6 +191,30 @@ const Customer = () => {
         };
         fetchCleanerData();
     }, [email]);
+
+    useEffect(() => {
+        const clients = JSON.parse(localStorage.getItem('client'));
+        const clientEmails = JSON.parse(localStorage.getItem('clientEmail'));
+        setClient(clients);
+        setClientEmail(clientEmails);
+    }, []);
+
+    const renderStars = (rating) => {
+        const stars = [];
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+
+        for (let i = 1; i <= 5; i++) {
+            if (i <= fullStars) {
+                stars.push(<FaStar style={{width:'15px'}} key={i} className="star filled" />);
+            } else if (i === fullStars + 1 && hasHalfStar) {
+                stars.push(<FaStar style={{width:'15px'}} key={i} className="star half-filled" />);
+            } else {
+                stars.push(<FaRegStar style={{width:'15px'}} key={i} className="star" />);
+            }
+        }
+        return stars;
+    };
 
     const handleNewOrder = () => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -705,7 +733,7 @@ const Customer = () => {
         <div className="sticky-nav-container">
             {message && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
             <nav  className='top-order-nav'>
-                <div style={{display:'flex', flexDirection: 'column'}}>
+                {(client === null && clientEmail === null) &&  <div style={{display:'flex', flexDirection: 'column'}}>
                     <div style={{display:'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
                         <img src={LOGO} style={{maxWidth:'12%'}}  className={'logo-icon2'}/>
                         <h1 style={{width:'20%', textAlign:'start'}} className={'page-title'}>My App</h1>
@@ -726,11 +754,11 @@ const Customer = () => {
                                 size={25}
                                 style={{color:'black'}}
                                 onClick={() => navigate('/messages', {state: {
-                                    receiver: companyEmail,
+                                        receiver: companyEmail,
                                         receiverName: companyName,
                                         sender: email,
                                         senderName: name}})
-                            }
+                                }
                             />
                             {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
                         </div>
@@ -758,20 +786,33 @@ const Customer = () => {
                         </div>
 
                     </div>
-                </div>
+                </div> }
+                {(clientEmail !== null && client !== null) &&
+                    <div style={{
+                        display:'flex',
+                        justifyContent:'flex-start',
+                        alignItems: 'center',
+                        gap:'10px'
+                    }}>
+                        <img src={LOGO} style={{maxWidth:'12%'}}  className={'logo-icon2'}/>
+                        <h1 style={{textAlign:'start'}} className={'page-title'}>Reviews for {client}</h1>
+                    </div>
+                }
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
-                {activeBottomMenu === 'Support' && <Contact />}
-                {activeTopMenu === 'Profile' && <Profile />}
-                {activeTopMenu === 'Billing' && <Billing />}
-                {activeTopMenu === 'Active' && <Bookings cancellable={true} user={'client'}/>}
-                {activeTopMenu === 'History' && <Bookings history={history}  user={'client'} />}
+                {(client === null && clientEmail === null) && <div style={{display:'flex', flexDirection: 'column'}}>
+                        {activeBottomMenu === 'Support' && <Contact />}
+                        {activeTopMenu === 'Profile' && <Profile />}
+                        {activeTopMenu === 'Billing' && <Billing />}
+                        {activeTopMenu === 'Active' && <Bookings cancellable={true} user={'client'}/>}
+                        {activeTopMenu === 'History' && <Bookings history={history}  user={'client'} />}
+                    </div>}
             </main>
 
             <nav  className='bottom-order-nav'>
                 <div className="nav-order-content">
-                    {bottomNavItems.map((item, index) => (
+                    {(client === null && clientEmail === null) &&  <div style={{display:'flex'}}>{bottomNavItems.map((item, index) => (
                         <div key={`bottom-${item.id}`} className="nav-order-item"
                              onClick={() => handleBottomItem(index)}>
                             <div style={activeTopMenu === item.category ?
@@ -784,7 +825,20 @@ const Customer = () => {
                                 </h3>
                             </div>
                         </div>
-                    ))}
+                    ))}</div> }
+                    {(client !== null && clientEmail !== null) &&
+                        <div style={{display:'flex', justifyContent:'space-evenly', gap:'10px', margin:'10px'}}>
+                            <button
+                                onClick={() => setReview('Post')}
+                                className={review === 'Post' ? 'next-button' : 'back-button'}>
+                                Post
+                            </button>
+                            <button
+                                onClick={() => setReview('View')}
+                                className={review === 'View' ? 'next-button' : 'back-button'}>
+                                View
+                            </button>
+                        </div>}
                 </div>
             </nav>
         </div>
