@@ -37,21 +37,21 @@ const CleaningSchedule = () => {
         const parsed = new Date(date);
 
         if (isNaN(parsed.getTime())) {
-            return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         if (isToday(parsed)) {
-            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         const diff = differenceInCalendarDays(parsed, new Date());
 
         if (diff === 1) {
-            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         if (diff === 2) {
-            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         return format(parsed, "EEE do MMM, yyyy h:mm a");

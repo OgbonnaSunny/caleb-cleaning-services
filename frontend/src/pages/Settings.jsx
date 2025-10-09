@@ -642,8 +642,6 @@ const Settings = () => {
 
                                             {!support && <label style={{margin:'10px'}}>This browser does not support notification</label>}
 
-                                            {loading && <p style={{margin:'15px'}}>loading...</p>}
-
                                             <div className="form-group">
                                                 <div  className="checkbox-label">
                                                     <label style={{
@@ -707,7 +705,8 @@ const Settings = () => {
                                             <button
                                                 onClick={onSubmit}
                                                 style={{color:'white', padding:'12px'}}
-                                                className={(!enabled || !support) ? 'back-button' : 'next-button'} type="button">
+                                                disabled={(loading || !support)}
+                                                className={(!enabled || !support || loading) ? 'back-button' : 'next-button'} type="button">
                                                 {loading ? 'Saving...' : 'Save'}
                                             </button>
                                         </div>
