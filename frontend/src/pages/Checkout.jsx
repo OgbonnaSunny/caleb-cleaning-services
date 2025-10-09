@@ -995,7 +995,7 @@ const Checkout = () => {
     }
 
     useEffect(() => {
-        var covered = postcode.toString().toUpperCase().startsWith('EH')
+        var covered = postcode?.toString()?.toUpperCase()?.startsWith('EH')
         setCovered(covered);
     }, [postcode]);
 

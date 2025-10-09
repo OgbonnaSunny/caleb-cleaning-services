@@ -208,7 +208,6 @@ const ProfilePage = ({ emailFromProile }) => {
     const [documents, setDocuments] = useState([]);
     const [docInView, setDocInView] = useState(null);
 
-
     useEffect(() => {
         if (window.innerWidth > 768) {
             setPage(20);
@@ -313,7 +312,6 @@ const ProfilePage = ({ emailFromProile }) => {
         }
 
     }, [reviewList])
-
 
     useEffect(() => {
          const fetchCleanerData =  async () => {

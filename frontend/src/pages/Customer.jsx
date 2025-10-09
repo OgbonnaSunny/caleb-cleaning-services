@@ -11,7 +11,7 @@ import {
     FaPoundSign,
     FaQuestionCircle, FaUserCircle,
     FaUserTie,
-    FaEnvelope, FaCommentDots, FaPen, FaTimes, FaPhone, FaStar, FaRegStar,
+    FaEnvelope, FaCommentDots, FaPen, FaTimes, FaPhone, FaStar, FaRegStar, FaArrowCircleLeft, FaArrowCircleRight,
 } from "react-icons/fa";
 import api from "./api.js";
 import { FaCalendarCheck} from 'react-icons/fa';
@@ -34,6 +34,7 @@ import {object} from "yup";
 import { FiLogOut } from "react-icons/fi";
 import { useSocket } from "../Socket.jsx";
 import {subscribeUser} from "./notification.js";
+import Reviews from "./Reviews.jsx";
 
 
 const Customer = () => {
@@ -43,7 +44,7 @@ const Customer = () => {
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
     const companyName =  "Fly Cleaner";
 
-    const topNavItems = ['Active', 'History'];
+    const topNavItems = ['Active', 'History', 'New'];
     const [topItems, setTopItems] = useState(topNavItems);
     const [activeTopMenu, setActiveTopMenu] = useState(topItems[0]);
 
@@ -82,8 +83,9 @@ const Customer = () => {
     const [chatting, setChatting] = useState(false);
     const [dataForUpdate, setDataForUpdate] = useState('');
     const [billing, setBilling] = useState(0);
+    const [cancelledJobs, setCancelledJobs] = useState(0);
     const [messageCount, setMessageCount] = useState(0);
-
+    const [commonEmail, setCommonEmail] = useState('');
     const [emailNotify, setEmailNotify] = useState(true);
     const [disabled, setDisabled] = useState(false);
     const [support, setSupport] = useState(true);
@@ -92,33 +94,59 @@ const Customer = () => {
     const [alert, setAlert] = useState(false);
     const [sms, setSms] = useState(false);
     const [review, setReview] = useState('Post');
-
     const [client, setClient] = useState(null);
     const [clientEmail, setClientEmail] = useState(null);
+    const [rating, setRating] = useState(null);
+    const [reviewCount, setReviewCount] = useState(null);
+    const [five, setFive] = useState(0);
+    const [four, setFour] = useState(0);
+    const [three, setThree] = useState(0);
+    const [two, setTwo] = useState(0);
+    const [one, setOne] = useState(0);
+    const [reviewList, setReviewList] = useState([]);
+    const [reviewMessage, setReviewMessage] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [loadingReviews, setLoadingReviews] = useState(false);
+    const [number, setNumber] = useState('+447362587018');
 
     const bottomNavItems = [
-        {id: 1, category: 'Account', items: ['Profile', 'Billing'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
+        {id: 1, category: 'Account', items: ['Profile', 'Billing', 'Review'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}/>},
-        {id: 2, category: 'Booking', items: ['Active', 'History'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
+        {id: 2, category: 'Booking', items: ['Active', 'History', 'New'], icon: <FaCalendarCheck className="logo-icon2" style={activeBottomMenu === 'Booking' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
-        {id: 4, category: 'Support', items: ['Contact us'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
+        {id: 4, category: 'Support', items: ['Contact us', 'Call', 'Chat'], icon: <FaQuestionCircle className="logo-icon2" style={activeBottomMenu === 'Support' ?
                 {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}} />},
     ];
 
-    function CallButton({ phoneNumber, name }) {
-        if (role === 'Support') {
-            return null;
-        }
+    function CallButton({ phoneNumber}) {
         return (
-            <div style={{width:'50%'}}>
+            <div style={{width:'100px'}}>
                 <p>
                     <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
-                        <FaPhone style={{width:'100%'}} size={20}/>
+                        <label style={{width:'100%',fontSize:'medium' }}>Call</label>
                     </a>
                 </p>
             </div>
         );
     }
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                if (!loadingReviews) {
+                    setPageCount(prev => prev + 1);
+                }
+            }
+
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loading, loadingReviews]);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -199,6 +227,15 @@ const Customer = () => {
         setClientEmail(clientEmails);
     }, []);
 
+    useEffect(() => {
+        if (clientEmail && clientEmail.length > 0 && client !== null) {
+            setCommonEmail(clientEmail);
+        }
+        if (email && clientEmail === null && client === null) {
+            setCommonEmail(email);
+        }
+    }, [clientEmail, email, client]);
+
     const renderStars = (rating) => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -206,11 +243,11 @@ const Customer = () => {
 
         for (let i = 1; i <= 5; i++) {
             if (i <= fullStars) {
-                stars.push(<FaStar style={{width:'15px'}} key={i} className="star filled" />);
+                stars.push(<FaStar size={20} style={{width:'20px'}} key={i} className="star filled" />);
             } else if (i === fullStars + 1 && hasHalfStar) {
-                stars.push(<FaStar style={{width:'15px'}} key={i} className="star half-filled" />);
+                stars.push(<FaStar size={20} style={{width:'20px'}} key={i} className="star half-filled" />);
             } else {
-                stars.push(<FaRegStar style={{width:'15px'}} key={i} className="star" />);
+                stars.push(<FaRegStar size={20} style={{width:'20px'}} key={i} className="star" />);
             }
         }
         return stars;
@@ -219,7 +256,11 @@ const Customer = () => {
     const handleNewOrder = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
-            navigate('/checkout');
+            let postcode = user?.postcode;
+            if (!postcode?.toString()?.startsWith("EH")) {
+                postcode = "EH12QA";
+            }
+            navigate('/checkout', { state: { postcode:  postcode } });
             return;
         }
         setMessage('User data not found');
@@ -233,6 +274,21 @@ const Customer = () => {
         setActiveTopMenu(item);
         setHistory(!history);
     }
+
+    useEffect(() => {
+        switch (activeTopMenu) {
+            case 'New':
+                handleNewOrder();
+                break;
+            case 'Chat':
+                navigate('/messages', {state: {
+                        receiver: companyEmail,
+                        receiverName: companyName,
+                        sender: email,
+                        senderName: name}});
+                break;
+        }
+    }, [activeTopMenu, email]);
 
     const handleBottomItem = (index) => {
         const item = bottomNavItems[index];
@@ -691,7 +747,8 @@ const Customer = () => {
             try {
                 let data = {email: email};
                 let response = await api.post('/api/revenue/billing', data)
-                setBilling(response.data);
+                setBilling(response.data.billing);
+                setCancelledJobs(response.data.pending);
 
                 data = {receiver: email};
                 response = await api.post('/api/messages/users', data)
@@ -707,10 +764,19 @@ const Customer = () => {
         }
     }, [email])
 
-    const Billing = () => {
+    const Billing = ({ amount, cancelled }) => {
+
         return (
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
-                <h2 style={{marginTop:'40%', textAlign:'center'}}>Total billing: £{billing}</h2>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                marginTop:'50%'
+            }}>
+                <h2 style={{textAlign:'center'}}>Total billing: £{amount}</h2>
+
+                <h2 style={{marginTop:'20px', textAlign:'center'}}>Cancelled jobs: £{cancelled}</h2>
             </div>
         );
     }
@@ -729,9 +795,264 @@ const Customer = () => {
 
     }, [email]);
 
+    const WriteReview = () => {
+        const [rating, setRating] = useState(1);
+        const [review, setReview] = useState('');
+        const [loading, setLoading] = useState(false);
+        const [message2, setMessage2] = useState('');
+
+        const writeReview = async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            const reviewData = { customer: client, cleanerEmail: clientEmail, review: review , rating: rating };
+            try {
+                const response = await api.post('/api/reviews', reviewData)
+                const { success} = response.data;
+                if (success) {
+                    setMessage("Review sent successful");
+                    setReview('')
+                    setReviewList([]);
+                    setPageCount(prev => prev + 1);
+                }
+                else {
+                    setMessage("Error occured while sending review");
+                }
+            } catch (error) {
+                  console.log(error);
+                setMessage("Error occured while sending review");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        return (<div className={'support-page'} >
+            <h3 style={{marginBottom:'20px'}}>Write review for {client}</h3>
+            <div  style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom:'10px'
+            }}>
+                <h2>Rating: {rating}</h2>
+                <FaArrowCircleLeft
+                    size={50} style={{width:'50px', color:'blue', marginRight:'15px'}}
+                    onClick={rating > 1 ? () => setRating(rating - 1) : null}
+                />
+                <FaArrowCircleRight
+                    size={50}
+                    style={{width:'50px', color:'blue'}}
+                    onClick={rating < 5 ? () => setRating(rating + 1) : null} />
+            </div>
+            <textarea
+                placeholder={'write review'}
+                style={{
+                    backgroundColor:'linen',
+                    color:'black', padding:'12px',
+                    marginTop:'20px',
+                }}
+                rows={20}
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+                name={'review'}
+            />
+
+            {message && <p style={{margin:'15px'}}>{message}</p>}
+
+            <button onClick={writeReview}
+                    style={{borderRadius:'30px', marginTop:'20px'}}
+                    className={(!loading && review) ?  'submit-button' : 'back-button'}
+                    disabled={(loading || !review)}>
+                {loading ? 'Saving...' : 'Save review'}
+            </button>
+        </div>)
+    }
+
+    const reviewPercentage = (ratingCount, ratingTotalCount) => {
+        const perc = (Number(ratingCount) / Number(ratingTotalCount)) * 100;
+        return Math.round(perc)
+    }
+
+    function timeAgo(date) {
+        const now = new Date();
+        const prevDate = new Date(date);
+        const seconds = Math.floor((now - prevDate) / 1000);
+
+        let interval = Math.floor(seconds / 31536000);
+        if (interval >= 1) {
+            return interval === 1 ? '1 year ago' : `${interval} years ago`;
+        }
+
+        interval = Math.floor(seconds / 2592000);
+        if (interval >= 1) {
+            return interval === 1 ? '1 month ago' : `${interval} months ago`;
+        }
+
+        interval = Math.floor(seconds / 86400);
+        if (interval >= 1) {
+            return interval === 1 ? '1 day ago' : `${interval} days ago`;
+        }
+
+        interval = Math.floor(seconds / 3600);
+        if (interval >= 1) {
+            return interval === 1 ? '1 hour ago' : `${interval} hours ago`;
+        }
+
+        interval = Math.floor(seconds / 60);
+        if (interval >= 1) {
+            return interval === 1 ? '1 minute ago' : `${interval} minutes ago`;
+        }
+
+        return 'just now';
+    }
+
+    useEffect(() => {
+        if (reviewList.length > 0) {
+            const occurence = reviewList.reduce((acc, review) => {
+                const rating = review.rating;
+                acc[rating] = (acc[rating] || 0) + 1;
+                return acc;
+            }, {1: 0, 2: 0, 3: 0, 4: 0, 5: 0});
+
+            setFive(reviewPercentage(occurence[5], reviewList.length));
+            setFour(reviewPercentage(occurence[4], reviewList.length));
+            setThree(reviewPercentage(occurence[3], reviewList.length));
+            setTwo(reviewPercentage(occurence[2], reviewList.length));
+            setOne(reviewPercentage(occurence[1], reviewList.length));
+            setReviewCount(reviewList.length);
+            let allReviews = 0;
+            reviewList.forEach(review => allReviews += review.rating);
+            setRating((allReviews / reviewList.length).toFixed(1));
+        }
+
+    }, [reviewList])
+
+    useEffect(() => {
+        const fetchCleanerData =  async () => {
+            if (loadingReviews) return;
+            setLoadingReviews(true);
+            try {
+                let offset = 0;
+                if (reviewList?.length > 0) {
+                    offset = reviewList[reviewList.length - 1].id;
+                }
+                const response = await api.post('/api/reviews/record', {cleanerEmail: commonEmail, limit: pageSize, offset: offset});
+                const { reviews } = response.data;
+                if (reviews) {
+                    setRating(reviews?.value);
+                    setReviewCount(reviews?.count);
+
+                    setReviewList(prev => {
+                        const map = new Map(prev.map(item => [item.id, item])); // old items
+                        reviews?.reviews?.forEach(item => map.set(item.id, item));    // add/replace new
+                        return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                    });
+                }
+                else {
+                    if (reviewList?.length <= 0 && reviews?.reviews?.length <= 0) {
+                        setReviewMessage('No review record was found');
+                    }
+                }
+            } catch(error) {
+                console.log(error);
+                setReviewMessage('Error fetching some profile data')
+            } finally {
+                setLoadingReviews(false);
+            }
+        };
+        if (commonEmail) {
+            fetchCleanerData();
+        }
+    }, [commonEmail, pageCount]);
+
+    const ViewReview = ({ reviews, message}) => {
+        if (message) {
+            return <p>{message}</p>
+        }
+
+        if (reviews.length <= 0) {
+            return <p style={{margin:'20px'}}>No reviews found</p>
+        }
+
+        const [loading, setLoading] = useState(false);
+
+        return ( <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection:'column'
+        }}>
+            <div className="reviews-section">
+                <h2 style={{textAlign:'center'}}>Reviews</h2>
+                <div className="review-summary">
+                    <div style={{display:'flex', alignItems:'center'}}>
+                        <p className="stars">{renderStars(rating)}</p>
+                        <p style={{fontWeight:'bold'}}>{rating}</p>
+                        <p style={{textAlign:'end', fontSize:'medium'}} className="review-count">{reviewCount} reviews</p>
+                    </div>
+
+                    <div className="rating-breakdown">
+                        <div className="rating-bar">
+                            <span>5 stars</span>
+                            <div className="bar-container">
+                                <div className="bar" style={{ width: `${five}%` }}></div>
+                            </div>
+                            <span>{five}%</span>
+                        </div>
+                        <div className="rating-bar">
+                            <span>4 stars</span>
+                            <div className="bar-container">
+                                <div className="bar" style={{ width: `${four}%` }}></div>
+                            </div>
+                            <span>{four}%</span>
+                        </div>
+                        <div className="rating-bar">
+                            <span>3 stars</span>
+                            <div className="bar-container">
+                                <div className="bar" style={{ width: `${three}%` }}></div>
+                            </div>
+                            <span>{three}%</span>
+                        </div>
+                        <div className="rating-bar">
+                            <span>2 stars</span>
+                            <div className="bar-container">
+                                <div className="bar" style={{ width: `${two}%` }}></div>
+                            </div>
+                            <span>{two}%</span>
+                        </div>
+                        <div className="rating-bar">
+                            <span>1 star</span>
+                            <div className="bar-container">
+                                <div className="bar" style={{ width: `${one}%` }}></div>
+                            </div>
+                            <span>{one}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div className={'grid-container'}>
+                    {reviewList.map((review, index) => (
+                        <div key={review.id} className="review-card">
+                            <div className="review-header">
+                                <div className="reviewer-info">
+                                    <h4  style={{marginBottom:'10px'}}  >{review.customer}</h4>
+                                    <div className="review-rating">
+                                        {renderStars(review.rating)}
+                                        <span style={{marginLeft:'10px'}}>{timeAgo(review.time)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="review-content">
+                                <p>{review.review}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            {loading && <p>Loading...</p>}
+        </div>)
+    }
+
     return (
         <div className="sticky-nav-container">
-            {message && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
+            {(message && client === null) && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
             <nav  className='top-order-nav'>
                 {(client === null && clientEmail === null) &&  <div style={{display:'flex', flexDirection: 'column'}}>
                     <div style={{display:'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
@@ -752,7 +1073,7 @@ const Customer = () => {
                         }}>
                             <FaCommentDots
                                 size={25}
-                                style={{color:'black'}}
+                                style={{color:'black', width:'20px'}}
                                 onClick={() => navigate('/messages', {state: {
                                         receiver: companyEmail,
                                         receiverName: companyName,
@@ -770,17 +1091,17 @@ const Customer = () => {
                                 {topItems.map((item, index) => (
                                     <div key={`top-${index}`} className="nav-order-item"
                                          onClick={() => handleTopItem(item)}>
-                                        <h3  style={activeTopMenu === item ? {color:'goldenrod', textDecoration:'underline'}:
-                                            {color:'', textDecoration:'none'} } >
+                                        {item === 'Call' ? <CallButton phoneNumber={number} /> : <h3  style={activeTopMenu === item ?
+                                            {
+                                                color:'goldenrod',
+                                                textDecoration:'underline'
+                                            }: {color:'',
+                                                textDecoration:'none'
+                                            } } >
                                             {item}
-                                        </h3>
+                                        </h3>}
                                     </div>
                                 ))}
-                            </div>
-                            <div style={{color:'navy', backgroundColor:'greenyellow', padding:'8px', display:'flex', alignItems: 'center'}}
-                                 className={'book-icon'} onClick={handleNewOrder}>
-                                <MdAdd  size={40} style={{width:'40px'}}  />
-                                <h3 className={'experience-text'}>New</h3>
                             </div>
 
                         </div>
@@ -801,13 +1122,21 @@ const Customer = () => {
             </nav>
 
             <main className={["main-content", "main-banner"].join(" ")}>
-                {(client === null && clientEmail === null) && <div style={{display:'flex', flexDirection: 'column'}}>
+                {(client === null && clientEmail === null) &&
+                    <div style={{display:'flex', flexDirection: 'column'}}>
                         {activeBottomMenu === 'Support' && <Contact />}
                         {activeTopMenu === 'Profile' && <Profile />}
-                        {activeTopMenu === 'Billing' && <Billing />}
+                        {activeTopMenu === 'Billing' && <Billing amount={billing} cancelled={cancelledJobs} />}
                         {activeTopMenu === 'Active' && <Bookings cancellable={true} user={'client'}/>}
                         {activeTopMenu === 'History' && <Bookings history={history}  user={'client'} />}
+                        {activeTopMenu == "Review" && <ViewReview reviews={reviewList} message={reviewMessage} /> }
                     </div>}
+                {(client !== null && clientEmail !== null) &&
+                    <div style={{display:'flex', flexDirection: 'column'}}>
+                        {review === "Post" && <WriteReview />}
+                        {review === "View" && <ViewReview reviews={reviewList} message={reviewMessage} />}
+                    </div>
+                }
             </main>
 
             <nav  className='bottom-order-nav'>
@@ -826,8 +1155,12 @@ const Customer = () => {
                             </div>
                         </div>
                     ))}</div> }
-                    {(client !== null && clientEmail !== null) &&
-                        <div style={{display:'flex', justifyContent:'space-evenly', gap:'10px', margin:'10px'}}>
+                    {(client !== null && clientEmail !== null) && <div style={{
+                            display:'flex',
+                            justifyContent:'space-evenly',
+                            gap:'10px',
+                            margin:'10px'
+                        }}>
                             <button
                                 onClick={() => setReview('Post')}
                                 className={review === 'Post' ? 'next-button' : 'back-button'}>

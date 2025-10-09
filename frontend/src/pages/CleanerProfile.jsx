@@ -33,6 +33,9 @@ const CleanerProfile = () => {
     const navigate = useNavigate();
     const ref = useRef(null);
 
+    localStorage.removeItem('client');
+    localStorage.removeItem('clientEmail');
+
     const companyEmail = import.meta.env.VITE_COMPANY_EMAIL;
     const companyName =  "Fly Cleaner";
 
