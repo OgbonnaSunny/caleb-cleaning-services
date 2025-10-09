@@ -159,26 +159,31 @@ const Customer = () => {
     }, []);
 
     useEffect(() => {
-        const fetchCleanerData = () => {
-            if (!email) {
-                return;
-            }
+        const fetchCleanerData = async () => {
             setLoading(true);
 
-            api.post('/api/notify-record', {email: email})
-                .then(response => {
-                    if (response.data) {
-                        setReminder(response.data?.reminder);
-                        setEnabled(response.data?.enabled);
-                        setAlert(response.data?.jobAlert)
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                })
+            const registration = await navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
+            const existingSubscription = await registration.pushManager.getSubscription();
+
+            if (existingSubscription && email) {
+                api.post('/api/notify-record', {email: email})
+                    .then(response => {
+                        if (response.data) {
+                            setReminder(response.data?.reminder);
+                            setEnabled(response.data?.enabled);
+                            setAlert(response.data?.jobAlert)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    })
+            }
+            else {
+                setLoading(false);
+            }
         };
         fetchCleanerData();
     }, [email]);

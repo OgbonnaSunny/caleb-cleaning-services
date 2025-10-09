@@ -2519,23 +2519,6 @@ const CleanerProfile = () => {
                     setIsLoading(false);
                 })
 
-            api.post('/api/notify-record', {email: email})
-                .then(response => {
-                    if (response.data) {
-                        setValue('notifications', {
-                            ...getValues(),
-                            jobAlerts: response.data?.jobAlert,
-                            reminderAlerts: response.data?.reminder,
-                            ratingNotifications: response.data?.rating,
-                            smsNotifications: response.data?.sms,
-                        });
-                        setEnabled(response.data?.enabled);
-
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                })
         };
         fetchCleanerData();
     }, [email]);
@@ -2545,10 +2528,50 @@ const CleanerProfile = () => {
     }, [successMessage])
 
     const [dataForUpdate, setDataForUpdate] = useState('');
-
     const [runCounter, setRunCounter] = useState(0);
+    const [loadingSettings, setLoadingSettings] = useState(false);
 
-    const SettingsPage = () => {
+    useEffect(() => {
+        const fetchCleanerData = async () => {
+            setLoadingSettings(true);
+
+            const registration = await navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
+            const existingSubscription = await registration.pushManager.getSubscription();
+
+            if (existingSubscription && email) {
+                api.post('/api/notify-record', {email: email})
+                    .then(response => {
+                        if (response.data) {
+                            setValue('notifications', {
+                                ...getValues(),
+                                jobAlerts: response.data?.jobAlert,
+                                reminderAlerts: response.data?.reminder,
+                                ratingNotifications: response.data?.rating,
+                                smsNotifications: response.data?.sms,
+                            });
+                            setEnabled(response.data?.enabled);
+
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setLoadingSettings(false);
+                    })
+            }
+            else {
+                setLoadingSettings(false);
+            }
+
+        };
+        fetchCleanerData();
+    }, [email]);
+
+    const SettingsPage = ({ loading }) => {
+        if (loading === true) {
+            return <p style={{margin:'16px'}}>Loading setting...</p>
+        }
         const [bankMessage, setBankMessage] = useState('');
         const [loading, setLoading] = useState(false);
         const [emailNotify, setEmailNotify] = useState(true);
@@ -3644,7 +3667,7 @@ const CleanerProfile = () => {
                 {(activeMenu === bottomNavItems[4].category && email) && <ProfilePage emailFromProile={email} /> }
                 {activeMenu === bottomNavItems[1].category && <Finance /> }
                 {activeMenu === bottomNavItems[2].category && <Docs /> }
-                {activeMenu === bottomNavItems[0].category && <SettingsPage /> }
+                {activeMenu === bottomNavItems[0].category && <SettingsPage loading={loadingSettings} /> }
 
             </main>
 

@@ -57,6 +57,7 @@ const Settings = () => {
     const [sms, setSms] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [notifyMessage, setNotifyMessage] = useState('');
+    const [saving, setSaving] = useState(false);
 
 
     const handleInputChange = (e) => {
@@ -102,9 +103,12 @@ const Settings = () => {
     };
 
     useEffect(() => {
-        if (!("Notification" in window)) {
-            setSupport(false);
+        const getNotification = async () => {
+            if (!("Notification" in window)) {
+                setSupport(false);
+            }
         }
+       getNotification();
     }, []);
 
     const handleNotify = async (e) => {
@@ -134,7 +138,7 @@ const Settings = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if (loading) return;
+        if (saving) return;
         setLoading(true);
         const data = {
             jobAlert: alert,
@@ -157,7 +161,7 @@ const Settings = () => {
             console.error(error.response.data);
             setMessage('Profile update failed');
         } finally {
-            setIsLoading(false);
+            setSaving(false);
         }
 
     };
@@ -216,26 +220,35 @@ const Settings = () => {
     }, []);
 
     useEffect(() => {
-        const fetchCleanerData = () => {
+        const fetchCleanerData = async () => {
             if (!currentUser) {
                 return;
             }
             setLoading(true);
 
-            api.post('/api/notify-record', {email: currentUser})
-                .then(response => {
-                    if (response.data) {
-                        setReminder(response.data?.reminder);
-                        setEnabled(response.data?.enabled);
-                        setAlert(response.data?.jobAlert)
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                })
+            const registration = await navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
+            const existingSubscription = await registration.pushManager.getSubscription();
+
+            if (existingSubscription) {
+                api.post('/api/notify-record', {email: currentUser})
+                    .then(response => {
+                        if (response.data) {
+                            setReminder(response.data?.reminder);
+                            setEnabled(response.data?.enabled);
+                            setAlert(response.data?.jobAlert)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    })
+            }
+            else {
+                setLoading(false);
+            }
+
         };
         fetchCleanerData();
     }, [currentUser]);
@@ -716,9 +729,9 @@ const Settings = () => {
                                             <button
                                                 onClick={onSubmit}
                                                 style={{color:'white', padding:'12px'}}
-                                                disabled={(processing || !support || loading)}
-                                                className={(!enabled || !support || processing || loading) ? 'back-button' : 'next-button'} type="button">
-                                                {loading ? 'Saving...' : 'Save'}
+                                                disabled={(processing || !support || saving)}
+                                                className={(!enabled || !support || processing || saving) ? 'back-button' : 'next-button'} type="button">
+                                                {saving ? 'Saving...' : 'Save'}
                                             </button>
                                         </div>
                                     </div>
