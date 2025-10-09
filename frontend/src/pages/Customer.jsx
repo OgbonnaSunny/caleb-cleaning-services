@@ -137,7 +137,7 @@ const Customer = () => {
             const clientHeight = window.innerHeight;
 
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loadingReviews) {
+                if (!loadingReviews && activeTopMenu === 'View') {
                     setPageCount(prev => prev + 1);
                 }
             }
