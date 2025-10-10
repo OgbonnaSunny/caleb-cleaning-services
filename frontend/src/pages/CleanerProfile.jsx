@@ -253,6 +253,7 @@ const CleanerProfile = () => {
     const [requestMessage, setRequestMessage] = useState(null);
     const [personel, setPersonel] = useState(1);
     const [enabled, setEnabled] = useState(JSON.parse(localStorage.getItem("notifications")) || false);
+    const [user, setUser] = useState({});
 
     const [loadingRequest, setLoadingRequest] = useState(false);
 
@@ -274,6 +275,7 @@ const CleanerProfile = () => {
                 setName(user.firstName?.charAt(0)?.toUpperCase() + user?.firstName?.slice(1));
             }
             setEmail(user?.email);
+            setUser(user);
             fetchData()
         }
     }, []);
@@ -551,10 +553,10 @@ const CleanerProfile = () => {
 
     function CallButton({ phoneNumber }) {
         return (
-            <div style={{width:'20px', alignSelf:'end', display:'flex', alignItems:'center', marginRight:'12px'}}>
+            <div style={{width:'50px'}}>
                 <p>
                     <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
-                        <label style={{color:'blue', fontSize:'medium'}}>Call</label>
+                        Call
                     </a>
                 </p>
             </div>
@@ -628,16 +630,59 @@ const CleanerProfile = () => {
                                             }}>£{getPay(order)}</h4>
                                         </div>
 
-                                        {order?.personel > 1 && <div style={{
-                                            display:'flex',
-                                            alignItems:'baseline'
-                                        }}>
-                                            <FaUserTie size={20} style={{width:'40px'}} />
-                                            <h3 style={{textAlign:'end', fontSize:'medium'}}>x2</h3>
-                                        </div>}
+                                        {order?.personel > 1 && <div style={{display:'flex', flexDirection:'column'}}>
 
-                                        {order?.personel <= 1 &&
-                                            <div style={{
+                                                <div style={{
+                                                    display:'flex',
+                                                    alignItems:'baseline'
+                                                }}>
+                                                    <FaUserTie size={20} style={{width:'40px'}} />
+                                                    <h3 style={{textAlign:'end', fontSize:'medium'}}>x2</h3>
+                                                </div>
+
+                                                {(order?.cleaner && order?.cleanerEmail) &&  <div style={{
+                                                    display: 'flex',
+                                                    flexDirection:'column',
+                                                    alignItems: 'center',
+                                                    justifyContent:'space-between',
+                                                    padding:'10px'
+                                                }}>
+                                                    <h3  style={{textAlign:'start', color:'darkorchid'}}>Cleaner(s) on this job</h3>
+                                                    <div style={{marginLeft:'10px'}}>
+                                                        <ul>
+                                                            <li>{order.cleaner}</li>
+                                                            <li>{order.cleanerEmail}</li>
+                                                        </ul>
+                                                        <div style={{
+                                                            display:'flex',
+                                                            justifyContent:'center',
+                                                            alignItems:'baseline',
+                                                            marginRight:'10px'
+                                                        }}>
+                                                            <ul><li> {order?.cleanerPhone} </li></ul>
+                                                            <CallButton phoneNumber={order.cleanerPhone} />
+                                                        </div>
+
+                                                        <ul style={{marginLeft:'15px'}}>
+                                                            {order?.cleaner2 && <li>{order?.cleaner2}</li>}
+                                                            {order?.cleanerEmail2 && <li>{order?.cleanerEmail2}</li>}
+                                                        </ul>
+                                                        {order?.cleanerPhone2 &&
+                                                            <div style={{
+                                                                display:'flex',
+                                                                justifyContent:'center',
+                                                                alignItems:'baseline',
+                                                                marginRight:'10px'
+                                                            }}>
+                                                                <ul><li> {order?.cleanerPhone2} </li></ul>
+                                                                <CallButton phoneNumber={order?.cleanerPhone2} />
+                                                            </div> }
+                                                    </div>
+
+                                                </div> }
+                                            </div>}
+
+                                        {order?.personel <= 1 && <div style={{
                                                 display:'flex',
                                                 alignItems:'baseline'}}>
                                                 <FaUserTie size={20} style={{width:'40px'}} />
@@ -1789,6 +1834,60 @@ const CleanerProfile = () => {
                                         }}>£{getPay(order)}
                                         </h4>
                                     </div>
+
+                                    {order?.personel > 1 &&
+                                        <div style={{display:'flex', flexDirection:'column'}}>
+
+                                            <div style={{
+                                                display:'flex',
+                                                alignItems:'baseline'
+                                            }}>
+                                                <FaUserTie size={20} style={{width:'40px'}} />
+                                                <h3 style={{textAlign:'end', fontSize:'medium'}}>x2</h3>
+                                            </div>
+
+                                            {(order?.cleaner && order?.cleanerEmail) &&  <div style={{
+                                                display: 'flex',
+                                                flexDirection:'column',
+                                                alignItems: 'center',
+                                                justifyContent:'space-between',
+                                                padding:'10px'
+                                            }}>
+                                                <h3  style={{textAlign:'start', color:'darkorchid'}}>Cleaner(s) on this job</h3>
+                                                <div style={{marginLeft:'10px'}}>
+                                                    <ul>
+                                                        <li>{order.cleaner}</li>
+                                                        <li>{order.cleanerEmail}</li>
+                                                    </ul>
+                                                    <div style={{
+                                                        display:'flex',
+                                                        justifyContent:'center',
+                                                        alignItems:'baseline',
+                                                        marginRight:'10px'
+                                                    }}>
+                                                        <ul><li> {order?.cleanerPhone} </li></ul>
+                                                        <CallButton phoneNumber={order.cleanerPhone} />
+                                                    </div>
+
+                                                    <ul style={{marginLeft:'15px'}}>
+                                                        {order?.cleaner2 && <li>{order?.cleaner2}</li>}
+                                                        {order?.cleanerEmail2 && <li>{order?.cleanerEmail2}</li>}
+                                                    </ul>
+                                                    {order?.cleanerPhone2 &&
+                                                        <div style={{
+                                                            display:'flex',
+                                                            justifyContent:'center',
+                                                            alignItems:'baseline',
+                                                            marginRight:'10px'
+                                                        }}>
+                                                            <ul><li> {order?.cleanerPhone2} </li></ul>
+                                                            <CallButton phoneNumber={order?.cleanerPhone2} />
+                                                        </div> }
+                                                </div>
+
+                                            </div> }
+                                        </div>
+                                    }
 
                                     {order.orderId === idForUpdate && <div className="price-container">
                                         <div className={'new-order-container'}>
