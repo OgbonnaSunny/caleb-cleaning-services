@@ -35,6 +35,7 @@ import { FiLogOut } from "react-icons/fi";
 import { useSocket } from "../Socket.jsx";
 import {subscribeUser} from "./notification.js";
 import Reviews from "./Reviews.jsx";
+import {checkPostcodeExists, isValidUKPostcodeFormat} from "./Postcode.jsx";
 
 
 const Customer = () => {
@@ -108,6 +109,8 @@ const Customer = () => {
     const [pageCount, setPageCount] = useState(0);
     const [loadingReviews, setLoadingReviews] = useState(false);
     const [number, setNumber] = useState('+447362587018');
+    const [postcode, setPostcode] = useState('');
+    const [showPostcode, setShowPostcode] = useState(false);
 
     const bottomNavItems = [
         {id: 1, category: 'Account', items: ['Profile', 'Billing', 'Review'], icon: <FaUserTie className="logo-icon2" style={activeBottomMenu === 'Account' ?
@@ -155,6 +158,7 @@ const Customer = () => {
             if (user?.firstName?.toString()?.length > 0) {
                 setName(user.firstName?.charAt(0)?.toUpperCase() + user?.firstName?.slice(1));
             }
+            setPostcode(user?.postcode);
 
         }
 
@@ -254,11 +258,10 @@ const Customer = () => {
     };
 
     const handleNewOrder = () => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
-            let postcode = user?.postcode;
-            if (!postcode?.toString()?.startsWith("EH")) {
-                postcode = "EH12QA";
+        if (postcode && postcode.length > 0) {
+            if (!postcode?.toString()?.trim()?.toUpperCase()?.startsWith("EH")) {
+                setShowPostcode(true);
+                return;
             }
             navigate('/checkout', { state: { postcode:  postcode } });
             return;
@@ -1050,6 +1053,76 @@ const Customer = () => {
         </div>)
     }
 
+    const Postcode = ({ postcode, show }) => {
+        if (!show) {
+            return null;
+        }
+        const [postcodes, setPostcodes] = useState('');
+        const [text, setText] = useState('');
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            setText('');
+            if (!postcodes.trim()) {
+                setText('Please enter a postcode');
+                return;
+            }
+            console.log(postcodes);
+
+            if (!isValidUKPostcodeFormat(postcodes)) {
+                setText(`${postcodes} is not a valid postcode`);
+                return;
+            }
+            checkPostcodeExists(postcodes).then(exists => {
+                if (!exists) {
+                    setText(`${postcodes} does not exist`);
+                    return;
+                }
+            })
+
+            if (!postcodes.trim().toUpperCase().startsWith("EH")) {
+                setText(`${postcodes} is not whithin Edinburgh. We currently do not cover this area.`);
+                return;
+            }
+
+            navigate('/checkout', { state: { postcode: postcodes } });
+        };
+
+        useEffect(() => {
+            if (text.length > 0) {
+          //      setTimeout(() => {setText('')}, 5000);
+            }
+        }, [text]);
+
+        return (
+            <form onSubmit={handleSubmit} className={'support-page'}>
+                <p style={{margin:'15px'}}>Your postcode <strong>{postcode}</strong> is yet to be covered. We currently cover Edinburgh and we are working hard seriously to expand our services to this area. Meanwhile, to proceed to
+                    checkout to book a new cleaning service, you will have to provide a postcode that is whithin Edinburgh. Thank you for choosing Fly Cleaner!
+                </p>
+
+                <div style={{display:'flex', alignItems:'center', gap:'10px', maxWidth:'800px'}}>
+                    <input
+                        type="text"
+                        value={postcodes}
+                        placeholder="full postcode"
+                        onChange={(e) => {setPostcodes(e.target.value)}}
+                        className={'button-bg'}
+                        style={{padding:'10px'}}
+                        required={true}
+                    />
+                    <button type={'submit'} className={'submit-button'}>Proceed</button>
+
+                    <FaTimes size={30} style={{color:'red', width:'40px'}} onClick={() => {
+                        setShowPostcode(false);
+                        setActiveTopMenu('Active');
+                    }} />
+
+                </div>
+                {text && <p style={{margin:'10px'}}>{text}</p>}
+            </form>
+        )
+    }
+
     return (
         <div className="sticky-nav-container">
             {(message && client === null) && <p style={{backgroundColor:'red', color:'white'}}>{message}</p>}
@@ -1129,7 +1202,9 @@ const Customer = () => {
                         {activeTopMenu === 'Billing' && <Billing amount={billing} cancelled={cancelledJobs} />}
                         {activeTopMenu === 'Active' && <Bookings cancellable={true} user={'client'}/>}
                         {activeTopMenu === 'History' && <Bookings history={history}  user={'client'} />}
-                        {activeTopMenu == "Review" && <ViewReview reviews={reviewList} message={reviewMessage} /> }
+                        {activeTopMenu === "Review" && <ViewReview reviews={reviewList} message={reviewMessage} /> }
+                        {activeTopMenu === 'New' && <Postcode postcode={postcode} show={showPostcode} /> }
+
                     </div>}
                 {(client !== null && clientEmail !== null) &&
                     <div style={{display:'flex', flexDirection: 'column'}}>
