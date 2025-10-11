@@ -438,6 +438,10 @@ const BookingList = () => {
             })
     }, [email])
 
+    useEffect(() => {
+        setMessage('');
+    }, [activeBottomMenu]);
+
     function CallButton({ phoneNumber }) {
         return (
             <div style={{width:'50px'}}>
@@ -480,6 +484,7 @@ const BookingList = () => {
     }, []);
 
     const TodayBookings = ({ todayBooking, message }) => {
+
         if (todayBooking?.length <= 0) {
             return <p style={{margin:'10px'}}>{message ? message : "No booking found for today"}</p>;
         }
@@ -534,6 +539,7 @@ const BookingList = () => {
     }
 
     const Recent = ({ last7DaysBooking, message }) => {
+
         if (last7DaysBooking?.length <= 0) {
             return <p style={{margin:'10px', textAlign:'center'}}>{message ? message : "No recent  bookings found"}</p>;
         }
@@ -585,7 +591,7 @@ const BookingList = () => {
                         ))}
                     </div>
                 </div>
-                {loading && <p>Loading...</p>}
+                {loading && <p style={{margin:'10px'}}>Loading...</p>}
             </div>
         );
     }

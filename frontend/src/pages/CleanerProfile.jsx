@@ -253,12 +253,13 @@ const CleanerProfile = () => {
     const [requestMessage, setRequestMessage] = useState(null);
     const [personel, setPersonel] = useState(1);
     const [enabled, setEnabled] = useState(JSON.parse(localStorage.getItem("notifications")) || false);
-    const [user, setUser] = useState({});
-
+    const [user, setUser] = useState(null);
     const [loadingRequest, setLoadingRequest] = useState(false);
+    const [processing, setProcessing] = useState(false);
+    const [stopUpdate, setStopUpdate] = useState(false);
+
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
         const fetchData = async () => {
             try {
                 var data = {receiver: user?.email};
@@ -278,7 +279,7 @@ const CleanerProfile = () => {
             setUser(user);
             fetchData()
         }
-    }, []);
+    }, [user]);
 
     const renderMenuIcon = (id) => {
         if (id === null || id === undefined) return;
@@ -429,21 +430,36 @@ const CleanerProfile = () => {
         }, 1000);
     }
 
-    useEffect(() => {
-        function startNewOrderCountdown(update = true) {
+    let countdownInterval = null;
 
-            const interval = setInterval(() => {
-                if (!update) {
-                    clearInterval(interval);
-                    return;
-                }
-
-                setPageCount(prev => prev + 1);
-
-            }, 10000);
+    function startNewOrderCountdown() {
+        // Clear any existing interval first
+        countdownInterval = Number(localStorage.getItem('countdown'));
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
         }
-        startNewOrderCountdown();
-    }, []);
+
+        countdownInterval = setInterval(() => {
+            setPageCount(prev => prev + 1);
+        }, 30000);
+
+        if (countdownInterval) {
+            localStorage.setItem('countdown', countdownInterval.toString());
+        }
+    }
+
+    useEffect(() => {
+        countdownInterval = Number(localStorage.getItem('countdown'));
+        if (activeMenu !== 'New') {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+        else {
+            startNewOrderCountdown();
+        }
+    }, [activeMenu]);
 
     const initiateCountdown = (order) => {
         const jobHour = Number(order?.startHour);
@@ -497,13 +513,13 @@ const CleanerProfile = () => {
     }
 
     useEffect(() => {
-        if (!isActive) return;
         const fetchOrders = async () => {
             if (isLoading) return;
 
             if (pageCount === 0) {
                 setIsLoading(true)
             }
+
             try {
                 const newOrderResponse = await api.get('api/booking/new');
                 const orders = await newOrderResponse.data;
@@ -511,6 +527,7 @@ const CleanerProfile = () => {
                     setMessage('No new orders yet.');
                     return;
                 }
+
                 setNewOrders(orders?.booking);
             } catch (error) {
                 console.log(error);
@@ -521,15 +538,16 @@ const CleanerProfile = () => {
             }
         }
         fetchOrders();
-    }, [pageCount, isActive]);
+    }, [pageCount, user]);
 
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.scrollY;
             const scrollHeight = document.documentElement.scrollHeight;
             const clientHeight = window.innerHeight;
+            if (detailsId?.toString()?.length > 0) { return; }
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                if (!loadingMore && !orderEnded) {
+                if (!orderEnded && !loadingMore) {
                     if (activeMenu === 'New') {
                         setPageCount(prev => prev + 1)
                     }
@@ -554,7 +572,7 @@ const CleanerProfile = () => {
     function CallButton({ phoneNumber }) {
         return (
             <div style={{width:'50px'}}>
-                <p>
+                <p style={{fontSize:'medium'}}>
                     <a href={`tel:${phoneNumber}`} style={{ color: "blue" }}>
                         Call
                     </a>
@@ -566,22 +584,32 @@ const CleanerProfile = () => {
     const NewOrders = ({ active }) => {
         const [detailsId, setDetailsId] = useState(null);
 
+        useEffect(() => {
+            if (detailsId) {
+                countdownInterval = Number(localStorage.getItem('countdown'));
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+            }
+            else {
+                startNewOrderCountdown();
+            }
+        }, [detailsId]);
+
         return (
             <div className={'support-page'}>
-                {isLoading ?
-                    <div className="progress-bar-container">
+                {isLoading ? <div className="progress-bar-container">
                         <div className="spinner"></div>
                         <p style={{textAlign:'center'}}>Loading data...</p>
                     </div>
-                    : (newOrders.length <= 0 || newOrders === null) ?
-                        <div style={{
+                    : newOrders?.length <= 0 ? <div style={{
                             display:'flex',
                             minHeight:'100vh',
                             justifyContent:'center'
                         }}>
                             <p style={{textAlign:'center'}}>{message}</p>
-                        </div> : active === true ?
-                            <div className="grid-container">
+                        </div> : <div className="grid-container">
                                 {newOrders.map(order => (
                                     <div key={order.orderId}  className={'stat-card'}>
                                         <p style={{textAlign:'center'}}>{order.orderId}</p>
@@ -767,58 +795,55 @@ const CleanerProfile = () => {
                                         </button>
                                     </div>
                                 ))}
-                            </div> :
-                            <p style={{textAlign:'start'}}>
-                                You do not have the clearance to access booking at this moment.
-                                If you believe this could be an error, contact help desk by email or through call <Link style={{color:'blue'}} to={'/contact'}>here </Link>
-                                or via live chat
-                            </p>
+                            </div>
                 }
-                {loadingMore && <p>Loading...</p>}
             </div>
         );
     }
 
     useEffect(() => {
-        window.scroll({top: 0, behavior: 'smooth'});
+        window
+            .scroll({
+                top: 0,
+                behavior: 'smooth'
+            });
     }, [activeMenu])
 
     useEffect(() => {
-        const currentUser = JSON.parse(localStorage.getItem('user'));
+        const currentUser = JSON.parse(localStorage.getItem("user"));
         if (!currentUser) return;
+        setProcessing(true)
         api.post('/api/users/record', {email: currentUser?.email})
             .then((response) => {
             const { user } = response.data;
             if (user) {
-                if (user?.firstName?.toString()?.length > 0 && user?.lastName?.toString()?.length > 0) {
-                    setCleanerName(`${user?.firstName?.charAt(0)?.toUpperCase()+user?.firstName?.slice(1)} ${user?.lastName?.charAt(0)?.toUpperCase()+user?.lastName?.slice(1)}`);
+                setUser(user);
+                if (user?.isActive > 0) {
+                    if (user?.firstName?.toString()?.length > 0 && user?.lastName?.toString()?.length > 0) {
+                        setCleanerName(`${user?.firstName?.charAt(0)?.toUpperCase()+user?.firstName?.slice(1)} ${user?.lastName?.charAt(0)?.toUpperCase()+user?.lastName?.slice(1)}`);
+                    }
+                    if (user?.roles?.toString()?.length > 0) {
+                        setBio(`Professional ${user?.roles?.charAt(0)?.toUpperCase()+user?.roles?.slice(1)}`);
+                    }
+                    setEmail(user.email);
+                    setPhoneNumber(user.phone);
                 }
-                const isActive = user.isActive;
-                if (isActive === 1 || isActive === true || isActive === 'true') {
-                    setIsActive(true);
-                }
-                else {
-                    setIsActive(false);
-                }
-                if (user?.roles?.toString()?.length > 0) {
-                    setBio(`Professional ${user?.roles?.charAt(0)?.toUpperCase()+user?.roles?.slice(1)}`);
-                }
-                setEmail(user.email);
-                setPhoneNumber(user.phone);
-
             }
 
             })
-            .catch((error) => {})
+            .catch((error) => {console.log(error)})
+            .finally(() => {
+                setProcessing(false);
+            })
 
     }, [])
 
     useEffect(() => {
-        if (email === null || email === undefined || email === '') {
+        if (!user)  {
             return;
         }
 
-        api.post('/api/income-pending', {cleanerEmail: email})
+        api.post('/api/income-pending', {cleanerEmail: user?.email})
             .then((response) => {
                 if (response.data) {
                     setIncome(response.data);
@@ -829,7 +854,7 @@ const CleanerProfile = () => {
                 console.log(error);
             })
 
-        api.post('/api/income-monthly', {cleanerEmail: email})
+        api.post('/api/income-monthly', {cleanerEmail: user?.email})
             .then((response) => {
                 const {income, ytd} = response.data;
                 if (income) {
@@ -844,7 +869,7 @@ const CleanerProfile = () => {
                 console.log(error);
             })
 
-        api.post('/api/income-last-month', {cleanerEmail: email})
+        api.post('/api/income-last-month', {cleanerEmail: user?.email})
             .then((response) => {
                 const {income } = response.data;
                 if (income) {
@@ -856,7 +881,7 @@ const CleanerProfile = () => {
                 console.log(error);
             })
 
-        api.post('/api/income-yearly', {cleanerEmail: email})
+        api.post('/api/income-yearly', {cleanerEmail: user?.email})
             .then((response) => {
                 const { income } = response.data;
                 if (income) {
@@ -868,7 +893,7 @@ const CleanerProfile = () => {
                 console.log(error);
             })
 
-        api.post('/api/income/quaterly', {cleanerEmail: email})
+        api.post('/api/income/quaterly', {cleanerEmail: user?.email})
             .then((response) => {
                 setQuarter(response.data.quarter);
 
@@ -877,16 +902,16 @@ const CleanerProfile = () => {
                 console.log(error);
             })
 
-    }, [email]);
+    }, [user]);
 
     useEffect(() => {
-        if (email === null || email === undefined || email === '' || orderEnded) return
+        if (!user || orderEnded) return
         setLoadingMore(true)
         let  offset = 0;
         if (allIncome.length > 0) {
             offset = allIncome[allIncome.length - 1].id;
         }
-        const data = {cleanerEmail: email, limit: 10, offset: offset};
+        const data = {cleanerEmail: user?.email, limit: 10, offset: offset};
         api.post('/api/income-all', data)
             .then((response) => {
                 const { income } = response.data;
@@ -908,7 +933,7 @@ const CleanerProfile = () => {
             .finally(() => {
                 setLoadingMore(false);
             })
-    }, [email, financePageCount, orderEnded])
+    }, [user, financePageCount, orderEnded])
 
     const Finance = () => {
 
@@ -1394,7 +1419,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const myOders = async () => {
-            if (email === null || email === undefined || orderEnded) {
+            if (!user || orderEnded) {
                 return;
             }
             if (myOrders.length === 0) {
@@ -1408,7 +1433,7 @@ const CleanerProfile = () => {
                 if (myOrders.length > 0) {
                     offset = myOrders[myOrders.length - 1].id;
                 }
-                const userData = {email: email, limit: page, offset: offset};
+                const userData = {email: user?.email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/my-orders', userData);
                 const jobList = acceptResponse.data.booking;
                 const time = acceptResponse.data?.time;
@@ -1459,10 +1484,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !isLoadMyOrders && activeMenu === 'Jobs') {
+        if (!isLoadMyOrders && activeMenu === 'Jobs') {
             myOders()
         }
-    }, [activeMenu, myPageCount, orderEnded]);
+    }, [activeMenu, myPageCount, orderEnded, user]);
 
     const finishJob = async (e) => {
         e.preventDefault();
@@ -1837,7 +1862,6 @@ const CleanerProfile = () => {
 
                                     {order?.personel > 1 &&
                                         <div style={{display:'flex', flexDirection:'column'}}>
-
                                             <div style={{
                                                 display:'flex',
                                                 alignItems:'baseline'
@@ -1846,46 +1870,52 @@ const CleanerProfile = () => {
                                                 <h3 style={{textAlign:'end', fontSize:'medium'}}>x2</h3>
                                             </div>
 
-                                            {(order?.cleaner && order?.cleanerEmail) &&  <div style={{
+                                            {(order?.cleanerEmail && order?.cleanerEmail2 && (order?.cleanerEmail !== user?.email || order?.cleanerEmail2 !== user?.email)) &&  <div style={{
                                                 display: 'flex',
                                                 flexDirection:'column',
                                                 alignItems: 'center',
                                                 justifyContent:'space-between',
                                                 padding:'10px'
                                             }}>
-                                                <h3  style={{textAlign:'start', color:'darkorchid'}}>Cleaner(s) on this job</h3>
+                                                <h3  style={{textAlign:'start', color:'darkorchid'}}> Another cleaner on this job</h3>
                                                 <div style={{marginLeft:'10px'}}>
-                                                    <ul>
-                                                        <li>{order.cleaner}</li>
-                                                        <li>{order.cleanerEmail}</li>
-                                                    </ul>
-                                                    <div style={{
-                                                        display:'flex',
-                                                        justifyContent:'center',
-                                                        alignItems:'baseline',
-                                                        marginRight:'10px'
-                                                    }}>
-                                                        <ul><li> {order?.cleanerPhone} </li></ul>
-                                                        <CallButton phoneNumber={order.cleanerPhone} />
-                                                    </div>
 
-                                                    <ul style={{marginLeft:'15px'}}>
-                                                        {order?.cleaner2 && <li>{order?.cleaner2}</li>}
-                                                        {order?.cleanerEmail2 && <li>{order?.cleanerEmail2}</li>}
-                                                    </ul>
-                                                    {order?.cleanerPhone2 &&
-                                                        <div style={{
-                                                            display:'flex',
-                                                            justifyContent:'center',
-                                                            alignItems:'baseline',
-                                                            marginRight:'10px'
-                                                        }}>
-                                                            <ul><li> {order?.cleanerPhone2} </li></ul>
-                                                            <CallButton phoneNumber={order?.cleanerPhone2} />
-                                                        </div> }
+                                                    {order.cleanerEmail !== user?.email && <div style={{display:'flex',flexDirection:'column'}}>
+                                                            <ul>
+                                                                <li>{order.cleaner}</li>
+                                                                <li>{order.cleanerEmail}</li>
+                                                            </ul>
+                                                            {order?.cleanerPhone && <div style={{
+                                                                display:'flex',
+                                                                justifyContent:'center',
+                                                                alignItems:'baseline',
+                                                                marginRight:'10px'
+                                                            }}>
+                                                                <ul><li> {order?.cleanerPhone} </li></ul>
+                                                                <CallButton phoneNumber={order.cleanerPhone} />
+                                                            </div> }
+                                                        </div>}
+
+                                                    {order.cleanerEmail2 !== user?.email && <div style={{display:'flex',flexDirection:'column'}}>
+                                                            <ul style={{marginLeft:'15px'}}>
+                                                                {order?.cleaner2 && <li>{order?.cleaner2}</li>}
+                                                                {order?.cleanerEmail2 && <li>{order?.cleanerEmail2}</li>}
+                                                            </ul>
+
+                                                            {order?.cleanerPhone2 && <div style={{
+                                                                display:'flex',
+                                                                justifyContent:'center',
+                                                                alignItems:'baseline',
+                                                                marginRight:'10px'
+                                                            }}>
+                                                                <ul><li> {order?.cleanerPhone2} </li></ul>
+                                                                <CallButton phoneNumber={order?.cleanerPhone2} />
+                                                            </div>}
+                                                        </div>}
                                                 </div>
 
-                                            </div> }
+                                            </div>
+                                            }
                                         </div>
                                     }
 
@@ -1964,7 +1994,7 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const history = async () => {
-            if (email === null || email === undefined || orderEnded) {
+            if (!user || orderEnded) {
                 return;
             }
             if (jobHistory.length > 0) {
@@ -1980,7 +2010,7 @@ const CleanerProfile = () => {
                     jobs.sort((a, b) => a.id - b.id);
                     offset = jobs[jobs.length - 1].id;
                 }
-                const data = {email: email, limit: page, offset: offset};
+                const data = {email: user?.email, limit: page, offset: offset};
                 const acceptResponse = await api.post('/api/booking/history', data);
                 const jobList = acceptResponse.data.booking;
                 if (jobList?.length <= 0 && jobHistory?.length <= 0) {
@@ -2006,10 +2036,10 @@ const CleanerProfile = () => {
                 setLoadingMore(false);
             }
         }
-        if (!loadingMore && !loadingHistory && activeMenu === 'History') {
+        if (!loadingHistory && activeMenu === 'History') {
             history()
         }
-    }, [historyPageCount, activeMenu]);
+    }, [historyPageCount, activeMenu, user]);
 
     function getDuration(start, end) {
         const startDate = new Date(start);
@@ -2089,7 +2119,6 @@ const CleanerProfile = () => {
         const [bgColor, setBgColor] = useState('red');
         const [bookingIdForReview, setBookingIdForReview] = useState(-1);
         const [detailsId, setDetailsId] = useState(null);
-
 
         const handleReviewChange = (e) => {
             e.preventDefault();
@@ -2574,11 +2603,11 @@ const CleanerProfile = () => {
 
     useEffect(() => {
         const fetchCleanerData = () => {
-            if (!email) {
+            if (!user) {
                 return;
             }
             setIsLoading(true);
-            api.post('/api/users/record', {email: email})
+            api.post('/api/users/record', {email: user?.email})
                 .then(response => {
                     const { user } = response.data;
                     if (user) {
@@ -2624,7 +2653,7 @@ const CleanerProfile = () => {
 
         };
         fetchCleanerData();
-    }, [email]);
+    }, [user]);
 
     useEffect(() => {
         setTimeout(() => setSuccessMessage(null), 5000);
@@ -2641,8 +2670,8 @@ const CleanerProfile = () => {
             const registration = await navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
             const existingSubscription = await registration.pushManager.getSubscription();
 
-            if (existingSubscription && email) {
-                api.post('/api/notify-record', {email: email})
+            if (existingSubscription && user?.email) {
+                api.post('/api/notify-record', {email: user?.email})
                     .then(response => {
                         if (response.data) {
                             setValue('notifications', {
@@ -2669,7 +2698,7 @@ const CleanerProfile = () => {
 
         };
         fetchCleanerData();
-    }, [email]);
+    }, [user]);
 
     const SettingsPage = ({ loadingFiles }) => {
         if (loadingFiles === true) {
@@ -3714,56 +3743,47 @@ const CleanerProfile = () => {
 
     }
 
-    return (
-        <div className="sticky-nav-container">
-            <nav  className='top-order-nav'>
-                <div style={{display:'flex', flexDirection: 'column'}}>
-                    <div style={{display:'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
-                        <img src={LOGO} style={{maxWidth:'12%'}}  className={'logo-icon2'}/>
-                        <h1 style={{width:'20%', textAlign:'start'}} className={'page-title'}>My App</h1>
-                        <button
-                            style={{color:'blue', background:'none', width:'20px'}}
-                            onClick={() => navigate('/help')}>
-                            FAQs
-                        </button>
-                        <div style={{width:'10%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
-                            <FaCommentDots
-                                size={25}
-                                style={{color:'black'}}
-                                onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
-                            />
-                            {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
-                        </div>
-                    </div>
-                    <div className="nav-order-content">
-                        {topNavItems.map((item, index) => (
-                            <div key={`top-${index}`} className="nav-order-item"
-                                 onClick={() => {
-                                     switch (item) {
-                                         case 'New':
-                                             setNewOrders([]);
-                                             setPageCount(0);
-                                             break;
-                                         case  'Jobs':
-                                             setMyOrders([]);
-                                             setMyPageCount(0);
-                                             break;
-                                         case 'History':
-                                             setJobHistory([]);
-                                             setHistoryPageCount(0);
-                                     }
-                                     setOrderEnded(false);
-                                     setActiveMenu(item);
-                                 }}>
-                                <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
-                            </div>
-                        ))}
+    return (<div className="sticky-nav-container">
+        <nav  className='top-order-nav'>
+            <div style={{display:'flex', flexDirection: 'column'}}>
+                <div style={{display:'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                    <img src={LOGO} style={{maxWidth:'12%'}}  className={'logo-icon2'}/>
+                    <h1 style={{width:'20%', textAlign:'start'}} className={'page-title'}>My App</h1>
+                    <button
+                        style={{color:'blue', background:'none', width:'20px'}}
+                        onClick={() => navigate('/help')}>
+                        FAQs
+                    </button>
+                    <div style={{width:'10%', marginRight:'10px', display:'flex', justifyContent:'flex-start', color:'red', alignItems:'center'}}>
+                        <FaCommentDots
+                            size={25}
+                            style={{color:'black'}}
+                            onClick={() => navigate('/messages', {state: {receiver: companyEmail, receiverName: companyName, sender: email, senderName: name}})}
+                        />
+                        {messageCount > 0 && <p style={{ textAlign:'left'}}>{messageCount}</p>}
                     </div>
                 </div>
-            </nav>
+                <div className="nav-order-content">
+                    {topNavItems.map((item, index) => (
+                        <div key={`top-${index}`} className="nav-order-item"
+                             onClick={() => {
+                                 setOrderEnded(false);
+                                 setActiveMenu(item);
+                             }}>
+                            <h3 style={activeMenu === item ? {color:'goldenrod', textDecoration:'underline'}: {color:'', textDecoration:'none'} } >{item}</h3>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </nav>
 
+        {processing ? <p style={{
+            marginTop:'50%',
+            textAlign:'center',
+            minHeight:'100vh'
+        }}>processing user data...</p> : user?.isActive > 0 ?
             <main className={["main-content", "main-banner"].join(" ")}>
-                {activeMenu === topNavItems[0] && <NewOrders active={isActive} /> }
+                {activeMenu === topNavItems[0] && <NewOrders active={user?.isActive} /> }
                 {activeMenu === topNavItems[1] && <MyOrders /> }
                 {activeMenu === topNavItems[2] && <History /> }
                 {activeMenu === bottomNavItems[3].category && <SupportPage /> }
@@ -3771,27 +3791,32 @@ const CleanerProfile = () => {
                 {activeMenu === bottomNavItems[1].category && <Finance /> }
                 {activeMenu === bottomNavItems[2].category && <Docs /> }
                 {activeMenu === bottomNavItems[0].category && <SettingsPage loading={loadingSettings} /> }
-
-            </main>
-
-            <nav  className='bottom-order-nav'>
-                <div className="nav-order-content">
-                    {bottomNavItems.map((item, index) => (
-                        <div key={`bottom-${item.id}`} className="nav-order-item"
-                             onClick={() => {
-                                 setOrderEnded(false);
-                                 setActiveMenu(item.category);
-                             }}>
-                            <div style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
-                                {renderMenuIcon(item.id)}
-                                <h3 style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>{item.category}</h3>
-                            </div>
+           </main> :
+            <p className={'support-page'} style={{
+               textAlign:'start',
+                marginTop:'50%',
+                minHeight:'100vh'}}>
+                You do not have the clearance to access booking at this moment.
+                If you believe this could be an error, contact help desk by email or through call <Link style={{color:'blue'}} to={'/contact'}>here </Link>.
+            </p>
+        }
+        <nav  className='bottom-order-nav'>
+            <div className="nav-order-content">
+                {bottomNavItems.map((item, index) => (
+                    <div key={`bottom-${item.id}`} className="nav-order-item"
+                         onClick={() => {
+                             setOrderEnded(false);
+                             setActiveMenu(item.category);
+                         }}>
+                        <div style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>
+                            {renderMenuIcon(item.id)}
+                            <h3 style={activeMenu === item.category ? {color:'blue', textDecoration:'underline'}: {color:'', textDecoration:'none'}}>{item.category}</h3>
                         </div>
-                    ))}
-                </div>
-            </nav>
-        </div>
-    );
+                    </div>
+                ))}
+            </div>
+        </nav>
+    </div>);
 };
 
 export default CleanerProfile;
