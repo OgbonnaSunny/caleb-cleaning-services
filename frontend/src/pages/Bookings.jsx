@@ -123,6 +123,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
     const [clientHistory, setClientHistory] = useState([]);
     const [clientHistoryCopy, setClientHistoryCopy] = useState([]);
+    const [cancelledBooking, setCancelledBooking] = useState([]);
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
@@ -149,6 +150,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [booking, setBooking] = useState(null);
     const [cancelId, setCancelId] = useState(null);
     const [detailsId, setDetailsId] = useState(null);
+    const [cancelStatus, setCancelStatus] = useState('');
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -341,15 +343,34 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
     }, [message]);
 
-    const cancelBooking = async (id) => {
-        if (!email) {
+    useEffect(() => {
+        api.get('/api/booking/cancelled-jobs')
+            .then((res) => {
+                const { booking } = res.data;
+                setCancelledBooking(prev => {
+                    const map = new Map(prev.map(item => [item.id, item])); // old items
+                    booking.forEach(item => map.set(item.id, item));    // add/replace new
+                    return Array.from(map.values()).sort((a, b) => a.id - b.id); // convert back to array
+                });
+                if (booking.length <= 0) {
+                    setCancelStatus('No cancelled booking found for today');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                setCancelStatus('Error while fetching booking data.');
+            })
+    }, []);
+
+    const cancelBooking = async (booking) => {
+        if (!booking) {
             return;
         }
         setLoading(true);
         setMessage(null);
         setActiveIdForCancellation(id)
         if (cancellable) {
-            api.post('/api/booking/cancel', {email: email, orderId: id})
+            api.post('/api/booking/cancel', {email: booking.customerEmail, orderId: booking.orderId, cleanerEmail: booking.cleanerEmail, cleanerEmail2: booking.cleanerEmail2})
                 .then((response) => {
                     const { success } = response.data;
                     if (success) {
@@ -540,7 +561,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 </p>
                     <div style={{gap:'10px'}} className={'form-actions'}>
                         <button className={'back-button2'}
-                            onClick={() => cancelBooking(booking.orderId)}>
+                            onClick={() => cancelBooking(booking)}>
                             Yes
                         </button>
                         <button
@@ -1331,8 +1352,9 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     </div>)}
                 </div>}
             <Reschedule booking={booking}  timeElapsed={timeSpent} cancelling={cancelling} />
-            {user === 'admin' && <div>
-                <div className="recent-bookings card">
+            {user === 'admin' &&
+                <div style={{display:'flex', flexDirection: 'column'}}>
+                    <div className="recent-bookings card">
                     <div className="card-header">
                         <h2 className={'experience-text'} style={{color:'navy', width:'60%', textAlign:'start'}}>Today's Bookings</h2>
                         {todayBooking.length > 0 &&
@@ -1369,7 +1391,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     </div>}
                     {(!loading && todayBooking.length <= 0) && <p>{todayMessage}</p>}
                 </div>
-                <div className="recent-bookings card">
+                    <div className="recent-bookings card">
                     <div className="card-header">
                         <h2 className={'experience-text'} style={{color:'navy', width:'60%'}}>Recent Bookings</h2>
                         {last7DaysBooking.length > 0 &&
@@ -1406,7 +1428,49 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     </div> }
                     {(!loading && last7DaysBooking.length <= 0) && <p>{message}</p>}
                 </div>
-            </div>}
+                    <div className="recent-bookings card">
+                        <div className="card-header">
+                            <h2 className={'experience-text'} style={{color:'navy'}}>Cancelled Bookings</h2>
+                        </div>
+                        {cancelledBooking.length > 0 && <div className="card-body">
+                                <div className="grid-container">
+                                {cancelledBooking.map(booking => (
+                                    <div key={booking.id} className="service-card">
+                                        <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                            <h4 style={{textAlign:'start', width:'60%'}}>Stats: {booking.duration}</h4>
+                                            <h4 style={{textAlign:'end', width:'40%', color:'blue'}}>£{booking.estimatedAmount}</h4>
+                                        </div>
+                                        <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                            <h4 style={{textAlign:'start', width:'50%'}}>Status</h4>
+                                            <h4 style={{textAlign:'end', width:'50%', color:'red'}}>£{booking.status}</h4>
+                                        </div>
+                                        <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                            <h4 style={{textAlign:'start', width:'50%'}}>Phone</h4>
+                                            <h4 style={{textAlign:'end', width:'50%', color:'red'}}>£{booking.phone}</h4>
+                                        </div>
+                                        <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                            <h4 style={{textAlign:'start', width:'50%'}}>Email</h4>
+                                            <h4 style={{textAlign:'end', width:'50%', color:'red'}}>£{booking.customerEmail}</h4>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <FaUser className="icon-small" />
+                                            <p>{renderName(booking.customer)}</p>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <FaMapMarkerAlt className="icon-small"/>
+                                            <p>{booking.address}</p>
+                                        </div>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                                            <FaClock className="icon-small" />
+                                            <p> {getTime(booking.startTime)}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            </div> }
+                        {cancelStatus && <p>{cancelStatus}</p>}
+                    </div>
+                </div>}
             {loading && (<div><p>Loading data...</p></div>)}
         </div>
     );

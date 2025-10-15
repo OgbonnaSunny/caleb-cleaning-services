@@ -2354,13 +2354,14 @@ const Checkout = () => {
                 else if (paymentIntent) {
                     if (paymentIntent.status === "succeeded") {
                         updateBookingOnDatabase();
-                        setPaymentMessage("Payment successful!");
+                        setPaymentMessage("Booking is successful!");
                         setCurrentStep( currentStep + 1);
+                        setSuccess(true);
                     }
                 }
 
             } catch (error) {
-                setError("Payment failed!. Please try Again!");
+                setError("Payment failed!. Please try again!");
             } finally {
                 setProcessing(false);
             }
