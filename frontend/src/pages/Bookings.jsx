@@ -151,6 +151,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [cancelId, setCancelId] = useState(null);
     const [detailsId, setDetailsId] = useState(null);
     const [cancelStatus, setCancelStatus] = useState('');
+   // const [message, setMessage] = useState('');
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -521,6 +522,19 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [timeSpent, setTimeSpent] = useState(null);
     const [orderId, setOrderId] = useState(null);
     const [cancelling, setCancelling] = useState(false);
+    const [formData, setFormData] = useState(data);
+    const [processing2, setProcessing2] = useState(false);
+
+    useEffect(() => {
+        const hours = new Date().getHours();
+        let disable = false;
+        if (hours > 16) {
+            disable = true;
+            setMinDate(new Date(Date.now() + 86400000))
+        }
+        //   setFormData({...formData, disableThisDay: disable});
+    }, []);
+
 
     useEffect(() => {
         if (!orderId) {return;}
@@ -580,26 +594,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         const amount = Math.round(fee * 100);
         const cleanerEmail = booking.cleanerEmail;
 
-        const [selectedDate, setSelectedDate] = useState(null);
+
         const [errors, setErrors] = useState({});
         const [adjustLower, setAdjustLower] = useState(true);
         const [minimumHour, setMinimumHour] = useState(0);
         const [minimumMinute, setMinimumMinute] = useState(0);
-        const [formData, setFormData] = useState(data);
-        const [count, setCount] = useState(0);
-        const [time, setTime] = useState('');
-        const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
-        const [message, setMessage] = useState('');
+        const [selectedDate, setSelectedDate] = useState(null);
 
-        useEffect(() => {
-            const hours = new Date().getHours();
-            let disable = false;
-            if (hours > 16) {
-                disable = true;
-                setMinDate(new Date(Date.now() + 86400000))
-            }
-            setFormData({...formData, disableThisDay: disable});
-        }, []);
 
         useEffect(() => {
             const time = new Date(selectedDate).setHours(formData.hour, formData.minute, 0, 0);
@@ -607,8 +608,12 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 hour: '2-digit',
                 minute: '2-digit'
             } );
-            setTime(date);
+              setTime(date);
         }, [formData.hour, formData.minute, selectedDate, formData.date, clientSecret])
+
+        const [count, setCount] = useState(0);
+        const [time, setTime] = useState('');
+        const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
 
         const isSameOrAfter = (date, baseDate = new Date()) => {
             const d1 = new Date(date.setHours(0, 0, 0, 0));
@@ -638,6 +643,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 time = `${hour}:${minuteText}`;
             }
             setFormData({...formData, hourText: hour, hour: hours, time: time });
+
         }
 
         const removeHour = () => {
@@ -701,6 +707,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             let time = `${hourText}:${minute}`;
 
             setFormData({...formData, minuteText: minute, minute: minutes, time: time });
+
         }
 
         const removeMinute = () => {
@@ -798,7 +805,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
         async function rescheduleBooking(e) {
             e?.preventDefault();
-            if (processing) return;
+            if (processing) setProcessing2(false); return;
             const newErrors = {};
             if (!formData.date.trim()) newErrors.date = 'Please select date';
 
@@ -806,6 +813,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
             if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
+                setProcessing2(false)
                 return;
             }
 
@@ -838,6 +846,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                 setMessage('Error occured');
             } finally {
                 setProcessing(false);
+                setProcessing2(false);
             }
         }
 
@@ -953,6 +962,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                     else if (paymentIntent) {
                         if (paymentIntent.status === "succeeded") {
                             rescheduleBooking()
+                            setProcessing2(true);
                         }
                     }
 
@@ -1026,12 +1036,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                 {message && <p style={{margin:'15px'}}>{message}</p>}
                             </div>
                         </div>
+                        {(processing || processing2) && <p style={{margin:'20px'}}>processing...</p>}
                         <div style={{margin:'15px', gap:'10px'}} className="form-actions">
-                            <button  disabled={(processing || !stripe)}
+                            <button  disabled={(processing || !stripe || processing2)}
                                     type="submit"
                                      style={{color:'white'}}
                                     className={(!stripe || !elements || processing) ? "back-button" : "submit-button"}>
-                                {processing ? 'Processing...' : 'Reschedule'}
+                                Reschedule
                             </button>
                         </div>
                     </div>
@@ -1096,7 +1107,13 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                        {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
                    </div>
 
-                   <div  style={{ flexDirection:'column', alignItems:'center', maxWidth:'200px', marginTop:'20px', justifyContent:'space-around'}}>
+                   <div  style={{
+                       flexDirection:'column',
+                       alignItems:'center',
+                       maxWidth:'200px',
+                       marginTop:'20px',
+                       justifyContent:'space-around'
+                   }}>
                        <label>Choose time</label>
                        <div  style={{display:'flex', flexDirection:'row', width:'80px', alignSelf:'center'}}>
                            <MdKeyboardArrowUp size={60}  style={{marginLeft:'12px'}} onClick={addHour} />
