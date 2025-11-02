@@ -1172,6 +1172,7 @@ const Checkout = () => {
         else {
                 setEndOfTenancy(false)
         }
+        setSuccess(false)
     }
 
     const handleSubscriptionPlan = (tarrif, price, rate, minimumRate) => {
