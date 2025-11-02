@@ -805,7 +805,8 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
         async function rescheduleBooking(e) {
             e?.preventDefault();
-            if (processing) setProcessing2(false); return;
+            if (processing) return;
+
             const newErrors = {};
             if (!formData.date.trim()) newErrors.date = 'Please select date';
 
@@ -813,7 +814,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
             if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
-                setProcessing2(false)
                 return;
             }
 
@@ -1041,7 +1041,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                             <button  disabled={(processing || !stripe || processing2)}
                                     type="submit"
                                      style={{color:'white'}}
-                                    className={(!stripe || !elements || processing) ? "back-button" : "submit-button"}>
+                                    className={(!stripe || !elements || processing || processing2) ? "back-button" : "submit-button"}>
                                 Reschedule
                             </button>
                         </div>
@@ -1077,6 +1077,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                         setBooking(null);
                         setPaymentIntentId(null);
                         setClientSecret(null);
+                        setFormData(data)
                     }} size={30} style={{width:'40px', alignSelf:'end'}} />
                </div>
 
