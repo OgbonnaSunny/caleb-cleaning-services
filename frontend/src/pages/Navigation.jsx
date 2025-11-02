@@ -183,7 +183,6 @@ const Navigation = () => {
 
     const handleAuth = () => {
       const user = JSON.parse(localStorage.getItem('user'));
-   //   navigate('/customer'); return
       if (user) {
           window.open('/logout', '_blank');
       }
