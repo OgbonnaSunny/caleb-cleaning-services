@@ -2026,6 +2026,7 @@ const Checkout = () => {
         }
     ];
 
+
     const validation3 = () => {
         const newErrors = {};
         if (!formData.firstName.trim()) newErrors.firstName = 'First Name is required';
