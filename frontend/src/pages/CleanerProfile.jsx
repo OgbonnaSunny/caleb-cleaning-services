@@ -314,6 +314,18 @@ const CleanerProfile = () => {
 
     }
 
+    function utcTimeToLocal(date) {
+        const locale = 'en-GB';
+        const userTimeZone = 'Europe/London'
+
+        return new Intl.DateTimeFormat(locale, {
+            timeZone: userTimeZone,
+            hour12: true,
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+    }
+
     const getTime = (date) => {
         const parsed = new Date(date);
 
@@ -322,17 +334,17 @@ const CleanerProfile = () => {
         }
 
         if (isToday(parsed)) {
-            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+            return "Today " + " " + utcTimeToLocal(parsed)  //parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         const diff = differenceInCalendarDays(parsed, new Date());
 
         if (diff === 1) {
-            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+            return "Tomorrow " + " " +  utcTimeToLocal(parsed) //parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         if (diff === 2) {
-            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+            return "In 2 days" + " " + utcTimeToLocal(parsed) // parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
         }
 
         return format(parsed, "EEE do MMM, yyyy h:mm a");

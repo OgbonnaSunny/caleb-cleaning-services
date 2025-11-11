@@ -59,6 +59,18 @@ const Income = () => {
         );
     }
 
+    function utcTimeToLocal(date) {
+        const locale = 'en-GB';
+        const userTimeZone = 'Europe/London'
+
+        return new Intl.DateTimeFormat(locale, {
+            timeZone: userTimeZone,
+            hour12: true,
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+    }
+
     const getTime = (date) => {
         const parsed = new Date(date);
         //  console.log(parsed);
@@ -67,17 +79,17 @@ const Income = () => {
         }
 
         if (isToday(parsed)) {
-            return "Today " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return "Today " + " " + utcTimeToLocal(parsed) // parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
         const diff = differenceInCalendarDays(parsed, new Date());
 
         if (diff === 1) {
-            return "Tomorrow " + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return "Tomorrow " + " " + utcTimeToLocal(parsed) //parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
         if (diff === 2) {
-            return "In 2 days" + " " + parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return "In 2 days" + " " + utcTimeToLocal(parsed) //parsed.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         }
 
         return format(parsed, "EEE do MMM, yyyy h:mm a");
