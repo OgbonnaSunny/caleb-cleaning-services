@@ -62,8 +62,10 @@ import useBackButtonInterceptor from "./useBackButtonInterceptor.js";
 // ksi66exy.up.railway.app
 
 const Checkout = () => {
-    const STRIPE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
+    const isProdcutionMode = process.env.NODE_ENV === 'production';
+    const STRIPE_KEY = isProdcutionMode ? import.meta.env.VITE_STRIPE_API_KEY : import.meta.env.VITE_STRIPE_API_KEY_TEST;
     const stripePromise = loadStripe(STRIPE_KEY);
+
     const location = useLocation();
     const code = location.state?.postcode;
     if (code && code?.toString().length > 0) {
@@ -74,6 +76,7 @@ const Checkout = () => {
     const ref = useRef(null);
     const navigate = useNavigate();
     const hasDummy = useRef(false);
+
 
     const cleaningFAQs = [
         {
@@ -121,7 +124,7 @@ const Checkout = () => {
             time2: 25,
             src: BedroomIcon,
             count: 0,
-            unitPrice: 7.09,
+            unitPrice: 11.09,
             totalPrice: 0
         },
         {
@@ -131,7 +134,7 @@ const Checkout = () => {
             time2: 30,
             src: LivingRoomIcon,
             count: 0,
-            unitPrice: 8.5,
+            unitPrice: 13.5,
             totalPrice: 0
         },
         {
@@ -141,7 +144,7 @@ const Checkout = () => {
             time2: 45,
             src: BathroomIcon,
             count: 0,
-            unitPrice: 12.75,
+            unitPrice: 20.75,
             totalPrice: 0
         },
         {
@@ -151,7 +154,7 @@ const Checkout = () => {
             time2: 10,
             src: HallIcon,
             count: 0,
-            unitPrice: 2.84,
+            unitPrice: 3.84,
             totalPrice: 0
         },
         {
@@ -161,7 +164,7 @@ const Checkout = () => {
             time2: 15,
             src: StaircaseIcon,
             count: 0,
-            unitPrice: 4.25,
+            unitPrice: 6.25,
             totalPrice: 0
         },
         {
@@ -171,7 +174,7 @@ const Checkout = () => {
             time2: 15,
             src: ToiletIcon,
             count: 0,
-            unitPrice: 4.25,
+            unitPrice: 14.25,
             totalPrice: 0
         },
         {
@@ -181,7 +184,7 @@ const Checkout = () => {
             time2: 45,
             src: KitchenIcon,
             count: 0,
-            unitPrice: 12.75,
+            unitPrice: 20.75,
             totalPrice: 0
         },
         {
@@ -191,7 +194,7 @@ const Checkout = () => {
             time2: 20,
             src: OfficeIcon,
             count: 0,
-            unitPrice: 5.67,
+            unitPrice: 8.69,
             totalPrice: 0
         },
         {
@@ -201,7 +204,7 @@ const Checkout = () => {
             time2: 25,
             src: ConservatoryIcon,
             count: 0,
-            unitPrice: 7.09,
+            unitPrice: 11.09,
             totalPrice: 0
         },
         {
@@ -211,7 +214,7 @@ const Checkout = () => {
             time2: 30,
             src: GarageIcon,
             count: 0,
-            unitPrice: 8.5,
+            unitPrice: 13.5,
             totalPrice: 0
         }
     ];
@@ -225,7 +228,7 @@ const Checkout = () => {
             time2: 30,
             src: FridgeIcon,
             count: 0,
-            unitPrice: 8.5,
+            unitPrice: 13.5,
             totalPrice: 0
         },
         {
@@ -235,7 +238,7 @@ const Checkout = () => {
             time2: 20,
             src: WindowIcon,
             count: 0,
-            unitPrice: 5.67,
+            unitPrice: 8.67,
             totalPrice: 0
         },
         {
@@ -245,7 +248,7 @@ const Checkout = () => {
             time2: 60,
             src: IroningIcon,
             count: 0,
-            unitPrice: 17,
+            unitPrice: 28,
             totalPrice: 0
         },
         {
@@ -255,7 +258,7 @@ const Checkout = () => {
             time2: 10,
             src: MicrowaveIcon,
             count: 0,
-            unitPrice: 2.84,
+            unitPrice: 3.84,
             totalPrice: 0
         },
         {
@@ -265,7 +268,7 @@ const Checkout = () => {
             time2: 60,
             src: KitchenInsideIcon,
             count: 0,
-            unitPrice: 17,
+            unitPrice: 28,
             totalPrice: 0
         },
         {
@@ -275,7 +278,7 @@ const Checkout = () => {
             time2: 10,
             src: BedmakingIcon,
             count: 0,
-            unitPrice: 2.84,
+            unitPrice: 3.84,
             totalPrice: 0
         },
         {
@@ -285,7 +288,7 @@ const Checkout = () => {
             time2: 25,
             src: BookcaseIcon,
             count: 0,
-            unitPrice: 7.09,
+            unitPrice: 11.09,
             totalPrice: 0
         },
     ]
@@ -327,7 +330,7 @@ const Checkout = () => {
             src: OvenAndGrill,
             count: 0,
             additionPrice: 35,
-            unitPrice: 47.75,
+            unitPrice: 47,
             totalPrice: 0
         },
     ]
@@ -728,6 +731,7 @@ const Checkout = () => {
     const [interceptMode, setInterceptMode] = useState(false);
     const [success, setSuccess] = useState(false);
 
+
     const cleaningSubscriptions = [
         {
             id: 22,
@@ -785,6 +789,15 @@ const Checkout = () => {
         },
         {id:3 , starter:'Carpet & Upholstery only'}
     ]
+
+    function getUserTimezone() {
+        if (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) {
+            return Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+        // Fallback: estimate from offset (not reliable for DST or historic zones)
+        const offset = new Date().getTimezoneOffset() / -60;
+        return `UTC${offset >= 0 ? '+' : ''}${offset}`;
+    }
 
     const handleDateChange = (selectedDate) => {
         const newErrors = errors;
@@ -1930,14 +1943,29 @@ const Checkout = () => {
         setFormData({...formData, minuteText: minute, minute: minutes, time: time });
     }
 
+    function utcTimeToLocal(utcTime24) {
+        const now = new Date(selectedDate);
+        const [h, m] = utcTime24.split(':');
+        const locale = 'en-GB';
+        const userTimeZone = 'Europe/London'
+        const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h, m));
+
+        return new Intl.DateTimeFormat(locale, {
+            timeZone: userTimeZone,
+            hour12: true,
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(utcDate);
+    }
+
     useEffect(() => {
         const time = new Date(selectedDate).setHours(formData.hour, formData.minute, 0, 0);
         const date = new Date(time).toLocaleTimeString([],{
             hour: '2-digit',
             minute: '2-digit'
         } );
-        setTime(date);
-    }, [formData.hour, formData.minute, selectedDate, formData.date])
+        setTime(utcTimeToLocal(formData.time));
+    }, [formData.hour, formData.minute, selectedDate, formData.date, formData.time])
 
     const paymentFAQs = [
         {

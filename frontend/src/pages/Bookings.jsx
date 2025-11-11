@@ -32,7 +32,8 @@ import {
 
 
 const Bookings = ( {cancellable =  false, user, history = false }) => {
-    const STRIPE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
+    const isProdcutionMode = process.env.NODE_ENV === 'production';
+    const STRIPE_KEY = isProdcutionMode ? import.meta.env.VITE_STRIPE_API_KEY : import.meta.env.VITE_STRIPE_API_KEY_TEST;
     const stripePromise = loadStripe(STRIPE_KEY);
 
     const navigate = useNavigate();
