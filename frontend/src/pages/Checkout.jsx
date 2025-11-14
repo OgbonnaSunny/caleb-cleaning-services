@@ -537,9 +537,9 @@ const Checkout = () => {
         planType:'',
         rate: 29,
         date: '',
-        time: '09:00',
-        hour: 9,
-        hourText: '09',
+        time: '08:00',
+        hour: 8,
+        hourText: '08',
         minuteText: '00',
         minute: 0,
         startTime: '',
@@ -1942,6 +1942,22 @@ const Checkout = () => {
         time = `${hourText}:${minute}`;
 
         setFormData({...formData, minuteText: minute, minute: minutes, time: time });
+    }
+
+    function formatToLocalDate(dateToFormat) {
+        const date = new Date(dateToFormat);
+        const locale = 'en-GB';
+        const userTimeZone = 'Europe/London'
+
+        return new Intl.DateTimeFormat(locale, {
+            timeZone: userTimeZone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        }).format(date);
     }
 
     function utcTimeToLocal(utcTime24) {
