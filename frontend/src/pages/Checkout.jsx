@@ -63,7 +63,8 @@ import useBackButtonInterceptor from "./useBackButtonInterceptor.js";
 
 const Checkout = () => {
     const isProdcutionMode = process.env.NODE_ENV === 'production';
-    const STRIPE_KEY = isProdcutionMode ? import.meta.env.VITE_STRIPE_API_KEY : import.meta.env.VITE_STRIPE_API_KEY_TEST;
+    const STRIPE_KEY =  import.meta.env.VITE_STRIPE_API_KEY_TEST;
+  //  const STRIPE_KEY =  import.meta.env.VITE_STRIPE_API_KEY;
     const stripePromise = loadStripe(STRIPE_KEY);
 
     const location = useLocation();

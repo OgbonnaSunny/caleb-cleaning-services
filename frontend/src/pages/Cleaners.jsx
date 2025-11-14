@@ -260,18 +260,6 @@ const Cleaners = () => {
         color: "black"
     }
 
-    function utcTimeToLocal(date) {
-        const locale = 'en-GB';
-        const userTimeZone = 'Europe/London'
-
-        return new Intl.DateTimeFormat(locale, {
-            timeZone: userTimeZone,
-            hour12: true,
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date);
-    }
-
 
     return (
         <div style={{
