@@ -862,6 +862,16 @@ const Checkout = () => {
         setErrors(newErrors);
     }
 
+    const updateTime = () => {
+        const currentHour = new Date().getHours();
+        const currentMinute = new Date().getMinutes();
+        const hourText = String(currentHour).padStart(2,'0');
+        const minuteText = String(currentMinute).padStart(2,'0');
+        const timeText = `${hourText}:${minuteText}`;
+        setFormData( {...formData, time: timeText, hour: currentHour, minute: currentMinute, hourText: hourText, minuteText: minuteText});
+        setTime(utcTimeToLocal(timeText))
+    }
+
     const handLeValidation1 = () => {
         const newErrors = {};
         const hours = new Date().getHours();
@@ -952,27 +962,7 @@ const Checkout = () => {
         const minute = Number(totalTime)%60;
 
         hour = (Number(totalTime) - Number(minute)) / 60;
-        /*let time;
-        if (minute <= 0 && hour > 0) {
-            time = `${hour}h`;
-        }
-        else if (minute > 0 && hour <= 0) {
-            if (minute.toString().length > 0) {
-                time = `${minute}m`;
-            }
-            else {
-                time = `0${minute}m`;
-            }
-        }
-        else {
-            if (minute.toString().length > 0) {
-                time = `${hour}h ${minute}m`;
-            }
-            else {
-                time = `${hour}h 0${minute}m`;
-            }
 
-        }*/
         const time = String(hour).padStart(2, '0') + "h" + " " + String(minute).padStart(2, '0') + "m";
         return {time: time, hour: hour, minute: minute};
     }
@@ -1066,17 +1056,30 @@ const Checkout = () => {
     const initializeForm = () => {
         if (!covered) return;
 
+        let currentHour = new Date().getHours();
+        let currentMinute = new Date().getMinutes();
+        if (currentMinute > 0 && currentMinute <= 30) {
+            currentMinute = 30;
+        }
+        if (currentMinute > 30) {
+            currentMinute = 0;
+            currentHour = currentHour + 1
+        }
+        const hourText = String(currentHour).padStart(2,'0');
+        const minuteText = String(currentMinute).padStart(2,'0');
+        const timeText = `${hourText}:${minuteText}`;
+
         let natureActive = [false, false, false]
         let nature = dirt[0];
         if ( starter === starters[1].starter) {
             natureActive = [true, true, false];
             nature = dirt[2]
         }
-        const hours = new Date().getHours();
+     //   const hours = new Date().getHours();
         let disable = false;
         let date = '';
         let time = '';
-        if (hours > 16) {
+        if (currentHour > 16) {
             disable = true;
             setMinDate(new Date(Date.now() + 86400000))
         }
@@ -1153,6 +1156,7 @@ const Checkout = () => {
                 rugRooms: endOfTenancyServices,
                 rugSizes: sizeBasedPricing,
                 postcode: normalPostcode,
+                time: timeText, hour: currentHour, minute: currentMinute, hourText: hourText, minuteText: minuteText,
             });
         }
         else {
@@ -1170,7 +1174,9 @@ const Checkout = () => {
                 onSubscription: false,
                 addresses: addresses,
                 postcode: normalPostcode,
+                time: timeText, hour: currentHour, minute: currentMinute, hourText: hourText, minuteText: minuteText,
             });
+
         }
        setSelectedDate(null)
 
@@ -1187,6 +1193,8 @@ const Checkout = () => {
                 setEndOfTenancy(false)
         }
         setSuccess(false)
+
+        setTimeout({updateTime}, 2000)
     }
 
     const handleSubscriptionPlan = (tarrif, price, rate, minimumRate) => {
@@ -3877,6 +3885,7 @@ const Checkout = () => {
             </div>
         );
     }
+
 
     return (
         <div className={['form-group', 'main-banner'].join(' ')}
