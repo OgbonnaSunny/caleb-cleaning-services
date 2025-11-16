@@ -596,6 +596,7 @@ const Checkout = () => {
         personel: 1,
         startHour: 0,
         startMinute: 0,
+        cleanerIncome: 0
 
     }
 
@@ -2256,7 +2257,14 @@ const Checkout = () => {
             return;
         }
         setClientSecret(null);
+        setFormData({...formData, cleanerIncome: getCleanerIncome()});
         fetchData()
+    }
+
+    const getCleanerIncome = () => {
+        const totalAmount = formData.totalAmount;
+        const income = (formData.totalAmount * 72) / 100;
+        return income.toFixed(2);
     }
 
     function PaymentHome() {
@@ -2354,6 +2362,7 @@ const Checkout = () => {
                     startHour: formData.startHour,
                     startMinute: formData.startMinute,
                     personel: personel,
+                    cleanerIncome: formData.cleanerIncome,
                 };
 
                 await api.post('/api/booking', orderData);
