@@ -2363,6 +2363,7 @@ const Checkout = () => {
                     startMinute: formData.startMinute,
                     personel: personel,
                     cleanerIncome: formData.cleanerIncome,
+                    address: formData.address,
                 };
 
                 await api.post('/api/booking', orderData);
