@@ -2263,7 +2263,7 @@ const Checkout = () => {
 
     const getCleanerIncome = () => {
         const totalAmount = formData.totalAmount;
-        const income = (formData.totalAmount * 72) / 100;
+        const income = (formData.totalAmount * 52) / 100;
         return income.toFixed(2);
     }
 
@@ -2343,7 +2343,7 @@ const Checkout = () => {
                     extraCharge: 0,
                     mainDate: selectedDate,
                     minimumPrice: formData.minimumEstimate,
-                    cleanerWage: 0,
+                    cleanerWage: getCleanerIncome(),
                     address: formData.address,
                     postcode: postcode,
                     phone: formData.phone,
@@ -2751,6 +2751,25 @@ const Checkout = () => {
                                     <p>2h clean with Cleaning products included</p>
                                 </div>
                             </div>
+
+                            <div style={{display:'flex', flexDirection:'row', marginBottom:'5px', alignItems:'center'}}>
+                                <div className="form-actions" style={{marginLeft:'50px', width:'60px', marginRight:'10px'}}>
+                                    <button type="button" className={formData.personel == 1 ? "next-button" : "back-button"}
+                                            onClick={() => setFormData({...formData, personel: 1})}>
+                                        No
+                                    </button>
+                                    <button type="button"  className={formData.personel > 1 ? "next-button" : "back-button"}
+                                            onClick={() => setFormData({...formData, personel: 2})}>
+                                        Yes
+                                    </button>
+                                </div>
+                                <div style={{marginTop:'25px'}}>
+                                    <h3>Do you need two cleaners for this job?</h3>
+                                    <p>Needed if you don't have the time for the full duration</p>
+                                </div>
+                            </div>
+
+
                         </div>}
                         <div className={'date-time-container'} style={{marginTop:'20px'}}>
                             <div style={{backgroundColor:'white', paddingRight:'30px', maxWidth:'300px'}}>
@@ -2774,7 +2793,13 @@ const Checkout = () => {
                                 {formData.date && <p style={{textAlign:'center'}}>{format(formData.date, "EEE do MMM, yyyy")}</p>}
                             </div>
 
-                            <div  style={{ flexDirection:'column', alignItems:'center', maxWidth:'200px', marginTop:'20px', justifyContent:'space-around'}}>
+                            <div  style={{
+                                flexDirection:'column',
+                                alignItems:'center',
+                                maxWidth:'200px',
+                                marginTop:'20px',
+                                justifyContent:'space-around'
+                            }}>
                                 <label>Choose time</label>
                                 <div  style={{display:'flex', flexDirection:'row', width:'80px', alignSelf:'center'}}>
                                     <MdKeyboardArrowUp size={60}  style={{marginLeft:'12px'}} onClick={addHour} />
