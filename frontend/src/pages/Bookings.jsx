@@ -539,16 +539,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
     const [formData, setFormData] = useState(data);
     const [processing2, setProcessing2] = useState(false);
 
-    useEffect(() => {
-        const hours = new Date().getHours();
-        let disable = false;
-        if (hours > 16) {
-            disable = true;
-            setMinDate(new Date(Date.now() + 86400000))
-        }
-        //   setFormData({...formData, disableThisDay: disable});
-    }, []);
-
 
     useEffect(() => {
         if (!orderId) {return;}
@@ -607,8 +597,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
 
         const amount = Math.round(fee * 100);
         const cleanerEmail = booking.cleanerEmail;
-
-
         const [errors, setErrors] = useState({});
         const [adjustLower, setAdjustLower] = useState(true);
         const [minimumHour, setMinimumHour] = useState(0);
@@ -628,6 +616,16 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         const [count, setCount] = useState(0);
         const [time, setTime] = useState('');
         const [minDate, setMinDate] = useState(new Date().setHours(0, 0, 0, 0));
+
+        useEffect(() => {
+            const hours = new Date().getHours();
+            let disable = false;
+            if (hours > 16) {
+                disable = true;
+                setMinDate(new Date(Date.now() + 86400000))
+            }
+            //   setFormData({...formData, disableThisDay: disable});
+        }, []);
 
         const isSameOrAfter = (date, baseDate = new Date()) => {
             const d1 = new Date(date.setHours(0, 0, 0, 0));
