@@ -2263,7 +2263,7 @@ const Checkout = () => {
 
     const getCleanerIncome = () => {
         const totalAmount = formData.totalAmount;
-        const income = (formData.totalAmount * 52) / 100;
+        const income = (formData.totalAmount * 30) / 100;
         return income.toFixed(2);
     }
 

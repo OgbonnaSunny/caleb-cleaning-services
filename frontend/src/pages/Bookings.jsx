@@ -371,14 +371,19 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
         }
         setLoading(true);
         setMessage(null);
-        setActiveIdForCancellation(id)
+        setActiveIdForCancellation(booking.orderId);
         if (cancellable) {
-            api.post('/api/booking/cancel', {email: booking.customerEmail, orderId: booking.orderId, cleanerEmail: booking.cleanerEmail, cleanerEmail2: booking.cleanerEmail2})
+            api.post('/api/booking/cancel', {
+                email: booking.customerEmail,
+                orderId: booking.orderId,
+                cleanerEmail:
+                booking.cleanerEmail,
+                cleanerEmail2: booking.cleanerEmail2
+            })
                 .then((response) => {
                     const { success } = response.data;
                     if (success) {
-                      //  cancelledIds.push(id);
-                        setCancelledIds(prev => [...prev, id]);
+                        setCancelledIds(prev => [...prev, booking.orderId]);
                         setCancelledMessage("Booking successfully cancelled");
                     }
                     else {
@@ -1191,6 +1196,7 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
             display: 'flex',
             flexDirection: 'column',
         }}>
+            {(cancelledMessage && user === 'client') && <p style={{margin:'12px', fontSize:'large', color:'red'}}>{cancelledMessage}</p>}
             {(user === 'client' && !booking) && <div>
                     {!history && (<div>
                         <div className="recent-bookings card">
@@ -1236,7 +1242,6 @@ const Bookings = ( {cancellable =  false, user, history = false }) => {
                                                     {booking.nature}
                                                 </p>
                                             </div>
-                                            {(cancelledMessage && activeIdForCancellation === booking.orderId) && <p>{cancelledMessage}</p>}
 
                                             <div style={{display:'flex', alignItems:'center', marginBottom:'5px', marginTop:'10px'}}>
                                                 <h3 style={{textAlign:'start'}}>My Job</h3>
